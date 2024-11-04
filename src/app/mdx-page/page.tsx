@@ -1,5 +1,5 @@
-import Test from '@/markdown/test.mdx'
+import Test from '@/markdown/my-first-api.mdx'
 
-export default function Page () {
-    return <Test />
+export default async function Page() {
+  return <Test />
 }
