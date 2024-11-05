@@ -1,36 +1,62 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-export async function getPost(slug: string) {
-  try {
-    const post = await import(`/src/markdown/${slug}.mdx`)
+import { notFound } from 'next/navigation'
+import { cache } from 'react'
 
-    return {
-      slug,
-      ...post,
-    }
+const MDX_EXTENSION = '.mdx'
+
+//
+async function loadPost(slug: string) {
+  try {
+    return await import(`/src/markdown/${slug}${MDX_EXTENSION}`)
   } catch (e) {
-    console.error('\nErro ao buscar post: %s', slug)
-    console.error((e as Error).message)
-    console.error((e as Error).stack)
+    console.error(`Error loading post: %s`, slug)
+    console.error(e)
     return null
   }
 }
 
-export async function getAllPosts() {
-  try {
-    const files = await fs.readdir(path.join(process.cwd(), 'src/markdown'))
-
-    const posts = await Promise.all(
-      files
-        .filter((file) => file.endsWith('.mdx'))
-        .map(async (file) => getPost(file.replace('.mdx', ''))),
-    )
-
-    return posts
-  } catch (e: Error | unknown) {
-    console.error('Erro ao buscar posts\n')
-    console.error(e)
-    return []
-  }
+async function getMarkdownFiles() {
+  const dir = path.join(process.cwd(), 'src', 'markdown')
+  return await fs.readdir(dir)
 }
+
+async function getPostMetadata(slug: string) {
+  const { frontmatter } = await loadPost(slug)
+  return { ...frontmatter, slug }
+}
+
+//
+export const getAllPostSlugs = cache(async () => {
+  const files = await getMarkdownFiles()
+  return files
+    .filter((file) => file.endsWith(MDX_EXTENSION))
+    .map((file) => file.replace(MDX_EXTENSION, ''))
+})
+
+export const getPostData = cache(async (slug: string) => {
+  const post = await loadPost(slug)
+
+  if (!post) return notFound()
+
+  return {
+    slug,
+    ...post.frontmatter,
+    content: post.default,
+  }
+})
+
+export const getAllPostMetadata = cache(async () => {
+  const slugs = await getAllPostSlugs()
+
+  const posts = await Promise.all(
+    slugs.map(async (slug) => {
+      return await getPostMetadata(slug)
+    }),
+  )
+
+  return posts.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+  )
+})

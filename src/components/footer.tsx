@@ -39,7 +39,7 @@ function SocialLinks() {
 
 export default function Footer() {
   return (
-    <small className='mt-16 block text-[#1C1C1C] dark:text-[#D4D4D4] lg:mt-24'>
+    <footer className='mt-16 block text-[#1C1C1C] dark:text-[#D4D4D4] lg:mt-24'>
       <time>© {YEAR}</time>&nbsp;
       <a
         className='no-underline'
@@ -58,6 +58,6 @@ export default function Footer() {
         }
       `}</style>
       <SocialLinks />
-    </small>
+    </footer>
   )
 }

@@ -2,33 +2,31 @@ import { Project } from '@/types'
 import { Link2 as LinkIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import path from 'node:path'
+
+import {githubRepos} from '@/data'
 
 export const metadata: Metadata = {
   title: 'Projects',
 }
-const url = path.join(process.env.API_GITHUB || '', 'repos')
 
 export default async function Projects() {
-  const data = await fetch(url)
-  const projects: Project[] = await data.json()
+  const res = await fetch(githubRepos, { cache: 'force-cache' })
+  const projects: Project[] = await res.json()
 
-  const hasProjects = projects.length > 0
-
-  console.log('url:', url)
+  const projectsCount = projects.length
 
   return (
     <div>
       <h1 className='text-2xl'>
-        Projects{projects.length ? '(' + projects.length + ')' : ''}:
+        Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
       </h1>
 
       <br />
 
-      {!hasProjects && <p>não tem projetos</p>}
+      {!projectsCount && <p>There are no projects to display.</p>}
 
-      <ul>
-        {hasProjects &&
+      <ul className='space-y-5'>
+        {projectsCount &&
           projects.map((project) => (
             <List key={project.id} project={project} />
           ))}
@@ -61,8 +59,6 @@ function List({ project }: { project: Project }) {
       <p>
         created:&nbsp;<time className={className}>{date}</time>
       </p>
-
-      <br />
     </li>
   )
 }

@@ -4,9 +4,9 @@ import { Analytics } from '@vercel/analytics/react'
 import { clsx } from 'clsx'
 import { JetBrains_Mono } from 'next/font/google'
 
-import { Nav } from '@/components/nav'
-import { meta } from './data'
 import Footer from '@/components/footer'
+import { Nav } from '@/components/nav'
+import { meta } from '@/data'
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], display: 'swap' })
 

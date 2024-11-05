@@ -8,6 +8,14 @@ import remarkParseFrontmatter from 'remark-parse-frontmatter'
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+      },
+    ],
+  },
 }
 
 const withMDX = createMDX({
@@ -15,7 +23,7 @@ const withMDX = createMDX({
     remarkPlugins: [
       remarkFrontmatter,
       remarkMdxFrontmatter,
-      remarkGfm,
+      [remarkGfm, {singleTilde: false}],
       [
         remarkParseFrontmatter,
         {

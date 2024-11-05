@@ -15,7 +15,7 @@ export type Frontmatter = {
   description: string
   tags: string[]
   published: boolean
-  createdAt: Date
+  createdAt: string
   updatedAt: string
 }
 
