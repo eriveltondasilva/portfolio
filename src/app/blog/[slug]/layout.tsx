@@ -1,4 +1,8 @@
+import { Calendar } from 'lucide-react'
+
 import { getAllPostSlugs, getPostData } from '@/services/post-service'
+import { Post } from '@/types'
+import { formatDate } from '@/utils/date-format'
 
 export async function generateMetadata({
   params,
@@ -27,18 +31,22 @@ export default async function Layout({
   children: React.ReactNode
 }) {
   const { slug } = await params
-  const post = await getPostData(slug)
+  const post: Post = await getPostData(slug)
 
   return (
-    <article>
-      <h1>title: {post.title}</h1>
-      <p>description: {post.description}</p>
-      <p>tags: {post.tags.join(', ')}</p>
-      <p>published: {post.published}</p>
-      <p>createdAt: {post.createdAt}</p>
-      <br />
-
-      {children}
-    </article>
+    <section>
+      <h1 className='title'>
+        {post.title}
+      </h1>
+      <div className='text-medium mb-8 mt-2 flex items-center justify-between'>
+        <p className='flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400'>
+          <Calendar className='size-4'/>
+          {formatDate(post.createdAt)}
+        </p>
+      </div>
+      <article className='prose-quoteless prose prose-neutral dark:prose-invert'>
+        {children}
+      </article>
+    </section>
   )
 }

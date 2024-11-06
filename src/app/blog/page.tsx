@@ -14,7 +14,7 @@ export default async function BlogPage() {
 
   return (
     <>
-      <h1 className='text-3xl'>My Blog</h1>
+      <h1 className='title'>My Blog</h1>
       <br />
       <ul className='space-y-5'>
         {posts.map((post) => (

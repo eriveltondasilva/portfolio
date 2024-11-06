@@ -17,7 +17,7 @@ export default async function Projects() {
 
   return (
     <div>
-      <h1 className='text-2xl'>
+      <h1 className='title'>
         Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
       </h1>
 

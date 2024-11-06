@@ -16,7 +16,7 @@ export default function HomePage() {
             'mx-auto mb-10 mt-0',
             'sm:float-right sm:mb-5 sm:ml-5',
             'lg:mb-5 lg:mt-5',
-            'transition duration-500 ease-in-out',
+            'transition-[filter] duration-500 ease-in',
             'bg-gray-100 grayscale hover:grayscale-0',
           )}
           // unoptimized
@@ -26,7 +26,7 @@ export default function HomePage() {
         />
       </a>
 
-      <h1 className='mb-8 text-2xl font-medium tracking-tight'>
+      <h1 className='title'>
         Portfolio, made simple!
       </h1>
 

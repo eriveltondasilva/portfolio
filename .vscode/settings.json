@@ -3,6 +3,10 @@
     {
       "filePath": "src",
       "group": "Default"
+    },
+    {
+      "filePath": "src\\app",
+      "group": "Default"
     }
   ]
 }
