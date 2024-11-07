@@ -6,6 +6,11 @@ import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import remarkParseFrontmatter from 'remark-parse-frontmatter'
 
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeSlug from 'rehype-slug'
+
+import { parseFrontmatterOptions, remarkGfmOptions } from '@/plugins'
+
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
@@ -23,26 +28,10 @@ const withMDX = createMDX({
     remarkPlugins: [
       remarkFrontmatter,
       remarkMdxFrontmatter,
-      [remarkGfm, {singleTilde: false}],
-      [
-        remarkParseFrontmatter,
-        {
-          properties: {
-            title: { type: 'string', required: true },
-            description: { type: 'string', required: true },
-            tags: {
-              type: 'array',
-              maxItems: 5,
-              items: { type: 'string' },
-              required: true,
-            },
-            published: { type: 'boolean', required: true },
-            createdAt: { type: 'string', format: 'date', required: true },
-            updatedAt: { type: 'string', format: 'date', required: true },
-          },
-        },
-      ],
+      [remarkGfm, remarkGfmOptions],
+      [remarkParseFrontmatter, parseFrontmatterOptions],
     ],
+    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
   },
 })
 

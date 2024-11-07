@@ -26,9 +26,7 @@ export default function HomePage() {
         />
       </a>
 
-      <h1 className='title'>
-        Portfolio, made simple!
-      </h1>
+      <h1 className='title'>Portfolio, made simple!</h1>
 
       <div className='prose prose-neutral dark:prose-invert'>
         <p>

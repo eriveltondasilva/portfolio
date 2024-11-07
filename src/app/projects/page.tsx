@@ -3,7 +3,7 @@ import { Link2 as LinkIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
-import {githubRepos} from '@/data'
+import { githubRepos } from '@/data'
 
 export const metadata: Metadata = {
   title: 'Projects',
@@ -42,7 +42,7 @@ function List({ project }: { project: Project }) {
 
   return (
     <li className=''>
-      <h2 className='flex gap-2 font-extrabold decoration-sky-600 decoration-2 hover:underline dark:decoration-sky-400'>
+      <h2 className='flex gap-2 font-semibold decoration-sky-600 decoration-2 hover:underline dark:decoration-sky-400'>
         <LinkIcon />
         <Link href={html_url}>{name.toUpperCase()}</Link>
       </h2>

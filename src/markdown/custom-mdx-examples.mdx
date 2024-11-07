@@ -21,7 +21,7 @@ Here are some examples of using MDX:
 
 ## Emphasis
 
-**This is bold text**
+This is **bold** text
 
 _This is italic text_
 
@@ -38,12 +38,15 @@ _This is italic text_
 
 ## CodeBlocks
 
-```
+```javascript
 // This is commented-out code
-export default function HelloWorld() {
-  return (
-    <h1>Hello, World!</h1>
-  );
+const test = 300
+const hello = {
+  world: 3000,
+}
+
+export default function HelloWorld(test) {
+  return <h1>Hello, World!</h1>
 }
 ```
 
@@ -51,49 +54,33 @@ export default function HelloWorld() {
 
 Nextfolio uses [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) in MDX for seamless image rendering:
 
-```
-<Image
-  src="/opengraph-image.png"
-  alt="OpenGraph image"
-  width={640}
-  height={500}
-/>
-```
-
-Renders:
-{/*
+```javascript
 <Image
   src='/opengraph-image.png'
   alt='OpenGraph image'
   width={640}
   height={500}
-/> */}
+/>
+```
+
+Renders:
 
 ## Image Grid
 
 Nextfolio uses a custom [image grid component](https://github.com/1msirius/Nextfolio/blob/main/app/components/image-grid.tsx) to display image galleries.
 
-```
+```javascript
 <ImageGrid
   columns={3} // Accepts 2, 3, or 4 columns
   images={[
-    { src: "/photos/photo1.jpg", alt: "Photo1", href: "#" }, // 'href' is optional
-    { src: "/photos/photo2.jpg", alt: "Photo2", href: "#" },
-    { src: "/photos/photo3.jpg", alt: "Photo3"},
+    { src: '/photos/photo1.jpg', alt: 'Photo1', href: '#' }, // 'href' is optional
+    { src: '/photos/photo2.jpg', alt: 'Photo2', href: '#' },
+    { src: '/photos/photo3.jpg', alt: 'Photo3' },
   ]}
 />
 ```
 
 Renders:
-{/*
-<ImageGrid
-  columns={3}
-  images={[
-    { src: '/photos/photo1.jpg', alt: 'Photo1', href: '#' },
-    { src: '/photos/photo2.jpg', alt: 'Photo2', href: '#' },
-    { src: '/photos/photo3.jpg', alt: 'Photo3' },
-  ]}
-/> */}
 
 ## Embeds
 
@@ -101,31 +88,27 @@ Renders:
 
 Nextfolio uses [react-tweet](https://react-tweet.vercel.app/) to embed tweets in MDX posts.
 
-```
-<StaticTweet id="1617979122625712128" />
+```javascript
+<StaticTweet id='1617979122625712128' />
 ```
 
 Renders:
-
-{/* <StaticTweet id='1617979122625712128' /> */}
 
 ### YouTube Videos
 
 Nextfolio uses [react-youtube](https://www.npmjs.com/package/react-youtube) to embed YouTube videos in MDX posts.
 
-```
-<YouTube videoId="wXhTHyIgQ_U" />
+```javascript
+<YouTube videoId='wXhTHyIgQ_U' />
 ```
 
 Renders:
-
-{/* <YouTube videoId='wXhTHyIgQ_U' /> */}
 
 ### Captions
 
 Nextfolio uses [react-wrap-balancer](https://react-wrap-balancer.vercel.app/) to evenly balance captions in MDX posts.
 
-```
+```javascript
 <Caption>
   Captions that flow smoothly, making your content easy to read and visually
   appealing with a clean look.
@@ -133,37 +116,13 @@ Nextfolio uses [react-wrap-balancer](https://react-wrap-balancer.vercel.app/) to
 ```
 
 Renders:
-{/*
-<Caption>
-  Captions that flow smoothly, making your content easy to read and visually
-  appealing with a clean look.
-</Caption> */}
 
 ## Tables
 
 Nextfolio uses a custom [table component](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx#L38) to render tables in MDX posts.
 
-```
+```javascript
 <Table
-  data={{
-    headers: ["Title", "Description"],
-    rows: [
-      [
-        "First item",
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid perspiciatis repellat amet quos.",
-      ],
-      [
-        "Second item",
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid perspiciatis repellat amet quos.",
-      ],
-    ],
-  }}
-/>
-```
-
-Renders:
-
-{/* <Table
   data={{
     headers: ['Title', 'Description'],
     rows: [
@@ -177,21 +136,20 @@ Renders:
       ],
     ],
   }}
-/> */}
+/>
+```
+
+Renders:
 
 ## Callout
 
 Nextfolio uses a custom [callout component](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx#L63) to render important information in MDX posts.
 
-```
-<Callout emoji="💡">
-[Nextfolio](https://nextfolio.site) is a clean, simple, and fast portfolio built with Next.js, Tailwind CSS, and pnpm for optimal performance.
+```javascript
+<Callout emoji='💡'>
+  [Nextfolio](https://nextfolio.site) is a clean, simple, and fast portfolio
+  built with Next.js, Tailwind CSS, and pnpm for optimal performance.
 </Callout>
 ```
 
 Renders:
-{/*
-<Callout emoji='💡'>
-  [Nextfolio](https://nextfolio.site) is a clean, simple, and fast portfolio
-  built with Next.js, Tailwind CSS, and pnpm for optimal performance.
-</Callout> */}

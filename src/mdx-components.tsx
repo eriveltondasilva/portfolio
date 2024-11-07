@@ -4,7 +4,7 @@ import { highlight } from 'sugar-high'
 // import { Code } from '@/components/mdx'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function Code({ children, ...props }: { children: string; props }) {
+export function Code({ children, ...props }: { children: string; props: any }) {
   const codeHTML = highlight(children)
   return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />
 }

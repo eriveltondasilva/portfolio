@@ -18,7 +18,7 @@ export function ThemeToggle() {
         isDark ? 'bg-gray-800 text-yellow-300' : 'bg-blue-100 text-gray-800',
       )}
     >
-      {isDark && <Sun className='size-5 animate-[spin_8s_linear_infinite]' />}
+      {isDark && <Sun className='size-5 animate-[spin_10s_linear_infinite]' />}
 
       {!isDark && (
         <Moon className='duration-400 size-5 transition-transform hover:-rotate-12' />
