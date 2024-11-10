@@ -15,3 +15,7 @@ export const parseFrontmatterOptions = {
 }
 
 export const remarkGfmOptions = { singleTilde: false }
+
+export const highlightOptions = {}
+
+export const highlightCodeLinesOptions = { showLineNumbers: true }

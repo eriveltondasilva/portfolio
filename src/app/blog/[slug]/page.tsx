@@ -1,4 +1,6 @@
 import { Calendar } from 'lucide-react'
+import '@/scss/plugins/highlightjs/monokai.scss'
+import '@/scss/plugins/rehype-highlight-code-lines.scss'
 
 import { getPostData } from '@/services/post-service'
 import { formatDate } from '@/utils/date-format'

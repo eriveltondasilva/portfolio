@@ -1,12 +1,52 @@
-import { Project } from '@/types'
-import { Link2 as LinkIcon } from 'lucide-react'
+import clsx from 'clsx'
+import { Calendar, Info, Link2 as LinkIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
+import { Alert } from '@/components/alert'
+import { Badge } from '@/components/badge'
 import { githubRepos } from '@/data'
+import { type Project } from '@/types'
+import { formatDate } from '@/utils/date-format'
 
 export const metadata: Metadata = {
   title: 'Projects',
+}
+
+function ListItem({ project }: { project: Project }) {
+  const { name, description, html_url, created_at, topics } = project
+  const date = formatDate(created_at)
+
+  return (
+    <li className='space-y-1 text-neutral-700 dark:text-neutral-400'>
+      <header>
+        <Link
+          className={clsx(
+            'flex gap-2 font-semibold',
+            'hover:underline hover:underline-offset-2',
+            'text-neutral-900 dark:text-neutral-50',
+            'decoration-sky-600 decoration-3',
+            'dark:decoration-sky-400',
+          )}
+          href={html_url}
+        >
+          <LinkIcon />
+          <h2>{name.toUpperCase()}</h2>
+        </Link>
+      </header>
+
+      <div className='flex flex-wrap gap-y-2'>
+        {topics?.map((topic) => <Badge key={topic}>{topic}</Badge>)}
+      </div>
+
+      <p>{description || 'No description.'}</p>
+
+      <div className='flex gap-2 text-sm'>
+        <Calendar className='size-4' />
+        <time>{date}</time>
+      </div>
+    </li>
+  )
 }
 
 export default async function Projects() {
@@ -17,48 +57,21 @@ export default async function Projects() {
 
   return (
     <div>
-      <h1 className='title'>
-        Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
-      </h1>
+      <header>
+        <h1 className='title'>
+          Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
+        </h1>
+      </header>
 
-      <br />
+      {!projects.length && (
+        <Alert icon={Info}>There are no projects to display.</Alert>
+      )}
 
-      {!projectsCount && <p>There are no projects to display.</p>}
-
-      <ul className='space-y-5'>
-        {projectsCount &&
-          projects.map((project) => (
-            <List key={project.id} project={project} />
-          ))}
+      <ul className='space-y-8'>
+        {projects.map((project) => (
+          <ListItem key={project.id} project={project} />
+        ))}
       </ul>
     </div>
-  )
-}
-
-function List({ project }: { project: Project }) {
-  const { name, description, html_url, created_at, topics } = project
-  const date = new Date(created_at).toLocaleDateString('pt-BR')
-  const className = 'text-slate-600 dark:text-slate-400'
-
-  return (
-    <li className=''>
-      <h2 className='flex gap-2 font-semibold decoration-sky-600 decoration-2 hover:underline dark:decoration-sky-400'>
-        <LinkIcon />
-        <Link href={html_url}>{name.toUpperCase()}</Link>
-      </h2>
-
-      <p>
-        description:&nbsp;
-        <span className={className}>{description || 'no description'}</span>
-      </p>
-
-      <p>
-        tags:&nbsp;
-        <span className={className}>{topics?.join(', ') || 'no tag'}</span>
-      </p>
-      <p>
-        created:&nbsp;<time className={className}>{date}</time>
-      </p>
-    </li>
   )
 }

@@ -10,8 +10,11 @@ const config: Config = {
   darkMode: 'class',
   theme: {
     extend: {
+      spacing: {
+        160: '40rem',
+      },
       textDecorationThickness: {
-        3: '3px'
+        3: '3px',
       },
       typography: {
         quoteless: {

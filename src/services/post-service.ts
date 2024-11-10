@@ -56,7 +56,9 @@ export const getAllPostMetadata = cache(async () => {
     }),
   )
 
-  return posts.sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-  )
+  return posts
+    .sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    })
+    .filter((post) => post.published)
 })

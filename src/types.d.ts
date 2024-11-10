@@ -18,5 +18,11 @@ export type Post = {
   published: boolean
   createdAt: string
   updatedAt: string
+  slug: string
   content: MDXComponents
+}
+
+export type NavItem = {
+  name: string
+  href: string
 }

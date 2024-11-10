@@ -1,0 +1,11 @@
+# .prettierrc.yml
+experimentalTernaries: true
+jsxSingleQuote: true
+printWidth: 80
+semi: false
+singleQuote: true
+tabWidth: 2
+trailingComma: all
+
+tailwindFunctions: [clsx]
+plugins: [prettier-plugin-tailwindcss]

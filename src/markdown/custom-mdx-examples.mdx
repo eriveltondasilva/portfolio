@@ -38,7 +38,7 @@ _This is italic text_
 
 ## CodeBlocks
 
-```javascript
+```jsx {2-5} showLineNumbers
 // This is commented-out code
 const test = 300
 const hello = {
@@ -46,7 +46,11 @@ const hello = {
 }
 
 export default function HelloWorld(test) {
-  return <h1>Hello, World!</h1>
+  return <Title />
+}
+
+function Title() {
+  return <h1>meu título</h1>
 }
 ```
 
@@ -54,7 +58,7 @@ export default function HelloWorld(test) {
 
 Nextfolio uses [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) in MDX for seamless image rendering:
 
-```javascript
+```jsx
 <Image
   src='/opengraph-image.png'
   alt='OpenGraph image'
@@ -69,7 +73,7 @@ Renders:
 
 Nextfolio uses a custom [image grid component](https://github.com/1msirius/Nextfolio/blob/main/app/components/image-grid.tsx) to display image galleries.
 
-```javascript
+```jsx
 <ImageGrid
   columns={3} // Accepts 2, 3, or 4 columns
   images={[
@@ -88,7 +92,7 @@ Renders:
 
 Nextfolio uses [react-tweet](https://react-tweet.vercel.app/) to embed tweets in MDX posts.
 
-```javascript
+```jsx
 <StaticTweet id='1617979122625712128' />
 ```
 
@@ -98,7 +102,7 @@ Renders:
 
 Nextfolio uses [react-youtube](https://www.npmjs.com/package/react-youtube) to embed YouTube videos in MDX posts.
 
-```javascript
+```jsx
 <YouTube videoId='wXhTHyIgQ_U' />
 ```
 
@@ -108,7 +112,7 @@ Renders:
 
 Nextfolio uses [react-wrap-balancer](https://react-wrap-balancer.vercel.app/) to evenly balance captions in MDX posts.
 
-```javascript
+```jsx
 <Caption>
   Captions that flow smoothly, making your content easy to read and visually
   appealing with a clean look.
@@ -121,7 +125,7 @@ Renders:
 
 Nextfolio uses a custom [table component](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx#L38) to render tables in MDX posts.
 
-```javascript
+```jsx
 <Table
   data={{
     headers: ['Title', 'Description'],
@@ -145,7 +149,7 @@ Renders:
 
 Nextfolio uses a custom [callout component](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx#L63) to render important information in MDX posts.
 
-```javascript
+```jsx
 <Callout emoji='💡'>
   [Nextfolio](https://nextfolio.site) is a clean, simple, and fast portfolio
   built with Next.js, Tailwind CSS, and pnpm for optimal performance.

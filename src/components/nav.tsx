@@ -2,57 +2,53 @@ import clsx from 'clsx'
 import Link from 'next/link'
 
 import { ThemeToggle } from './theme-toggle'
+import { NavItem } from '@/types'
 
-const items = [
-  {
-    name: 'Blog',
-    href: '/blog',
-  },
-  {
-    name: 'Projects',
-    href: '/projects',
-  },
-  {
-    name: 'Mdx Page',
-    href: '/mdx-page',
-  },
-]
-
-export function Nav() {
+function ListItem({ items }: { items: NavItem[] }) {
   return (
-    <nav className='mb-12 py-2 lg:mb-16'>
-      <div
+    <>
+      {items.map(({ name, href }) => (
+        <li key={name}>
+          <Link
+            href={href}
+            className={clsx(
+              'relative flex align-middle transition-all',
+              'hover:text-neutral-800 dark:hover:text-neutral-200',
+            )}
+          >
+            {name}
+          </Link>
+        </li>
+      ))}
+    </>
+  )
+}
+
+export function Nav({ items }: { items: NavItem[] }) {
+  return (
+    <nav
+      className={clsx(
+        'flex flex-col justify-between md:flex-row',
+        'py-4 sm:py-8 md:items-center',
+      )}
+    >
+      <header>
+        <Link
+          href='/'
+          className='flex items-center text-3xl font-semibold tracking-tight'
+        >
+          Erivelton&apos;s
+        </Link>
+      </header>
+      <ul
         className={clsx(
-          'flex flex-col md:flex-row',
-          'justify-between md:items-center',
+          'flex flex-row items-center',
+          'mt-2 gap-4 md:ml-auto md:mt-0',
         )}
       >
-        <div className='flex items-center'>
-          <Link href='/' className='text-3xl font-semibold tracking-tight'>
-            Erivelton&apos;s
-          </Link>
-        </div>
-        <div
-          className={clsx(
-            'flex flex-row items-center',
-            'mt-6 gap-4 md:ml-auto md:mt-0',
-          )}
-        >
-          {items.map(({ name, href }) => (
-            <Link
-              key={name}
-              href={href}
-              className={clsx(
-                'relative flex align-middle transition-all',
-                'hover:text-neutral-800 dark:hover:text-neutral-200',
-              )}
-            >
-              {name}
-            </Link>
-          ))}
-          <ThemeToggle />
-        </div>
-      </div>
+        <ListItem items={items} />
+        <ThemeToggle />
+      </ul>
     </nav>
   )
 }

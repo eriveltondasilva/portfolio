@@ -7,9 +7,15 @@ import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import remarkParseFrontmatter from 'remark-parse-frontmatter'
 
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeHighlightCodeLines from 'rehype-highlight-code-lines'
 import rehypeSlug from 'rehype-slug'
 
-import { parseFrontmatterOptions, remarkGfmOptions } from '@/plugins'
+import {
+  parseFrontmatterOptions,
+  remarkGfmOptions,
+  highlightCodeLinesOptions,
+} from '@/plugins'
 
 const nextConfig: NextConfig = {
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
@@ -31,7 +37,12 @@ const withMDX = createMDX({
       [remarkGfm, remarkGfmOptions],
       [remarkParseFrontmatter, parseFrontmatterOptions],
     ],
-    rehypePlugins: [rehypeSlug, rehypeAutolinkHeadings],
+    rehypePlugins: [
+      rehypeSlug,
+      rehypeAutolinkHeadings,
+      rehypeHighlight,
+      [rehypeHighlightCodeLines, highlightCodeLinesOptions],
+    ],
   },
 })
 

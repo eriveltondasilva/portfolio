@@ -7,7 +7,7 @@ import { JetBrains_Mono } from 'next/font/google'
 
 import Footer from '@/components/footer'
 import { Nav } from '@/components/nav'
-import { meta } from '@/data'
+import { meta, navItems } from '@/data'
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], display: 'swap' })
 
@@ -25,30 +25,29 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang='pt-br' suppressHydrationWarning>
-      <ThemeProvider enableSystem={true} attribute='class'>
+    <html lang='en' suppressHydrationWarning>
+      <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
         <body
           className={clsx(
             'antialiased',
-            'flex flex-col items-center justify-center',
-            'mx-auto mb-20 mt-2 lg:mb-40 lg:mt-8',
+            'flex h-screen items-center justify-center',
             'transition-colors duration-100 ease-out',
             'bg-white text-gray-900',
             'dark:bg-gray-900 dark:text-white',
             jetBrainsMono.className,
           )}
         >
-          <main
+          <div
             className={clsx(
-              'flex flex-auto flex-col',
-              'w-full min-w-0 max-w-[640px]',
-              'mt-2 px-6 sm:px-4 md:mt-6 md:px-0',
+              'flex h-full flex-col',
+              'px-4 sm:px-8',
+              'w-full min-w-[320px] max-w-[640px]',
             )}
           >
-            <Nav />
-            {children}
+            <Nav items={navItems} />
+            <main className='flex-1'>{children}</main>
             <Footer />
-          </main>
+          </div>
           <Analytics />
         </body>
       </ThemeProvider>
