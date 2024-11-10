@@ -3,11 +3,11 @@ import { Calendar, Info, Link2 as LinkIcon } from 'lucide-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
+import { Alert } from '@/components/alert'
 import { Badge } from '@/components/badge'
 import { getAllPostMetadata } from '@/services/post-service'
 import { type Post } from '@/types'
 import { formatDate } from '@/utils/date-format'
-import { Alert } from '@/components/alert'
 
 export const metadata: Metadata = {
   title: 'Blog',

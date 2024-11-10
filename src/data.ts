@@ -14,7 +14,7 @@ export const social = {
   github: 'https://github.com/eriveltondasilva',
   linkedin: '#',
   mail: '#',
-}
+} as const
 
 export const navItems = [
   {
