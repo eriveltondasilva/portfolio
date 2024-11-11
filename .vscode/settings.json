@@ -7,6 +7,10 @@
     {
       "filePath": "src\\app",
       "group": "Default"
+    },
+    {
+      "filePath": "src\\components",
+      "group": "Default"
     }
   ]
 }

@@ -2,13 +2,16 @@ import clsx from 'clsx'
 import Image, { type ImageProps } from 'next/image'
 import Link, { LinkProps } from 'next/link'
 
-interface ImageGridProps {
-  images: {
-    src: string
-    alt: string
-    href?: string
-  }[]
+type ImageGridProps = {
+  images: ({ href?: string } & ImageProps)[]
   columns?: 2 | 3 | 4 | 5
+}
+
+type TableProps = {
+  data: {
+    headers: string[]
+    rows: string[][]
+  }
 }
 
 export function CustomLink({
@@ -42,17 +45,31 @@ export function CustomLink({
   )
 }
 
-export function RoundedImage(props: ImageProps) {
-  // eslint-disable-next-line jsx-a11y/alt-text
-  return <Image className='rounded-lg' {...props} />
+export function RoundedImage({
+  src,
+  alt,
+  width,
+  height,
+  ...props
+}: ImageProps) {
+  return (
+    <Image
+      className='rounded-lg'
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      {...props}
+    />
+  )
 }
 
 export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
   const gridClass = {
-    2: 'grid-cols-2 sm:grid-cols-2',
-    3: 'grid-cols-2 sm:grid-cols-3',
-    4: 'grid-cols-2 sm:grid-cols-4',
-    5: 'grid-cols-2 sm:grid-cols-5',
+    2: 'grid-cols-1 sm:grid-cols-2',
+    3: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3',
+    4: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-4',
+    5: 'grid-cols-1 sm:grid-cols-2 md:grid-cols-5',
   }[columns]
 
   return (
@@ -68,8 +85,8 @@ export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
                 className='block h-full w-full'
               >
                 <Image
-                  alt={alt}
                   src={src}
+                  alt={alt}
                   className='rounded-lg object-cover'
                   sizes='(max-width: 768px) 50vw, 33vw'
                   fill
@@ -90,13 +107,6 @@ export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
       </div>
     </section>
   )
-}
-
-type TableProps = {
-  data: {
-    headers: string[]
-    rows: string[][]
-  }
 }
 
 export function TableComponent({ data }: TableProps) {

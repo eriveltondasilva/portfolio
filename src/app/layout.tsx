@@ -29,10 +29,11 @@ export default function RootLayout({
       <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
         <body
           className={clsx(
-            'antialiased',
+            'select-none antialiased',
             'flex h-screen items-center justify-center',
             'transition-colors duration-100 ease-out',
             'bg-white text-gray-900',
+            'selection:bg-rose-300 selection:text-rose-900',
             'dark:bg-gray-900 dark:text-white',
             jetBrainsMono.className,
           )}
@@ -45,7 +46,7 @@ export default function RootLayout({
             )}
           >
             <Nav items={navItems} />
-            <main className='flex-1'>{children}</main>
+            <main className='flex-1 select-text'>{children}</main>
             <Footer />
           </div>
           <Analytics />
