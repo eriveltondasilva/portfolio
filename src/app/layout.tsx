@@ -2,30 +2,44 @@ import '@/scss/main.scss'
 
 import { Analytics } from '@vercel/analytics/react'
 import { clsx } from 'clsx'
+import { type Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { JetBrains_Mono } from 'next/font/google'
 
-import Footer from '@/components/footer'
+import { Footer } from '@/components/footer'
 import { Nav } from '@/components/nav'
-import { meta, navItems } from '@/data'
+
+import { meta, navItems } from '@/config'
 
 const jetBrainsMono = JetBrains_Mono({ subsets: ['latin'], display: 'swap' })
 
-export const metadata = {
+export const metadata: Metadata = {
+  metadataBase: new URL(meta.baseUrl),
+  //
   title: {
-    default: meta.title,
     template: `%s | ${meta.title}`,
+    default: meta.title,
   },
   description: meta.description,
+  keywords: meta.keywords,
+  authors: [{ name: meta.author, url: meta.github }],
+  generator: 'Next.js',
+  //
+  openGraph: {
+    type: 'website',
+    //
+    title: meta.title,
+    description: meta.description,
+    siteName: meta.title,
+    url: meta.baseUrl,
+    locale: meta.locale,
+  },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+type RootLayoutProps = { children: React.ReactNode }
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang={meta.locale} suppressHydrationWarning>
       <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
         <body
           className={clsx(

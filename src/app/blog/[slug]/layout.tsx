@@ -1,16 +1,33 @@
-import { getAllPostSlugs, getPostData } from '@/services/post-service'
+import { Metadata } from 'next'
+import { notFound } from 'next/navigation'
 
+import { meta } from '@/config'
+import { getAllPostSlugs, getPostData } from '@/services/post-service'
+import { Post } from '@/types'
+
+type MetadataProps = { params: Promise<{ slug: string }> }
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
+}: MetadataProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPostData(slug)
+  const post: Post = await getPostData(slug)
+
+  if (!post) return notFound()
 
   return {
     title: post?.title,
     description: post?.description,
+    openGraph: {
+      type: 'article',
+      //
+      title: post?.title,
+      description: post?.description,
+      url: `/blog/${post?.slug}`,
+      publishedTime: post?.createdAt,
+      modifiedTime: post?.updatedAt,
+      tags: post?.tags,
+      authors: [meta?.author],
+    },
   }
 }
 
@@ -19,10 +36,7 @@ export async function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }
 
-export default async function Layout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+type LayoutProps = { children: React.ReactNode }
+export default async function Layout({ children }: LayoutProps) {
   return <>{children}</>
 }

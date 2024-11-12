@@ -1,12 +1,15 @@
-import type { Metadata } from 'next'
-
 export const avatar = process.env.GITHUB_AVATAR || ''
 export const githubRepos = process.env.GITHUB_REPOS || ''
 
-export const meta: Metadata = {
+export const meta = {
   title: "Erivelton's portfolio",
-  description: 'lorem ipsum dolor sit amet consectetur adipiscing elit.',
-} as const
+  description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
+  baseUrl: 'https://eriveltondasilva.vercel.app',
+  keywords: 'Next.js, React, JavaScript',
+  author: 'Erivelton da Silva',
+  github: 'https://github.com/eriveltondasilva',
+  locale: 'pt-BR',
+}
 
 export const social = {
   twitter: '#',
@@ -28,5 +31,5 @@ export const navItems = [
   {
     name: 'About',
     href: '/about',
-  }
+  },
 ]

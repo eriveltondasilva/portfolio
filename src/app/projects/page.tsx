@@ -1,16 +1,19 @@
 import clsx from 'clsx'
 import { Calendar, Info, Link2 as LinkIcon } from 'lucide-react'
-import { Metadata } from 'next'
+import { type Metadata } from 'next'
 import Link from 'next/link'
 
 import { Alert } from '@/components/alert'
 import { Badge } from '@/components/badge'
-import { githubRepos } from '@/data'
-import { type Project } from '@/types'
+
+import { githubRepos } from '@/config'
 import { formatDate } from '@/utils/date-format'
+
+import { type Project } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Projects',
+  description: 'Projects page',
 }
 
 function ListItem({ project }: { project: Project }) {

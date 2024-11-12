@@ -1,6 +1,6 @@
 'use client'
+import { social } from '@/config'
 import { Github, Instagram, Linkedin, Mail, Twitter } from 'lucide-react'
-import { social } from '@/data'
 
 const YEAR = new Date().getFullYear()
 
@@ -31,7 +31,7 @@ function SocialLinks() {
   )
 }
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className='flex flex-col items-center justify-between gap-2 py-8 sm:flex-row'>
       <section>

@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { notFound } from 'next/navigation'
 import { cache } from 'react'
 
 const MDX_EXTENSION = '.mdx'
@@ -37,8 +36,6 @@ export const getAllPostSlugs = cache(async () => {
 
 export const getPostData = cache(async (slug: string) => {
   const post = await loadPost(slug)
-
-  if (!post) return notFound()
 
   return {
     slug,
