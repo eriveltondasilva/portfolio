@@ -1,11 +1,7 @@
-import {
-  CustomLink,
-  ImageGrid,
-  RoundedImage,
-  TableComponent,
-} from '@/components/mdx'
+import { type MDXComponents } from 'mdx/types'
+
+import { CustomLink, ImageGrid, RoundedImage, TableComponent } from '@/components/mdx'
 import { YouTubeComponent } from '@/components/youtube'
-import type { MDXComponents } from 'mdx/types'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {

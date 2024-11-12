@@ -1,35 +1,54 @@
-export const avatar = process.env.GITHUB_AVATAR || ''
-export const githubRepos = process.env.GITHUB_REPOS || ''
+const ENV = {
+  GITHUB_BASE_URL: process.env.GITHUB || '',
+  GITHUB_AVATAR_URL: process.env.GITHUB_AVATAR || '',
+  GITHUB_REPOS_URL: process.env.GITHUB_REPOS || '',
+  VERCEL_BASE_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
+} as const
 
 export const meta = {
   title: "Erivelton's portfolio",
   description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
-  baseUrl: 'https://eriveltondasilva.vercel.app',
   keywords: 'Next.js, React, JavaScript',
   author: 'Erivelton da Silva',
-  github: 'https://github.com/eriveltondasilva',
   locale: 'pt-BR',
-}
+  baseUrl: ENV.VERCEL_BASE_URL,
+  github: ENV.GITHUB_BASE_URL,
+} as const
 
 export const social = {
   twitter: '#',
   instagram: '#',
-  github: 'https://github.com/eriveltondasilva',
+  github: ENV.GITHUB_BASE_URL,
   linkedin: '#',
   mail: '#',
+} as const
+
+export const routes = {
+  home: '/',
+  blog: '/blog',
+  projects: '/projects',
+  about: '/about',
+  helloWorld: '/hello-world',
 } as const
 
 export const navItems = [
   {
     name: 'Blog',
-    href: '/blog',
+    href: routes.blog,
   },
   {
     name: 'Projects',
-    href: '/projects',
+    href: routes.projects,
   },
   {
     name: 'About',
-    href: '/about',
+    href: routes.about,
   },
 ]
+
+export const url = {
+  site: ENV.VERCEL_BASE_URL,
+  sitemap: `${ENV.VERCEL_BASE_URL}/sitemap.xml`,
+  githubAvatar: ENV.GITHUB_AVATAR_URL,
+  githubRepos: ENV.GITHUB_REPOS_URL,
+} as const

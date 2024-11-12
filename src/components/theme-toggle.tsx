@@ -20,9 +20,7 @@ export function ThemeToggle() {
     >
       {isDark && <Sun className='size-5 animate-[spin_10s_linear_infinite]' />}
 
-      {!isDark && (
-        <Moon className='duration-400 size-5 transition-transform hover:-rotate-12' />
-      )}
+      {!isDark && <Moon className='duration-400 size-5 transition-transform hover:-rotate-12' />}
     </button>
   )
 }

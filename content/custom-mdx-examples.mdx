@@ -59,22 +59,12 @@ function Title() {
 Nextfolio uses [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) in MDX for seamless image rendering:
 
 ```jsx
-<Image
-  src='/opengraph-image.png'
-  alt='OpenGraph image'
-  width={640}
-  height={500}
-/>
+<Image src='/opengraph-image.png' alt='OpenGraph image' width={640} height={500} />
 ```
 
 Renders:
 
-<Image
-  src='/opengraph-image.png'
-  alt='OpenGraph image'
-  width={640}
-  height={500}
-/>
+<Image src='/opengraph-image.png' alt='OpenGraph image' width={640} height={500} />
 
 ## Image Grid
 
@@ -126,14 +116,8 @@ Nextfolio uses a custom [table component](https://github.com/1msirius/Nextfolio/
   data={{
     headers: ['Title', 'Description'],
     rows: [
-      [
-        'First item',
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      ],
-      [
-        'Second item',
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      ],
+      ['First item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
+      ['Second item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
     ],
   }}
 />
@@ -145,14 +129,8 @@ Renders:
   data={{
     headers: ['Title', 'Description'],
     rows: [
-      [
-        'First item',
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      ],
-      [
-        'Second item',
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-      ],
+      ['First item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
+      ['Second item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
     ],
   }}
 />

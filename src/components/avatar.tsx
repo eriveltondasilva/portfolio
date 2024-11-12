@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import Image from 'next/image'
 
-import { avatar } from '@/config'
+import { url } from '@/config'
 
 function AvatarClipPath() {
   return (
@@ -35,7 +35,7 @@ export function Avatar() {
   return (
     <div>
       <Image
-        src={avatar || '/profile.png'}
+        src={url.githubAvatar || '/profile.png'}
         alt='Profile photo'
         className={className}
         style={style}

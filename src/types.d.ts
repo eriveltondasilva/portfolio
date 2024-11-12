@@ -23,6 +23,6 @@ export type Post = {
 }
 
 export type NavItem = {
-  name: string
-  href: string
+  readonly name: string
+  readonly href: string
 }

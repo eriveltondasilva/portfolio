@@ -4,13 +4,13 @@ import '@/scss/plugins/rehype-highlight-code-lines.scss'
 import clsx from 'clsx'
 import { Calendar } from 'lucide-react'
 
-import { getPostData } from '@/services/post-service'
+import { getPost } from '@/services/post-service'
 import { formatDate } from '@/utils/date-format'
 
 type PostPageProps = { params: Promise<{ slug: string }> }
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params
-  const post = await getPostData(slug)
+  const post = await getPost(slug)
 
   return (
     <section>
@@ -21,9 +21,7 @@ export default async function PostPage({ params }: PostPageProps) {
           {formatDate(post.createdAt)}
         </p>
       </div>
-      <article
-        className={clsx('prose prose-slate prose-quoteless dark:prose-invert')}
-      >
+      <article className={clsx('prose prose-slate prose-quoteless dark:prose-invert')}>
         <post.content />
       </article>
     </section>

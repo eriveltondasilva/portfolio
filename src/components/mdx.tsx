@@ -45,22 +45,9 @@ export function CustomLink({
   )
 }
 
-export function RoundedImage({
-  src,
-  alt,
-  width,
-  height,
-  ...props
-}: ImageProps) {
+export function RoundedImage({ src, alt, width, height, ...props }: ImageProps) {
   return (
-    <Image
-      className='rounded-lg'
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      {...props}
-    />
+    <Image className='rounded-lg' src={src} alt={alt} width={width} height={height} {...props} />
   )
 }
 

@@ -10,14 +10,13 @@ export default function HomePage() {
 
       <div className='prose prose-neutral dark:prose-invert'>
         <p>
-          Sou desenvolvedor web fullstack, apaixonado por criar soluções
-          digitais personalizadas que fazem a diferença.
+          Sou desenvolvedor web fullstack, apaixonado por criar soluções digitais personalizadas que
+          fazem a diferença.
         </p>
 
         <p>
-          Minha jornada na tecnologia começou com uma curiosidade insaciável
-          pelo mundo da programação, e hoje transformo essa paixão em projetos
-          de impacto.
+          Minha jornada na tecnologia começou com uma curiosidade insaciável pelo mundo da
+          programação, e hoje transformo essa paixão em projetos de impacto.
         </p>
       </div>
     </section>

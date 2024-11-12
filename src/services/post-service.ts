@@ -1,61 +1,61 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-
 import { cache } from 'react'
 
+const CONTENT_DIR = path.join(process.cwd(), 'content')
 const MDX_EXTENSION = '.mdx'
 
-//
 async function loadPost(slug: string) {
   try {
-    return await import(`/src/markdown/${slug}${MDX_EXTENSION}`)
-  } catch (e) {
-    console.error(`Error loading post: %s`, slug)
-    console.error(e)
+    return await import(`/content/${slug}${MDX_EXTENSION}`)
+  } catch (err) {
+    console.error(`Failed to load post: ${slug}.`, err)
     return null
   }
 }
 
-async function getMarkdownFiles() {
-  const dir = path.join(process.cwd(), 'src', 'markdown')
-  return await fs.readdir(dir)
-}
+async function getMetadata(slug: string) {
+  const post = await loadPost(slug)
 
-async function getPostMetadata(slug: string) {
-  const { frontmatter } = await loadPost(slug)
-  return { ...frontmatter, slug }
+  if (!post) return null
+
+  return { ...post.frontmatter, slug }
 }
 
 //
-export const getAllPostSlugs = cache(async () => {
-  const files = await getMarkdownFiles()
-  return files
-    .filter((file) => file.endsWith(MDX_EXTENSION))
-    .map((file) => file.replace(MDX_EXTENSION, ''))
-})
+export const getSlugs = cache(async () => {
+  try {
+    const files = await fs.readdir(CONTENT_DIR)
 
-export const getPostData = cache(async (slug: string) => {
-  const post = await loadPost(slug)
-
-  return {
-    slug,
-    ...post.frontmatter,
-    content: post.default,
+    return files
+      .filter((file) => file.endsWith(MDX_EXTENSION))
+      .map((file) => path.basename(file, MDX_EXTENSION))
+  } catch (err) {
+    console.error(`Failed to read content directory: ${CONTENT_DIR}.`, err)
+    return []
   }
 })
 
-export const getAllPostMetadata = cache(async () => {
-  const slugs = await getAllPostSlugs()
+export const getPost = cache(async (slug: string) => {
+  const post = await loadPost(slug)
 
-  const posts = await Promise.all(
-    slugs.map(async (slug) => {
-      return await getPostMetadata(slug)
-    }),
-  )
+  if (!post?.frontmatter || !post?.default) return null
+
+  return {
+    ...post.frontmatter,
+    content: post.default,
+    slug,
+  }
+})
+
+export const getPosts = cache(async () => {
+  const slugs = await getSlugs()
+
+  const posts = await Promise.all(slugs.map((slug) => getMetadata(slug)))
 
   return posts
+    .filter((post) => post?.title !== null && post?.published === true)
     .sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     })
-    .filter((post) => post.published)
 })

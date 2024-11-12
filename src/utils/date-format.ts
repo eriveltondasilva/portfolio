@@ -5,8 +5,8 @@ import local from 'dayjs/locale/pt-br'
 dayjs.extend(localizedFormat)
 dayjs.locale(local)
 
-export function formatDate(date: string) {
-  return dayjs(date).format('LL')
+export function formatDate(date: string | Date, format = 'LL') {
+  return dayjs(date).format(format)
 }
 
 export function formatTime(date: string) {

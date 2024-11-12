@@ -2,15 +2,12 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 import { meta } from '@/config'
-import { getAllPostSlugs, getPostData } from '@/services/post-service'
-import { Post } from '@/types'
+import { getPost, getSlugs } from '@/services/post-service'
 
 type MetadataProps = { params: Promise<{ slug: string }> }
-export async function generateMetadata({
-  params,
-}: MetadataProps): Promise<Metadata> {
+export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
   const { slug } = await params
-  const post: Post = await getPostData(slug)
+  const post = await getPost(slug)
 
   if (!post) return notFound()
 
@@ -26,13 +23,13 @@ export async function generateMetadata({
       publishedTime: post?.createdAt,
       modifiedTime: post?.updatedAt,
       tags: post?.tags,
-      authors: [meta?.author],
+      authors: meta?.author,
     },
   }
 }
 
 export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs()
+  const slugs = await getSlugs()
   return slugs.map((slug) => ({ slug }))
 }
 
