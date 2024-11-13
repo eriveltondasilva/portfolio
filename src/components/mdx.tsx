@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import Image, { type ImageProps } from 'next/image'
-import Link, { LinkProps } from 'next/link'
+import Link from 'next/link'
 
 type ImageGridProps = {
   images: ({ href?: string } & ImageProps)[]
@@ -14,33 +14,22 @@ type TableProps = {
   }
 }
 
-export function CustomLink({
-  href,
-  children,
-  ...props
-}: {
-  href: string
-  children: React.ReactNode
-} & LinkProps) {
-  const isInternalLink = href.startsWith('/')
-  const isAnchorLink = href.startsWith('#')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function CustomLink(props: any) {
+  const isInternalLink = props.href.startsWith('/')
+  const isAnchorLink = props.href.startsWith('#')
 
   if (isInternalLink) {
-    return (
-      <Link href={href} {...props}>
-        {children}
-      </Link>
-    )
+    return <Link {...props}>{props.children}</Link>
   }
 
   return (
     <a
-      href={href}
       target={!isAnchorLink ? '_blank' : undefined}
       rel={!isAnchorLink ? 'noopener noreferrer' : undefined}
       {...props}
     >
-      {children}
+      {props.children}
     </a>
   )
 }
