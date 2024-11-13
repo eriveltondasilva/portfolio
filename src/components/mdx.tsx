@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import Image, { type ImageProps } from 'next/image'
-import Link from 'next/link'
 
 type ImageGridProps = {
   images: ({ href?: string } & ImageProps)[]
@@ -15,13 +14,8 @@ type TableProps = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function CustomLink(props: any) {
-  const isInternalLink = props.href.startsWith('/')
+export function CustomLink({ children, ...props }: any) {
   const isAnchorLink = props.href.startsWith('#')
-
-  if (isInternalLink) {
-    return <Link {...props}>{props.children}</Link>
-  }
 
   return (
     <a
@@ -29,7 +23,7 @@ export function CustomLink(props: any) {
       rel={!isAnchorLink ? 'noopener noreferrer' : undefined}
       {...props}
     >
-      {props.children}
+      {children}
     </a>
   )
 }
