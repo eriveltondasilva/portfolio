@@ -9,7 +9,7 @@ import { formatDate } from '@/utils/date-format'
 
 export function ListItem({ post }: { post: Post | null }) {
   if (!post) return null
-  
+
   const date = formatDate(post.createdAt)
 
   return (

@@ -25,7 +25,7 @@ export function Avatar() {
     'sm:float-right',
     'mx-auto my-4',
     'transition-[filter] duration-300 ease-out',
-    'bg-gray-100 grayscale hover:grayscale-0',
+    'bg-gray-100 sepia hover:sepia-0',
   )
   const style = {
     clipPath: 'url(#avatar-shape)',

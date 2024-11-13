@@ -1,11 +1,10 @@
 'use client'
 import { social } from '@/config'
-import { Github, Instagram, Linkedin, Mail, Twitter } from 'lucide-react'
+import { Github, Linkedin, Mail, Twitter } from 'lucide-react'
 
 const YEAR = new Date().getFullYear()
 
 const items = [
-  { title: 'Instagram', href: social.instagram, icon: Instagram },
   { title: 'X|Twitter', href: social.twitter, icon: Twitter },
   { title: 'Github', href: social.github, icon: Github },
   { title: 'Linkedin', href: social.linkedin, icon: Linkedin },
@@ -15,7 +14,7 @@ const items = [
 function SocialLinks() {
   return (
     <>
-      {items.map(({ title, href, icon: Icon }) => (
+      {items?.map(({ title, href, icon: Icon }) => (
         <li key={title} className='hover:opacity-50'>
           <a href={href} title={title} target='_blank' rel='noopener noreferrer'>
             <Icon />
