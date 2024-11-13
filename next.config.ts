@@ -6,6 +6,9 @@ import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import remarkParseFrontmatter from 'remark-parse-frontmatter'
 
+import remarkReadingTime from 'remark-reading-time'
+import readingMdxTime from "remark-reading-time/mdx";
+
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeHighlightCodeLines from 'rehype-highlight-code-lines'
@@ -34,6 +37,8 @@ const withMDX = createMDX({
     remarkPlugins: [
       remarkFrontmatter,
       remarkMdxFrontmatter,
+      remarkReadingTime,
+      readingMdxTime,
       [remarkGfm, remarkGfmOptions],
       [remarkParseFrontmatter, parseFrontmatterOptions],
     ],

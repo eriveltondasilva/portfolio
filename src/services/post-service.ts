@@ -2,6 +2,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { cache } from 'react'
 
+import { Post } from '@/types'
+
 const CONTENT_DIR = path.join(process.cwd(), 'content')
 const MDX_EXTENSION = '.mdx'
 
@@ -19,11 +21,15 @@ async function getMetadata(slug: string) {
 
   if (!post) return null
 
-  return { ...post.frontmatter, slug }
+  return {
+    ...post.frontmatter,
+    readingTime: post.readingTime,
+    slug,
+  }
 }
 
 //
-export const getSlugs = cache(async () => {
+export const getSlugs = cache(async (): Promise<string[]> => {
   try {
     const files = await fs.readdir(CONTENT_DIR)
 
@@ -36,7 +42,7 @@ export const getSlugs = cache(async () => {
   }
 })
 
-export const getPost = cache(async (slug: string) => {
+export const getPost = cache(async (slug: string): Promise<Post | null> => {
   const post = await loadPost(slug)
 
   if (!post?.frontmatter || !post?.default) return null
@@ -44,11 +50,12 @@ export const getPost = cache(async (slug: string) => {
   return {
     ...post.frontmatter,
     content: post.default,
+    readingTime: post.readingTime,
     slug,
   }
 })
 
-export const getPosts = cache(async () => {
+export const getPosts = cache(async (): Promise<(Post | null)[]> => {
   const slugs = await getSlugs()
 
   const posts = await Promise.all(slugs.map((slug) => getMetadata(slug)))

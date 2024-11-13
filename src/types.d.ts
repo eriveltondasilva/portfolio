@@ -1,6 +1,11 @@
 import { MDXComponents } from '@types/mdx'
 
-export type Theme = 'light' | 'dark'
+type ReadingTime = {
+  text: string
+  minutes: number
+  time: number
+  words: number
+}
 
 export type Project = {
   id: number
@@ -19,7 +24,8 @@ export type Post = {
   createdAt: string
   updatedAt: string
   slug: string
-  content: MDXComponents
+  readingTime: ReadingTime
+  content?: MDXComponents
 }
 
 export type NavItem = {

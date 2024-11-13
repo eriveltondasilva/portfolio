@@ -23,7 +23,7 @@ export default async function BlogPage() {
       {!postCount && <Alert icon={Info}>There are no posts to display.</Alert>}
 
       <ul className='space-y-8'>
-        {posts?.map((post) => <ListItem key={post.slug} post={post} />)}
+        {posts?.map((post) => <ListItem key={post?.slug} post={post} />)}
       </ul>
     </div>
   )

@@ -7,7 +7,9 @@ import { Badge } from '@/components/badge'
 import { type Post } from '@/types'
 import { formatDate } from '@/utils/date-format'
 
-export function ListItem({ post }: { post: Post }) {
+export function ListItem({ post }: { post: Post | null }) {
+  if (!post) return null
+  
   const date = formatDate(post.createdAt)
 
   return (

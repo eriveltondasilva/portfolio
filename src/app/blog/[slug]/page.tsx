@@ -12,6 +12,8 @@ export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params
   const post = await getPost(slug)
 
+  if (!post) return null
+
   return (
     <section>
       <h1 className='title'>{post.title}</h1>

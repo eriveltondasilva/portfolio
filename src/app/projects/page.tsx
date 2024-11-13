@@ -26,7 +26,7 @@ export default async function Projects() {
       {!projects.length && <Alert icon={Info}>There are no projects to display.</Alert>}
 
       <ul className='space-y-8'>
-        {projects.map((project) => (
+        {projects?.map((project) => (
           <ListItem key={project.id} project={project} />
         ))}
       </ul>
