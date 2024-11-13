@@ -1,11 +1,12 @@
 import clsx from 'clsx'
-import { Calendar, Link2 as LinkIcon } from 'lucide-react'
+import { Calendar, Link2 as LinkIcon, Timer } from 'lucide-react'
 import Link from 'next/link'
 
 import { Badge } from '@/components/badge'
 
 import { type Post } from '@/types'
 import { formatDate } from '@/utils/date-format'
+import { getReadingTime } from '@/utils/reading-time'
 
 export function ListItem({ post }: { post: Post | null }) {
   if (!post) return null
@@ -38,7 +39,7 @@ export function ListItem({ post }: { post: Post | null }) {
 
       <div className='flex gap-2 text-sm'>
         <Calendar className='size-4' />
-        <time>{date}</time>
+        <time>{date}</time> | <Timer className='size-4' /> {getReadingTime(post)} de leitura
       </div>
     </li>
   )

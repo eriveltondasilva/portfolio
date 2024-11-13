@@ -17,7 +17,7 @@ pre {
 
 .prose {
   a {
-    @apply decoration-sky-600 decoration-3 underline-offset-4 transition-colors dark:decoration-sky-400;
+    @apply decoration-sky-600 decoration-2 underline-offset-4 transition-colors dark:decoration-sky-400;
 
     &:hover {
       @apply decoration-rose-600 decoration-wavy dark:decoration-rose-400;
