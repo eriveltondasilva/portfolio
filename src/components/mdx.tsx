@@ -14,8 +14,12 @@ type TableProps = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function CustomLink({ children, ...props }: any) {
-  const isAnchorLink = props.href.startsWith('#')
+export function CustomLink({
+  href,
+  children,
+  ...props
+}: React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>) {
+  const isAnchorLink = href?.startsWith('#')
 
   return (
     <a
