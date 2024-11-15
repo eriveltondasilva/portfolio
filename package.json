@@ -1,6 +1,19 @@
 {
   "name": "portfolio",
-  "version": "0.1.0",
+  "author": "Erivelton Silva <seu-email@example.com>",
+  "description": "Uma aplicação incrível em Node.js.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eriveltondasilva/portfolio.git"
+  },
+  "keywords": [
+    "nextjs",
+    "reactjs",
+    "portfolio"
+  ],
+  "homepage": "https://github.com/eriveltondasilva/portfolio#readme",
+  "license": "MIT",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
