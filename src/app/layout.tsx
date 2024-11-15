@@ -1,4 +1,4 @@
-import '@/scss/main.scss'
+import '@/styles/main.scss'
 
 import { Analytics } from '@vercel/analytics/react'
 import { clsx } from 'clsx'

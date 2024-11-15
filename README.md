@@ -26,13 +26,13 @@ Este é um projeto de portfólio pessoal desenvolvido com **Next.js**, incorpora
 
 ### 📦 Scripts Disponíveis
 
-| Comando          | Descrição                                  |
-|------------------|------------------------------------------|
-| `npm run dev`    | Inicia o ambiente de desenvolvimento.     |
-| `npm run build`  | Gera a build de produção.                 |
-| `npm start`      | Inicia o servidor em modo de produção.     |
-| `npm run lint`   | Executa o linter para verificar erros.    |
-| `npm run format` | Formata o código com Prettier.            |
+| Comando          | Descrição                              |
+| ---------------- | -------------------------------------- |
+| `npm run dev`    | Inicia o ambiente de desenvolvimento.  |
+| `npm run build`  | Gera a build de produção.              |
+| `npm start`      | Inicia o servidor em modo de produção. |
+| `npm run lint`   | Executa o linter para verificar erros. |
+| `npm run format` | Formata o código com Prettier.         |
 
 ---
 
@@ -46,17 +46,20 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 ### 🛠️ Como Configurar o Projeto
 
 1. Clone o repositório:
+
    ```bash
    git clone https://github.com/eriveltondasilva/portfolio.git
    cd portfolio
    ```
 
 2. Instale as dependências:
+
    ```bash
    npm install
    ```
 
 3. Inicie o ambiente de desenvolvimento:
+
    ```bash
    npm run dev
    ```
@@ -76,8 +79,8 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 │   ├── app/              # Rotas e estrutura de páginas do Next.js
 │   ├── components/       # Componentes reutilizáveis
 │   ├── hooks/            # Hooks personalizados
-│   ├── styles/           # Estilos globais e temas
 │   ├── services/         # Serviços e integrações externas
+│   ├── styles/           # Estilos globais e temas
 │   ├── utils/            # Funções e helpers utilitários
 │   ├── config.ts         # Configurações globais do projeto
 │   ├── plugin.ts         # Configurações de plugins e extensões

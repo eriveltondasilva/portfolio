@@ -11,7 +11,7 @@ export function Metadata({ createdAt, readingTime }: MetadataProps) {
     <div
       className={clsx(
         'flex flex-wrap items-center gap-x-2',
-        'text-medium  text-sm',
+        'text-medium text-sm',
         'text-neutral-600 dark:text-neutral-400',
       )}
     >

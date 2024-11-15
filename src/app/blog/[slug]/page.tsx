@@ -1,5 +1,5 @@
-import '@/scss/plugins/highlightjs/monokai.scss'
-import '@/scss/plugins/rehype-highlight-code-lines.scss'
+import '@/styles/plugins/highlightjs/monokai.scss'
+import '@/styles/plugins/rehype-highlight-code-lines.scss'
 
 import { PencilLine } from 'lucide-react'
 
@@ -37,7 +37,7 @@ export default async function PostPage({ params }: PostPageProps) {
       <Separator />
 
       <footer className='flex text-sm italic text-neutral-600 dark:text-neutral-400'>
-      <PencilLine className='mr-2 size-4' />
+        <PencilLine className='mr-2 size-4' />
         <p>Artigo escrito por {post.author || meta.author}</p>
       </footer>
     </article>
