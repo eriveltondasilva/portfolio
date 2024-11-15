@@ -1,14 +1,13 @@
-type Post = {
-  title: string
-  description: string
-  author: string
-  date: string
-  readingTime: number
-  tags: string[]
-  authorAvatar: string
-}
+import { meta } from '@/config'
+import { type Post } from '@/types'
+import { formatDate } from '@/utils/date-format'
 
-export function OGImage({ post }: { post: Post }) {
+export function OGImage({ post }: { post: Post | null }) {
+  if (!post) return null
+
+  const author = post.author || meta.author
+  const date = formatDate(post.createdAt)
+
   return (
     <div
       style={{
@@ -60,18 +59,12 @@ export function OGImage({ post }: { post: Post }) {
           lineHeight: 1.4,
         }}
       >
-        {'By ' +
-          post.author +
-          ' | ' +
-          post.date +
-          ' | ' +
-          post.readingTime +
-          ' min read'}
+        {`By ${author} | ${date}`}
       </div>
     </div>
   )
 }
 
-export function TailwindImage({ post }: { post: Post }) {
-  return <div tw='text-3xl'>{post.title}</div>
+export function TailwindImage({ title }: { title: string }) {
+  return <div tw='text-3xl'>{title}</div>
 }
