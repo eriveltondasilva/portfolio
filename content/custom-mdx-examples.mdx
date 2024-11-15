@@ -1,11 +1,16 @@
 ---
-title: 'Custom MDX Examples'
-description: 'Nextfolio custom MDX examples.'
+title: Custom MDX Examples
+description: Nextfolio custom MDX examples.
 tags: [Custom MDX, Web development]
+author: Velton
 published: true
 createdAt: 2024-08-11
 updatedAt: 2024-11-02
 ---
+
+## Contents
+
+## Intrudução
 
 Nextfolio uses [custom MDX](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx) for blog posts, making it easy to include JSX components such as interactive embeds, charts, or alerts directly in your markdown content.
 
@@ -38,7 +43,7 @@ _This is italic text_
 
 ## CodeBlocks
 
-```jsx {2-5} showLineNumbers
+```jsx {7-9} showLineNumbers
 // This is commented-out code
 const test = 300
 const hello = {
@@ -59,12 +64,22 @@ function Title() {
 Nextfolio uses [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) in MDX for seamless image rendering:
 
 ```jsx
-<Image src='/opengraph-image.png' alt='OpenGraph image' width={640} height={500} />
+<Image
+  src='/opengraph-image.png'
+  alt='OpenGraph image'
+  width={640}
+  height={500}
+/>
 ```
 
 Renders:
 
-<Image src='/opengraph-image.png' alt='OpenGraph image' width={640} height={500} />
+<Image
+  src='/opengraph-image.png'
+  alt='OpenGraph image'
+  width={640}
+  height={500}
+/>
 
 ## Image Grid
 
@@ -116,8 +131,14 @@ Nextfolio uses a custom [table component](https://github.com/1msirius/Nextfolio/
   data={{
     headers: ['Title', 'Description'],
     rows: [
-      ['First item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
-      ['Second item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
+      [
+        'First item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+      [
+        'Second item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
     ],
   }}
 />
@@ -129,8 +150,14 @@ Renders:
   data={{
     headers: ['Title', 'Description'],
     rows: [
-      ['First item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
-      ['Second item', 'Lorem ipsum dolor sit amet consectetur adipisicing elit.'],
+      [
+        'First item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+      [
+        'Second item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
     ],
   }}
 />

@@ -13,7 +13,7 @@ export const meta = {
   title: "Erivelton's portfolio",
   description: 'Lorem ipsum dolor sit amet consectetur adipiscing elit.',
   keywords: 'Next.js, React, JavaScript',
-  author: 'Erivelton da Silva',
+  author: 'Erivelton Silva',
   locale: 'pt-BR',
   baseUrl: ENV.VERCEL_URL,
   github: ENV.GITHUB_URL,

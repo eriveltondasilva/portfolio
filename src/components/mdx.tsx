@@ -14,10 +14,7 @@ type TableProps = {
   }
 }
 
-type CustomLinkProps = {
-  href?: string
-  children?: React.ReactNode
-}
+type CustomLinkProps = { href?: string; children?: React.ReactNode }
 export function CustomLink({ href = '', children, ...props }: CustomLinkProps) {
   const isAnchorLink = href?.startsWith('#')
   const isInternalLink = href?.startsWith('/')
@@ -42,9 +39,22 @@ export function CustomLink({ href = '', children, ...props }: CustomLinkProps) {
   )
 }
 
-export function RoundedImage({ src, alt, width, height, ...props }: ImageProps) {
+export function RoundedImage({
+  src,
+  alt,
+  width,
+  height,
+  ...props
+}: ImageProps) {
   return (
-    <Image className='rounded-lg' src={src} alt={alt} width={width} height={height} {...props} />
+    <Image
+      className='rounded-lg'
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      {...props}
+    />
   )
 }
 
@@ -61,7 +71,7 @@ export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
       <div className={clsx('my-8 grid gap-4', gridClass)}>
         {images.map(({ src, alt, href }, index) => (
           <div key={index} className='relative aspect-square'>
-            {href ?
+            {href && (
               <a
                 target='_blank'
                 rel='noopener noreferrer'
@@ -69,23 +79,25 @@ export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
                 className='block h-full w-full'
               >
                 <Image
-                  src={src}
                   alt={alt}
+                  src={src}
                   className='rounded-lg object-cover'
                   sizes='(max-width: 768px) 50vw, 33vw'
                   fill
                   priority
                 />
               </a>
-            : <Image
+            )}
+            {!href && (
+              <Image
                 alt={alt}
                 src={src}
-                sizes='(max-width: 768px) 50vw, 33vw'
                 className='rounded-lg object-cover'
+                sizes='(max-width: 768px) 50vw, 33vw'
                 fill
                 priority
               />
-            }
+            )}
           </div>
         ))}
       </div>

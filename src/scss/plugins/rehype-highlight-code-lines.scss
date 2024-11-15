@@ -48,7 +48,9 @@ span.code-line {
 }
 
 .code-line.inserted {
-  background-color: var(--color-inserted-line); /* inserted code-line (+) color */
+  background-color: var(
+    --color-inserted-line
+  ); /* inserted code-line (+) color */
 }
 
 .code-line.deleted {

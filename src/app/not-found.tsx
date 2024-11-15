@@ -8,8 +8,12 @@ export const metadata: Metadata = {
 export default function NotFound() {
   return (
     <section>
-      <h1 className='mb-8 text-2xl font-medium tracking-tight'>404 - Página não encontrada</h1>
-      <p className='mb-4'>Oops! A página que você tentou acessar não foi encontrada.</p>
+      <h1 className='mb-8 text-2xl font-medium tracking-tight'>
+        404 - Página não encontrada
+      </h1>
+      <p className='mb-4'>
+        Oops! A página que você tentou acessar não foi encontrada.
+      </p>
     </section>
   )
 }

@@ -20,13 +20,19 @@ export default async function Projects() {
   return (
     <div>
       <header>
-        <h1 className='title'>Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:</h1>
+        <h1 className='title'>
+          Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
+        </h1>
       </header>
 
-      {!projects.length && <Alert icon={Info}>There are no projects to display.</Alert>}
+      {!projects.length && (
+        <Alert icon={Info}>There are no projects to display.</Alert>
+      )}
 
       <ul className='space-y-8'>
-        {projects?.map((project) => <ListItem key={project.id} project={project} />)}
+        {projects?.map((project) => (
+          <ListItem key={project.id} project={project} />
+        ))}
       </ul>
     </div>
   )

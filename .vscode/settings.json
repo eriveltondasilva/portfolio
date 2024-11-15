@@ -11,6 +11,10 @@
     {
       "filePath": "src\\components",
       "group": "Default"
+    },
+    {
+      "filePath": "content",
+      "group": "Default"
     }
   ]
 }

@@ -1,5 +1,5 @@
-import { Post } from '@/types'
+import { ReadingTime } from '@/types'
 
-export function getReadingTime(post: Post) {
-  return post?.readingTime.text.split(' ').slice(0, 2).join(' ')
+export function getReadingTime(readingTime: ReadingTime) {
+  return readingTime.text.split(' ')[0]
 }

@@ -5,7 +5,9 @@ import { meta } from '@/config'
 import { getPost, getSlugs } from '@/services/post-service'
 
 type MetadataProps = { params: Promise<{ slug: string }> }
-export async function generateMetadata({ params }: MetadataProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
   const { slug } = await params
   const post = await getPost(slug)
 

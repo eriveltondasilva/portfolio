@@ -27,14 +27,25 @@ function ListItem({ items }: { items: NavItem[] }) {
 export function Nav({ items }: { items: NavItem[] }) {
   return (
     <nav
-      className={clsx('flex flex-col justify-between md:flex-row', 'py-4 sm:py-8 md:items-center')}
+      className={clsx(
+        'flex flex-col justify-between md:flex-row',
+        'py-4 sm:py-8 md:items-center',
+      )}
     >
       <header>
-        <Link href='/' className='flex items-center text-3xl font-semibold tracking-tight'>
+        <Link
+          href='/'
+          className='flex items-center text-3xl font-semibold tracking-tight'
+        >
           Erivelton&apos;s
         </Link>
       </header>
-      <ul className={clsx('flex flex-row items-center', 'mt-2 gap-4 md:ml-auto md:mt-0')}>
+      <ul
+        className={clsx(
+          'flex flex-row items-center',
+          'mt-2 gap-4 md:ml-auto md:mt-0',
+        )}
+      >
         <ListItem items={items} />
         <ThemeToggle />
       </ul>

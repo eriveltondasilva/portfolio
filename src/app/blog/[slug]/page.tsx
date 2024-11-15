@@ -1,11 +1,13 @@
 import '@/scss/plugins/highlightjs/monokai.scss'
 import '@/scss/plugins/rehype-highlight-code-lines.scss'
 
-import { Calendar, Timer } from 'lucide-react'
+import { PencilLine } from 'lucide-react'
 
+import { Badge } from '@/components/badge'
+import { Metadata } from '@/components/metadata'
 import { getPost } from '@/services/post-service'
-import { formatDate } from '@/utils/date-format'
-import { getReadingTime } from '@/utils/reading-time'
+import { meta } from '@/config'
+import { Separator } from '@/components/separator'
 
 type PostPageProps = { params: Promise<{ slug: string }> }
 export default async function PostPage({ params }: PostPageProps) {
@@ -15,23 +17,29 @@ export default async function PostPage({ params }: PostPageProps) {
   if (!post) return null
 
   return (
-    <section>
-      <h1 className='title'>{post.title}</h1>
-      <div className='text-medium mb-8 mt-2 flex items-center justify-between'>
-        <p className='flex flex-wrap items-center gap-2 text-sm text-neutral-600 dark:text-neutral-400'>
-          <span className='flex gap-2'>
-            <Calendar className='size-4' />
-            {formatDate(post.createdAt)}
-          </span>
-          <span className='hidden sm:flex'>|</span>
-          <span className='flex gap-2'>
-            <Timer className='size-4' /> {getReadingTime(post)} de leitura
-          </span>
-        </p>
-      </div>
-      <article className='prose prose-slate prose-quoteless dark:prose-invert'>
+    <article>
+      <header>
+        <h1 className='title'>{post.title}</h1>
+        <Metadata createdAt={post.createdAt} readingTime={post.readingTime} />
+        <div className='mt-3 flex flex-wrap gap-y-2'>
+          {post.tags.map((tag) => (
+            <Badge key={tag}>{tag}</Badge>
+          ))}
+        </div>
+      </header>
+
+      <Separator />
+
+      <div className='prose prose-slate prose-quoteless dark:prose-invert'>
         <post.content />
-      </article>
-    </section>
+      </div>
+
+      <Separator />
+
+      <footer className='flex text-sm italic text-neutral-600 dark:text-neutral-400'>
+      <PencilLine className='mr-2 size-4' />
+        <p>Artigo escrito por {post.author || meta.author}</p>
+      </footer>
+    </article>
   )
 }

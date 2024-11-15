@@ -5,9 +5,9 @@ import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
 import remarkParseFrontmatter from 'remark-parse-frontmatter'
-
 import remarkReadingTime from 'remark-reading-time'
-import readingMdxTime from "remark-reading-time/mdx";
+import readingMdxTime from 'remark-reading-time/mdx'
+import remarkToc from 'remark-toc'
 
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeHighlight from 'rehype-highlight'
@@ -15,9 +15,10 @@ import rehypeHighlightCodeLines from 'rehype-highlight-code-lines'
 import rehypeSlug from 'rehype-slug'
 
 import {
-  parseFrontmatterOptions,
-  remarkGfmOptions,
+  gfmOptions,
   highlightCodeLinesOptions,
+  parseFrontmatterOptions,
+  tocOptions,
 } from '@/plugins'
 
 const nextConfig: NextConfig = {
@@ -39,7 +40,8 @@ const withMDX = createMDX({
       remarkMdxFrontmatter,
       remarkReadingTime,
       readingMdxTime,
-      [remarkGfm, remarkGfmOptions],
+      [remarkToc, tocOptions],
+      [remarkGfm, gfmOptions],
       [remarkParseFrontmatter, parseFrontmatterOptions],
     ],
     rehypePlugins: [

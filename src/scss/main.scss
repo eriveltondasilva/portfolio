@@ -32,7 +32,15 @@ pre {
     @apply font-medium tracking-tight;
 
     &::after {
-      @apply hidden pl-2 content-['#'] hover:inline-block;
+      @apply hidden pl-1 content-['#'] hover:inline-block;
+    }
+  }
+
+  #contents + ol > li a {
+    @apply no-underline;
+
+    &::after {
+      @apply hidden pl-1 content-['#'] hover:inline-block;
     }
   }
 
@@ -44,5 +52,5 @@ pre {
 // #Custom Classes
 
 .title {
-  @apply mb-3 text-balance text-2xl font-semibold tracking-tight;
+  @apply mb-2 text-balance text-2xl font-semibold tracking-tight;
 }

@@ -1,7 +1,13 @@
 import { LucideIcon } from 'lucide-react'
 import clsx from 'clsx'
 
-export function Alert({ children, icon: Icon }: { children: React.ReactNode; icon?: LucideIcon }) {
+export function Alert({
+  children,
+  icon: Icon,
+}: {
+  children: React.ReactNode
+  icon?: LucideIcon
+}) {
   return (
     <div
       className={clsx(

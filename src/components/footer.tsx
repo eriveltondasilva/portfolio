@@ -16,7 +16,12 @@ function SocialLinks() {
     <>
       {items?.map(({ title, href, icon: Icon }) => (
         <li key={title} className='hover:opacity-50'>
-          <a href={href} title={title} target='_blank' rel='noopener noreferrer'>
+          <a
+            href={href}
+            title={title}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
             <Icon />
           </a>
         </li>
@@ -30,7 +35,12 @@ export function Footer() {
     <footer className='flex flex-col items-center justify-between gap-2 py-8 sm:flex-row'>
       <section>
         <time>© {YEAR}</time>&nbsp;
-        <a className='no-underline' href='#' target='_blank' rel='noopener noreferrer'>
+        <a
+          className='no-underline'
+          href='#'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           by Erivelton
         </a>
       </section>
