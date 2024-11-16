@@ -6,7 +6,10 @@ const ENV = {
   //
   GITHUB_AVATAR_URL: process.env.GITHUB_AVATAR || '',
   GITHUB_REPOS_URL: process.env.GITHUB_REPOS || '',
-  VERCEL_URL: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '',
+  VERCEL_URL:
+    process.env.VERCEL_URL ?
+      `https://${process.env.VERCEL_URL}`
+    : 'http://localhost:3000',
 } as const
 
 export const meta = {

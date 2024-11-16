@@ -80,7 +80,6 @@ export async function getBlogPost(slug: string) {
   try {
     return await readMDXFile(filePath)
   } catch (error: any) {
-    if (error.code === 'ENOENT') return null
     throw new Error(`Error reading file ${filePath}: ${error.message}`)
   }
 }

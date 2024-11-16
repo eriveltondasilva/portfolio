@@ -1,49 +1,74 @@
-## Portfolio - Projeto em Next.js
+# 🌐 **Portfolio - Projeto em Next.js**
 
-Este é um projeto de portfólio pessoal desenvolvido com **Next.js**, incorporando seções de blog e projetos. A aplicação foi projetada para ser rápida, responsiva e fácil de manter, utilizando as melhores práticas e ferramentas do ecossistema React e Next.js.
-
-### 📋 Funcionalidades
-
-- **Portfólio Pessoal**: Exibição de projetos.
-- **Blog**: Integração com **MDX** para publicação de posts personalizados.
-- **Tema Dinâmico**: Implementação de temas claros e escuros com `next-themes`.
-- **SEO Otimizado**: Configurações para melhorar a visibilidade em mecanismos de busca.
-- **Analytics**: Integrado com Vercel Analytics para monitoramento de performance.
+Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que também inclui um blog para compartilhar conhecimentos e projetos. O objetivo é ser rápido, responsivo e fácil de manter, incorporando as melhores práticas do ecossistema React e Next.js.
 
 ---
 
-### 🚀 Tecnologias Utilizadas
+## 📋 **Funcionalidades**
+
+### Geral
+
+- **Portfólio Pessoal**: Apresente seus trabalhos e projetos de forma clara e visualmente atraente.
+- **Blog Interativo**: Utilize **MDX** para criar posts que combinam Markdown e componentes React.
+- **Tema Dinâmico**: Suporte para temas claro e escuro, alternáveis com `next-themes`.
+- **YouTube Player**: Integração com vídeos do YouTube, permitindo incorporar mídia nos posts ou páginas.
+- **SEO Avançado**: Configurações otimizadas para melhorar a visibilidade em mecanismos de busca.
+- **Análise de Dados**: Monitore visitas e desempenho com **Vercel Analytics**.
+
+### Blog: Plugins Remark e Rehype
+
+**Remark Plugins:**
+
+- **remark-frontmatter**: Suporte a frontmatter YAML para metadados em posts.
+- **remark-mdx-frontmatter**: Permite usar variáveis do frontmatter diretamente nos componentes MDX.
+- **remark-parse-frontmatter**: Parsing avançado de metadados YAML.
+- **remark-reading-time**: Estima o tempo de leitura dos posts para uma melhor experiência do leitor.
+- **remark-toc**: Gera automaticamente uma Tabela de Conteúdo (TOC) com base nos cabeçalhos do post.
+- **remark-gfm**: Adiciona funcionalidades como tabelas, listas de tarefas e links automáticos no Markdown.
+
+**Rehype Plugins:**
+
+- **rehype-slug**: Adiciona IDs únicos aos cabeçalhos para links internos.
+- **rehype-autolink-headings**: Insere links automáticos nos títulos, facilitando a navegação.
+- **rehype-highlight**: Realça sintaxe de código, suportando diversas linguagens.
+- **rehype-highlight-code-lines**: Permite destacar linhas específicas em blocos de código.
+
+---
+
+## 💻 **Tecnologias Utilizadas**
 
 - **Framework**: [Next.js](https://nextjs.org/)
 - **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
-- **UI/Styling**: [TailwindCSS](https://tailwindcss.com/), Sass
-- **Componentes de UI**: [Headless UI](https://headlessui.dev/), [Lucide React](https://lucide.dev/)
-- **Blog**: MDX, Remark, Rehype
-- **Análise de Dados**: [Vercel Analytics](https://vercel.com/docs/analytics)
-- **Data/Utils**: Day.js, clsx
+- **Estilização**: [TailwindCSS](https://tailwindcss.com/), [Sass](https://sass-lang.com/)
+- **Bibliotecas de UI**: [Headless UI](https://headlessui.dev/), [Lucide React](https://lucide.dev/)
+- **Blog**: [MDX](https://mdxjs.com/), Remark, Rehype
+- **Análise de Dados**: [Vercel Analytics](https://vercel.com/docs/analytics/)
+- **Outras ferramentas**: Day.js, clsx, Prettier
 
 ---
 
-### 📦 Scripts Disponíveis
+## 🚀 **Scripts Disponíveis**
 
-| Comando          | Descrição                              |
-| ---------------- | -------------------------------------- |
-| `npm run dev`    | Inicia o ambiente de desenvolvimento.  |
-| `npm run build`  | Gera a build de produção.              |
-| `npm start`      | Inicia o servidor em modo de produção. |
-| `npm run lint`   | Executa o linter para verificar erros. |
-| `npm run format` | Formata o código com Prettier.         |
+| Comando          | Descrição                             |
+| ---------------- | ------------------------------------- |
+| `npm run dev`    | Inicia o ambiente de desenvolvimento. |
+| `npm run build`  | Gera a build de produção.             |
+| `npm start`      | Inicia o servidor no modo produção.   |
+| `npm run lint`   | Verifica erros de lint no código.     |
+| `npm run format` | Formata o código com Prettier.        |
 
 ---
 
-### 📖 Pré-requisitos
+## 📖 **Pré-requisitos**
 
 Antes de começar, certifique-se de ter instalado em sua máquina:
 
-- [Node.js](https://nodejs.org/) (versão 20 ou superior)
-- [npm](https://www.npmjs.com/)
+- **[Node.js](https://nodejs.org/)** (versão 20 ou superior)
+- **[npm](https://www.npmjs.com/)**
 
-### 🛠️ Como Configurar o Projeto
+---
+
+## 🛠️ **Como Executar o Projeto**
 
 1. Clone o repositório:
 
@@ -58,64 +83,128 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    npm install
    ```
 
-3. Inicie o ambiente de desenvolvimento:
+3. Configure variáveis de ambiente:
+
+   - Renomeie o arquivo `.env.example` para `.env`.
+   - Preencha as variáveis necessárias (URLs de APIs, chaves de análise etc.).
+
+4. Inicie o ambiente de desenvolvimento:
 
    ```bash
    npm run dev
    ```
 
-4. Acesse a aplicação no navegador em: `http://localhost:3000`
+5. Acesse no navegador: [http://localhost:3000](http://localhost:3000)
 
 ---
 
-### 📁 Estrutura do Projeto
+## 📁 **Estrutura do Projeto**
 
 ```plaintext
 /
-├── content/              # Conteúdo do blog em MDX
-├── docs/                 # Documentação do projeto
-├── public/               # Assets públicos (imagens, fontes, etc.)
-├── src/                  # Código-fonte principal
-│   ├── app/              # Rotas e estrutura de páginas do Next.js
-│   ├── components/       # Componentes reutilizáveis
-│   ├── hooks/            # Hooks personalizados
-│   ├── services/         # Serviços e integrações externas
-│   ├── styles/           # Estilos globais e temas
-│   ├── utils/            # Funções e helpers utilitários
-│   ├── config.ts         # Configurações globais do projeto
-│   ├── plugin.ts         # Configurações de plugins e extensões
-│   ├── types.d.ts        # Declarações de tipos TypeScript
-│   ├── mdx-components.tsx # Componentes personalizados para renderizar MDX
-├── .env                  # Variáveis de ambiente
-├── prettierrc.yml        # Configuração do Prettier
-├── tailwind.config.js    # Configuração do TailwindCSS
-├── next.config.js        # Configuração do Next.js
+├── content/               # Posts do blog em formato MDX
+├── public/                # Assets públicos (imagens, fontes, etc.)
+├── src/                   # Código-fonte principal
+│   ├── app/               # Rotas e páginas (estrutura do Next.js)
+│   ├── components/        # Componentes reutilizáveis
+│   ├── hooks/             # Hooks personalizados
+│   ├── services/          # Serviços externos e APIs
+│   ├── styles/            # Estilos globais e temas
+│   ├── utils/             # Funções utilitárias
+│   ├── config.ts          # Configurações gerais
+│   ├── types.d.ts         # Tipos TypeScript
+│   ├── mdx-components.tsx # Componentes para renderização MDX
+├── .env                   # Variáveis de ambiente
+├── tailwind.config.js     # Configuração do TailwindCSS
+├── next.config.js         # Configuração do Next.js
 ```
 
 ---
 
-### ✍️ Como Contribuir
+## ✍️ **Como Criar um Novo Post no Blog**
+
+1. **Crie um arquivo MDX em `content/`:**
+
+   - O nome do arquivo será o slug do post (exemplo: `content/my-first-post.mdx`).
+
+2. **Adicione o frontmatter YAML:**
+
+   ```yaml
+   ---
+   title: 'Meu Primeiro Post'
+   description: 'Este é o meu primeiro post utilizando MDX.'
+   author: 'Erivelton Silva'
+   tags:
+     - nextjs
+     - blog
+     - portfolio
+   published: true
+   createdAt: '2024-11-15'
+   updatedAt: '2024-11-20'
+   ---
+   ```
+
+   ```ts
+   type Frontmatter = {
+     title: string // Título do post
+     description: string // Descrição curta do post
+     author?: string // (Opcional) Nome do autor
+     tags: string[] // Tags associadas ao post
+     published: boolean // Indica se o post está publicado
+     createdAt: string // Data de criação (ISO 8601)
+     updatedAt?: string // (Opcional) Data de atualização (ISO 8601)
+   }
+   ```
+
+3. **Escreva conteúdo Markdown ou use componentes React:**
+
+   ```mdx
+   # Bem-vindo ao meu post
+
+   Este é um parágrafo em Markdown.
+
+   <MyCustomComponent prop='valor' />
+   ```
+
+---
+
+## 🤝 **Como Contribuir**
 
 1. Faça um fork do projeto.
-2. Crie uma branch para sua feature ou correção de bug: `git checkout -b minha-feature`
-3. Commit suas alterações: `git commit -m 'Minha nova feature'`
-4. Envie para o repositório remoto: `git push origin minha-feature`
-5. Abra um Pull Request.
+2. Crie uma branch para sua feature:
+
+   ```bash
+   git checkout -b minha-feature
+   ```
+
+3. Commit suas alterações:
+
+   ```bash
+   git commit -m "Minha nova feature"
+   ```
+
+4. Envie para o repositório remoto:
+
+   ```bash
+   git push origin minha-feature
+   ```
+
+5. Abra um Pull Request no repositório original.
 
 ---
 
-### 📝 Licença
+## 📜 **Licença**
 
-Este projeto está licenciado sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está licenciado sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-### 🔗 Links Úteis
+## 🔗 **Links Úteis**
 
-- **Repositório**: [GitHub](https://github.com/eriveltondasilva/portfolio)
+- **Repositório do Projeto**: [GitHub](https://github.com/eriveltondasilva/portfolio)
 - **Documentação do Next.js**: [nextjs.org](https://nextjs.org/)
 - **TailwindCSS**: [tailwindcss.com](https://tailwindcss.com/)
 
 ---
 
-**Desenvolvido com 💙 por Erivelton Silva**
+**💙 Desenvolvido por [Erivelton Silva](https://github.com/eriveltondasilva/)**
