@@ -21,7 +21,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "npx prettier ./src --write"
+    "format": "prettier . --write",
+    "format:cache": "prettier . --write --cache --cache-strategy metadata"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",

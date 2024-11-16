@@ -2,7 +2,7 @@
 
 Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que também inclui um blog para compartilhar conhecimentos e projetos. O objetivo é ser rápido, responsivo e fácil de manter, incorporando as melhores práticas do ecossistema React e Next.js.
 
----
+<br />
 
 ## 📋 **Funcionalidades**
 
@@ -33,7 +33,7 @@ Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que t
 - **rehype-highlight**: Realça sintaxe de código, suportando diversas linguagens.
 - **rehype-highlight-code-lines**: Permite destacar linhas específicas em blocos de código.
 
----
+<br />
 
 ## 💻 **Tecnologias Utilizadas**
 
@@ -45,7 +45,7 @@ Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que t
 - **Análise de Dados**: [Vercel Analytics](https://vercel.com/docs/analytics/)
 - **Outras ferramentas**: Day.js, clsx, Prettier
 
----
+<br />
 
 ## 🚀 **Scripts Disponíveis**
 
@@ -57,7 +57,7 @@ Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que t
 | `npm run lint`   | Verifica erros de lint no código.     |
 | `npm run format` | Formata o código com Prettier.        |
 
----
+<br />
 
 ## 📖 **Pré-requisitos**
 
@@ -66,7 +66,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 - **[Node.js](https://nodejs.org/)** (versão 20 ou superior)
 - **[npm](https://www.npmjs.com/)**
 
----
+<br />
 
 ## 🛠️ **Como Executar o Projeto**
 
@@ -96,7 +96,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 
 5. Acesse no navegador: [http://localhost:3000](http://localhost:3000)
 
----
+<br />
 
 ## 📁 **Estrutura do Projeto**
 
@@ -119,7 +119,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 ├── next.config.js         # Configuração do Next.js
 ```
 
----
+<br />
 
 ## ✍️ **Como Criar um Novo Post no Blog**
 
@@ -142,6 +142,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    createdAt: '2024-11-15'
    updatedAt: '2024-11-20'
    ---
+   <!-- Conteúdo da postagem -->
    ```
 
    ```ts
@@ -159,6 +160,8 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 3. **Escreva conteúdo Markdown ou use componentes React:**
 
    ```mdx
+   <!-- Metadata -->
+
    # Bem-vindo ao meu post
 
    Este é um parágrafo em Markdown.
@@ -166,7 +169,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    <MyCustomComponent prop='valor' />
    ```
 
----
+<br />
 
 ## 🤝 **Como Contribuir**
 
@@ -191,13 +194,13 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 
 5. Abra um Pull Request no repositório original.
 
----
+<br />
 
 ## 📜 **Licença**
 
 Este projeto está licenciado sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
 
----
+<br />
 
 ## 🔗 **Links Úteis**
 
@@ -205,6 +208,6 @@ Este projeto está licenciado sob a licença **MIT**. Consulte o arquivo [LICENS
 - **Documentação do Next.js**: [nextjs.org](https://nextjs.org/)
 - **TailwindCSS**: [tailwindcss.com](https://tailwindcss.com/)
 
----
+<br />
 
 **💙 Desenvolvido por [Erivelton Silva](https://github.com/eriveltondasilva/)**
