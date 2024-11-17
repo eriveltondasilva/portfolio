@@ -20,7 +20,7 @@ export type Post = {
   title: string
   description: string
   author: string
-  tags: string[]
+  tags?: string[]
   published: boolean
   createdAt: string
   updatedAt: string

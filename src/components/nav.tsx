@@ -1,54 +1,61 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { ThemeToggle } from './theme-toggle'
 import { NavItem } from '@/types'
+import { MobileMenu } from './mobile-menu'
+import { ThemeToggle } from './theme-toggle'
 
-function ListItem({ items }: { items: NavItem[] }) {
+function ListItem({ item }: { item: NavItem }) {
   return (
-    <>
-      {items.map(({ name, href }) => (
-        <li key={name}>
-          <Link
-            href={href}
-            className={clsx(
-              'relative flex align-middle transition-all',
-              'hover:text-neutral-800 dark:hover:text-neutral-200',
-            )}
-          >
-            {name}
-          </Link>
-        </li>
-      ))}
-    </>
+    <li>
+      <Link
+        href={item.href}
+        className={clsx(
+          'relative flex align-middle transition-all',
+          'hover:text-neutral-800 dark:hover:text-neutral-200',
+        )}
+        aria-label={item.name}
+      >
+        {item.name}
+      </Link>
+    </li>
+  )
+}
+
+function Header() {
+  return (
+    <header>
+      <Link
+        href='/'
+        className='flex items-center text-3xl font-semibold tracking-tight'
+        aria-label='Home'
+      >
+        Erivelton&apos;s
+      </Link>
+    </header>
   )
 }
 
 export function Nav({ items }: { items: NavItem[] }) {
   return (
     <nav
-      className={clsx(
-        'flex flex-col justify-between md:flex-row',
-        'py-4 sm:py-8 md:items-center',
-      )}
-    >
-      <header>
-        <Link
-          href='/'
-          className='flex items-center text-3xl font-semibold tracking-tight'
+      className={clsx('flex justify-between', 'py-4 sm:py-8 md:items-center')}
+      aria-label="Main Navigation"
+
+   >
+      <Header />
+      <div className='flex gap-x-2'>
+        <ul
+          className={clsx(
+            'hidden items-center sm:flex',
+            'mt-2 gap-4 md:ml-auto md:mt-0',
+          )}
         >
-          Erivelton&apos;s
-        </Link>
-      </header>
-      <ul
-        className={clsx(
-          'flex flex-row items-center',
-          'mt-2 gap-4 md:ml-auto md:mt-0',
-        )}
-      >
-        <ListItem items={items} />
+          {items.map((item) => <ListItem key={item.name} item={item} />)}
+        </ul>
         <ThemeToggle />
-      </ul>
+        <MobileMenu items={items} />
+      </div>
     </nav>
   )
 }

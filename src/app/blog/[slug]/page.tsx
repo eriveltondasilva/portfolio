@@ -22,9 +22,8 @@ export default async function PostPage({ params }: PostPageProps) {
         <h1 className='title'>{post.title}</h1>
         <Metadata createdAt={post.createdAt} readingTime={post.readingTime} />
         <div className='mt-3 flex flex-wrap gap-y-2'>
-          {post.tags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
-          ))}
+          {post.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
+          {!post.tags?.length && <Badge>no tags</Badge>}
         </div>
       </header>
 

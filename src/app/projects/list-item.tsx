@@ -13,6 +13,7 @@ export function ListItem({ project }: { project: Project }) {
     <li className='space-y-1 text-neutral-700 dark:text-neutral-400'>
       <header>
         <Link
+            href={project.html_url}
           className={clsx(
             'flex gap-2 font-semibold',
             'hover:underline hover:underline-offset-2',
@@ -20,7 +21,6 @@ export function ListItem({ project }: { project: Project }) {
             'decoration-sky-600 decoration-3',
             'dark:decoration-sky-400',
           )}
-          href={project.html_url}
         >
           <LinkIcon />
           <h2>{project.name.toUpperCase()}</h2>
@@ -29,13 +29,14 @@ export function ListItem({ project }: { project: Project }) {
 
       <div className='flex flex-wrap gap-y-2'>
         {project.topics?.map((topic) => <Badge key={topic}>{topic}</Badge>)}
+        {!project.topics?.length && <Badge>no tags</Badge>}
       </div>
 
       <p>{project.description || 'No description.'}</p>
 
-      <div className='flex gap-2 text-sm'>
+      <div className='flex items-center gap-2 text-sm'>
         <Calendar className='size-4' />
-        <time>{date}</time>
+        <time dateTime={project.created_at}>{date}</time>
       </div>
     </li>
   )

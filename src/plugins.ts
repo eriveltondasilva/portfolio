@@ -7,7 +7,6 @@ export const parseFrontmatterOptions = {
       type: 'array',
       maxItems: 5,
       items: { type: 'string' },
-      required: true,
     },
     published: { type: 'boolean', required: true },
     createdAt: { type: 'string', format: 'date', required: true },

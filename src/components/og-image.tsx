@@ -65,6 +65,6 @@ export function OGImage({ post }: { post: Post | null }) {
   )
 }
 
-export function TailwindImage({ title }: { title: string }) {
-  return <div tw='text-3xl'>{title}</div>
+export function TailwindImage({ title }: { title?: string }) {
+  return <div tw='text-3xl'>{title || 'No title'}</div>
 }

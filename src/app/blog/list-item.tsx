@@ -29,9 +29,8 @@ export function ListItem({ post }: { post: Post | null }) {
         </header>
 
         <div className='flex flex-wrap gap-y-2'>
-          {post.tags.map((tag) => (
-            <Badge key={tag}>{tag}</Badge>
-          ))}
+          {post?.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
+          {!post.tags?.length && <Badge>no tags</Badge>}
         </div>
 
         <p>{post.description || 'No description.'}</p>
