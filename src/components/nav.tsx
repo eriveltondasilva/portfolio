@@ -40,9 +40,8 @@ export function Nav({ items }: { items: NavItem[] }) {
   return (
     <nav
       className={clsx('flex justify-between', 'py-4 sm:py-8 md:items-center')}
-      aria-label="Main Navigation"
-
-   >
+      aria-label='Main Navigation'
+    >
       <Header />
       <div className='flex gap-x-2'>
         <ul
@@ -51,7 +50,9 @@ export function Nav({ items }: { items: NavItem[] }) {
             'mt-2 gap-4 md:ml-auto md:mt-0',
           )}
         >
-          {items.map((item) => <ListItem key={item.name} item={item} />)}
+          {items.map((item) => (
+            <ListItem key={item.name} item={item} />
+          ))}
         </ul>
         <ThemeToggle />
         <MobileMenu items={items} />

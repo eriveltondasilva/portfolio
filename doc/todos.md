@@ -1,4 +1,4 @@
-- [ ] coloca um dropdown menu do headlessui no mobile
+- [x] coloca um dropdown menu do headlessui no mobile
 - [ ] adiciona api para views, com banco de dados do prisma em SQLite para guardar as visualizações, limitando com cookies cada view ser contada num prazo de 24h
 - [ ] cria filtro de postagem conforme as tags
 - [ ] cria pesquisa de post por nome

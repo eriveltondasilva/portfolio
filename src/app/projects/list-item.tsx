@@ -13,7 +13,7 @@ export function ListItem({ project }: { project: Project }) {
     <li className='space-y-1 text-neutral-700 dark:text-neutral-400'>
       <header>
         <Link
-            href={project.html_url}
+          href={project.html_url}
           className={clsx(
             'flex gap-2 font-semibold',
             'hover:underline hover:underline-offset-2',
