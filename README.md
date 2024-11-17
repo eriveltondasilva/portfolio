@@ -142,7 +142,8 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    createdAt: '2024-11-15'
    updatedAt: '2024-11-20'
    ---
-   <!-- Conteúdo da postagem -->
+
+   # Conteúdo da postagem
    ```
 
    ```ts
@@ -160,9 +161,11 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 3. **Escreva conteúdo Markdown ou use componentes React:**
 
    ```mdx
-   <!-- Metadata -->
+   ---
+   # metadata
+   ---
 
-   # Bem-vindo ao meu post
+   # Conteúdo da postagem
 
    Este é um parágrafo em Markdown.
 
