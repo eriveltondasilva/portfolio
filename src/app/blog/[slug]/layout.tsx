@@ -14,6 +14,8 @@ export async function generateMetadata({
   if (!post) return notFound()
 
   return {
+    metadataBase: new URL(meta.baseUrl),
+    //
     title: post?.title,
     description: post?.description,
     openGraph: {
@@ -26,6 +28,12 @@ export async function generateMetadata({
       modifiedTime: post?.updatedAt,
       tags: post?.tags,
       authors: meta?.author,
+      images: [
+        {
+          url: `/api/post-og?slug=${encodeURIComponent(slug)}`,
+          alt: post?.title,
+        },
+      ],
     },
   }
 }
