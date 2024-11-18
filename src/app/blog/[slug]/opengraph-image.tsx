@@ -1,10 +1,10 @@
-import { Modelo1 } from '@/components/post-og'
+import { Modelo1 as OGImage } from '@/components/post-og'
 import { getPost } from '@/services/post-service'
 import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 
-export const alt = 'Blog post thumbnail'
+export const alt = 'blog post thumbnail'
 export const size = { width: 800, height: 400 }
 export const contentType = 'image/png'
 
@@ -13,7 +13,9 @@ export default async function Image({ params }: ImageProps) {
   const { slug } = await params
   const post = await getPost(slug)
 
-  return new ImageResponse(<Modelo1 post={post} />, {
+  if (!post?.title) return new Response('Post not found.', { status: 404 })
+
+  return new ImageResponse(<OGImage post={post} />, {
     ...size,
   })
 }
