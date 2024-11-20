@@ -29,7 +29,10 @@ export default async function Projects() {
         <Alert icon={InfoIcon}>There are no projects to display.</Alert>
       )}
 
-      <List projects={projects} count={projectsCount} />
+      <List
+        projects={projects}
+        count={projectsCount}
+      />
     </div>
   )
 }

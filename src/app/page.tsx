@@ -37,8 +37,14 @@ export default function HomePage() {
 
         <div className='mt-4 flex flex-wrap gap-2'>
           {skills.map(([label, href]) => (
-            <Badge key={label} size='md'>
-              <Link href={href} className='no-underline'>
+            <Badge
+              key={label}
+              size='md'
+            >
+              <Link
+                href={href}
+                className='no-underline'
+              >
                 {label}
               </Link>
             </Badge>

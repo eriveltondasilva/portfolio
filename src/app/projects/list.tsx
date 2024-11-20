@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { CalendarIcon, Link2Icon } from 'lucide-react'
 import Link from 'next/link'
-import { Fragment } from 'react'
 
 import { Badge } from '@/components/badge'
 import { Separator } from '@/components/separator'
@@ -12,10 +11,13 @@ import { Project } from '@/types'
 type ListProps = { projects: Project[]; count: number }
 export function List({ projects, count }: ListProps) {
   return (
-    <ul>
+    <ul className='space-y-8'>
       {projects?.map((project, index) => (
-        <Fragment key={project.id}>
-          <li className='space-y-1 text-neutral-700 dark:text-neutral-400'>
+        <li
+          key={project.id}
+          className='text-neutral-700 dark:text-neutral-400'
+        >
+          <article className='space-y-1'>
             <header>
               <Link
                 href={project.html_url}
@@ -48,9 +50,9 @@ export function List({ projects, count }: ListProps) {
                 {formatDate(project.created_at)}
               </time>
             </div>
-          </li>
+          </article>
           {index < count - 1 && <Separator />}
-        </Fragment>
+        </li>
       ))}
     </ul>
   )

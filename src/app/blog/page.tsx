@@ -33,14 +33,20 @@ export default async function BlogPostPage({ searchParams }: BlogPostProps) {
     <div>
       <header className='mb-8'>
         <h1 className='title'>{pageTitle}</h1>
-        <TagFilter allTags={allTags} tag={tag} />
+        <TagFilter
+          allTags={allTags}
+          tag={tag}
+        />
       </header>
 
       {!postCount && (
         <Alert icon={InfoIcon}>There are no posts to display.</Alert>
       )}
 
-      <List posts={filteredPosts} count={postCount} />
+      <List
+        posts={filteredPosts}
+        count={postCount}
+      />
     </div>
   )
 }

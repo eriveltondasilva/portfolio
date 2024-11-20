@@ -1,9 +1,6 @@
 export default function Loading() {
   return (
-    <div
-      id='loading-overlay'
-      className='fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60'
-    >
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-60'>
       <svg
         className='mr-3 size-6 animate-spin text-white'
         xmlns='http://www.w3.org/2000/svg'
@@ -16,7 +13,7 @@ export default function Loading() {
           cy='12'
           r='10'
           stroke='currentColor'
-          stroke-width='4'
+          strokeWidth='4'
         ></circle>
         <path
           className='opacity-75'
@@ -25,7 +22,9 @@ export default function Loading() {
         ></path>
       </svg>
 
-      <span className='text-2xl font-bold text-white animate-pulse'>carregando...</span>
+      <span className='animate-pulse text-2xl font-bold text-white'>
+        carregando...
+      </span>
     </div>
   )
 }

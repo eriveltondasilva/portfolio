@@ -52,7 +52,10 @@ export function Nav({ items }: { items: NavItem[] }) {
           )}
         >
           {items.map((item) => (
-            <ListItem key={item.name} item={item} />
+            <ListItem
+              key={item.name}
+              item={item}
+            />
           ))}
         </ul>
         <ThemeToggle />

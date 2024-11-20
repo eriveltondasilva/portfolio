@@ -5,7 +5,11 @@ import { url } from '@/config'
 
 function AvatarClipPath() {
   return (
-    <svg width='0' height='0' xmlns='http://www.w3.org/2000/svg'>
+    <svg
+      width='0'
+      height='0'
+      xmlns='http://www.w3.org/2000/svg'
+    >
       <defs>
         <clipPath id='avatar-shape'>
           <path

@@ -39,8 +39,15 @@ export const metadata: Metadata = {
 type RootLayoutProps = { children: React.ReactNode }
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang={meta.locale} suppressHydrationWarning>
-      <ThemeProvider attribute='class' defaultTheme='system' enableSystem>
+    <html
+      lang={meta.locale}
+      suppressHydrationWarning
+    >
+      <ThemeProvider
+        attribute='class'
+        defaultTheme='system'
+        enableSystem
+      >
         <body
           className={clsx(
             'select-none antialiased',

@@ -15,7 +15,10 @@ function SocialLinks() {
   return (
     <>
       {items?.map(({ title, href, icon: Icon }) => (
-        <li key={title} className='hover:opacity-50'>
+        <li
+          key={title}
+          className='hover:opacity-50'
+        >
           <a
             href={href}
             title={title}

@@ -11,7 +11,7 @@ export function Alert({
   return (
     <div
       className={clsx(
-        'flex items-center rounded-lg px-4 py-5 mb-4 text-sm',
+        'mb-4 flex items-center rounded-lg px-4 py-5 text-sm',
         'bg-blue-50 dark:bg-gray-800',
       )}
       role='alert'

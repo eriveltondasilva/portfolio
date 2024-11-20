@@ -21,7 +21,10 @@ export function CustomLink({ href = '', children, ...props }: CustomLinkProps) {
 
   if (isInternalLink) {
     return (
-      <Link href={href} {...props}>
+      <Link
+        href={href}
+        {...props}
+      >
         {children}
       </Link>
     )
@@ -70,7 +73,10 @@ export function ImageGrid({ images, columns = 3 }: ImageGridProps) {
     <section>
       <div className={clsx('my-8 grid gap-4', gridClass)}>
         {images.map(({ src, alt, href }, index) => (
-          <div key={index} className='relative aspect-square'>
+          <div
+            key={index}
+            className='relative aspect-square'
+          >
             {href && (
               <a
                 target='_blank'
