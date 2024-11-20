@@ -22,10 +22,9 @@ function AvatarClipPath() {
 
 export function Avatar() {
   const className = clsx(
-    'sm:float-right',
-    'mx-auto my-4',
-    'transition-[filter] duration-300 ease-out',
-    'bg-gray-100 sepia hover:sepia-0',
+    'mx-auto my-4 sm:float-right sm:ml-4',
+    'transition-[filter] duration-700 ease-out',
+    'bg-gray-100 grayscale hover:grayscale-0',
   )
   const style = {
     clipPath: 'url(#avatar-shape)',

@@ -27,7 +27,7 @@ export function ListItem({ project }: { project: Project }) {
         </Link>
       </header>
 
-      <div className='flex flex-wrap gap-y-2'>
+      <div className='flex flex-wrap gap-2'>
         {project.topics?.map((topic) => <Badge key={topic}>{topic}</Badge>)}
         {!project.topics?.length && <Badge>no tags</Badge>}
       </div>

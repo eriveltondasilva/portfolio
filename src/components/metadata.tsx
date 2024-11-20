@@ -1,5 +1,5 @@
-import { Calendar, Clock } from 'lucide-react'
 import { clsx } from 'clsx'
+import { Calendar, Clock } from 'lucide-react'
 
 import { type ReadingTime } from '@/types'
 import { formatDate } from '@/utils/date-format'
@@ -7,6 +7,8 @@ import { getReadingTime } from '@/utils/reading-time'
 
 type MetadataProps = { createdAt: string; readingTime: ReadingTime }
 export function Metadata({ createdAt, readingTime }: MetadataProps) {
+  const date = formatDate(createdAt)
+
   return (
     <div
       className={clsx(
@@ -17,7 +19,7 @@ export function Metadata({ createdAt, readingTime }: MetadataProps) {
     >
       <div className='flex items-center'>
         <Calendar className='mr-2 size-4' />
-        <time dateTime={createdAt}>{formatDate(createdAt)}</time>
+        <time dateTime={createdAt}>{date}</time>
       </div>
 
       <span>|</span>

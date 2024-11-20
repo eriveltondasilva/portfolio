@@ -5,7 +5,7 @@ import { Menu as MenuIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useTheme } from '@/hooks/useTheme'
 
-import { NavItem } from '@/types'
+import { type NavItem } from '@/types'
 
 export function MobileMenu({ items }: { items: NavItem[] }) {
   const { isDark } = useTheme()

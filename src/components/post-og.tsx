@@ -1,5 +1,5 @@
 import { meta } from '@/config'
-import { Post } from '@/types'
+import { type Post } from '@/types'
 import { formatDate } from '@/utils/date-format'
 import { getReadingTime } from '@/utils/reading-time'
 

@@ -2,7 +2,7 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import { cache } from 'react'
 
-import { Post } from '@/types'
+import { type Post } from '@/types'
 
 const CONTENT_DIR = path.join(process.cwd(), 'content')
 const MDX_EXTENSION = '.mdx'

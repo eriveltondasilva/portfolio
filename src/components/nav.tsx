@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { NavItem } from '@/types'
+import { type NavItem } from '@/types'
 import { MobileMenu } from './mobile-menu'
 import { ThemeToggle } from './theme-toggle'
 

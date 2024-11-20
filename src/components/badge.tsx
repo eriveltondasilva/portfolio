@@ -1,11 +1,44 @@
-import clsx from 'clsx'
+import { clsx } from 'clsx'
+import React from 'react'
 
-export function Badge({ children }: { children: string }) {
+const sizeClasses = {
+  sm: 'text-xs px-2.5 py-0.5',
+  md: 'text-sm px-3.5 py-1',
+}
+
+const COLORS = {
+  blue: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+}
+
+const BORDERED = {
+  blue: 'bg-blue-100 text-blue-800 dark:bg-gray-700 dark:text-blue-400 border border-blue-400',
+}
+
+type BadgeProps = {
+  size?: keyof typeof sizeClasses
+  variant?: keyof typeof COLORS
+  bordered?: boolean
+  pill?: boolean
+  children: React.ReactNode
+}
+export function Badge({
+  size = 'sm',
+  variant = 'blue',
+  bordered = false,
+  pill = false,
+  children,
+}: BadgeProps) {
+  const variantClasses = {
+    blue: bordered ? BORDERED.blue : COLORS.blue,
+  }
+
   return (
     <span
       className={clsx(
-        'me-2 rounded px-2.5 py-0.5 text-xs font-medium',
-        'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+        'inline-flex items-center font-medium tracking-wider',
+        variantClasses[variant],
+        sizeClasses[size],
+        pill ? 'rounded-full' : 'rounded',
       )}
     >
       {children}

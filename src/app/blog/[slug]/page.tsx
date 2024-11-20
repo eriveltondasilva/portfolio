@@ -20,7 +20,9 @@ export default async function PostPage({ params }: PostPageProps) {
     <article>
       <header>
         <h1 className='title'>{post.title}</h1>
+
         <Metadata createdAt={post.createdAt} readingTime={post.readingTime} />
+
         <div className='mt-3 flex flex-wrap gap-y-2'>
           {post.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
           {!post.tags?.length && <Badge>no tags</Badge>}
@@ -29,7 +31,7 @@ export default async function PostPage({ params }: PostPageProps) {
 
       <Separator />
 
-      <div className='prose prose-slate prose-quoteless dark:prose-invert'>
+      <div className='mdx prose prose-slate prose-quoteless dark:prose-invert'>
         <post.content />
       </div>
 
