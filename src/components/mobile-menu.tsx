@@ -3,6 +3,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { clsx } from 'clsx'
 import { Menu as MenuIcon } from 'lucide-react'
 import Link from 'next/link'
+
 import { useTheme } from '@/hooks/useTheme'
 
 import { type NavItem } from '@/types'
@@ -10,7 +11,7 @@ import { type NavItem } from '@/types'
 export function MobileMenu({ items }: { items: NavItem[] }) {
   const { isDark } = useTheme()
 
-  if (items?.length === 0) return null
+  if (!items?.length) return null
 
   return (
     <div className='sm:hidden'>

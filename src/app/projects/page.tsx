@@ -1,44 +1,35 @@
-import { Info } from 'lucide-react'
+import { InfoIcon } from 'lucide-react'
 import { type Metadata } from 'next'
 
 import { Alert } from '@/components/alert'
-import { Separator } from '@/components/separator'
 import { url } from '@/config'
+import { List } from './list'
+
 import { type Project } from '@/types'
-import { Fragment } from 'react'
-import { ListItem } from './list-item'
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'Projects page',
+  title: 'Projetos',
+  description: 'Página para exibição de projetos no Github',
 }
 
 export default async function Projects() {
   const res = await fetch(url.githubRepos, { cache: 'force-cache' })
   const projects: Project[] = await res.json()
 
-  const projectsCount = projects?.length
+  const projectsCount = projects.length
+  const pageTitle = `Projects${projectsCount > 0 ? ` (${projectsCount})` : ''}`
 
   return (
     <div>
-      <header>
-        <h1 className='title'>
-          Projects{projectsCount > 0 ? `(${projectsCount})` : ''}:
-        </h1>
+      <header className='mb-8'>
+        <h1 className='title'>{pageTitle}</h1>
       </header>
 
-      {!projects?.length && (
-        <Alert icon={Info}>There are no projects to display.</Alert>
+      {!projectsCount && (
+        <Alert icon={InfoIcon}>There are no projects to display.</Alert>
       )}
 
-      <ul className=''>
-        {projects?.map((project, index) => (
-          <Fragment key={project.id}>
-            <ListItem project={project} />
-            {projectsCount !== ++index && <Separator />}
-          </Fragment>
-        ))}
-      </ul>
+      <List projects={projects} count={projectsCount} />
     </div>
   )
 }

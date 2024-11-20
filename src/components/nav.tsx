@@ -1,9 +1,10 @@
 import clsx from 'clsx'
 import Link from 'next/link'
 
-import { type NavItem } from '@/types'
 import { MobileMenu } from './mobile-menu'
 import { ThemeToggle } from './theme-toggle'
+
+import { type NavItem } from '@/types'
 
 function ListItem({ item }: { item: NavItem }) {
   return (

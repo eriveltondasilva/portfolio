@@ -1,6 +1,7 @@
+import Link from 'next/link'
+
 import { Avatar } from '@/components/avatar'
 import { Badge } from '@/components/badge'
-import Link from 'next/link'
 
 const skills: string[][] = [
   ['JavaScript', '#'],

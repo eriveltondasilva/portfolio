@@ -1,5 +1,6 @@
-import { Badge } from '@/components/badge'
 import Link from 'next/link'
+
+import { Badge } from '@/components/badge'
 
 type TagFilterProp = {
   allTags: string[]

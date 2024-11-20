@@ -11,9 +11,8 @@ export function Alert({
   return (
     <div
       className={clsx(
-        'mb-4 flex items-center rounded-lg text-sm',
-        'bg-blue-50 p-4 text-blue-800',
-        'dark:bg-gray-800 dark:text-blue-400',
+        'flex items-center rounded-lg px-4 py-5 mb-4 text-sm',
+        'bg-blue-50 dark:bg-gray-800',
       )}
       role='alert'
     >

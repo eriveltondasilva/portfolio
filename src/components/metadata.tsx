@@ -1,12 +1,15 @@
 import { clsx } from 'clsx'
 import { Calendar, Clock } from 'lucide-react'
 
-import { type ReadingTime } from '@/types'
 import { formatDate } from '@/utils/date-format'
 import { getReadingTime } from '@/utils/reading-time'
 
-type MetadataProps = { createdAt: string; readingTime: ReadingTime }
+import { type ReadingTime } from '@/types'
+
+type MetadataProps = { createdAt?: string; readingTime?: ReadingTime }
 export function Metadata({ createdAt, readingTime }: MetadataProps) {
+  if (!createdAt || !readingTime) return null
+
   const date = formatDate(createdAt)
 
   return (
