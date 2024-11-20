@@ -15,20 +15,20 @@ Este é um projeto de **portfólio pessoal** desenvolvido com **Next.js**, que t
 - **SEO Avançado**: Configurações otimizadas para melhorar a visibilidade em mecanismos de busca.
 - **Análise de Dados**: Monitore visitas e desempenho com **Vercel Analytics**.
 
-### Blog: Plugins Remark e Rehype
+### Blog: Plugins
 
 **Remark Plugins:**
 
-- **remark-frontmatter**: Suporte a frontmatter YAML para metadados em posts.
+- **remark-frontmatter**: Suporte a frontmatter **YAML** para metadados em posts.
 - **remark-mdx-frontmatter**: Permite usar variáveis do frontmatter diretamente nos componentes MDX.
 - **remark-parse-frontmatter**: Parsing avançado de metadados YAML.
 - **remark-reading-time**: Estima o tempo de leitura dos posts para uma melhor experiência do leitor.
-- **remark-toc**: Gera automaticamente uma Tabela de Conteúdo (TOC) com base nos cabeçalhos do post.
+- **remark-toc**: Gera automaticamente uma Tabela de Conteúdo (TOC) com base nos títulos do post.
 - **remark-gfm**: Adiciona funcionalidades como tabelas, listas de tarefas e links automáticos no Markdown.
 
 **Rehype Plugins:**
 
-- **rehype-slug**: Adiciona IDs únicos aos cabeçalhos para links internos.
+- **rehype-slug**: Adiciona IDs únicos aos títulos para links internos.
 - **rehype-autolink-headings**: Insere links automáticos nos títulos, facilitando a navegação.
 - **rehype-highlight**: Realça sintaxe de código, suportando diversas linguagens.
 - **rehype-highlight-code-lines**: Permite destacar linhas específicas em blocos de código.
@@ -102,21 +102,23 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
 
 ```plaintext
 /
-├── content/               # Posts do blog em formato MDX
-├── public/                # Assets públicos (imagens, fontes, etc.)
-├── src/                   # Código-fonte principal
-│   ├── app/               # Rotas e páginas (estrutura do Next.js)
-│   ├── components/        # Componentes reutilizáveis
-│   ├── hooks/             # Hooks personalizados
-│   ├── services/          # Serviços externos e APIs
-│   ├── styles/            # Estilos globais e temas
-│   ├── utils/             # Funções utilitárias
-│   ├── config.ts          # Configurações gerais
-│   ├── types.d.ts         # Tipos TypeScript
-│   ├── mdx-components.tsx # Componentes para renderização MDX
-├── .env                   # Variáveis de ambiente
-├── tailwind.config.js     # Configuração do TailwindCSS
-├── next.config.js         # Configuração do Next.js
+├── content/                # Posts do blog em formato MDX
+├── doc/                    # Documentos do blog em formato MD
+├── public/                 # Assets públicos (imagens, fontes, etc.)
+├── src/                    # Código-fonte principal
+│   ├── app/                # Rotas e páginas (estrutura do Next.js)
+│   ├── components/         # Componentes reutilizáveis
+│   ├── hooks/              # Hooks personalizados
+│   ├── services/           # Serviços externos e APIs
+│   ├── styles/             # Estilos globais e temas
+│   ├── utils/              # Funções utilitárias
+│   ├── config.ts           # Configurações gerais
+│   ├── plugin.ts           # Configurações dos plugins de remark e rehype
+│   ├── types.d.ts          # Tipos TypeScript
+│   ├── mdx-components.tsx  # Componentes para renderização MDX
+├── .env                    # Variáveis de ambiente
+├── tailwind.config.js      # Configuração do TailwindCSS
+├── next.config.js          # Configuração do Next.js
 ```
 
 <br />
@@ -164,7 +166,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    # metadata
    ---
 
-   # Conteúdo da postagem
+   # Título da postagem
 
    Este é um parágrafo em Markdown.
 
@@ -212,4 +214,4 @@ Este projeto está licenciado sob a licença **MIT**. Consulte o arquivo [LICENS
 
 <br />
 
-**💙 Desenvolvido por [Erivelton Silva](https://github.com/eriveltondasilva/)**
+**Desenvolvido com 💙 por [Erivelton Silva](https://github.com/eriveltondasilva/)**
