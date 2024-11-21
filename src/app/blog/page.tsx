@@ -2,7 +2,7 @@ import { InfoIcon } from 'lucide-react'
 import { type Metadata } from 'next'
 
 import { Alert } from '@/components/alert'
-import { getPosts } from '@/services/post-service'
+import { getAllPosts } from '@/services/post-service'
 import { extractTags, filterPostsByTag } from './helper'
 import { List } from './list'
 import { TagFilter } from './tag-filter'
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 type BlogPostProps = { searchParams: Promise<{ tag?: string }> }
 export default async function BlogPostPage({ searchParams }: BlogPostProps) {
   const { tag } = await searchParams
-  const posts = await getPosts()
+  const posts = await getAllPosts()
 
   const filteredPosts = filterPostsByTag(posts, tag)
   const allTags = extractTags(posts)

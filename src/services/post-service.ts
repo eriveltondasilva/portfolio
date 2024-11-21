@@ -55,7 +55,7 @@ export const getPost = cache(async (slug: string): Promise<Post | null> => {
   }
 })
 
-export const getPosts = cache(async (): Promise<(Post | null)[]> => {
+export const getAllPosts = cache(async (): Promise<(Post | null)[]> => {
   const slugs = await getSlugs()
 
   const posts = await Promise.all(slugs.map((slug) => getMetadata(slug)))

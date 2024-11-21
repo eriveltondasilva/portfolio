@@ -8,13 +8,11 @@ import { Metadata } from '@/components/metadata'
 import { getPost } from '@/services/post-service'
 import { meta } from '@/config'
 import { Separator } from '@/components/separator'
-import { delay } from '@/utils/delay'
 
 type PostPageProps = { params: Promise<{ slug: string }> }
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params
   const post = await getPost(slug)
-  await delay(5)
 
   if (!post) return null
 

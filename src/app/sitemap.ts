@@ -1,10 +1,10 @@
 import { type MetadataRoute } from 'next'
 
-import { getPosts } from '@/services/post-service'
+import { getAllPosts } from '@/services/post-service'
 import { url, routes } from '@/config'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const posts = await getPosts()
+  const posts = await getAllPosts()
   const currentDate = new Date().toISOString().split('T')[0]
 
   const staticRoutes: MetadataRoute.Sitemap = Object.values(routes).map(
