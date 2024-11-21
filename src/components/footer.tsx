@@ -37,10 +37,10 @@ export function Footer() {
   return (
     <footer className='flex flex-col items-center justify-between gap-2 py-8 sm:flex-row'>
       <section>
-        <time>© {YEAR}</time>&nbsp;
+        <time>©{YEAR}</time>&nbsp;
         <a
           className='no-underline'
-          href='#'
+          href='https://github.com/eriveltondasilva/portfolio'
           target='_blank'
           rel='noopener noreferrer'
         >
