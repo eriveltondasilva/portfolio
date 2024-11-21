@@ -19,6 +19,9 @@ type BadgeProps = {
   variant?: keyof typeof COLORS
   bordered?: boolean
   pill?: boolean
+  className?: string
+  disabled?: boolean
+  onClick?: () => void
   children: React.ReactNode
 }
 export function Badge({
@@ -26,6 +29,9 @@ export function Badge({
   variant = 'blue',
   bordered = false,
   pill = false,
+  disabled = false,
+  className,
+  onClick,
   children,
 }: BadgeProps) {
   const variantClasses = {
@@ -39,7 +45,10 @@ export function Badge({
         variantClasses[variant],
         sizeClasses[size],
         pill ? 'rounded-full' : 'rounded',
+        disabled ? 'cursor-not-allowed opacity-75' : 'cursor-pointer',
+        className,
       )}
+      onClick={!disabled ? onClick : undefined}
     >
       {children}
     </span>

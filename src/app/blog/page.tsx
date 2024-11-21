@@ -3,40 +3,31 @@ import { type Metadata } from 'next'
 
 import { Alert } from '@/components/alert'
 import { getPosts } from '@/services/post-service'
+import { extractTags, filterPostsByTag } from './helper'
 import { List } from './list'
 import { TagFilter } from './tag-filter'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Blog page',
+  description: 'Página de listagem de artigos do blog',
 }
 
-type BlogPostProps = {
-  searchParams: Promise<{
-    tag?: string
-  }>
-}
+type BlogPostProps = { searchParams: Promise<{ tag?: string }> }
 export default async function BlogPostPage({ searchParams }: BlogPostProps) {
   const { tag } = await searchParams
   const posts = await getPosts()
 
-  const filteredPosts =
-    tag ? posts.filter((post) => post?.tags?.includes(tag)) : posts
+  const filteredPosts = filterPostsByTag(posts, tag)
+  const allTags = extractTags(posts)
 
   const postCount = filteredPosts?.length
-
-  const allTags = [...new Set(posts.flatMap((post) => post?.tags || []))]
-
   const pageTitle = `Meus Artigos${postCount > 0 ? ` (${postCount})` : ''}:`
 
   return (
     <div>
       <header className='mb-8'>
         <h1 className='title'>{pageTitle}</h1>
-        <TagFilter
-          allTags={allTags}
-          tag={tag}
-        />
+        <TagFilter allTags={allTags} />
       </header>
 
       {!postCount && (
