@@ -2,15 +2,17 @@ export const parseFrontmatterOptions = {
   properties: {
     title: { type: 'string', required: true },
     description: { type: 'string', required: true },
-    author: { type: 'string' },
     tags: {
       type: 'array',
+      minItems: 1,
       maxItems: 5,
+      uniqueItems: true,
       items: { type: 'string' },
     },
     published: { type: 'boolean', required: true },
     createdAt: { type: 'string', format: 'date', required: true },
     updatedAt: { type: 'string', format: 'date' },
+    author: { type: 'string' },
   },
 }
 

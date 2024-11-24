@@ -1,29 +1,162 @@
 ---
 title: Hello World
-description: lorem ipsum dolor sit amet consectetur adipiscing elit.
-tags: [js, nodejs]
-published: true
-createdAt: 2024-10-31
-updatedAt: 2024-10-31
+description: Nextfolio custom MDX examples
+tags: [MDX, nextjs, blog, blog, blog]
+author: Velton
+published: false
+createdAt: 2024-08-11
 ---
 
-## hello
+## Contents
 
-This is some ~~teste~~, **bold** and _italics_ text.
+## Introdução
 
-This is a list in markdown:
+Nextfolio uses [custom MDX](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx) for blog posts, making it easy to include JSX components such as interactive embeds, charts, or alerts directly in your markdown content.
 
-- One
-- Two
-- Three
+Here are some examples of using MDX:
 
-```javascript
-function Foo({ params }) {
-  return null
+## h2 Heading
+
+### h3 Heading
+
+#### h4 Heading
+
+##### h5 Heading
+
+## Emphasis
+
+This is **bold** text
+
+_This is italic text_
+
+<del> Strikethrough </del>
+
+## Blockquotes
+
+> If today were the last day of my life, would I want to do what I am about to do today? – Steve Jobs
+
+## Links
+
+- Nextfolio is built with [Next.js](https://nextjs.org).
+- Nextfolio uses [pnpm](https://pnpm.io/) for package management.
+
+## CodeBlocks
+
+```jsx {7-9} showLineNumbers
+// This is commented-out code
+const test = 300
+const hello = {
+  world: 3000,
 }
 
-const t = 'hello world'
-console.log(t)
+export default function HelloWorld(test) {
+  return <Title />
+}
+
+function Title() {
+  return <h1>meu título</h1>
+}
 ```
 
-Checkout my React component:
+## Images
+
+Nextfolio uses [Next.js Image](https://nextjs.org/docs/basic-features/image-optimization) in MDX for seamless image rendering:
+
+```jsx
+<Image
+  src='/opengraph-image.png'
+  alt='OpenGraph image'
+  width={640}
+  height={500}
+/>
+```
+
+Renders:
+
+<Image
+  src='/opengraph-image.png'
+  alt='OpenGraph image'
+  width={640}
+  height={500}
+/>
+
+## Image Grid
+
+Nextfolio uses a custom [image grid component](https://github.com/1msirius/Nextfolio/blob/main/app/components/image-grid.tsx) to display image galleries.
+
+```jsx
+<ImageGrid
+  columns={3} // Accepts 2, 3, or 4 columns
+  images={[
+    { src: '/photos/photo1.jpg', alt: 'Photo1', href: '#' }, // 'href' is optional
+    { src: '/photos/photo2.jpg', alt: 'Photo2', href: '#' },
+    { src: '/photos/photo3.jpg', alt: 'Photo3' },
+  ]}
+/>
+```
+
+Renders:
+
+<ImageGrid
+  columns={3}
+  images={[
+    { src: '/photos/photo1.jpg', alt: 'Photo1', href: '#' },
+    { src: '/photos/photo2.jpg', alt: 'Photo2', href: '#' },
+    { src: '/photos/photo3.jpg', alt: 'Photo3' },
+    { src: '/photos/photo4.jpg', alt: 'Photo4' },
+  ]}
+/>
+
+## Embeds
+
+### YouTube Videos
+
+Nextfolio uses [react-youtube](https://www.npmjs.com/package/react-youtube) to embed YouTube videos in MDX posts.
+
+```jsx
+<YouTube videoId='wXhTHyIgQ_U' />
+```
+
+Renders:
+
+<YouTube id='IRRnY5j2jLs' />
+
+## Tables
+
+Nextfolio uses a custom [table component](https://github.com/1msirius/Nextfolio/blob/main/app/components/mdx.tsx#L38) to render tables in MDX posts.
+
+```jsx
+<Table
+  data={{
+    headers: ['Title', 'Description'],
+    rows: [
+      [
+        'First item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+      [
+        'Second item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+    ],
+  }}
+/>
+```
+
+Renders:
+
+<Table
+  data={{
+    headers: ['Title', 'Description'],
+    rows: [
+      [
+        'First item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+      [
+        'Second item',
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
+      ],
+    ],
+  }}
+/>
