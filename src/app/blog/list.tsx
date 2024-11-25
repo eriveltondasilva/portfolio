@@ -6,7 +6,7 @@ import { Badge } from '@/components/badge'
 import { Metadata } from '@/components/metadata'
 import { Separator } from '@/components/separator'
 
-import { Post } from '@/types'
+import { type Post } from '@/types'
 
 type ListProp = { posts: Post[]; count: number }
 export async function List({ posts, count }: ListProp) {

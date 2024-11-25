@@ -9,7 +9,7 @@ import { Separator } from '@/components/separator'
 
 import { meta } from '@/config'
 import { getPost } from '@/services/post-service'
-import { Post } from '@/types'
+import { type Post } from '@/types'
 
 type PostPageProps = { params: Promise<{ slug: string[] }> }
 export default async function PostPage({ params }: PostPageProps) {

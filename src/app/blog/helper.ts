@@ -1,4 +1,4 @@
-import { Post } from '@/types'
+import { type Post } from '@/types'
 
 export function filterPostsByTag(posts: Post[], tag?: string) {
   return tag ? posts.filter((post) => post.tags.includes(tag)) : posts

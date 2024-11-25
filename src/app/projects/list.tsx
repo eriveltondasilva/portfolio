@@ -6,7 +6,7 @@ import { Badge } from '@/components/badge'
 import { Separator } from '@/components/separator'
 import { formatDate } from '@/utils/date-format'
 
-import { Project } from '@/types'
+import { type Project } from '@/types'
 
 type ListProps = { projects: Project[]; count: number }
 export function List({ projects, count }: ListProps) {

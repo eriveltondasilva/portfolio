@@ -6,7 +6,7 @@ import { getAllPosts } from '@/services/post-service'
 import { extractTags, filterPostsByTag } from './helper'
 import { List } from './list'
 import { TagFilter } from './tag-filter'
-import { Post } from '@/types'
+import { type Post } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Blog',

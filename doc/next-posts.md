@@ -1,2 +1,5 @@
-- [ ] teste
-- [ ]
+- [ ] Origem do javascript
+- [ ] Para que serve frameworks?
+- [ ] Responsividade importa mesmo?
+- [ ] A linguagem mais importante da WEB
+- [ ] Clean Code para iniciantes

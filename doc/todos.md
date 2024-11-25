@@ -1,6 +1,6 @@
 - [x] coloca um dropdown menu do headlessui no mobile
 - [x] cria filtro de postagem conforme as tags
 - [x] coloca o texto da página home centralizado no mobile
+- [x] acrescenta parâmetro year à página post: `blog/[...slug]`.
 - [ ] cria pesquisa de post por nome
 - [ ] adiciona api para views, com banco de dados do prisma em SQLite para guardar as visualizações, limitando com cookies cada view ser contada num prazo de 24h
-- [ ] acrescenta parâmetro year à página post: `blog/[year]/[slug]`.

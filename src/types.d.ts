@@ -1,6 +1,6 @@
 import { MDXComponents } from '@types/mdx'
 
-type ReadingTime = {
+export type ReadingTime = {
   text: string
   minutes: number
   time: number
@@ -26,10 +26,10 @@ export type Post = {
   author?: string
   slug: string[]
   readingTime: ReadingTime
-  content?: MDXComponents
+  content: MDXComponents
 }
 
 export type NavItem = {
-  readonly name: string
-  readonly href: string
+  name: string
+  href: string
 }
