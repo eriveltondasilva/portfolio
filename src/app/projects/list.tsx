@@ -3,19 +3,20 @@ import { CalendarIcon, Link2Icon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Badge } from '@/components/badge'
-import { Separator } from '@/components/separator'
 import { formatDate } from '@/utils/date-format'
 
 import { type Project } from '@/types'
 
-type ListProps = { projects: Project[]; count: number }
-export function List({ projects, count }: ListProps) {
+export function List({ projects }: { projects: Project[] }) {
   return (
-    <ul className='space-y-8'>
-      {projects?.map((project, index) => (
+    <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
+      {projects.map((project) => (
         <li
           key={project.id}
-          className='text-neutral-700 dark:text-neutral-400'
+          className={clsx(
+            'flex py-6 first:pt-0 last:pb-0',
+            'text-neutral-700 dark:text-neutral-400',
+          )}
         >
           <article className='space-y-1'>
             <header>
@@ -35,7 +36,7 @@ export function List({ projects, count }: ListProps) {
             </header>
 
             <div className='flex flex-wrap gap-2'>
-              {project.topics.length > 0 ?
+              {!!project.topics.length ?
                 project.topics.map((topic) => (
                   <Badge key={topic}>{topic}</Badge>
                 ))
@@ -51,7 +52,6 @@ export function List({ projects, count }: ListProps) {
               </time>
             </div>
           </article>
-          {index < count - 1 && <Separator />}
         </li>
       ))}
     </ul>

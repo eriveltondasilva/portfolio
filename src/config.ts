@@ -1,3 +1,5 @@
+import { type Skill } from './types'
+
 const ENV = {
   GITHUB_URL: process.env.NEXT_PUBLIC_GITHUB_URL || '#',
   LINKEDIN_URL: process.env.NEXT_PUBLIC_LINKEDIN_URL || '#',
@@ -50,6 +52,16 @@ export const navItems = [
     name: 'About',
     href: routes.about,
   },
+]
+
+export const skills: Skill[] = [
+  { label: 'JavaScript', href: '#' },
+  { label: 'TypeScript', href: '#' },
+  { label: 'Nodejs', href: '#' },
+  { label: 'Express', href: '#' },
+  { label: 'Reactjs', href: '#' },
+  { label: 'Nextjs', href: '#' },
+  { label: 'TailwindCSS', href: '#' },
 ]
 
 export const url = {

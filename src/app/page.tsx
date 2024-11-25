@@ -3,28 +3,22 @@ import Link from 'next/link'
 import { Avatar } from '@/components/avatar'
 import { Badge } from '@/components/badge'
 
-const skills: string[][] = [
-  ['JavaScript', '#'],
-  ['TypeScript', '#'],
-  ['Nodejs', '#'],
-  ['Express', '#'],
-  ['Reactjs', '#'],
-  ['Nextjs', '#'],
-  ['TailwindCSS', '#'],
-]
+import { skills } from '@/config'
 
 export default async function HomePage() {
   return (
-    <section>
+    <>
       <header>
         <Avatar />
-        <h1 className='title text-center sm:text-left'>Hello,there 👋</h1>
+        <h1 className='title text-center sm:text-left'>
+          Hello,there <div className='inline-block animate-wiggle'>👋</div>
+        </h1>
       </header>
 
-      <div className='prose prose-neutral text-justify dark:prose-invert sm:text-left'>
+      <div className='prose prose-slate dark:prose-invert text-center sm:text-left'>
         <p>
-          Sou desenvolvedor web fullstack, apaixonado por criar soluções
-          digitais personalizadas que fazem a diferença.
+          Sou desenvolvedor web <strong>fullstack</strong>, apaixonado por criar
+          soluções digitais personalizadas que fazem a diferença.
         </p>
 
         <p>
@@ -36,21 +30,17 @@ export default async function HomePage() {
         <h2>Habilidades</h2>
 
         <div className='mt-4 flex flex-wrap gap-2'>
-          {skills.map(([label, href]) => (
-            <Badge
+          {skills.map(({ label, href }) => (
+            <Link
               key={label}
-              size='md'
+              href={href}
+              className='no-underline'
             >
-              <Link
-                href={href}
-                className='no-underline'
-              >
-                {label}
-              </Link>
-            </Badge>
+              <Badge size='md'>{label}</Badge>
+            </Link>
           ))}
         </div>
       </div>
-    </section>
+    </>
   )
 }

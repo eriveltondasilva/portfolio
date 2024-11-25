@@ -39,7 +39,7 @@ export function Avatar() {
     <div>
       <Image
         src={url.githubAvatar || '/profile.png'}
-        alt='Profile photo'
+        alt='foto de avatar'
         className={className}
         style={style}
         width={AVATAR_SIZE}

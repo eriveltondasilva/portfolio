@@ -1,14 +1,24 @@
 'use client'
 import { useEffect } from 'react'
+import { BanIcon } from 'lucide-react'
 
-export default function Error({ error }: { error: Error; reset: () => void }) {
+import { Alert } from '@/components/alert'
+
+type ErrorProps = {
+  error: Error
+  reset: () => void
+}
+export default function Error({ error }: ErrorProps) {
   useEffect(() => {
     console.error(error)
   }, [error])
 
   return (
-    <div>
+    <Alert
+      type='danger'
+      icon={BanIcon}
+    >
       <p>Oops! Something went wrong... maybe try refreshing?</p>
-    </div>
+    </Alert>
   )
 }

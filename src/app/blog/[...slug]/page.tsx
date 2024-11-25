@@ -10,6 +10,7 @@ import { Separator } from '@/components/separator'
 import { meta } from '@/config'
 import { getPost } from '@/services/post-service'
 import { type Post } from '@/types'
+import clsx from 'clsx'
 
 type PostPageProps = { params: Promise<{ slug: string[] }> }
 export default async function PostPage({ params }: PostPageProps) {
@@ -41,7 +42,12 @@ export default async function PostPage({ params }: PostPageProps) {
 
       <Separator />
 
-      <footer className='flex text-sm italic text-neutral-600 dark:text-neutral-400'>
+      <footer
+        className={clsx(
+          'flex text-sm italic',
+          'text-neutral-600 dark:text-neutral-400',
+        )}
+      >
         <PencilLine className='mr-2 size-4' />
         <p>Artigo escrito por {post.author || meta.author}</p>
       </footer>

@@ -7,6 +7,11 @@ export type ReadingTime = {
   words: number
 }
 
+export type Skill = {
+  label: string
+  href: string
+}
+
 export type Project = {
   id: number
   name: string

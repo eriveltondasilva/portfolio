@@ -9,7 +9,7 @@ import { TagFilter } from './tag-filter'
 import { type Post } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Meus Artigos',
   description: 'Página de listagem de artigos do blog',
 }
 
@@ -22,10 +22,10 @@ export default async function BlogPostPage({ searchParams }: BlogPostProps) {
   const allTags = extractTags(posts)
 
   const postCount = filteredPosts?.length
-  const pageTitle = `Meus Artigos${!!postCount ? ` (${postCount})` : ''}:`
+  const pageTitle = `Meus Artigos${!!postCount ? `(${postCount})` : ''}`
 
   return (
-    <div>
+    <>
       <header className='mb-8'>
         <h1 className='title'>{pageTitle}</h1>
         {!!postCount && <TagFilter allTags={allTags} />}
@@ -35,10 +35,7 @@ export default async function BlogPostPage({ searchParams }: BlogPostProps) {
         <Alert icon={InfoIcon}>There are no posts to display.</Alert>
       )}
 
-      <List
-        posts={filteredPosts}
-        count={postCount}
-      />
-    </div>
+      <List posts={filteredPosts} />
+    </>
   )
 }

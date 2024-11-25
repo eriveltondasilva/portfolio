@@ -8,7 +8,7 @@ import { List } from './list'
 import { type Project } from '@/types'
 
 export const metadata: Metadata = {
-  title: 'Projetos',
+  title: 'Meus Projetos',
   description: 'Página para exibição de projetos no Github',
 }
 
@@ -17,10 +17,10 @@ export default async function Projects() {
   const projects: Project[] = await res.json()
 
   const projectsCount = projects.length
-  const pageTitle = `Projects${projectsCount > 0 ? ` (${projectsCount})` : ''}`
+  const pageTitle = `Meus Projetos${!!projectsCount ? `(${projectsCount})` : ''}`
 
   return (
-    <div>
+    <>
       <header className='mb-8'>
         <h1 className='title'>{pageTitle}</h1>
       </header>
@@ -29,10 +29,7 @@ export default async function Projects() {
         <Alert icon={InfoIcon}>There are no projects to display.</Alert>
       )}
 
-      <List
-        projects={projects}
-        count={projectsCount}
-      />
-    </div>
+      <List projects={projects} />
+    </>
   )
 }

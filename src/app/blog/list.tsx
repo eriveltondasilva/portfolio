@@ -4,18 +4,19 @@ import Link from 'next/link'
 
 import { Badge } from '@/components/badge'
 import { Metadata } from '@/components/metadata'
-import { Separator } from '@/components/separator'
 
 import { type Post } from '@/types'
 
-type ListProp = { posts: Post[]; count: number }
-export async function List({ posts, count }: ListProp) {
+export async function List({ posts }: { posts: Post[] }) {
   return (
-    <ul className='space-y-8'>
-      {posts?.map((post, index) => (
+    <ul className='divide-y divide-gray-200 dark:divide-gray-700'>
+      {posts.map((post) => (
         <li
           key={post.slug.join('-')}
-          className='text-neutral-700 dark:text-neutral-400'
+          className={clsx(
+            'flex py-6 first:pt-0 last:pb-0',
+            'text-neutral-700 dark:text-neutral-400',
+          )}
         >
           <article className='space-y-1'>
             <header>
@@ -37,7 +38,7 @@ export async function List({ posts, count }: ListProp) {
             <div className='flex flex-wrap gap-2'>
               {!!post.tags.length ?
                 post.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)
-              : <Badge>no tags</Badge>}
+              : <Badge>No tags</Badge>}
             </div>
 
             <p>{post.description || 'No description.'}</p>
@@ -47,7 +48,6 @@ export async function List({ posts, count }: ListProp) {
               readingTime={post.readingTime}
             />
           </article>
-          {index < count - 1 && <Separator />}
         </li>
       ))}
     </ul>
