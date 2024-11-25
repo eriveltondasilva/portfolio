@@ -19,12 +19,12 @@ export type Project = {
 export type Post = {
   title: string
   description: string
-  author: string
-  tags?: string[]
-  published: boolean
   createdAt: string
-  updatedAt: string
-  slug: string
+  updatedAt?: string
+  isPublished: boolean
+  tags: string[]
+  author?: string
+  slug: string[]
   readingTime: ReadingTime
   content?: MDXComponents
 }

@@ -3,10 +3,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { Badge } from '@/components/badge'
 
-type TagFilterProp = {
-  allTags: string[]
-}
-export function TagFilter({ allTags }: TagFilterProp) {
+export function TagFilter({ allTags }: { allTags: string[] }) {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const router = useRouter()

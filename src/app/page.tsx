@@ -13,7 +13,7 @@ const skills: string[][] = [
   ['TailwindCSS', '#'],
 ]
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <section>
       <header>

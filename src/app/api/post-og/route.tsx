@@ -4,18 +4,15 @@ import { ImageResponse } from 'next/og'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const slug = searchParams.get('slug')
-  console.log('teste:', slug)
+  const slug = searchParams.getAll('slug')
 
-  if (!slug) {
-    console.log('teste')
+  if (!slug || slug.length !== 2) {
     return new Response('Missing "slug" query parameter.', { status: 400 })
   }
 
   const post = await getPost(slug)
 
-  if (!post?.title) {
-    console.log('teste')
+  if (!post) {
     return new Response('Post not found.', { status: 404 })
   }
 

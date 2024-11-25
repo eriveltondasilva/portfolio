@@ -1,4 +1,4 @@
-import '@/styles/main.scss'
+import '@/styles/main.css'
 
 import { Analytics } from '@vercel/analytics/react'
 import { clsx } from 'clsx'
@@ -51,7 +51,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body
           className={clsx(
             'select-none antialiased',
-            'flex h-screen items-center justify-center',
+            'flex h-dvh items-center justify-center sm:h-screen',
             'transition-colors duration-100 ease-out',
             'bg-white text-gray-900',
             'selection:bg-rose-300 selection:text-rose-900',

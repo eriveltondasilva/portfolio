@@ -140,7 +140,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
      - nextjs
      - blog
      - portfolio
-   published: true
+   isPublished: true
    createdAt: '2024-11-15'
    updatedAt: '2024-11-20'
    ---
@@ -153,7 +153,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
      description: string // Descrição curta do post
      author?: string // (Opcional) Nome do autor
      tags: string[] // Tags associadas ao post
-     published: boolean // Indica se o post está publicado
+     isPublished: boolean // Indica se o post está publicado
      createdAt: string // Data de criação (ISO 8601)
      updatedAt?: string // (Opcional) Data de atualização (ISO 8601)
    }

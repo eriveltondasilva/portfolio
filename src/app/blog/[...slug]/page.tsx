@@ -1,20 +1,20 @@
-import '@/styles/plugins/highlightjs/monokai.scss'
-import '@/styles/plugins/rehype-highlight-code-lines.scss'
+import '@/styles/plugins/highlightjs/monokai.css'
+import '@/styles/plugins/rehype-highlight-code-lines.css'
 
 import { PencilLine } from 'lucide-react'
 
 import { Badge } from '@/components/badge'
 import { Metadata } from '@/components/metadata'
-import { getPost } from '@/services/post-service'
-import { meta } from '@/config'
 import { Separator } from '@/components/separator'
 
-type PostPageProps = { params: Promise<{ slug: string }> }
+import { meta } from '@/config'
+import { getPost } from '@/services/post-service'
+import { Post } from '@/types'
+
+type PostPageProps = { params: Promise<{ slug: string[] }> }
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params
-  const post = await getPost(slug)
-
-  if (!post) return null
+  const post: Post = await getPost(slug)
 
   return (
     <article>
@@ -27,8 +27,9 @@ export default async function PostPage({ params }: PostPageProps) {
         />
 
         <div className='mt-3 flex flex-wrap gap-2'>
-          {post.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
-          {!post.tags?.length && <Badge>no tags</Badge>}
+          {!!post.tags.length ?
+            post.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)
+          : <Badge>no tags</Badge>}
         </div>
       </header>
 

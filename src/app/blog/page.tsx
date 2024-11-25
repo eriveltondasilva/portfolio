@@ -6,6 +6,7 @@ import { getAllPosts } from '@/services/post-service'
 import { extractTags, filterPostsByTag } from './helper'
 import { List } from './list'
 import { TagFilter } from './tag-filter'
+import { Post } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -15,19 +16,19 @@ export const metadata: Metadata = {
 type BlogPostProps = { searchParams: Promise<{ tag?: string }> }
 export default async function BlogPostPage({ searchParams }: BlogPostProps) {
   const { tag } = await searchParams
-  const posts = await getAllPosts()
+  const posts: Post[] = await getAllPosts()
 
   const filteredPosts = filterPostsByTag(posts, tag)
   const allTags = extractTags(posts)
 
   const postCount = filteredPosts?.length
-  const pageTitle = `Meus Artigos${postCount > 0 ? ` (${postCount})` : ''}:`
+  const pageTitle = `Meus Artigos${!!postCount ? ` (${postCount})` : ''}:`
 
   return (
     <div>
       <header className='mb-8'>
         <h1 className='title'>{pageTitle}</h1>
-        <TagFilter allTags={allTags} />
+        {!!postCount && <TagFilter allTags={allTags} />}
       </header>
 
       {!postCount && (

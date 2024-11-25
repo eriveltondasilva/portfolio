@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className='prose prose-neutral dark:prose-invert'>
-      <h1>About</h1>
+      <header className='mb-8'>
+        <h1 className='title'>About</h1>
+      </header>
       <p>
         Tenho sólida experiência com JavaScript, TypeScript e PHP, o que me
         permite desenvolver aplicações robustas, escaláveis e de alta qualidade.
