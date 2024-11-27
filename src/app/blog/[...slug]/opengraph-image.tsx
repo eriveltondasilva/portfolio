@@ -9,7 +9,7 @@ export const size = {
 export const contentType = 'image/png'
 
 // type ImageProps = { params: Promise<{ slug: string[] }> }
-export default async function Image() {
+export default function Image() {
   //   const { slug } = await params
 
   return new ImageResponse(
