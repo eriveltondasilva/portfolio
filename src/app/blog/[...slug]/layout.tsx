@@ -3,8 +3,8 @@ import { getAllPostFiles, getPost } from '@/services/post-service'
 
 type MetadataProps = { params: Promise<{ slug: string[] }> }
 export async function generateMetadata({ params }: MetadataProps) {
-  const [year, postSlug] = (await params).slug
-  const post = await getPost([year, postSlug])
+  const { slug } = await params
+  const post = await getPost(slug)
 
   return {
     metadataBase: new URL(meta.baseUrl),
@@ -16,19 +16,10 @@ export async function generateMetadata({ params }: MetadataProps) {
       //
       title: post.title,
       description: post.description,
-      url: `/blog/${year}/${postSlug}`,
+      url: `/blog/${slug.join('/')}`,
       publishedTime: post.createdAt,
       modifiedTime: post.updatedAt,
       tags: post.tags,
-      authors: meta.author,
-      // images: [
-      //   {
-      //     url: `/api/post-og?slug=${encodeURIComponent(year)}&slug=${encodeURIComponent(postSlug)}`,
-      //     alt: post.title,
-      //     width: 800,
-      //     height: 400,
-      //   },
-      // ],
     },
   }
 }
