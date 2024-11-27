@@ -2,9 +2,9 @@ import { InfoIcon } from 'lucide-react'
 import { type Metadata } from 'next'
 
 import { Alert } from '@/components/alert'
-import { url } from '@/config'
 import { List } from './list'
 
+import { fetchGithubRepos } from '@/services/fetch-github-repos'
 import { type Project } from '@/types'
 
 export const metadata: Metadata = {
@@ -13,8 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default async function Projects() {
-  const res = await fetch(url.githubRepos, { cache: 'force-cache' })
-  const projects: Project[] = await res.json()
+  const projects: Project[] = await fetchGithubRepos()
 
   const projectsCount = projects.length
   const pageTitle = `Meus Projetos${!!projectsCount ? `(${projectsCount})` : ''}`
