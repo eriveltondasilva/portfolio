@@ -11,9 +11,9 @@ export const size = {
 
 export const contentType = 'image/png'
 
-type ImageProps = { params: Promise<{ slug: string[] }> }
-export default async function Image({ params }: ImageProps) {
-  const { slug } = await params
+// type ImageProps = { params: Promise<{ slug: string[] }> }
+export default async function Image() {
+  //   const { slug } = await params
 
   return new ImageResponse(
     (
@@ -28,7 +28,7 @@ export default async function Image({ params }: ImageProps) {
           justifyContent: 'center',
         }}
       >
-        {slug.join('-')}
+        ACME APP
       </div>
     ),
     {
