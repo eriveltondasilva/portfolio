@@ -132,6 +132,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    ```
 
    ```ts
+   // tipos dos frontmatter retornado pelos posts
    type Frontmatter = {
      title: string // Título do post
      description: string // Descrição curta do post
@@ -157,7 +158,7 @@ Antes de começar, certifique-se de ter instalado em sua máquina:
    <MyCustomComponent prop='valor' />
    ```
 
-   > Posts que estejam com `isPublished: false` ou estejam fora das pastas dos anos não serão encontrados.
+   > Posts que tiverem o campo `isPublished` como `false` ou que estiverem fora das pastas do ano correspondente não serão exibidos.
 
 ## 🤝 **Como Contribuir**
 
