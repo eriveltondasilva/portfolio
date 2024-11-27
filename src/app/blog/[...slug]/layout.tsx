@@ -21,14 +21,14 @@ export async function generateMetadata({ params }: MetadataProps) {
       modifiedTime: post.updatedAt,
       tags: post.tags,
       authors: meta.author,
-      images: [
-        {
-          url: `/api/post-og?slug=${encodeURIComponent(year)}&slug=${encodeURIComponent(postSlug)}`,
-          alt: post.title,
-          width: 800,
-          height: 400,
-        },
-      ],
+      // images: [
+      //   {
+      //     url: `/api/post-og?slug=${encodeURIComponent(year)}&slug=${encodeURIComponent(postSlug)}`,
+      //     alt: post.title,
+      //     width: 800,
+      //     height: 400,
+      //   },
+      // ],
     },
   }
 }
