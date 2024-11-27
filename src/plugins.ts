@@ -1,6 +1,6 @@
 export const parseFrontmatterOptions = {
   properties: {
-    title: { type: 'string', minLength: 5, maxLength: 100, required: true },
+    title: { type: 'string', minLength: 5, maxLength: 150, required: true },
     description: {
       type: 'string',
       minLength: 5,
