@@ -1,14 +1,23 @@
 import { meta } from '@/config'
 import { getAllPostFiles, getPost } from '@/services/post-service'
+import { Post } from '@/types'
+import { formatDate } from '@/utils/date-format'
+import { getReadingTime } from '@/utils/reading-time'
+import { Metadata } from 'next'
 
 type MetadataProps = { params: Promise<{ slug: string[] }> }
-export async function generateMetadata({ params }: MetadataProps) {
+export async function generateMetadata({
+  params,
+}: MetadataProps): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPost(slug)
+  const post: Post = await getPost(slug)
+  const author = post.author || meta.author
+  const createdAt = formatDate(post.createdAt)
+  const readingTime = getReadingTime(post.readingTime)
+
+  const ogImage = `${meta.baseUrl}/api/post-og?title=${encodeURIComponent(post.title)}&description=${encodeURIComponent(post.description)}&author=${encodeURIComponent(author)}&created-at=${encodeURIComponent(createdAt)}&reading-time=${encodeURIComponent(readingTime)}`
 
   return {
-    metadataBase: new URL(meta.baseUrl),
-    //
     title: post.title,
     description: post.description,
     openGraph: {
@@ -16,10 +25,15 @@ export async function generateMetadata({ params }: MetadataProps) {
       //
       title: post.title,
       description: post.description,
-      url: `/blog/${slug.join('/')}`,
+      url: `${meta.baseUrl}/blog/${slug.join('/')}`,
       publishedTime: post.createdAt,
       modifiedTime: post.updatedAt,
       tags: post.tags,
+      images: [
+        {
+          url: ogImage,
+        },
+      ],
     },
   }
 }
