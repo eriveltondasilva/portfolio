@@ -1,16 +1,15 @@
 import '@/styles/plugins/highlightjs/monokai.css'
 import '@/styles/plugins/rehype-highlight-code-lines.css'
 
+import { clsx } from 'clsx'
 import { PencilLine } from 'lucide-react'
 
-import { Badge } from '@/components/badge'
 import { Metadata } from '@/components/metadata'
 import { Separator } from '@/components/separator'
 
 import { meta } from '@/config'
 import { getPost } from '@/services/post-service'
 import { type Post } from '@/types'
-import clsx from 'clsx'
 
 type PostPageProps = { params: Promise<{ slug: string[] }> }
 export default async function PostPage({ params }: PostPageProps) {
@@ -25,13 +24,8 @@ export default async function PostPage({ params }: PostPageProps) {
         <Metadata
           createdAt={post.createdAt}
           readingTime={post.readingTime}
+          tags={post.tags}
         />
-
-        <div className='mt-3 flex flex-wrap gap-2'>
-          {!!post.tags.length ?
-            post.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)
-          : <Badge>no tags</Badge>}
-        </div>
       </header>
 
       <Separator />
@@ -49,7 +43,7 @@ export default async function PostPage({ params }: PostPageProps) {
         )}
       >
         <PencilLine className='mr-2 size-4' />
-        <p>Artigo escrito por {post.author || meta.author}</p>
+        <p>Escrito por {post.author || meta.author}</p>
       </footer>
     </article>
   )

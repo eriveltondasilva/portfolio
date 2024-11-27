@@ -1,10 +1,7 @@
 import clsx from 'clsx'
-import { CalendarIcon, Link2Icon } from 'lucide-react'
-import Link from 'next/link'
+import { Link2Icon } from 'lucide-react'
 
-import { Badge } from '@/components/badge'
-import { formatDate } from '@/utils/date-format'
-
+import { Metadata } from '@/components/metadata'
 import { type Project } from '@/types'
 
 export function List({ projects }: { projects: Project[] }) {
@@ -20,7 +17,7 @@ export function List({ projects }: { projects: Project[] }) {
         >
           <article className='space-y-1'>
             <header>
-              <Link
+              <a
                 href={project.html_url}
                 className={clsx(
                   'flex gap-2 font-semibold',
@@ -29,28 +26,20 @@ export function List({ projects }: { projects: Project[] }) {
                   'decoration-sky-600 decoration-3',
                   'dark:decoration-sky-400',
                 )}
+                rel='noopener noreferrer'
+                target='_blank'
               >
                 <Link2Icon aria-hidden='true' />
                 <h2>{project.name.toUpperCase()}</h2>
-              </Link>
+              </a>
             </header>
-
-            <div className='flex flex-wrap gap-2'>
-              {!!project.topics.length ?
-                project.topics.map((topic) => (
-                  <Badge key={topic}>{topic}</Badge>
-                ))
-              : <Badge>No tags</Badge>}
-            </div>
 
             <p>{project.description || 'No description.'}</p>
 
-            <div className='flex items-center gap-2 text-sm'>
-              <CalendarIcon className='size-4' />
-              <time dateTime={project.created_at}>
-                {formatDate(project.created_at)}
-              </time>
-            </div>
+            <Metadata
+              createdAt={project.created_at}
+              tags={project.topics}
+            />
           </article>
         </li>
       ))}

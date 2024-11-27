@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import { Link2Icon } from 'lucide-react'
 import Link from 'next/link'
 
-import { Badge } from '@/components/badge'
 import { Metadata } from '@/components/metadata'
 
 import { type Post } from '@/types'
@@ -35,17 +34,12 @@ export async function List({ posts }: { posts: Post[] }) {
               </Link>
             </header>
 
-            <div className='flex flex-wrap gap-2'>
-              {!!post.tags.length ?
-                post.tags.map((tag) => <Badge key={tag}>{tag}</Badge>)
-              : <Badge>No tags</Badge>}
-            </div>
-
             <p>{post.description || 'No description.'}</p>
 
             <Metadata
               createdAt={post.createdAt}
               readingTime={post.readingTime}
+              tags={post.tags}
             />
           </article>
         </li>

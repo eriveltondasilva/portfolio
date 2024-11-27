@@ -15,7 +15,7 @@ export default async function HomePage() {
         </h1>
       </header>
 
-      <div className='prose prose-slate dark:prose-invert text-center sm:text-left'>
+      <div className='prose prose-slate text-center dark:prose-invert sm:text-left'>
         <p>
           Sou desenvolvedor web <strong>fullstack</strong>, apaixonado por criar
           soluções digitais personalizadas que fazem a diferença.

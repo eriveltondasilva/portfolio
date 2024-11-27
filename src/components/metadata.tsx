@@ -1,36 +1,53 @@
 import { clsx } from 'clsx'
-import { Calendar, Clock } from 'lucide-react'
+import { CalendarIcon, ClockIcon } from 'lucide-react'
 
 import { formatDate } from '@/utils/date-format'
 import { getReadingTime } from '@/utils/reading-time'
 
 import { type ReadingTime } from '@/types'
+import { Badge } from './badge'
 
-type MetadataProps = { createdAt?: string; readingTime?: ReadingTime }
-export function Metadata({ createdAt, readingTime }: MetadataProps) {
-  if (!createdAt || !readingTime) return null
-
-  const date = formatDate(createdAt)
-
+type MetadataProps = {
+  createdAt?: string
+  readingTime?: ReadingTime
+  tags?: string[]
+}
+export function Metadata({ createdAt, readingTime, tags }: MetadataProps) {
   return (
-    <div
-      className={clsx(
-        'flex flex-wrap items-center gap-x-2',
-        'text-medium text-sm',
-        'text-neutral-600 dark:text-neutral-400',
-      )}
-    >
-      <div className='flex items-center'>
-        <Calendar className='mr-2 size-4' />
-        <time dateTime={createdAt}>{date}</time>
+    <section>
+      <div
+        className={clsx(
+          'flex flex-wrap items-center gap-x-4',
+          'text-medium text-sm',
+          'text-neutral-600 dark:text-neutral-400',
+        )}
+      >
+        {createdAt && (
+          <div
+            className='flex items-center gap-2'
+            aria-label='Data de publicação'
+          >
+            <CalendarIcon className='size-4' />
+            <time dateTime={createdAt}>{formatDate(createdAt)}</time>
+          </div>
+        )}
+
+        {readingTime && (
+          <div
+            className='flex items-center gap-2'
+            aria-label='Tempo estimado de leitura'
+          >
+            <ClockIcon className='size-4' />
+            <span>{getReadingTime(readingTime)} min de leitura</span>
+          </div>
+        )}
       </div>
 
-      <span>|</span>
-
-      <div className='flex items-center'>
-        <Clock className='mr-2 size-4' />
-        <span>{getReadingTime(readingTime)} min de leitura</span>
+      <div className='mt-2 flex flex-wrap gap-2'>
+        {!!tags?.length ?
+          tags.map((tag) => <Badge key={tag}>{tag}</Badge>)
+        : <Badge>Sem tags</Badge>}
       </div>
-    </div>
+    </section>
   )
 }
