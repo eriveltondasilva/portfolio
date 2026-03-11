@@ -13,7 +13,7 @@ export const seriesSchema = z.object({
   cover: z.string().optional(),
 })
 
-export const postFrontmatterSchema  = z
+export const postFrontmatterSchema = z
   .object({
     slug: z
       .string()

@@ -14,6 +14,10 @@ const SERIES_DIR = join(CONTENT_DIR, 'series')
 const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
 const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
 async function listSubdirectories(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true })
   return entries
@@ -21,12 +25,94 @@ async function listSubdirectories(dir: string): Promise<string[]> {
     .map((entry) => join(dir, entry.name))
 }
 
-async function readSeries(): Promise<Map<string, SeriesMeta>> {
-  const seriesMap = new Map<string, SeriesMeta>()
+async function writeJson(filePath: string, data: unknown): Promise<void> {
+  await writeFile(filePath, JSON.stringify(data, null, 2) + '\n', 'utf-8')
+}
 
+interface SlugEntry {
+  slug: string
+  source: string
+}
+
+function assertUniqueSlugs(
+  entries: SlugEntry[],
+  context: 'posts' | 'series',
+): void {
+  const seen = new Map<string, string>() // slug → first source
+  const duplicates = new Map<string, string[]>() // slug → all sources
+
+  for (const { slug, source } of entries) {
+    const first = seen.get(slug)
+
+    if (first !== undefined) {
+      const sources = duplicates.get(slug) ?? [first]
+      sources.push(source)
+      duplicates.set(slug, sources)
+    } else {
+      seen.set(slug, source)
+    }
+  }
+
+  if (duplicates.size === 0) return
+
+  const detail = [...duplicates.entries()]
+    .map(([slug, sources]) => {
+      const files = sources.map((s) => `\n    - ${s}`).join('')
+      return `  "${slug}" encontrado em:${files}`
+    })
+    .join('\n')
+
+  throw new Error(`[${context}] Slugs duplicados encontrados:\n${detail}`)
+}
+
+// Carries the source file path alongside the parsed post for validation purposes.
+// Stripped before returning from readPosts.
+type PostWithSource = PostIndex & { _source: string }
+
+/**
+ * Detects duplicate order values within each series and reports which files conflict.
+ */
+function assertUniqueSeriesOrder(posts: PostWithSource[]): void {
+  // Map<seriesSlug, Map<order, source[]>>
+  const index = new Map<string, Map<number, string[]>>()
+
+  for (const post of posts) {
+    if (!post.series || post.order === undefined) continue
+
+    const byOrder = index.get(post.series) ?? new Map<number, string[]>()
+    const sources = byOrder.get(post.order) ?? []
+    sources.push(post._source)
+    byOrder.set(post.order, sources)
+    index.set(post.series, byOrder)
+  }
+
+  for (const [seriesSlug, byOrder] of index) {
+    const conflicts = [...byOrder.entries()].filter(
+      ([, sources]) => sources.length > 1,
+    )
+    if (conflicts.length === 0) continue
+
+    const detail = conflicts
+      .map(([order, sources]) => {
+        const files = sources.map((s) => `\n    - ${s}`).join('')
+        return `  order ${order}:${files}`
+      })
+      .join('\n')
+
+    throw new Error(
+      `[posts] Série "${seriesSlug}" possui posts com "order" duplicado:\n${detail}`,
+    )
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Readers
+// ---------------------------------------------------------------------------
+
+async function readSeries(): Promise<Map<string, SeriesMeta>> {
   const dirs = await listSubdirectories(SERIES_DIR)
 
-  await Promise.all(
+  const entries = await Promise.all(
     dirs.map(async (dir) => {
       const filePath = join(dir, 'index.json')
 
@@ -52,18 +138,26 @@ async function readSeries(): Promise<Map<string, SeriesMeta>> {
         throw new Error(`[series] Validação falhou em ${filePath}:\n${issues}`)
       }
 
-      seriesMap.set(result.data.slug, result.data)
+      return { data: result.data, filePath }
     }),
   )
 
-  return seriesMap
+  assertUniqueSlugs(
+    entries.map(({ data, filePath }) => ({
+      slug: data.slug,
+      source: filePath,
+    })),
+    'series',
+  )
+
+  return new Map(entries.map(({ data }) => [data.slug, data]))
 }
 
 async function readPosts(knownSeries: Set<string>): Promise<PostIndex[]> {
   const dirs = await listSubdirectories(POSTS_DIR)
 
   const results = await Promise.all(
-    dirs.map(async (dir): Promise<PostIndex | null> => {
+    dirs.map(async (dir): Promise<PostWithSource | null> => {
       const filePath = join(dir, 'index.mdx')
 
       let raw: string
@@ -85,29 +179,46 @@ async function readPosts(knownSeries: Set<string>): Promise<PostIndex[]> {
 
       const post = result.data
 
-      // Filter unpublished posts
+      if (post.order !== undefined && post.series === undefined) {
+        throw new Error(
+          `[posts] Post "${post.slug}" define "order: ${post.order}" sem pertencer a uma série.\n  Arquivo: ${filePath}`,
+        )
+      }
+
       if (!post.published) return null
 
-      // Validate series reference
       if (post.series && !knownSeries.has(post.series)) {
         throw new Error(
-          `[posts] Post "${post.slug}" referencia a série "${post.series}" que não existe.`,
+          `[posts] Post "${post.slug}" referencia a série "${post.series}" que não existe.\n  Arquivo: ${filePath}`,
         )
       }
 
       return {
         ...post,
-        readingTime: readingTime(content).minutes,
+        readingTime: Math.ceil(readingTime(content).minutes),
+        _source: filePath,
       }
     }),
   )
 
-  return results.filter((post): post is PostIndex => post !== null)
+  const publishedPosts = results.filter(
+    (post): post is PostWithSource => post !== null,
+  )
+
+  assertUniqueSlugs(
+    publishedPosts.map((p) => ({ slug: p.slug, source: p._source })),
+    'posts',
+  )
+  assertUniqueSeriesOrder(publishedPosts)
+
+  // Strip internal _source field before writing to JSON
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return publishedPosts.map(({ _source: _, ...post }) => post)
 }
 
-async function writeJson(filePath: string, data: unknown): Promise<void> {
-  await writeFile(filePath, JSON.stringify(data, null, 2) + '\n', 'utf-8')
-}
+// ---------------------------------------------------------------------------
+// Index builders
+// ---------------------------------------------------------------------------
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   const sorted = [...posts].sort(
@@ -126,12 +237,14 @@ async function buildSeriesIndex(
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .map((series) => {
       const relatedPosts: SeriesPostRef[] = posts
-        .filter((p) => p.series === series.slug)
-        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .filter(
+          (p): p is PostIndex & { order: number } => p.series === series.slug,
+        )
+        .sort((a, b) => a.order - b.order)
         .map((p) => ({
           slug: p.slug,
           title: p.title,
-          order: p.order as number,
+          order: p.order,
         }))
 
       return { ...series, posts: relatedPosts }
@@ -140,6 +253,10 @@ async function buildSeriesIndex(
   await writeJson(OUTPUT_SERIES, seriesWithPosts)
   console.log(`✔ series-index.json → ${seriesWithPosts.length} série(s)`)
 }
+
+// ---------------------------------------------------------------------------
+// Entry point
+// ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
   console.log('> Gerando índices do blog...\n')
@@ -156,7 +273,7 @@ async function main(): Promise<void> {
 }
 
 main().catch((err: unknown) => {
-  console.error('\n> Erro ao gerar índices:')
+  console.error('> Erro ao gerar índices:')
   console.error(err instanceof Error ? err.message : err)
   process.exit(1)
 })
