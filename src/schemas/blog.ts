@@ -28,15 +28,16 @@ export const postFrontmatterSchema = z
     series: z.string().regex(slugRegex).optional(),
     order: z.number().int().positive().optional(),
   })
-   .superRefine((data, ctx) => {
+  .superRefine((data, ctx) => {
     if (data.series !== undefined && data.order === undefined) {
       ctx.addIssue({
         code: 'custom',
-        message: 'O campo "order" é obrigatório quando o post pertence a uma série.',
+        message:
+          'O campo "order" é obrigatório quando o post pertence a uma série.',
         path: ['order'],
       })
     }
- 
+
     if (data.order !== undefined && data.series === undefined) {
       ctx.addIssue({
         code: 'custom',
@@ -45,4 +46,3 @@ export const postFrontmatterSchema = z
       })
     }
   })
- 
