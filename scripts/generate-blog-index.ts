@@ -18,6 +18,11 @@ const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
 // Helpers
 // ---------------------------------------------------------------------------
 
+function unwrap<T>(result: PromiseSettledResult<T>): T {
+  if (result.status === 'rejected') throw result.reason
+  return result.value
+}
+
 async function listSubdirectories(dir: string): Promise<string[]> {
   const entries = await readdir(dir, { withFileTypes: true })
   return entries
@@ -38,7 +43,7 @@ function assertUniqueSlugs(
   entries: SlugEntry[],
   context: 'posts' | 'series',
 ): void {
-  const seen = new Map<string, string>() 
+  const seen = new Map<string, string>()
   const duplicates = new Map<string, string[]>()
 
   for (const { slug, source } of entries) {
@@ -308,10 +313,8 @@ async function main(): Promise<void> {
     throw new Error(errors.join('\n\n'))
   }
 
-  const seriesMap = (
-    seriesResult as PromiseFulfilledResult<Map<string, SeriesMeta>>
-  ).value
-  const posts = (postsResult as PromiseFulfilledResult<PostIndex[]>).value
+  const seriesMap = unwrap(seriesResult)
+  const posts = unwrap(postsResult)
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
 

@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predev": "bun run build:indexes",
+    "prebuild": "bun run build:indexes",
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "fmt": "bunx prettier . --write",
-    "index": "bun run scripts/generate-blog-index.ts"
+    "build:indexes": "bun run scripts/generate-blog-index.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
