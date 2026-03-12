@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join, relative } from 'node:path'
 import { cwd } from 'node:process'
 import { readdir, writeFile, readFile } from 'node:fs/promises'
 import matter from 'gray-matter'
@@ -38,8 +38,8 @@ function assertUniqueSlugs(
   entries: SlugEntry[],
   context: 'posts' | 'series',
 ): void {
-  const seen = new Map<string, string>() // slug → first source
-  const duplicates = new Map<string, string[]>() // slug → all sources
+  const seen = new Map<string, string>() 
+  const duplicates = new Map<string, string[]>()
 
   for (const { slug, source } of entries) {
     const first = seen.get(slug)
@@ -65,15 +65,7 @@ function assertUniqueSlugs(
   throw new Error(`[${context}] Slugs duplicados encontrados:\n${detail}`)
 }
 
-// Carries the source file path alongside the parsed post for validation purposes.
-// Stripped before returning from readPosts.
-type PostWithSource = PostIndex & { _source: string }
-
-/**
- * Detects duplicate order values within each series and reports which files conflict.
- */
-function assertUniqueSeriesOrder(posts: PostWithSource[]): void {
-  // Map<seriesSlug, Map<order, source[]>>
+function assertUniqueSeriesOrder(posts: PostIndex[]): void {
   const index = new Map<string, Map<number, string[]>>()
 
   for (const post of posts) {
@@ -81,7 +73,7 @@ function assertUniqueSeriesOrder(posts: PostWithSource[]): void {
 
     const byOrder = index.get(post.series) ?? new Map<number, string[]>()
     const sources = byOrder.get(post.order) ?? []
-    sources.push(post._source)
+    sources.push(post.filePath)
     byOrder.set(post.order, sources)
     index.set(post.series, byOrder)
   }
@@ -105,6 +97,23 @@ function assertUniqueSeriesOrder(posts: PostWithSource[]): void {
   }
 }
 
+function collectErrors(
+  results: PromiseSettledResult<unknown>[],
+  context: 'posts' | 'series',
+): void {
+  const errors = results
+    .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+    .map((r) =>
+      r.reason instanceof Error ? r.reason.message : String(r.reason),
+    )
+
+  if (errors.length > 0) {
+    throw new Error(
+      `[${context}] ${errors.length} erro(s) encontrado(s):\n\n${errors.join('\n\n')}`,
+    )
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Readers
 // ---------------------------------------------------------------------------
@@ -112,7 +121,7 @@ function assertUniqueSeriesOrder(posts: PostWithSource[]): void {
 async function readSeries(): Promise<Map<string, SeriesMeta>> {
   const dirs = await listSubdirectories(SERIES_DIR)
 
-  const entries = await Promise.all(
+  const results = await Promise.allSettled(
     dirs.map(async (dir) => {
       const filePath = join(dir, 'index.json')
 
@@ -142,6 +151,17 @@ async function readSeries(): Promise<Map<string, SeriesMeta>> {
     }),
   )
 
+  collectErrors(results, 'series')
+
+  const entries = results
+    .filter(
+      (
+        r,
+      ): r is PromiseFulfilledResult<{ data: SeriesMeta; filePath: string }> =>
+        r.status === 'fulfilled',
+    )
+    .map((r) => r.value)
+
   assertUniqueSlugs(
     entries.map(({ data, filePath }) => ({
       slug: data.slug,
@@ -153,11 +173,11 @@ async function readSeries(): Promise<Map<string, SeriesMeta>> {
   return new Map(entries.map(({ data }) => [data.slug, data]))
 }
 
-async function readPosts(knownSeries: Set<string>): Promise<PostIndex[]> {
+async function readPosts(): Promise<PostIndex[]> {
   const dirs = await listSubdirectories(POSTS_DIR)
 
-  const results = await Promise.all(
-    dirs.map(async (dir): Promise<PostWithSource | null> => {
+  const results = await Promise.allSettled(
+    dirs.map(async (dir): Promise<PostIndex | null> => {
       const filePath = join(dir, 'index.mdx')
 
       let raw: string
@@ -179,41 +199,53 @@ async function readPosts(knownSeries: Set<string>): Promise<PostIndex[]> {
 
       const post = result.data
 
-      if (post.order !== undefined && post.series === undefined) {
-        throw new Error(
-          `[posts] Post "${post.slug}" define "order: ${post.order}" sem pertencer a uma série.\n  Arquivo: ${filePath}`,
-        )
-      }
-
       if (!post.published) return null
-
-      if (post.series && !knownSeries.has(post.series)) {
-        throw new Error(
-          `[posts] Post "${post.slug}" referencia a série "${post.series}" que não existe.\n  Arquivo: ${filePath}`,
-        )
-      }
 
       return {
         ...post,
         readingTime: Math.ceil(readingTime(content).minutes),
-        _source: filePath,
+        filePath,
       }
     }),
   )
 
-  const publishedPosts = results.filter(
-    (post): post is PostWithSource => post !== null,
-  )
+  collectErrors(results, 'posts')
+
+  const publishedPosts = results
+    .filter(
+      (r): r is PromiseFulfilledResult<PostIndex | null> =>
+        r.status === 'fulfilled',
+    )
+    .map((r) => r.value)
+    .filter((post): post is PostIndex => post !== null)
 
   assertUniqueSlugs(
-    publishedPosts.map((p) => ({ slug: p.slug, source: p._source })),
+    publishedPosts.map((p) => ({ slug: p.slug, source: p.filePath })),
     'posts',
   )
   assertUniqueSeriesOrder(publishedPosts)
 
-  // Strip internal _source field before writing to JSON
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return publishedPosts.map(({ _source: _, ...post }) => post)
+  return publishedPosts.map((post) => ({
+    ...post,
+    filePath: relative(cwd(), post.filePath),
+  }))
+}
+
+function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
+  const invalid = posts.filter(
+    (p) => p.series !== undefined && !knownSeries.has(p.series),
+  )
+
+  if (invalid.length === 0) return
+
+  const detail = invalid
+    .map(
+      (p) =>
+        `  - "${p.slug}" referencia a série "${p.series}"\n    Arquivo: ${p.filePath}`,
+    )
+    .join('\n')
+
+  throw new Error(`[posts] Séries inexistentes referenciadas:\n${detail}`)
 }
 
 // ---------------------------------------------------------------------------
@@ -261,8 +293,27 @@ async function buildSeriesIndex(
 async function main(): Promise<void> {
   console.log('> Gerando índices do blog...\n')
 
-  const seriesMap = await readSeries()
-  const posts = await readPosts(new Set(seriesMap.keys()))
+  const [seriesResult, postsResult] = await Promise.allSettled([
+    readSeries(),
+    readPosts(),
+  ])
+
+  const errors = [seriesResult, postsResult]
+    .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+    .map((r) =>
+      r.reason instanceof Error ? r.reason.message : String(r.reason),
+    )
+
+  if (errors.length > 0) {
+    throw new Error(errors.join('\n\n'))
+  }
+
+  const seriesMap = (
+    seriesResult as PromiseFulfilledResult<Map<string, SeriesMeta>>
+  ).value
+  const posts = (postsResult as PromiseFulfilledResult<PostIndex[]>).value
+
+  assertSeriesExist(posts, new Set(seriesMap.keys()))
 
   await Promise.all([
     buildPostsIndex(posts),

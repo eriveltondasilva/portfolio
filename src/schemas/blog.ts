@@ -28,14 +28,21 @@ export const postFrontmatterSchema = z
     series: z.string().regex(slugRegex).optional(),
     order: z.number().int().positive().optional(),
   })
-  .refine(
-    (data) => {
-      if (data.series !== undefined && data.order === undefined) return false
-      return true
-    },
-    {
-      message:
-        'O campo "order" é obrigatório quando o post pertence a uma série.',
-      path: ['order'],
-    },
-  )
+   .superRefine((data, ctx) => {
+    if (data.series !== undefined && data.order === undefined) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'O campo "order" é obrigatório quando o post pertence a uma série.',
+        path: ['order'],
+      })
+    }
+ 
+    if (data.order !== undefined && data.series === undefined) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'O campo "series" é obrigatório quando o post define "order".',
+        path: ['series'],
+      })
+    }
+  })
+ 

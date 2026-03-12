@@ -7,6 +7,7 @@ export type PostFrontmatter = z.infer<typeof postFrontmatterSchema>
 
 export interface PostIndex extends PostFrontmatter {
   readingTime: number
+  filePath: string
 }
 
 export interface SeriesPostRef {
