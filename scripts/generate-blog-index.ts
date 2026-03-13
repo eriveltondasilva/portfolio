@@ -9,6 +9,11 @@ import { postFrontmatterSchema, seriesSchema } from '@/schemas/blog'
 
 import type { PostIndex, SeriesIndex, SeriesMeta, SeriesPostRef } from '@/types'
 
+interface SlugEntry {
+  slug: string
+  source: string
+}
+
 const CONTENT_DIR = join(cwd(), 'content')
 const POSTS_DIR = join(CONTENT_DIR, 'posts')
 const SERIES_DIR = join(CONTENT_DIR, 'series')
@@ -16,7 +21,7 @@ const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
 const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
 
 // ---------------------------------------------------------------------------
-// Helpers
+// # Helpers
 // ---------------------------------------------------------------------------
 
 function unwrap<T>(result: PromiseSettledResult<T>): T {
@@ -33,11 +38,6 @@ async function listSubdirectories(dir: string): Promise<string[]> {
 
 async function writeJson(filePath: string, data: unknown): Promise<void> {
   await writeFile(filePath, JSON.stringify(data, null, 2) + '\n', 'utf-8')
-}
-
-interface SlugEntry {
-  slug: string
-  source: string
 }
 
 function assertUniqueSlugs(
@@ -68,7 +68,9 @@ function assertUniqueSlugs(
     })
     .join('\n')
 
-  throw new Error(`[${context}] Slugs duplicados encontrados:\n${detail}`)
+  throw new Error(
+    `[${context}] ${duplicates.size} slug(s) duplicado(s) encontrado(s):\n${detail}`,
+  )
 }
 
 function assertUniqueSeriesOrder(posts: PostIndex[]): void {
@@ -98,7 +100,7 @@ function assertUniqueSeriesOrder(posts: PostIndex[]): void {
       .join('\n')
 
     throw new Error(
-      `[posts] Série "${seriesSlug}" possui posts com "order" duplicado:\n${detail}`,
+      `[posts] Conflito de "order" na série "${seriesSlug}". Cada post deve ter um "order" único:\n${detail}`,
     )
   }
 }
@@ -121,7 +123,7 @@ function collectErrors(
 }
 
 // ---------------------------------------------------------------------------
-// Readers
+// # Readers
 // ---------------------------------------------------------------------------
 
 async function readSeries(): Promise<Map<string, SeriesMeta>> {
@@ -135,14 +137,16 @@ async function readSeries(): Promise<Map<string, SeriesMeta>> {
       try {
         raw = await readFile(filePath, 'utf-8')
       } catch {
-        throw new Error(`[series] Arquivo não encontrado: ${filePath}`)
+        throw new Error(`[series] Não foi possível ler o arquivo: ${filePath}`)
       }
 
       let parsed: unknown
       try {
         parsed = JSON.parse(raw)
-      } catch {
-        throw new Error(`[series] JSON inválido em: ${filePath}`)
+      } catch (error) {
+        throw new Error(
+          `[series] JSON inválido em: ${filePath}\n  Motivo: ${error instanceof Error ? error.message : String(error)}`,
+        )
       }
 
       const result = seriesSchema.safeParse(parsed)
@@ -190,7 +194,7 @@ async function readPosts(): Promise<PostIndex[]> {
       try {
         raw = await readFile(filePath, 'utf-8')
       } catch {
-        throw new Error(`[posts] Arquivo não encontrado: ${filePath}`)
+        throw new Error(`[posts] Não foi possível ler o arquivo: ${filePath}`)
       }
 
       const { data: frontmatter, content } = matter(raw)
@@ -247,15 +251,22 @@ function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
   const detail = invalid
     .map(
       (p) =>
-        `  - "${p.slug}" referencia a série "${p.series}"\n    Arquivo: ${p.filePath}`,
+        `  - "${p.slug}" referencia a série "${p.series}" (não encontrada)\n    Arquivo: ${p.filePath}`,
     )
     .join('\n')
 
-  throw new Error(`[posts] Séries inexistentes referenciadas:\n${detail}`)
+  const available =
+    knownSeries.size > 0 ?
+      `\n  - Séries disponíveis: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
+    : '\nNenhuma série foi encontrada.'
+
+  throw new Error(
+    `[posts] Séries inexistentes referenciadas:\n${detail}${available}`,
+  )
 }
 
 // ---------------------------------------------------------------------------
-// Index builders
+// # Index builders
 // ---------------------------------------------------------------------------
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
@@ -293,7 +304,7 @@ async function buildSeriesIndex(
 }
 
 // ---------------------------------------------------------------------------
-// Entry point
+// # Entry point
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
@@ -311,7 +322,9 @@ async function main(): Promise<void> {
     )
 
   if (errors.length > 0) {
-    throw new Error(errors.join('\n\n'))
+    throw new Error(
+      `${errors.length} contexto(s) com erro durante a geração dos índices:\n\n---\n\n${errors.join('\n\n---\n\n')}`,
+    )
   }
 
   const seriesMap = unwrap(seriesResult)
@@ -327,8 +340,13 @@ async function main(): Promise<void> {
   console.info('\n> Índices gerados com sucesso.')
 }
 
-main().catch((err: unknown) => {
-  console.error('> Erro ao gerar índices:')
-  console.error(err instanceof Error ? err.message : err)
+main().catch((error: unknown) => {
+  console.error('❌ Erro ao gerar índices:')
+  console.error(error instanceof Error ? error.message : error)
+  console.error('')
+  console.error('---')
+  console.error('')
+  console.error('> Corrija os erros acima e tente novamente.')
+  console.error('')
   process.exit(1)
 })
