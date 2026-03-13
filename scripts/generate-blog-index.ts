@@ -1,12 +1,13 @@
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { cwd } from 'node:process'
-import { readdir, writeFile, readFile } from 'node:fs/promises'
+
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
 import { postFrontmatterSchema, seriesSchema } from '@/schemas/blog'
 
-import type { SeriesMeta, PostIndex, SeriesIndex, SeriesPostRef } from '@/types'
+import type { PostIndex, SeriesIndex, SeriesMeta, SeriesPostRef } from '@/types'
 
 const CONTENT_DIR = join(cwd(), 'content')
 const POSTS_DIR = join(CONTENT_DIR, 'posts')
@@ -263,7 +264,7 @@ async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   )
 
   await writeJson(OUTPUT_POSTS, sorted)
-  console.log(`✔ posts-index.json → ${sorted.length} post(s)`)
+  console.info(`✔ posts-index.json → ${sorted.length} post(s)`)
 }
 
 async function buildSeriesIndex(
@@ -288,7 +289,7 @@ async function buildSeriesIndex(
     })
 
   await writeJson(OUTPUT_SERIES, seriesWithPosts)
-  console.log(`✔ series-index.json → ${seriesWithPosts.length} série(s)`)
+  console.info(`✔ series-index.json → ${seriesWithPosts.length} série(s)`)
 }
 
 // ---------------------------------------------------------------------------
@@ -296,7 +297,7 @@ async function buildSeriesIndex(
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  console.log('> Gerando índices do blog...\n')
+  console.info('\n> Gerando índices do blog...\n')
 
   const [seriesResult, postsResult] = await Promise.allSettled([
     readSeries(),
@@ -323,7 +324,7 @@ async function main(): Promise<void> {
     buildSeriesIndex(seriesMap, posts),
   ])
 
-  console.log('\n> Índices gerados com sucesso.')
+  console.info('\n> Índices gerados com sucesso.')
 }
 
 main().catch((err: unknown) => {

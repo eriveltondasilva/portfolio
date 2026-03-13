@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "start": "next start",
     "predev": "bun run build:indexes",
     "prebuild": "bun run build:indexes",
-    "start": "next start",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "fmt": "bunx prettier . --write",
+    "lint": "bunx eslint .",
+    "lint:fix": "bunx eslint . --fix",
+    "fmt": "bunx prettier . --check",
+    "fmt:fix": "bunx prettier . --write",
+    "fix": "bun run lint:fix && bun run fmt:fix",
     "build:indexes": "bun run scripts/generate-blog-index.ts"
   },
   "dependencies": {
@@ -23,7 +25,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "reading-time": "^1.5.0",
-    "shadcn": "^4.0.5",
+    "shadcn": "^4.0.6",
     "tailwind-merge": "^3.5.0",
     "tw-animate-css": "^1.4.0",
     "zod": "^4.3.6"
@@ -37,6 +39,8 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.2.1",

@@ -1,12 +1,13 @@
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { cwd } from 'node:process'
+
 import matter from 'gray-matter'
 
-import postsIndex from '../../content/posts-index.json'
 import seriesIndex from '../../content/series-index.json'
+import postsIndex from '../../content/posts-index.json'
 
-import { PostIndex, SeriesIndex } from '@/types'
+import type { PostIndex, SeriesIndex } from '@/types'
 
 export function getAllPosts(): PostIndex[] {
   return postsIndex
