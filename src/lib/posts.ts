@@ -27,6 +27,7 @@ export async function getPostBySlug(slug: string) {
 
   return { meta: post, content }
 }
+getPostBySlug('')
 
 export async function getSeriesBySlug(slug: string) {
   return getAllSeries().find((s) => s.slug === slug) ?? null
