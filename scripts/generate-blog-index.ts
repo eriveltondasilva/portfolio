@@ -270,9 +270,12 @@ function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
 // ---------------------------------------------------------------------------
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
-  const sorted = [...posts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  )
+  const sorted = [...posts]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .map((post) => ({
+      ...post,
+      filePath: post.filePath.replaceAll('\\', '/'),
+    }))
 
   await writeJson(OUTPUT_POSTS, sorted)
   console.info(`✔ posts-index.json → ${sorted.length} post(s)`)
