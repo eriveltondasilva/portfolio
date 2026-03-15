@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "portfolio",
   "version": "0.1.0",
   "private": true,
@@ -13,7 +14,8 @@
     "fmt": "bunx prettier . --check",
     "fmt:fix": "bunx prettier . --write",
     "fix": "bun run lint:fix && bun run fmt:fix",
-    "build:indexes": "bun run scripts/generate-blog-index.ts"
+    "build:indexes": "bun run scripts/generate-blog-index.ts",
+    "build:schemas": "bun run scripts/generate-zod-schemas.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

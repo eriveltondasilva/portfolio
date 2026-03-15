@@ -1,0 +1,11 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["/content/series/**/index.json"],
+      "url": "./content/series.schema.json"
+    }
+  ],
+    "yaml.schemas": {
+    "./content/posts.schema.json": "/content/posts/**/index.mdx"
+  }
+}

@@ -1,35 +1,113 @@
 import { z } from 'zod'
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+const imageRegex = /\.(png|jpg|jpeg|webp|avif)$/i
 
 const setRegexChecks = (schema: z.ZodString) =>
-  schema.regex(slugRegex, 'O slug deve estar em kebab-case')
+  schema.regex(slugRegex, 'Slug must be in kebab-case.')
 
-export const seriesSchema = z.object({
-  slug: z
-    .string()
-    .min(1, 'O slug da série é obrigatório.')
-    .apply(setRegexChecks),
-  title: z.string().min(1, 'O título da série é obrigatório.'),
-  description: z.string().min(1, 'A descrição da série é obrigatória.'),
-  date: z.iso.date(),
-  cover: z.string().optional(),
-})
+export const seriesSchema = z
+  .object({
+    //
+    slug: z
+      .string()
+      .min(1, 'Series slug is required.')
+      .max(80, 'Slug must not exceed 80 characters.')
+      .apply(setRegexChecks)
+      .describe(
+        'Unique identifier of the series in kebab-case (e.g. nextjs-pro).',
+      ),
+    //
+    title: z
+      .string()
+      .min(1, 'Series title is required.')
+      .max(120, 'Title must not exceed 120 characters.')
+      .describe('Human readable title of the series.'),
+    //
+    description: z
+      .string()
+      .min(10, 'Description must contain at least 10 characters.')
+      .max(300, 'Description must not exceed 300 characters.')
+      .describe('Short summary describing the series content.'),
+    //
+    date: z.iso
+      .date()
+      .describe('Publication date in ISO format (YYYY-MM-DD).')
+      .meta({
+        examples: ['2026-01-01'],
+      }),
+    //
+    cover: z
+      .string()
+      .startsWith('./', 'Cover path must be an absolute path.')
+      .regex(imageRegex, 'Cover must be a valid image file.')
+      .optional()
+      .describe('Path to the cover image used for the series.'),
+  })
+  .strict()
+  .describe('Metadata describing a content series.')
 
 export const postFrontmatterSchema = z
   .object({
+    //
     slug: z
       .string()
-      .min(1, 'O slug do post é obrigatório.')
-      .apply(setRegexChecks),
-    title: z.string().min(1, 'O título do post é obrigatório.'),
-    description: z.string().min(1, 'A descrição do post é obrigatória.'),
-    tags: z.array(z.string()).min(1, 'Adicione pelo menos uma tag.'),
-    date: z.iso.date(),
-    published: z.boolean().default(false),
-    cover: z.string().optional(),
-    series: z.string().apply(setRegexChecks).optional(),
-    order: z.number().int().positive().optional(),
+      .min(1, 'Post slug is required.')
+      .max(120)
+      .apply(setRegexChecks)
+      .describe('Unique identifier for the post.'),
+    //
+    title: z
+      .string()
+      .min(1, 'Post title is required.')
+      .max(160)
+      .describe('Human readable title of the post.'),
+    //
+    description: z
+      .string()
+      .min(10, 'Description must contain at least 10 characters.')
+      .max(300)
+      .describe('Short summary of the post.'),
+    //
+    tags: z
+      .array(z.string().min(1).describe('Tag identifier.'))
+      .min(1, 'At least one tag is required.')
+      .max(10)
+      .describe('List of tags used to categorize the post.'),
+    //
+    date: z.iso
+      .date()
+      .describe('Publication date in ISO format (YYYY-MM-DD).')
+      .meta({
+        examples: ['2026-01-01'],
+      }),
+    //
+    published: z
+      .boolean()
+      .default(false)
+      .describe('Indicates whether the post is publicly visible.'),
+    //
+    cover: z
+      .string()
+      .startsWith('./', 'Cover path must be absolute.')
+      .optional()
+      .describe('Path to the cover image of the post.'),
+    //
+    series: z
+      .string()
+      .apply(setRegexChecks)
+      .optional()
+      .describe('Series identifier if the post belongs to a series.'),
+    //
+    order: z
+      .number()
+      .int()
+      .positive()
+      .optional()
+      .describe('Position of the post inside the series.')
+      .meta({
+        examples: [1, 2, 3],
+      }),
   })
   .superRefine(({ series, order }, ctx) => {
     const hasSeries = series !== undefined
@@ -39,7 +117,7 @@ export const postFrontmatterSchema = z
       ctx.addIssue({
         code: 'custom',
         message:
-          'O campo "order" é obrigatório quando o post pertence a uma série.',
+          'The "order" field is required when the post belongs to a series.',
         path: ['order'],
       })
     }
@@ -47,8 +125,10 @@ export const postFrontmatterSchema = z
     if (hasOrder && !hasSeries) {
       ctx.addIssue({
         code: 'custom',
-        message: 'O campo "series" é obrigatório quando o post define "order".',
+        message: 'The "series" field is required when "order" is defined.',
         path: ['series'],
       })
     }
   })
+  .strict()
+  .describe('Frontmatter metadata for a blog post.')

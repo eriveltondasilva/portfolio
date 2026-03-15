@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Unique identifier of the series in kebab-case (e.g. nextjs-pro)."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "Human readable title of the series."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 300,
+      "description": "Short summary describing the series content."
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+      "description": "Publication date in ISO format (YYYY-MM-DD).",
+      "examples": [
+        "2026-01-01"
+      ]
+    },
+    "cover": {
+      "description": "Path to the cover image used for the series.",
+      "type": "string",
+      "allOf": [
+        {
+          "pattern": "^\\.\\/.*"
+        },
+        {
+          "pattern": "\\.(png|jpg|jpeg|webp|avif)$"
+        }
+      ]
+    }
+  },
+  "required": [
+    "slug",
+    "title",
+    "description",
+    "date"
+  ],
+  "additionalProperties": false,
+  "description": "Metadata describing a content series."
+}

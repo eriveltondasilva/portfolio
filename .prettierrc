@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/prettierrc.json",
   "experimentalTernaries": true,
   "jsxSingleQuote": true,
   "semi": false,
