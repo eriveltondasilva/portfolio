@@ -50,5 +50,6 @@
     "date"
   ],
   "additionalProperties": false,
-  "description": "Metadata describing a content series."
+  "title": "Series Metadata",
+  "description": "Schema for validating metadata of a content series."
 }

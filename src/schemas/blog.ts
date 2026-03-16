@@ -45,7 +45,10 @@ export const seriesSchema = z
       .describe('Path to the cover image used for the series.'),
   })
   .strict()
-  .describe('Metadata describing a content series.')
+  .meta({
+    title: 'Series Metadata',
+    description: 'Schema for validating metadata of a content series.',
+  })
 
 export const postFrontmatterSchema = z
   .object({
@@ -131,4 +134,7 @@ export const postFrontmatterSchema = z
     }
   })
   .strict()
-  .describe('Frontmatter metadata for a blog post.')
+  .meta({
+    title: 'Post Frontmatter',
+    description: 'Schema for validating frontmatter metadata of a blog post.',
+  })
