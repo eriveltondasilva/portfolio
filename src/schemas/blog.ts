@@ -5,6 +5,8 @@ import { PostStatus, SeriesStatus } from '@/types'
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const imageRegex = /\.(png|jpg|jpeg|webp|avif)$/i
 
+// z.config(z.locales.pt())
+
 const setRegexChecks = (schema: z.ZodString) =>
   schema.regex(slugRegex, 'Slug must be in kebab-case.')
 

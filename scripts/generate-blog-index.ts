@@ -1,4 +1,5 @@
 import { join, relative } from 'node:path'
+import { styleText } from 'node:util'
 
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
@@ -19,6 +20,8 @@ const POSTS_DIR = join(CONTENT_DIR, 'posts')
 const SERIES_DIR = join(CONTENT_DIR, 'series')
 const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
 const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
+
+const successMsg = (text: string) => console.info(styleText('green', text))
 
 // ---------------------------------------------------------------------------
 // # Error
@@ -189,41 +192,28 @@ function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
 // ---------------------------------------------------------------------------
 // # Readers
 // ---------------------------------------------------------------------------
+// scripts/generate-blog-index.ts
 
 async function readSeries(): Promise<Map<string, Series>> {
-  const files = await globFiles('*/index.json', SERIES_DIR)
+  const filePath = join(SERIES_DIR, 'index.json')
+  const parsed = await readJson(filePath)
 
-  const results = await Promise.allSettled(
-    
-    files.map(async (filePath) => {
-      const parsed = await readJson(filePath)
-
-      const { success, data, error } = seriesSchema.safeParse(parsed)
-      if (!success) {
-        throw new Error(
-          `Validação falhou em ${filePath}:\n${formatZodIssues(error.issues)}`,
-        )
-      }
-
-      return { data, filePath }
-    }),
-  )
-
-  collectSettledErrors(results, 'series')
-
-  const entries = fulfilledValues(
-    results as PromiseFulfilledResult<{ data: Series; filePath: string }>[],
-  )
+  const result = seriesSchema.array().safeParse(parsed)
+  if (!result.success) {
+    throw new BuildError(
+      'series',
+      result.error.issues.map(
+        ({ path, message }) => `  - ${path.join('.')}: ${message}`,
+      ),
+    )
+  }
 
   assertUniqueSlugs(
-    entries.map(({ data, filePath }) => ({
-      slug: data.slug,
-      source: filePath,
-    })),
+    result.data.map((s) => ({ slug: s.slug, source: filePath })),
     'series',
   )
 
-  return new Map(entries.map(({ data }) => [data.slug, data]))
+  return new Map(result.data.map((s) => [s.slug, s]))
 }
 
 async function readPosts(): Promise<PostIndex[]> {
@@ -280,7 +270,7 @@ async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   )
 
   await writeJson(OUTPUT_POSTS, sorted)
-  console.info(`✔ posts-index.json → ${sorted.length} post(s)`)
+  console.info(successMsg(`✔ posts-index.json → ${sorted.length} post(s)`))
 }
 
 async function buildSeriesIndex(
@@ -310,7 +300,9 @@ async function buildSeriesIndex(
     })
 
   await writeJson(OUTPUT_SERIES, seriesWithPosts)
-  console.info(`✔ series-index.json → ${seriesWithPosts.length} série(s)`)
+  console.info(
+    successMsg(`✔ series-index.json → ${seriesWithPosts.length} série(s)`),
+  )
 }
 
 // ---------------------------------------------------------------------------
