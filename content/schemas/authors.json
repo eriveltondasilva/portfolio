@@ -29,6 +29,7 @@
         "format": "uri"
       },
       "socials": {
+        "description": "Social media profiles of the author.",
         "type": "object",
         "properties": {
           "github": {
@@ -47,16 +48,10 @@
             "format": "uri"
           }
         },
-        "additionalProperties": false,
-        "description": "Social media profiles of the author."
+        "additionalProperties": false
       }
     },
-    "required": [
-      "slug",
-      "name",
-      "bio",
-      "socials"
-    ],
+    "required": ["slug", "name", "bio"],
     "additionalProperties": false,
     "title": "Author Metadata",
     "description": "Schema for validating metadata of a blog author."

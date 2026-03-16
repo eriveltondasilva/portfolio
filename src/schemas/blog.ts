@@ -1,56 +1,56 @@
 import { z } from 'zod'
 
+import { PostStatus, SeriesStatus } from '@/types'
+
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const imageRegex = /\.(png|jpg|jpeg|webp|avif)$/i
 
 const setRegexChecks = (schema: z.ZodString) =>
   schema.regex(slugRegex, 'Slug must be in kebab-case.')
 
-export const seriesSchema = z
+export const authorSchema = z
   .object({
     //
     slug: z
       .string()
-      .min(1, 'Series slug is required.')
+      .min(1, 'Author slug is required.')
       .max(80, 'Slug must not exceed 80 characters.')
       .apply(setRegexChecks)
-      .describe(
-        'Unique identifier of the series in kebab-case (e.g. nextjs-pro).',
-      ),
+      .describe('Unique identifier of the author in kebab-case.'),
     //
-    title: z
+    name: z
       .string()
-      .min(1, 'Series title is required.')
-      .max(120, 'Title must not exceed 120 characters.')
-      .describe('Human readable title of the series.'),
+      .min(1, 'Author name is required.')
+      .max(100)
+      .describe('Full name of the author.'),
     //
-    description: z
+    bio: z
       .string()
-      .min(10, 'Description must contain at least 10 characters.')
-      .max(300, 'Description must not exceed 300 characters.')
-      .describe('Short summary describing the series content.'),
+      .min(10, 'Bio must contain at least 10 characters.')
+      .max(300)
+      .describe('Short summary of the author.'),
     //
-    date: z.iso
-      .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).')
-      .meta({
-        examples: ['2026-01-01'],
-      }),
-    //
-    cover: z
-      .string()
-      .startsWith('./', 'Cover path must be an absolute path.')
-      .regex(imageRegex, 'Cover must be a valid image file.')
+    avatar: z
+      .url()
       .optional()
-      .describe('Path to the cover image used for the series.'),
+      .describe('Path to the avatar image of the author.'),
+    //
+    socials: z
+      .object({
+        github: z.url().optional().describe('GitHub profile URL.'),
+        linkedin: z.url().optional().describe('LinkedIn profile URL.'),
+        twitter: z.url().optional().describe('Twitter profile URL.'),
+      })
+      .optional()
+      .describe('Social media profiles of the author.'),
   })
   .strict()
   .meta({
-    title: 'Series Metadata',
-    description: 'Schema for validating metadata of a content series.',
+    title: 'Author Metadata',
+    description: 'Schema for validating metadata of a blog author.',
   })
 
-export const postFrontmatterSchema = z
+export const postSchema = z
   .object({
     //
     slug: z
@@ -73,28 +73,38 @@ export const postFrontmatterSchema = z
       .describe('Short summary of the post.'),
     //
     tags: z
-      .array(z.string().min(1).describe('Tag identifier.'))
+      .array(
+        z.string().min(1).apply(setRegexChecks).describe('Tag identifier.'),
+      )
       .min(1, 'At least one tag is required.')
       .max(10)
       .describe('List of tags used to categorize the post.'),
     //
-    date: z.iso
+    publishedAt: z.iso
       .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).')
-      .meta({
-        examples: ['2026-01-01'],
-      }),
+      .describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
-    published: z
-      .boolean()
-      .default(false)
-      .describe('Indicates whether the post is publicly visible.'),
+    updatedAt: z.iso
+      .date()
+      .optional()
+      .describe('Date of the last significant update to the post.'),
+    //
+    status: z
+      .enum(Object.values(PostStatus))
+      .default(PostStatus.DRAFT)
+      .describe('Visibility state of the post.'),
     //
     cover: z
       .string()
       .startsWith('./', 'Cover path must be absolute.')
+      .regex(imageRegex, 'Cover must be a valid image file.')
       .optional()
       .describe('Path to the cover image of the post.'),
+    //
+    authors: z
+      .array(z.string().apply(setRegexChecks).describe('Author slug.'))
+      .min(1, 'At least one author is required.')
+      .describe('List of author slugs associated with this post.'),
     //
     series: z
       .string()
@@ -139,43 +149,48 @@ export const postFrontmatterSchema = z
     description: 'Schema for validating frontmatter metadata of a blog post.',
   })
 
-export const authorSchema = z
+export const seriesSchema = z
   .object({
     //
     slug: z
       .string()
-      .min(1, 'Author slug is required.')
+      .min(1, 'Series slug is required.')
       .max(80, 'Slug must not exceed 80 characters.')
       .apply(setRegexChecks)
-      .describe('Unique identifier of the author in kebab-case.'),
+      .describe(
+        'Unique identifier of the series in kebab-case (e.g. nextjs-pro).',
+      ),
     //
-    name: z
+    title: z
       .string()
-      .min(1, 'Author name is required.')
-      .max(100)
-      .describe('Full name of the author.'),
+      .min(1, 'Series title is required.')
+      .max(120, 'Title must not exceed 120 characters.')
+      .describe('Human readable title of the series.'),
     //
-    bio: z
+    description: z
       .string()
-      .min(10, 'Bio must contain at least 10 characters.')
-      .max(300)
-      .describe('Short summary of the author.'),
+      .min(10, 'Description must contain at least 10 characters.')
+      .max(300, 'Description must not exceed 300 characters.')
+      .describe('Short summary describing the series content.'),
     //
-    avatar: z
-      .url()
+    publishedAt: z.iso
+      .date()
+      .describe('Publication date in ISO format (YYYY-MM-DD).'),
+    //
+    status: z
+      .enum(Object.values(SeriesStatus))
+      .default(SeriesStatus.PLANNED)
+      .describe('Indicates the current state of the series.'),
+    //
+    cover: z
+      .string()
+      .startsWith('./', 'Cover path must be an absolute path.')
+      .regex(imageRegex, 'Cover must be a valid image file.')
       .optional()
-      .describe('Path to the avatar image of the author.'),
-    //
-    socials: z
-      .object({
-        github: z.url().optional().describe('GitHub profile URL.'),
-        linkedin: z.url().optional().describe('LinkedIn profile URL.'),
-        twitter: z.url().optional().describe('Twitter profile URL.'),
-      })
-      .describe('Social media profiles of the author.'),
+      .describe('Path to the cover image used for the series.'),
   })
   .strict()
   .meta({
-    title: 'Author Metadata',
-    description: 'Schema for validating metadata of a blog author.',
+    title: 'Series Metadata',
+    description: 'Schema for validating metadata of a content series.',
   })

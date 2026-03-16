@@ -1,19 +1,10 @@
 import { z } from 'zod'
 
-import {
-  authorSchema,
-  postFrontmatterSchema,
-  seriesSchema,
-} from '@/schemas/blog'
+import { authorSchema, postSchema, seriesSchema } from '@/schemas/blog'
 
-export type SeriesMeta = z.infer<typeof seriesSchema>
-export type PostFrontmatter = z.infer<typeof postFrontmatterSchema>
+export type Series = z.infer<typeof seriesSchema>
+export type Post = z.infer<typeof postSchema>
 export type Author = z.infer<typeof authorSchema>
-
-export interface PostIndex extends PostFrontmatter {
-  readingTime: number
-  filePath: string
-}
 
 export interface SeriesPostRef {
   slug: string
@@ -21,6 +12,23 @@ export interface SeriesPostRef {
   order: number
 }
 
-export interface SeriesIndex extends SeriesMeta {
+export interface PostIndex extends Post {
+  readingTime: number
+  filePath: string
+}
+
+export interface SeriesIndex extends Series {
   posts: SeriesPostRef[]
+}
+
+export enum PostStatus {
+  DRAFT = 'draft',
+  PUBLISHED = 'published',
+  ARCHIVED = 'archived',
+}
+
+export enum SeriesStatus {
+  PLANNED = 'planned',
+  IN_PROGRESS = 'in-progress',
+  COMPLETE = 'complete',
 }

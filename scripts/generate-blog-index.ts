@@ -5,9 +5,9 @@ import { cwd } from 'node:process'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
-import { postFrontmatterSchema, seriesSchema } from '@/schemas/blog'
+import { postSchema, seriesSchema } from '@/schemas/blog'
 
-import type { PostIndex, SeriesIndex, SeriesMeta, SeriesPostRef } from '@/types'
+import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 interface SlugEntry {
   slug: string
@@ -126,7 +126,7 @@ function collectErrors(
 // # Readers
 // ---------------------------------------------------------------------------
 
-async function readSeries(): Promise<Map<string, SeriesMeta>> {
+async function readSeries(): Promise<Map<string, Series>> {
   const dirs = await listSubdirectories(SERIES_DIR)
 
   const results = await Promise.allSettled(
@@ -165,9 +165,7 @@ async function readSeries(): Promise<Map<string, SeriesMeta>> {
 
   const entries = results
     .filter(
-      (
-        r,
-      ): r is PromiseFulfilledResult<{ data: SeriesMeta; filePath: string }> =>
+      (r): r is PromiseFulfilledResult<{ data: Series; filePath: string }> =>
         r.status === 'fulfilled',
     )
     .map((r) => r.value)
@@ -199,7 +197,7 @@ async function readPosts(): Promise<PostIndex[]> {
 
       const { data: frontmatter, content } = matter(raw)
 
-      const result = postFrontmatterSchema.safeParse(frontmatter)
+      const result = postSchema.safeParse(frontmatter)
       if (!result.success) {
         const issues = result.error.issues
           .map((i) => `  - ${i.path.join('.')}: ${i.message}`)
@@ -282,7 +280,7 @@ async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
 }
 
 async function buildSeriesIndex(
-  seriesMap: Map<string, SeriesMeta>,
+  seriesMap: Map<string, Series>,
   posts: PostIndex[],
 ): Promise<void> {
   const seriesWithPosts: SeriesIndex[] = Array.from(seriesMap.values())

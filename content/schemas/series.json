@@ -23,14 +23,16 @@
         "maxLength": 300,
         "description": "Short summary describing the series content."
       },
-      "date": {
+      "publishedAt": {
         "type": "string",
         "format": "date",
         "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-        "description": "Publication date in ISO format (YYYY-MM-DD).",
-        "examples": [
-          "2026-01-01"
-        ]
+        "description": "Publication date in ISO format (YYYY-MM-DD)."
+      },
+      "status": {
+        "type": "string",
+        "enum": ["planned", "in-progress", "complete"],
+        "description": "Indicates the current state of the series."
       },
       "cover": {
         "description": "Path to the cover image used for the series.",
@@ -45,12 +47,7 @@
         ]
       }
     },
-    "required": [
-      "slug",
-      "title",
-      "description",
-      "date"
-    ],
+    "required": ["slug", "title", "description", "publishedAt", "status"],
     "additionalProperties": false,
     "title": "Series Metadata",
     "description": "Schema for validating metadata of a content series."
