@@ -30,9 +30,10 @@
         "description": "Publication date in ISO format (YYYY-MM-DD)."
       },
       "status": {
+        "default": "planned",
+        "description": "Indicates the current state of the series.",
         "type": "string",
-        "enum": ["planned", "in-progress", "complete"],
-        "description": "Indicates the current state of the series."
+        "enum": ["planned", "in-progress", "complete"]
       },
       "cover": {
         "description": "Path to the cover image used for the series.",
