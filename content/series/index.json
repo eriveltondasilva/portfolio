@@ -1,0 +1,16 @@
+[
+  {
+    "slug": "css-master",
+    "title": "CSS Master",
+    "description": "Domine a arte de criar layouts modernos e responsivos utilizando Flexbox, Grid, Variáveis CSS e as melhores práticas de arquitetura de estilos.",
+    "date": "2026-01-01",
+    "cover": "./series-css.png"
+  },
+  {
+    "slug": "nextjs-pro",
+    "title": "Next.js Pro",
+    "description": "Uma jornada completa do zero ao avançado no framework React mais popular do mercado, cobrindo Server Components, Actions e Otimização.",
+    "date": "2026-01-01",
+    "cover": "./series-nextjs.png"
+  }
+]

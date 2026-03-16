@@ -138,3 +138,44 @@ export const postFrontmatterSchema = z
     title: 'Post Frontmatter',
     description: 'Schema for validating frontmatter metadata of a blog post.',
   })
+
+export const authorSchema = z
+  .object({
+    //
+    slug: z
+      .string()
+      .min(1, 'Author slug is required.')
+      .max(80, 'Slug must not exceed 80 characters.')
+      .apply(setRegexChecks)
+      .describe('Unique identifier of the author in kebab-case.'),
+    //
+    name: z
+      .string()
+      .min(1, 'Author name is required.')
+      .max(100)
+      .describe('Full name of the author.'),
+    //
+    bio: z
+      .string()
+      .min(10, 'Bio must contain at least 10 characters.')
+      .max(300)
+      .describe('Short summary of the author.'),
+    //
+    avatar: z
+      .url()
+      .optional()
+      .describe('Path to the avatar image of the author.'),
+    //
+    socials: z
+      .object({
+        github: z.url().optional().describe('GitHub profile URL.'),
+        linkedin: z.url().optional().describe('LinkedIn profile URL.'),
+        twitter: z.url().optional().describe('Twitter profile URL.'),
+      })
+      .describe('Social media profiles of the author.'),
+  })
+  .strict()
+  .meta({
+    title: 'Author Metadata',
+    description: 'Schema for validating metadata of a blog author.',
+  })

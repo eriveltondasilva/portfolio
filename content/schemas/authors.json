@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "slug": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 80,
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+        "description": "Unique identifier of the author in kebab-case."
+      },
+      "name": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 100,
+        "description": "Full name of the author."
+      },
+      "bio": {
+        "type": "string",
+        "minLength": 10,
+        "maxLength": 300,
+        "description": "Short summary of the author."
+      },
+      "avatar": {
+        "description": "Path to the avatar image of the author.",
+        "type": "string",
+        "format": "uri"
+      },
+      "socials": {
+        "type": "object",
+        "properties": {
+          "github": {
+            "description": "GitHub profile URL.",
+            "type": "string",
+            "format": "uri"
+          },
+          "linkedin": {
+            "description": "LinkedIn profile URL.",
+            "type": "string",
+            "format": "uri"
+          },
+          "twitter": {
+            "description": "Twitter profile URL.",
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Social media profiles of the author."
+      }
+    },
+    "required": [
+      "slug",
+      "name",
+      "bio",
+      "socials"
+    ],
+    "additionalProperties": false,
+    "title": "Author Metadata",
+    "description": "Schema for validating metadata of a blog author."
+  }
+}
