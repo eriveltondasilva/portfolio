@@ -1,18 +1,13 @@
 import { join, relative } from 'node:path'
-import { styleText } from 'node:util'
 
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
-import { $ZodIssue } from 'zod/v4/core'
 
+import { logSuccess } from '@/lib'
 import { postSchema, seriesSchema } from '@/schemas/blog'
 import { PostStatus } from '@/types'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
-
-// ---------------------------------------------------------------------------
-// # Constants
-// ---------------------------------------------------------------------------
 
 const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
@@ -21,11 +16,12 @@ const SERIES_DIR = join(CONTENT_DIR, 'series')
 const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
 const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
 
-const successMsg = (text: string) => console.info(styleText('green', text))
-
-// ---------------------------------------------------------------------------
-// # Error
-// ---------------------------------------------------------------------------
+function sortByDateDesc<T extends { publishedAt: string }>(items: T[]) {
+  return items.toSorted(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  )
+}
 
 class BuildError extends Error {
   constructor(
@@ -33,7 +29,7 @@ class BuildError extends Error {
     messages: string[],
   ) {
     super(
-      `[${context}] ${messages.length} erro(s) encontrado(s):\n\n${messages.join('\n\n')}`,
+      `[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n\n')}`,
     )
     this.name = 'BuildError'
   }
@@ -51,60 +47,8 @@ async function readJson(filePath: string): Promise<unknown> {
   }
 }
 
-async function readText(filePath: string): Promise<string> {
-  try {
-    return await Bun.file(filePath).text()
-  } catch (cause) {
-    throw new Error(`Não foi possível ler: ${filePath}`, { cause })
-  }
-}
-
-async function writeJson(filePath: string, data: unknown): Promise<void> {
-  await Bun.write(filePath, JSON.stringify(data, null, 2))
-}
-
-// ---------------------------------------------------------------------------
-// # Bun-native Glob
-// ---------------------------------------------------------------------------
-
-async function globFiles(pattern: string, cwd: string): Promise<string[]> {
-  const glob = new Bun.Glob(pattern)
-  const files: string[] = []
-
-  for await (const file of glob.scan({ cwd, absolute: true })) {
-    files.push(file)
-  }
-
-  return files
-}
-
-// ---------------------------------------------------------------------------
-// # Helpers
-// ---------------------------------------------------------------------------
-
-function formatZodIssues(issues: $ZodIssue[]): string {
-  return issues
-    .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
-    .join('\n')
-}
-
 function errorMessage(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason)
-}
-
-function collectSettledErrors(
-  results: PromiseSettledResult<unknown>[],
-  context: 'posts' | 'series',
-): void {
-  const errors = results
-    .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
-    .map(({ reason }) => errorMessage(reason))
-
-  if (errors.length > 0) throw new BuildError(context, errors)
-}
-
-function fulfilledValues<T>(results: PromiseFulfilledResult<T>[]): T[] {
-  return results.map(({ value }) => value)
 }
 
 // ---------------------------------------------------------------------------
@@ -125,14 +69,14 @@ function assertUniqueSlugs(
 
   const detail = duplicates
     .map(([slug, group]) => {
-      const files = group!.map(({ source }) => `\n    - ${source}`).join('')
-      return `  "${slug}" encontrado em:${files}`
+      const files = (group ?? [])
+        .map(({ source }) => `\n    - ${source}`)
+        .join('')
+      return `  "${slug}" found in:${files}`
     })
     .join('\n')
 
-  throw new BuildError(context, [
-    `${duplicates.length} slug(s) duplicado(s) encontrado(s):\n${detail}`,
-  ])
+  throw new BuildError(context, [`Duplicate slugs found:\n${detail}`])
 }
 
 function assertUniqueSeriesOrder(posts: PostIndex[]): void {
@@ -189,11 +133,19 @@ function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
   ])
 }
 
+function assertAuthorsExist(posts: PostIndex[], authors: Set<string>) {
+  const missing = posts.flatMap((p) => p.authors).filter((a) => !authors.has(a))
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Autores não encontrados: ${[...new Set(missing)].join(', ')}`,
+    )
+  }
+}
+
 // ---------------------------------------------------------------------------
 // # Readers
 // ---------------------------------------------------------------------------
-// scripts/generate-blog-index.ts
-
 async function readSeries(): Promise<Map<string, Series>> {
   const filePath = join(SERIES_DIR, 'index.json')
   const parsed = await readJson(filePath)
@@ -217,46 +169,51 @@ async function readSeries(): Promise<Map<string, Series>> {
 }
 
 async function readPosts(): Promise<PostIndex[]> {
-  const files = await globFiles('*/index.mdx', POSTS_DIR)
+  const glob = new Bun.Glob('*/index.mdx')
+  const files = [...glob.scanSync({ cwd: POSTS_DIR, absolute: true })]
 
   const results = await Promise.allSettled(
-    files.map(async (filePath): Promise<PostIndex | null> => {
-      const raw = await readText(filePath)
+    files.map(async (filePath) => {
+      const raw = await Bun.file(filePath).text()
       const { data: frontmatter, content } = matter(raw)
 
       const { success, data, error } = postSchema.safeParse(frontmatter)
       if (!success) {
-        throw new Error(
-          `Validação falhou em ${filePath}:\n${formatZodIssues(error.issues)}`,
-        )
+        const issues = error.issues
+          .map(({ path, message }) => `\t- ${path.join('.')}: ${message}`)
+          .join('\n')
+        throw new Error(`Validation failed in: ${filePath}\n${issues}`)
       }
 
-      if (data.status !== PostStatus.PUBLISHED) return null
+      if (data.status === PostStatus.DRAFT) return null
 
       return {
         ...data,
         readingTime: Math.ceil(readingTime(content).minutes),
-        filePath,
+        filePath: relative(ROOT, filePath).replaceAll('\\', '/'),
       }
     }),
   )
 
-  collectSettledErrors(results, 'posts')
+  const errors = results
+    .filter((r) => r.status === 'rejected')
+    .map(errorMessage)
 
-  const publishedPosts = fulfilledValues(
-    results as PromiseFulfilledResult<PostIndex | null>[],
-  ).filter((p): p is PostIndex => p !== null)
+  if (errors.length > 0) throw new BuildError('posts', errors)
+
+  const publishedPosts = results
+    .filter(
+      (r): r is PromiseFulfilledResult<PostIndex> =>
+        r.status === 'fulfilled' && r.value !== null,
+    )
+    .map((r) => r.value)
 
   assertUniqueSlugs(
     publishedPosts.map((p) => ({ slug: p.slug, source: p.filePath })),
     'posts',
   )
-  assertUniqueSeriesOrder(publishedPosts)
 
-  return publishedPosts.map((post) => ({
-    ...post,
-    filePath: relative(ROOT, post.filePath).replaceAll('\\', '/'),
-  }))
+  return publishedPosts
 }
 
 // ---------------------------------------------------------------------------
@@ -264,13 +221,9 @@ async function readPosts(): Promise<PostIndex[]> {
 // ---------------------------------------------------------------------------
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
-  const sorted = posts.toSorted(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  )
-
-  await writeJson(OUTPUT_POSTS, sorted)
-  console.info(successMsg(`✔ posts-index.json → ${sorted.length} post(s)`))
+  const sorted = sortByDateDesc(posts)
+  await Bun.write(OUTPUT_POSTS, JSON.stringify(sorted, null, 2))
+  logSuccess(`✔ posts-index.json → ${sorted.length} post(s)`)
 }
 
 async function buildSeriesIndex(
@@ -286,23 +239,18 @@ async function buildSeriesIndex(
     ({ series }) => series,
   )
 
-  const seriesWithPosts: SeriesIndex[] = Array.from(seriesMap.values())
-    .toSorted(
-      (a, b) =>
-        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-    )
-    .map((series) => {
-      const relatedPosts: SeriesPostRef[] = (postsBySeries[series.slug] ?? [])
-        .toSorted((a, b) => a.order - b.order)
-        .map(({ slug, title, order }) => ({ slug, title, order }))
+  const seriesWithPosts: SeriesIndex[] = sortByDateDesc(
+    Array.from(seriesMap.values()),
+  ).map((series) => {
+    const relatedPosts: SeriesPostRef[] = (postsBySeries[series.slug] ?? [])
+      .toSorted((a, b) => a.order - b.order)
+      .map(({ slug, title, order }) => ({ slug, title, order }))
 
-      return { ...series, posts: relatedPosts }
-    })
+    return { ...series, posts: relatedPosts }
+  })
 
-  await writeJson(OUTPUT_SERIES, seriesWithPosts)
-  console.info(
-    successMsg(`✔ series-index.json → ${seriesWithPosts.length} série(s)`),
-  )
+  await Bun.write(OUTPUT_SERIES, JSON.stringify(seriesWithPosts, null, 2))
+  logSuccess(`✔ series-index.json → ${seriesWithPosts.length} series`)
 }
 
 // ---------------------------------------------------------------------------
@@ -310,7 +258,8 @@ async function buildSeriesIndex(
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  console.info('\n> Gerando índices do blog...\n')
+  console.info('> Gerando índices do blog...')
+  console.info()
 
   const [seriesResult, postsResult] = await Promise.allSettled([
     readSeries(),
@@ -318,13 +267,11 @@ async function main(): Promise<void> {
   ])
 
   const errors = [seriesResult, postsResult]
-    .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+    .filter((result) => result.status === 'rejected')
     .map(({ reason }) => errorMessage(reason))
 
   if (errors.length > 0) {
-    throw new Error(
-      `${errors.length} contexto(s) com erro durante a geração dos índices:\n\n---\n\n${errors.join('\n\n---\n\n')}`,
-    )
+    throw new Error(`Erros na extração dos dados:\n\n${errors.join('\n\n')}`)
   }
 
   const seriesMap = (
@@ -339,12 +286,16 @@ async function main(): Promise<void> {
     buildSeriesIndex(seriesMap, posts),
   ])
 
-  console.info('\n> Índices gerados com sucesso.')
+  console.info()
+  console.info('> Índices gerados com sucesso.')
 }
 
 main().catch((error: unknown) => {
+  console.error()
   console.error('❌ Erro ao gerar índices:')
   console.error(error instanceof Error ? error.message : error)
-  console.error('\n> Corrija os erros acima e tente novamente.\n')
+  console.error()
+  console.error('> Corrija os erros acima e tente novamente.')
+  console.error()
   process.exit(1)
 })

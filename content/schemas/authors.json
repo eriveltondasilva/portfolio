@@ -28,6 +28,17 @@
         "type": "string",
         "format": "uri"
       },
+      "skills": {
+        "minItems": 1,
+        "maxItems": 20,
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Skill name."
+        },
+        "description": "List of skills or technologies the author is proficient in."
+      },
       "socials": {
         "description": "Social media profiles of the author.",
         "type": "object",
@@ -51,7 +62,7 @@
         "additionalProperties": false
       }
     },
-    "required": ["slug", "name", "bio"],
+    "required": ["slug", "name", "bio", "skills"],
     "additionalProperties": false,
     "title": "Author Metadata",
     "description": "Schema for validating metadata of a blog author."

@@ -37,6 +37,12 @@ export const authorSchema = z
       .optional()
       .describe('Path to the avatar image of the author.'),
     //
+    skills: z
+      .array(z.string().min(1).describe('Skill name.'))
+      .min(1, 'At least one skill is required.')
+      .max(20)
+      .describe('List of skills or technologies the author is proficient in.'),
+    //
     socials: z
       .object({
         github: z.url().optional().describe('GitHub profile URL.'),
