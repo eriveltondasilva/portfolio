@@ -62,7 +62,12 @@
         "additionalProperties": false
       }
     },
-    "required": ["slug", "name", "bio", "skills"],
+    "required": [
+      "slug",
+      "name",
+      "bio",
+      "skills"
+    ],
     "additionalProperties": false,
     "title": "Author Metadata",
     "description": "Schema for validating metadata of a blog author."

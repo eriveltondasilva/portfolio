@@ -3,8 +3,8 @@ import { join, relative } from 'node:path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
-import { logSuccess } from '@/lib'
-import { postSchema, seriesSchema } from '@/schemas/blog'
+import { logSuccess, writeJson } from '@/lib'
+import { authorSchema, postSchema, seriesSchema } from '@/schemas/blog'
 import { PostStatus } from '@/types'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
@@ -13,51 +13,62 @@ const ROOT = join(import.meta.dir, '..')
 const CONTENT_DIR = join(ROOT, 'content')
 const POSTS_DIR = join(CONTENT_DIR, 'posts')
 const SERIES_DIR = join(CONTENT_DIR, 'series')
+const AUTHORS_FILE = join(CONTENT_DIR, 'authors', 'index.json')
 const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
 const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
 
-function sortByDateDesc<T extends { publishedAt: string }>(items: T[]) {
+type BuildContext = 'authors' | 'series' | 'posts'
+type SeriesPost = PostIndex & { series: string; order: number }
+
+// ###
+
+function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
   return items.toSorted(
     (a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   )
 }
 
+function errorMessage(reason: unknown): string {
+  return reason instanceof Error ? reason.message : String(reason)
+}
+
+function unwrapFulfilled<T>(result: PromiseSettledResult<T>): T {
+  if (result.status !== 'fulfilled') {
+    throw new Error('Expected a fulfilled result, got rejected.')
+  }
+  return result.value
+}
+
+// ###
+
 class BuildError extends Error {
   constructor(
-    readonly context: 'posts' | 'series',
+    readonly context: BuildContext,
     messages: string[],
   ) {
     super(
-      `[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n\n')}`,
+      `[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n')}`,
     )
     this.name = 'BuildError'
   }
 }
 
-// ---------------------------------------------------------------------------
-// # Bun-native I/O
-// ---------------------------------------------------------------------------
+// ###
 
 async function readJson(filePath: string): Promise<unknown> {
   try {
     return await Bun.file(filePath).json()
   } catch (cause) {
-    throw new Error(`Não foi possível ler ou parsear: ${filePath}`, { cause })
+    throw new Error(`Failed to read file: ${filePath}`, { cause })
   }
 }
 
-function errorMessage(reason: unknown): string {
-  return reason instanceof Error ? reason.message : String(reason)
-}
-
-// ---------------------------------------------------------------------------
-// # Assertions
-// ---------------------------------------------------------------------------
+// ###
 
 function assertUniqueSlugs(
   entries: { slug: string; source: string }[],
-  context: 'posts' | 'series',
+  context: BuildContext,
 ): void {
   const grouped = Object.groupBy(entries, ({ slug }) => slug)
 
@@ -80,8 +91,6 @@ function assertUniqueSlugs(
 }
 
 function assertUniqueSeriesOrder(posts: PostIndex[]): void {
-  type SeriesPost = PostIndex & { series: string; order: number }
-
   const seriesPosts = posts.filter(
     (p): p is SeriesPost => p.series !== undefined && p.order !== undefined,
   )
@@ -92,24 +101,26 @@ function assertUniqueSeriesOrder(posts: PostIndex[]): void {
     const byOrder = Object.groupBy(group!, ({ order }) => order)
 
     const duplicateOrders = Object.entries(byOrder).filter(
-      ([, posts]) => (posts?.length ?? 0) > 1,
+      ([, items]) => (items?.length ?? 0) > 1,
     )
 
     if (duplicateOrders.length === 0) return []
 
     const detail = duplicateOrders
-      .map(([order, posts]) => {
-        const files = posts!
+      .map(([order, items]) => {
+        const files = items!
           .map(({ filePath }) => `\n    - ${filePath}`)
           .join('')
         return `  order ${order}:${files}`
       })
       .join('\n')
 
-    return [`Série "${seriesSlug}" tem "order" duplicado:\n${detail}`]
+    return [`Series "${seriesSlug}" has duplicate "order" values:\n${detail}`]
   })
 
-  if (conflicts.length > 0) throw new BuildError('posts', conflicts)
+  if (conflicts.length > 0) {
+    throw new BuildError('posts', conflicts)
+  }
 }
 
 function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
@@ -120,52 +131,94 @@ function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
   if (invalid.length === 0) return
 
   const detail = invalid
-    .map((p) => `  - "${p.slug}" → série "${p.series}"\n    ${p.filePath}`)
+    .map(
+      (post) =>
+        `  - "${post.slug}" → série "${post.series}"\n    ${post.filePath}`,
+    )
     .join('\n')
 
   const available =
     knownSeries.size > 0 ?
-      `\n  Séries disponíveis: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
-    : '\n  Nenhuma série encontrada.'
+      `\n  Series available: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
+    : '\n  No series found.'
 
   throw new BuildError('posts', [
-    `Séries inexistentes referenciadas:\n${detail}${available}`,
+    `Non-existent series referenced:\n${detail}${available}`,
   ])
 }
 
-function assertAuthorsExist(posts: PostIndex[], authors: Set<string>) {
-  const missing = posts.flatMap((p) => p.authors).filter((a) => !authors.has(a))
+function assertAuthorsExist(
+  posts: PostIndex[],
+  knownAuthors: Set<string>,
+): void {
+  const missing = posts.flatMap((post) =>
+    post.authors
+      .filter((author) => !knownAuthors.has(author))
+      .map((author) => ({ author, post })),
+  )
 
-  if (missing.length > 0) {
-    throw new Error(
-      `Autores não encontrados: ${[...new Set(missing)].join(', ')}`,
+  if (missing.length === 0) return
+
+  const detail = missing
+    .map(
+      ({ author, post }) =>
+        `  - author "${author}" in "${post.slug}"\n    ${post.filePath}`,
     )
-  }
+    .join('\n')
+
+  const available =
+    knownAuthors.size > 0 ?
+      `\n Authors available: ${[...knownAuthors].map((author) => `"${author}"`).join(', ')}`
+    : '\n No authors found.'
+
+  throw new BuildError('posts', [
+    `Non-existent authors referenced:\n${detail}${available}`,
+  ])
 }
 
-// ---------------------------------------------------------------------------
-// # Readers
-// ---------------------------------------------------------------------------
+// ###
+
+async function readAuthors(): Promise<Set<string>> {
+  const parsed = await readJson(AUTHORS_FILE)
+
+  const result = authorSchema.array().safeParse(parsed)
+  if (!result.success) {
+    throw new BuildError('authors', [
+      AUTHORS_FILE + '\n',
+      ...result.error.issues.map(
+        ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
+      ),
+    ])
+  }
+
+  assertUniqueSlugs(
+    result.data.map((author) => ({ slug: author.slug, source: AUTHORS_FILE })),
+    'authors',
+  )
+
+  return new Set(result.data.map((author) => author.slug))
+}
+
 async function readSeries(): Promise<Map<string, Series>> {
   const filePath = join(SERIES_DIR, 'index.json')
   const parsed = await readJson(filePath)
 
   const result = seriesSchema.array().safeParse(parsed)
   if (!result.success) {
-    throw new BuildError(
-      'series',
-      result.error.issues.map(
-        ({ path, message }) => `  - ${path.join('.')}: ${message}`,
+    throw new BuildError('series', [
+      filePath + '\n',
+      ...result.error.issues.map(
+        ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
       ),
-    )
+    ])
   }
 
   assertUniqueSlugs(
-    result.data.map((s) => ({ slug: s.slug, source: filePath })),
+    result.data.map((series) => ({ slug: series.slug, source: filePath })),
     'series',
   )
 
-  return new Map(result.data.map((s) => [s.slug, s]))
+  return new Map(result.data.map((series) => [series.slug, series]))
 }
 
 async function readPosts(): Promise<PostIndex[]> {
@@ -182,7 +235,7 @@ async function readPosts(): Promise<PostIndex[]> {
         const issues = error.issues
           .map(({ path, message }) => `\t- ${path.join('.')}: ${message}`)
           .join('\n')
-        throw new Error(`Validation failed in: ${filePath}\n${issues}`)
+        throw new Error(`${filePath}\n\n${issues}`)
       }
 
       if (data.status === PostStatus.DRAFT) return null
@@ -191,52 +244,52 @@ async function readPosts(): Promise<PostIndex[]> {
         ...data,
         readingTime: Math.ceil(readingTime(content).minutes),
         filePath: relative(ROOT, filePath).replaceAll('\\', '/'),
-      }
+      } satisfies PostIndex
     }),
   )
 
   const errors = results
-    .filter((r) => r.status === 'rejected')
-    .map(errorMessage)
+    .filter(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    )
+    .map(({ reason }) => errorMessage(reason))
 
   if (errors.length > 0) throw new BuildError('posts', errors)
 
-  const publishedPosts = results
-    .filter(
-      (r): r is PromiseFulfilledResult<PostIndex> =>
-        r.status === 'fulfilled' && r.value !== null,
-    )
-    .map((r) => r.value)
+  const publishedPosts = results.filter(
+    (result): result is PromiseFulfilledResult<PostIndex> =>
+      result.status === 'fulfilled' && result.value !== null,
+  )
 
   assertUniqueSlugs(
-    publishedPosts.map((p) => ({ slug: p.slug, source: p.filePath })),
+    publishedPosts.map(({ value: post }) => ({
+      slug: post.slug,
+      source: post.filePath,
+    })),
     'posts',
   )
 
-  return publishedPosts
+  return publishedPosts.map(({ value }) => value)
 }
 
-// ---------------------------------------------------------------------------
-// # Index builders
-// ---------------------------------------------------------------------------
+// ###
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   const sorted = sortByDateDesc(posts)
-  await Bun.write(OUTPUT_POSTS, JSON.stringify(sorted, null, 2))
-  logSuccess(`✔ posts-index.json → ${sorted.length} post(s)`)
+  await writeJson(OUTPUT_POSTS, sorted)
+  console.info(`> posts-index.json → ${sorted.length} post(s)`)
 }
 
 async function buildSeriesIndex(
   seriesMap: Map<string, Series>,
   posts: PostIndex[],
 ): Promise<void> {
-  type SeriesPost = PostIndex & { series: string; order: number }
-
   const postsBySeries = Object.groupBy(
     posts.filter(
-      (p): p is SeriesPost => p.series !== undefined && p.order !== undefined,
+      (post): post is SeriesPost =>
+        post.series !== undefined && post.order !== undefined,
     ),
-    ({ series }) => series,
+    (post) => post.series,
   )
 
   const seriesWithPosts: SeriesIndex[] = sortByDateDesc(
@@ -249,8 +302,8 @@ async function buildSeriesIndex(
     return { ...series, posts: relatedPosts }
   })
 
-  await Bun.write(OUTPUT_SERIES, JSON.stringify(seriesWithPosts, null, 2))
-  logSuccess(`✔ series-index.json → ${seriesWithPosts.length} series`)
+  await writeJson(OUTPUT_SERIES, seriesWithPosts)
+  console.info(`> series-index.json → ${seriesWithPosts.length} series`)
 }
 
 // ---------------------------------------------------------------------------
@@ -258,44 +311,45 @@ async function buildSeriesIndex(
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  console.info('> Gerando índices do blog...')
-  console.info()
+  console.info('⏳ Generating blog indices...\n')
 
-  const [seriesResult, postsResult] = await Promise.allSettled([
+  const [authorsResult, seriesResult, postsResult] = await Promise.allSettled([
+    readAuthors(),
     readSeries(),
     readPosts(),
   ])
 
-  const errors = [seriesResult, postsResult]
-    .filter((result) => result.status === 'rejected')
+  const errors = [authorsResult, seriesResult, postsResult]
+    .filter(
+      (result): result is PromiseRejectedResult => result.status === 'rejected',
+    )
     .map(({ reason }) => errorMessage(reason))
 
   if (errors.length > 0) {
-    throw new Error(`Erros na extração dos dados:\n\n${errors.join('\n\n')}`)
+    throw new Error(
+      `errors during data read.\n\n---\n\n${errors.join('\n\n---\n\n')}\n\n---\n`,
+    )
   }
 
-  const seriesMap = (
-    seriesResult as PromiseFulfilledResult<Map<string, Series>>
-  ).value
-  const posts = (postsResult as PromiseFulfilledResult<PostIndex[]>).value
+  const authors = unwrapFulfilled(authorsResult)
+  const seriesMap = unwrapFulfilled(seriesResult)
+  const posts = unwrapFulfilled(postsResult)
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
+  assertUniqueSeriesOrder(posts)
+  assertAuthorsExist(posts, authors)
 
   await Promise.all([
     buildPostsIndex(posts),
     buildSeriesIndex(seriesMap, posts),
   ])
 
-  console.info()
-  console.info('> Índices gerados com sucesso.')
+  logSuccess('\n✔ Indices generated successfully.')
 }
 
 main().catch((error: unknown) => {
-  console.error()
-  console.error('❌ Erro ao gerar índices:')
+  console.error('❌ Error generating indices:')
   console.error(error instanceof Error ? error.message : error)
-  console.error()
-  console.error('> Corrija os erros acima e tente novamente.')
-  console.error()
+  console.error('> Fix the errors above and try again.\n')
   process.exit(1)
 })

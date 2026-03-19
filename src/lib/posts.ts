@@ -9,6 +9,7 @@ import type { MDXContent } from 'mdx/types'
 // # BASE
 
 export function getAllPosts() {
+  
   return postsIndex as PostIndex[]
 }
 
