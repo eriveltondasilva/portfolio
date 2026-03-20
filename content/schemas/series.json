@@ -33,11 +33,7 @@
         "default": "planned",
         "description": "Indicates the current state of the series.",
         "type": "string",
-        "enum": [
-          "planned",
-          "in-progress",
-          "complete"
-        ]
+        "enum": ["planned", "in-progress", "complete"]
       },
       "cover": {
         "description": "Path to the cover image used for the series.",
@@ -52,13 +48,7 @@
         ]
       }
     },
-    "required": [
-      "slug",
-      "title",
-      "description",
-      "publishedAt",
-      "status"
-    ],
+    "required": ["slug", "title", "description", "publishedAt", "status"],
     "additionalProperties": false,
     "title": "Series Metadata",
     "description": "Schema for validating metadata of a content series."

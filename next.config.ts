@@ -1,20 +1,28 @@
 import createMDX from '@next/mdx'
 
 import type { NextConfig } from 'next'
+import type { Options as PrettyCodeOptions } from 'rehype-pretty-code'
+
+const prettyCodeOptions: PrettyCodeOptions = {
+  theme: 'github-dark-default',
+  defaultLang: 'plaintext',
+}
 
 const nextConfig: NextConfig = {
   /* config options here */
+  reactStrictMode: true,
   reactCompiler: true,
   typedRoutes: true,
   pageExtensions: ['ts', 'tsx', 'mdx'],
 }
 
 const withMDX = createMDX({
-  extension: /\.mdx$/,
   options: {
-    remarkPlugins: [
-      'remark-frontmatter',
-      ['remark-mdx-frontmatter', { name: 'meta' }],
+    remarkPlugins: ['remark-frontmatter', 'remark-gfm', 'remark-gemoji'],
+    rehypePlugins: [
+      'rehype-slug',
+      'rehype-autolink-headings',
+      ['rehype-pretty-code', prettyCodeOptions],
     ],
   },
 })
