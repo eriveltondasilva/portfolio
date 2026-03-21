@@ -20,7 +20,7 @@ interface Tab {
   label: string
   href: Route
   icon: LucideIcon
-  count?: number
+  // count?: number
 }
 
 const tabs: Tab[] = [
@@ -39,7 +39,7 @@ export function TabsNav() {
       aria-label='Navegação principal'
     >
       <div className='-mb-px flex overflow-x-auto'>
-        {tabs.map(({ label, href, icon, count }) => {
+        {tabs.map(({ label, href, icon }) => {
           const isActive =
             href === '/' ? pathname === '/' : pathname.startsWith(href)
 
@@ -56,7 +56,7 @@ export function TabsNav() {
             >
               <Icon iconNode={icon} />
               {label}
-              {count !== undefined && (
+              {/* {count !== undefined && (
                 <span
                   className={cn(
                     'rounded-full px-2 py-0.5 text-xs font-medium',
@@ -67,7 +67,7 @@ export function TabsNav() {
                 >
                   {count}
                 </span>
-              )}
+              )} */}
             </Link>
           )
         })}

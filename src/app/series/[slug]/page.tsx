@@ -1,12 +1,13 @@
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeftIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
+import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { getAllPosts, getAllSeries, getSeriesBySlug } from '@/lib/posts'
 import { SeriesStatus } from '@/types'
-import { Badge } from '@/components/ui/badge'
 
 import type { Metadata } from 'next'
 
@@ -62,7 +63,7 @@ export default async function SeriesDetailPage({
         href='/series'
         className='inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
       >
-        <ArrowLeft className='h-4 w-4' />
+        <Icon iconNode={ArrowLeftIcon} />
         Todas as séries
       </Link>
 

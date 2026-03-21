@@ -63,7 +63,7 @@ export default function HomePage() {
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'
             >
               Ver todos
-              <Icon iconNode={ArrowRightIcon} className='h-3.5 w-3.5' />
+              <Icon iconNode={ArrowRightIcon} className='size-3.5' />
             </Link>
           </div>
           <div className='grid gap-3 sm:grid-cols-2'>
@@ -87,7 +87,7 @@ export default function HomePage() {
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'
             >
               Ver todas
-              <Icon iconNode={ArrowRightIcon} className='h-3.5 w-3.5' />
+              <Icon iconNode={ArrowRightIcon} className='size-3.5' />
             </Link>
           </div>
           <div className='grid gap-3 sm:grid-cols-2'>

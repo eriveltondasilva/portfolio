@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { getAllPosts, getAllTags } from '@/lib/posts'
+import { getTagsWithCount } from '@/lib/posts'
 
 import type { Metadata } from 'next'
 
@@ -10,22 +10,14 @@ export const metadata: Metadata = {
 }
 
 export default function TagsPage() {
-  const tags = getAllTags()
-  const posts = getAllPosts()
-
-  const tagsWithCount = tags
-    .map((tag) => ({
-      tag,
-      count: posts.filter((p) => p.tags.includes(tag)).length,
-    }))
-    .sort((a, b) => b.count - a.count)
+  const tagsWithCount = getTagsWithCount()
 
   return (
     <div className='space-y-6'>
       {/* Header */}
       <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {tags.length} {tags.length === 1 ? 'tag' : 'tags'}
+          {tagsWithCount.length} {tagsWithCount.length === 1 ? 'tag' : 'tags'}
         </p>
       </div>
 

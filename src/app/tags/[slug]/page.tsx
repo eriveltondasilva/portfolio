@@ -2,16 +2,13 @@ import { ArrowLeft, Hash } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { getAllPosts, getAllTags } from '@/lib/posts'
 
 import type { Metadata } from 'next'
 
 export const dynamicParams = false
-
-export function generateStaticParams() {
-  return getAllTags().map((tag) => ({ slug: tag }))
-}
 
 export async function generateMetadata({
   params,
@@ -21,6 +18,11 @@ export async function generateMetadata({
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
   }
+}
+
+export function generateStaticParams() {
+  const tags = getAllTags()
+  return tags.map((tag) => ({ slug: tag }))
 }
 
 export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
@@ -38,14 +40,14 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
         href='/tags'
         className='inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
       >
-        <ArrowLeft className='h-4 w-4' />
+        <Icon iconNode={ArrowLeft} />
         Todas as tags
       </Link>
 
       {/* Header */}
       <header className='space-y-1 border-b border-zinc-100 pb-4 dark:border-zinc-800'>
         <h1 className='flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-zinc-50'>
-          <Hash className='h-5 w-5 text-zinc-400' />
+          <Icon iconNode={Hash} className='size-5 text-zinc-400' />
           {slug}
         </h1>
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>
