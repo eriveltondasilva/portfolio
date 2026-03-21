@@ -12,6 +12,8 @@ import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
+import { Icon } from './icon'
+
 import type { Route } from 'next'
 
 interface Tab {
@@ -37,7 +39,7 @@ export function TabsNav() {
       aria-label='Navegação principal'
     >
       <div className='-mb-px flex overflow-x-auto'>
-        {tabs.map(({ label, href, icon: Icon, count }) => {
+        {tabs.map(({ label, href, icon, count }) => {
           const isActive =
             href === '/' ? pathname === '/' : pathname.startsWith(href)
 
@@ -52,7 +54,7 @@ export function TabsNav() {
                 : 'border-transparent text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-200',
               )}
             >
-              <Icon className='h-4 w-4' aria-hidden='true' />
+              <Icon iconNode={icon} />
               {label}
               {count !== undefined && (
                 <span

@@ -1,9 +1,11 @@
-import { BookMarkedIcon, LayersIcon } from 'lucide-react'
+import { BookMarkedIcon, CalendarIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
+import { formatDate } from '@/lib'
 import { cn } from '@/lib/utils'
 import { SeriesStatus } from '@/types'
 
+import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
 import type { SeriesIndex } from '@/types'
@@ -13,24 +15,28 @@ interface SeriesCardProps {
   className?: string
 }
 
-const statusConfig: Record<SeriesStatus, { label: string; className: string }> =
-  {
-    [SeriesStatus.PLANNED]: {
-      label: 'Planejada',
-      className:
-        'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
-    },
-    [SeriesStatus.IN_PROGRESS]: {
-      label: 'Em andamento',
-      className:
-        'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    },
-    [SeriesStatus.COMPLETE]: {
-      label: 'Completa',
-      className:
-        'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    },
-  }
+const statusConfig: Record<
+  SeriesStatus,
+  { label: string; dot: string; className: string }
+> = {
+  [SeriesStatus.PLANNED]: {
+    label: 'Planned',
+    dot: 'bg-primary size-1.5 rounded-full',
+    className: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
+  },
+  [SeriesStatus.IN_PROGRESS]: {
+    label: 'In Progress',
+    dot: 'size-1.5 rounded-full bg-amber-600 dark:bg-amber-400',
+    className:
+      'border-none bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 focus-visible:outline-none dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5',
+  },
+  [SeriesStatus.COMPLETE]: {
+    label: 'Complete',
+    dot: 'size-1.5 rounded-full bg-green-600 dark:bg-green-400',
+    className:
+      'border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5',
+  },
+}
 
 export function SeriesCard({ series, className }: SeriesCardProps) {
   const status = statusConfig[series.status as SeriesStatus]
@@ -44,33 +50,43 @@ export function SeriesCard({ series, className }: SeriesCardProps) {
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-start gap-3'>
-          <BookMarkedIcon className='mt-0.5 h-4 w-4 shrink-0 text-orange-500 dark:text-orange-400' />
+        <div className='flex items-center gap-3'>
+          <Icon
+            iconNode={BookMarkedIcon}
+            className='shrink-0 text-orange-500 dark:text-orange-400'
+          />
           <div>
             <Link
               href={`/series/${series.slug}`}
-              className='font-semibold text-blue-600 hover:underline dark:text-blue-400'
+              className='font-semibold text-balance text-blue-600 hover:underline dark:text-blue-400'
             >
               {series.title}
             </Link>
-            <p className='mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
-              {series.description}
-            </p>
           </div>
         </div>
-        <Badge
-          variant='secondary'
-          className={cn('shrink-0 rounded-full text-xs', status?.className)}
-        >
+        <Badge className={status?.className}>
+          <span className={status?.dot} aria-hidden='true' />
           {status?.label}
         </Badge>
       </div>
 
+      {/* Description */}
+      <p className='mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
+        {series.description}
+      </p>
+
       {/* Posts count */}
-      <div className='mt-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-500'>
-        <LayersIcon className='h-3.5 w-3.5' />
-        <span>
-          {series.posts.length} {series.posts.length === 1 ? 'post' : 'posts'}
+      <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
+        <span className='flex items-center gap-1.5'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          <span>
+            {series.posts.length} {series.posts.length === 1 ? 'post' : 'posts'}
+          </span>
+        </span>
+
+        <span className='flex items-center gap-1.5'>
+          <Icon iconNode={CalendarIcon} className='size-3.5' />
+          {formatDate(series.publishedAt)}
         </span>
       </div>
 

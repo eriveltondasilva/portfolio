@@ -1,8 +1,15 @@
-import { BookOpenIcon, CalendarIcon, ClockIcon } from 'lucide-react'
+import {
+  ArrowUpRightIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  ClockIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 
+import { formatDate } from '@/lib'
 import { cn } from '@/lib/utils'
 
+import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
 import type { PostIndex } from '@/types'
@@ -10,14 +17,6 @@ import type { PostIndex } from '@/types'
 interface PostCardProps {
   post: PostIndex
   className?: string
-}
-
-function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
 }
 
 export function PostCard({ post, className }: PostCardProps) {
@@ -29,20 +28,35 @@ export function PostCard({ post, className }: PostCardProps) {
       )}
     >
       {/* Header */}
-      <div className='flex items-start gap-3'>
-        <BookOpenIcon className='mt-0.5 h-4 w-4 shrink-0 text-blue-500 dark:text-blue-400' />
-        <div className='min-w-0 flex-1'>
-          <Link
-            href={`/blog/${post.slug}`}
-            className='font-semibold text-blue-600 hover:underline dark:text-blue-400'
-          >
-            {post.title}
-          </Link>
-          <p className='mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
-            {post.description}
-          </p>
+      <div className='flex items-start justify-between gap-4'>
+        <div className='flex items-center gap-3'>
+          <Icon
+            iconNode={BookOpenIcon}
+            className='shrink-0 text-blue-500 dark:text-blue-400'
+          />
+          <div className='min-w-0 flex-1'>
+            <Link
+              href={`/blog/${post.slug}`}
+              className='font-semibold text-balance text-blue-600 hover:underline dark:text-blue-400'
+            >
+              {post.title}
+            </Link>
+          </div>
         </div>
+
+        {post.series && (
+          <Link href={`/series/${post.series}`} className='shrink-0'>
+            <Badge className='border-orange-600/40 bg-orange-100/10 text-orange-500 shadow-none hover:bg-orange-500/10 dark:bg-orange-600/20'>
+              Série <Icon iconNode={ArrowUpRightIcon} />
+            </Badge>
+          </Link>
+        )}
       </div>
+
+      {/* Description */}
+      <p className='mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
+        {post.description}
+      </p>
 
       {/* Tags */}
       {post.tags.length > 0 && (
@@ -63,21 +77,13 @@ export function PostCard({ post, className }: PostCardProps) {
       {/* Meta */}
       <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
         <span className='flex items-center gap-1.5'>
-          <CalendarIcon className='h-3.5 w-3.5' />
+          <Icon iconNode={CalendarIcon} className='size-3.5' />
           {formatDate(post.publishedAt)}
         </span>
-        {post.readingTime > 0 && (
-          <span className='flex items-center gap-1.5'>
-            <ClockIcon className='h-3.5 w-3.5' />
-            {post.readingTime} min de leitura
-          </span>
-        )}
-        {post.series && (
-          <span className='flex items-center gap-1 text-orange-500 dark:text-orange-400'>
-            <span className='inline-block h-2 w-2 rounded-full bg-orange-500 dark:bg-orange-400' />
-            Série
-          </span>
-        )}
+        <span className='flex items-center gap-1.5'>
+          <Icon iconNode={ClockIcon} className='size-3.5' />
+          {post.readingTime} min de leitura
+        </span>
       </div>
     </article>
   )

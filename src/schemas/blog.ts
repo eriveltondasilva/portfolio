@@ -45,11 +45,10 @@ export const authorSchema = z
     //
     socials: z
       .object({
-        github: z.url().optional().describe('GitHub profile URL.'),
+        github: z.url().describe('GitHub profile URL.'),
         linkedin: z.url().optional().describe('LinkedIn profile URL.'),
         twitter: z.url().optional().describe('Twitter profile URL.'),
       })
-      .optional()
       .describe('Social media profiles of the author.'),
   })
   .strict()

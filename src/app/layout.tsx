@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Inter, Roboto_Mono } from 'next/font/google'
 
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
@@ -8,20 +8,22 @@ import './globals.css'
 
 import type { Metadata } from 'next'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
+  display: 'swap',
 })
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const robotoMono = Roboto_Mono({
+  variable: '--font-roboto-mono',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 export const metadata: Metadata = {
   title: {
     default: 'Erivelton Silva — Dev Blog',
-    template: '%s · Erivelton Silva',
+    template: '%s — Erivelton Silva',
   },
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
@@ -31,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang='pt-BR'
-      className={cn(geistSans.variable, geistMono.variable)}
+      className={cn(inter.variable, robotoMono.variable)}
       suppressHydrationWarning
     >
       <body className='min-h-screen bg-white font-sans antialiased dark:bg-[#0d1117]'>

@@ -2,12 +2,13 @@
   {
     "slug": "erivelton",
     "name": "Erivelton Silva",
-    "bio": "Desenvolvedor Frontend apaixonado por criar experiências digitais incríveis. Com mais de 10 anos de experiência, Erivelton é especialista em React, Next.js e design de interfaces. Ele adora compartilhar conhecimento e ajudar outros desenvolvedores a crescerem na carreira.",
+    "bio": "Desenvolvedor Frontend apaixonado por criar experiências digitais incríveis.",
+    "avatar": "https://github.com/eriveltondasilva.png",
     "skills": ["React", "Next.js", "TypeScript", "Tailwind CSS"],
     "socials": {
       "github": "https://github.com/eriveltondasilva",
-      "linkedin": "https://www.linkedin.com/in/erivelton-silva-9b1a3b1a0",
-      "twitter": "https://twitter.com/erivelton_silva"
+      "linkedin": "https://www.linkedin.com/in/eriveltondasilva",
+      "twitter": "https://x.com/erivelton_silv4"
     }
   }
 ]

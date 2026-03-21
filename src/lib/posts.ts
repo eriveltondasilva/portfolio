@@ -37,7 +37,7 @@ export function getPostBySlug(slug: string): PostIndex | null {
   return getAllPosts().find((post) => post.slug === slug) ?? null
 }
 
-export function getRecentPosts(limit = 5): PostIndex[] {
+export function getRecentPosts(limit = 4): PostIndex[] {
   return getAllPosts().slice(0, limit)
 }
 
@@ -106,6 +106,10 @@ export function getTagsWithCount(): TagCount[] {
 
 export function getSeriesBySlug(slug: string): SeriesIndex | null {
   return getAllSeries().find((series) => series.slug === slug) ?? null
+}
+
+export function getRecentSeries(limit = 2): SeriesIndex[] {
+  return getAllSeries().slice(0, limit)
 }
 
 // # CONTENT

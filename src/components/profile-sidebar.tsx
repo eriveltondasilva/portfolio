@@ -2,44 +2,24 @@ import { Github, Linkedin, MapPinIcon, Twitter } from 'lucide-react'
 import Link from 'next/link'
 
 import authorsData from '@/authors/index.json'
+import { getGitHubUsername, getInitials } from '@/lib'
 
+import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 
 import type { Route } from 'next'
 
-function getGitHubUsername(url: string): string | null {
-  try {
-    return new URL(url).pathname.replace('/', '')
-  } catch {
-    return null
-  }
-}
-
-function getInitials(name: string): string {
-  return name
-    .split(' ')
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase()
-}
-
 export function ProfileSidebar() {
   const author = authorsData[0]
-  const githubUsername =
-    author.socials?.github ? getGitHubUsername(author.socials.github) : null
-  const avatarUrl =
-    githubUsername ?
-      `https://avatars.githubusercontent.com/${githubUsername}`
-    : undefined
+  const githubUsername = getGitHubUsername(author.socials.github)
 
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
       <div className='relative'>
-        <Avatar className='h-20 w-20 rounded-full border-2 border-zinc-200 md:h-full md:w-full md:rounded-full dark:border-zinc-700'>
-          <AvatarImage src={avatarUrl} alt={author.name} />
+        <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:h-full md:w-full md:rounded-full dark:border-zinc-700'>
+          <AvatarImage src={author.avatar} alt={author.name} />
           <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
             {getInitials(author.name)}
           </AvatarFallback>
@@ -53,7 +33,7 @@ export function ProfileSidebar() {
         </h1>
         {githubUsername && (
           <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
-            {githubUsername}
+            {githubUsername} • ele/dele
           </p>
         )}
       </div>
@@ -79,7 +59,7 @@ export function ProfileSidebar() {
       {/* Info */}
       <div className='mt-5 space-y-2 text-sm text-zinc-600 dark:text-zinc-400'>
         <div className='flex items-center gap-2'>
-          <MapPinIcon className='h-4 w-4 shrink-0' />
+          <Icon iconNode={MapPinIcon} className='shrink-0' />
           <span>Alagoas, Brasil</span>
         </div>
 
@@ -90,8 +70,8 @@ export function ProfileSidebar() {
             rel='noopener noreferrer'
             className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
           >
-            <Github className='h-4 w-4 shrink-0' />
-            <span className='truncate'>{githubUsername}</span>
+            <Icon iconNode={Github} className='shrink-0' />
+            <span className='truncate'>GitHub</span>
           </Link>
         )}
 
@@ -102,7 +82,7 @@ export function ProfileSidebar() {
             rel='noopener noreferrer'
             className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
           >
-            <Linkedin className='h-4 w-4 shrink-0' />
+            <Icon iconNode={Linkedin} className='shrink-0' />
             <span className='truncate'>LinkedIn</span>
           </Link>
         )}
@@ -114,7 +94,7 @@ export function ProfileSidebar() {
             rel='noopener noreferrer'
             className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
           >
-            <Twitter className='h-4 w-4 shrink-0' />
+            <Icon iconNode={Twitter} className='shrink-0' />
             <span className='truncate'>Twitter / X</span>
           </Link>
         )}

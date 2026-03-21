@@ -6,13 +6,14 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
+import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { SeriesCard } from '@/components/series-card'
-import { getAllPosts, getAllSeries } from '@/lib/posts'
+import { getRecentPosts, getRecentSeries } from '@/lib/posts'
 
 export default function HomePage() {
-  const recentPosts = getAllPosts().slice(0, 4)
-  const activeSeries = getAllSeries().filter((s) => s.posts.length > 0)
+  const recentPosts = getRecentPosts()
+  const activeSeries = getRecentSeries()
 
   return (
     <div className='space-y-10'>
@@ -27,7 +28,7 @@ export default function HomePage() {
         </div>
         <div className='space-y-3'>
           <h2 className='flex items-center gap-2 text-lg font-bold text-zinc-900 dark:text-zinc-50'>
-            <SparklesIcon className='h-5 w-5 text-orange-500' />
+            <Icon iconNode={SparklesIcon} className='h-5 w-5 text-orange-500' />
             Olá, mundo! Sou o Erivelton 👋
           </h2>
           <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
@@ -54,7 +55,7 @@ export default function HomePage() {
         <section>
           <div className='mb-4 flex items-center justify-between'>
             <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-              <BookOpenIcon className='h-4 w-4 text-blue-500' />
+              <Icon iconNode={BookOpenIcon} className='text-blue-500' />
               Posts recentes
             </h2>
             <Link
@@ -62,7 +63,7 @@ export default function HomePage() {
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'
             >
               Ver todos
-              <ArrowRightIcon className='h-3.5 w-3.5' />
+              <Icon iconNode={ArrowRightIcon} className='h-3.5 w-3.5' />
             </Link>
           </div>
           <div className='grid gap-3 sm:grid-cols-2'>
@@ -78,7 +79,7 @@ export default function HomePage() {
         <section>
           <div className='mb-4 flex items-center justify-between'>
             <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-              <BookMarkedIcon className='h-4 w-4 text-orange-500' />
+              <Icon iconNode={BookMarkedIcon} className='text-orange-500' />
               Séries em andamento
             </h2>
             <Link
@@ -86,7 +87,7 @@ export default function HomePage() {
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'
             >
               Ver todas
-              <ArrowRightIcon className='h-3.5 w-3.5' />
+              <Icon iconNode={ArrowRightIcon} className='h-3.5 w-3.5' />
             </Link>
           </div>
           <div className='grid gap-3 sm:grid-cols-2'>
