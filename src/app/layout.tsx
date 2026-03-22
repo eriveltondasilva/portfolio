@@ -3,6 +3,8 @@ import { Inter, Roboto_Mono } from 'next/font/google'
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
 import { cn } from '@/lib/utils'
+import { getAuthorBySlug } from '@/lib/blog'
+import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants'
 
 import './globals.css'
 
@@ -30,6 +32,10 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
+  const author = getAuthorBySlug(PRIMARY_AUTHOR_SLUG)
+
+  if (!author) throw new Error('Author not found')
+
   return (
     <html
       lang='pt-BR'
@@ -43,7 +49,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <div className='mx-auto max-w-7xl px-4 py-8 md:px-8 lg:px-12'>
           <div className='flex flex-col gap-8 md:flex-row md:items-start md:gap-10 lg:gap-14'>
             {/* Sidebar - fixed on desktop */}
-            <ProfileSidebar />
+            <ProfileSidebar author={author} />
 
             {/* Main content area */}
             <main className='min-w-0 flex-1'>

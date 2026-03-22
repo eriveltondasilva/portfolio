@@ -97,7 +97,7 @@ export const postSchema = z
       .describe('Date of the last significant update to the post.'),
     //
     status: z
-      .enum(Object.values(PostStatus))
+      .enum(PostStatus)
       .default(PostStatus.DRAFT)
       .describe('Visibility state of the post.'),
     //
@@ -185,7 +185,7 @@ export const seriesSchema = z
       .describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
     status: z
-      .enum(Object.values(SeriesStatus))
+      .enum(SeriesStatus)
       .default(SeriesStatus.PLANNED)
       .describe('Indicates the current state of the series.'),
     //

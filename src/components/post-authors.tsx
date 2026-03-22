@@ -16,10 +16,31 @@ import { Icon } from './icon'
 import type { Author } from '@/types'
 
 function AuthorHoverCard({ author }: { author: Author }) {
+  const socialMap = [
+    {
+      label: 'GitHub',
+      href: author.socials.github,
+      icon: Github,
+    },
+    {
+      label: 'Linkedin',
+      href: author.socials.linkedin,
+      icon: Linkedin,
+    },
+    {
+      label: 'Twitter',
+      href: author.socials.twitter,
+      icon: Twitter,
+    },
+  ]
+
   return (
     <HoverCard openDelay={200} closeDelay={100}>
       <HoverCardTrigger asChild>
-        <span className='cursor-default underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'>
+        <span
+          tabIndex={0}
+          className='cursor-default underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+        >
           {author.name}
         </span>
       </HoverCardTrigger>
@@ -77,61 +98,43 @@ function AuthorHoverCard({ author }: { author: Author }) {
           </div>
         )}
 
-        {/* Socials */}
-        {author.socials && (
-          <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-            {author.socials.github && (
+        {/* Social info */}
+        <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
+          {socialMap.map((social) => {
+            if (!social.href) return null
+
+            return (
               <a
-                href={author.socials.github}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-              >
-                <Icon iconNode={Github} label='GitHub' className='size-3.5' />
-              </a>
-            )}
-            {author.socials.linkedin && (
-              <a
-                href={author.socials.linkedin}
+                key={social.label}
+                href={social.href}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
                 <Icon
-                  iconNode={Linkedin}
-                  label='LinkedIn'
+                  iconNode={social.icon}
+                  label={social.label}
                   className='size-3.5'
                 />
               </a>
-            )}
-            {author.socials.twitter && (
-              <a
-                href={author.socials.twitter}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-              >
-                <Icon
-                  iconNode={Twitter}
-                  label='Twitter / X'
-                  className='size-3.5'
-                />
-              </a>
-            )}
-          </div>
-        )}
+            )
+          })}
+        </div>
       </HoverCardContent>
     </HoverCard>
   )
 }
 
+const listFormat = new Intl.ListFormat('pt-BR', {
+  style: 'long',
+  type: 'conjunction',
+})
+
 export function PostAuthors({ authors }: { authors: Author[] }) {
   if (authors.length === 0) return null
 
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
-  const parts = new Intl.ListFormat('pt-BR').formatToParts(
-    authors.map((author) => author.slug),
-  )
+  const parts = listFormat.formatToParts(authors.map((author) => author.slug))
 
   return (
     <span className='flex flex-wrap items-baseline gap-x-0.5 text-sm text-zinc-500 dark:text-zinc-500'>

@@ -9,8 +9,7 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-
-import { cn } from '@/lib/utils'
+import clsx from 'clsx'
 
 import { Icon } from './icon'
 
@@ -46,7 +45,7 @@ export function TabsNav() {
             <Link
               key={href}
               href={href}
-              className={cn(
+              className={clsx(
                 'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                 isActive ?
                   'border-orange-500 text-zinc-900 dark:border-orange-400 dark:text-zinc-50'

@@ -11,3 +11,5 @@ export enum SeriesStatus {
 }
 
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
+
+export const PRIMARY_AUTHOR_SLUG = 'erivelton'

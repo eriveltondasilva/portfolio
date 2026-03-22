@@ -112,6 +112,7 @@ export function getSeriesBySlug(slug: string): SeriesIndex | null {
   return getAllSeries().find((series) => series.slug === slug) ?? null
 }
 
+/** Retorna séries com status IN_PROGRESS, usadas na home. */
 export function getRecentSeries(limit = 2): SeriesIndex[] {
   return getAllSeries()
     .filter((series) => series.status === SeriesStatus.IN_PROGRESS)

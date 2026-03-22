@@ -1,20 +1,31 @@
 import { Github, Linkedin, MapPinIcon, Twitter } from 'lucide-react'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
-import { getAuthorBySlug } from '@/lib/blog'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 
-import type { Route } from 'next'
+import type { Author } from '@/types'
 
-export function ProfileSidebar() {
-  const author = getAuthorBySlug('erivelton')
-
-  if (!author) return notFound()
+export function ProfileSidebar({ author }: { author: Author }) {
+  const socialMap = [
+    {
+      label: 'GitHub',
+      href: author.socials.github,
+      icon: Github,
+    },
+    {
+      label: 'Linkedin',
+      href: author.socials.linkedin,
+      icon: Linkedin,
+    },
+    {
+      label: 'Twitter',
+      href: author.socials.twitter,
+      icon: Twitter,
+    },
+  ]
 
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
@@ -56,48 +67,29 @@ export function ProfileSidebar() {
         ))}
       </div>
 
-      {/* Info */}
+      {/* Social Info */}
       <div className='mt-5 space-y-2 text-sm text-zinc-600 dark:text-zinc-400'>
         <div className='flex items-center gap-2'>
           <Icon iconNode={MapPinIcon} className='shrink-0' />
           <span>Alagoas, Brasil</span>
         </div>
 
-        {author.socials.github && (
-          <Link
-            href={author.socials.github as Route}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-          >
-            <Icon iconNode={Github} className='shrink-0' />
-            <span className='truncate'>GitHub</span>
-          </Link>
-        )}
+        {socialMap.map((social) => {
+          if (!social.href) return null
 
-        {author.socials?.linkedin && (
-          <Link
-            href={author.socials.linkedin as Route}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-          >
-            <Icon iconNode={Linkedin} className='shrink-0' />
-            <span className='truncate'>LinkedIn</span>
-          </Link>
-        )}
-
-        {author.socials?.twitter && (
-          <Link
-            href={author.socials.twitter as Route}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-          >
-            <Icon iconNode={Twitter} className='shrink-0' />
-            <span className='truncate'>Twitter / X</span>
-          </Link>
-        )}
+          return (
+            <a
+              key={social.label}
+              href={social.href}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+            >
+              <Icon iconNode={social.icon} className='shrink-0' />
+              <span className='truncate'>{social.label}</span>
+            </a>
+          )
+        })}
       </div>
     </aside>
   )

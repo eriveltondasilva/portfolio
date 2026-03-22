@@ -39,7 +39,7 @@ const statusConfig: Record<
 }
 
 export function SeriesCard({ series, className }: SeriesCardProps) {
-  const status = statusConfig[series.status as SeriesStatus]
+  const status = statusConfig[series.status]
 
   return (
     <article
