@@ -129,3 +129,73 @@
     @apply font-sans;
   }
 }
+
+/* ================================== */
+
+/* Headings */
+.prose :is(h2, h3, h4, h5, h6) {
+  @apply hover:after:content-['#'];
+}
+
+/* Code Block Styles */
+figure[data-rehype-pretty-code-figure] {
+  @apply relative my-6;
+
+  & > [data-rehype-pretty-code-title] {
+    @apply rounded-t-lg bg-slate-900 px-4 py-1.5 text-sm text-white;
+
+    & + pre {
+      @apply mt-0 rounded-t-none;
+    }
+  }
+
+  & > pre {
+    @apply overflow-x-auto rounded-lg px-0 py-4;
+
+    & [data-line] {
+      @apply px-4 py-0;
+    }
+  }
+}
+
+/* Inline Code */
+span[data-rehype-pretty-code-figure] > code {
+  @apply rounded-lg bg-muted px-1.5 py-0.5 text-foreground;
+}
+
+/* Line Numbers */
+code[data-line-numbers] {
+  counter-reset: line;
+
+  & > [data-line]::before {
+    counter-increment: line;
+    content: counter(line);
+
+    /* Other styling */
+    @apply mr-4 inline-block w-3 text-right text-muted-foreground/90;
+  }
+
+  &[data-line-numbers-max-digits='2'] > [data-line]::before {
+    @apply w-4;
+  }
+
+  &[data-line-numbers-max-digits='3'] > [data-line]::before {
+    @apply w-5;
+  }
+
+  &[data-line-numbers-max-digits='4'] > [data-line]::before {
+    @apply w-7;
+  }
+}
+
+/* Highlighted Elements */
+code {
+  & [data-highlighted-line] {
+    @apply border-l-4 border-blue-500 bg-muted/10;
+    margin-left: -0.25rem;
+  }
+
+  & [data-highlighted-chars] {
+    @apply rounded-sm border border-blue-700/30 bg-blue-800/20 px-1;
+  }
+}

@@ -75,7 +75,7 @@ export function SeriesCard({ series, className }: SeriesCardProps) {
         {series.description}
       </p>
 
-      {/* Posts count */}
+      {/* Meta info */}
       <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
@@ -86,7 +86,9 @@ export function SeriesCard({ series, className }: SeriesCardProps) {
 
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={CalendarIcon} className='size-3.5' />
-          {formatDate(series.publishedAt)}
+          <time dateTime={series.publishedAt}>
+            {formatDate(series.publishedAt)}
+          </time>
         </span>
       </div>
 

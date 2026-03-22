@@ -81,7 +81,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
           <span className='flex items-center gap-1.5'>
             <Icon iconNode={CalendarIcon} />
-            {formatDate(meta.publishedAt, { dateStyle: 'long' })}
+            <time dateTime={meta.publishedAt}>
+              {formatDate(meta.publishedAt, { dateStyle: 'long' })}
+            </time>
           </span>
 
           {post.meta.readingTime && (

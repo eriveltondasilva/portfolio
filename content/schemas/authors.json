@@ -40,13 +40,12 @@
         "description": "List of skills or technologies the author is proficient in."
       },
       "socials": {
-        "description": "Social media profiles of the author.",
         "type": "object",
         "properties": {
           "github": {
-            "description": "GitHub profile URL.",
             "type": "string",
-            "format": "uri"
+            "format": "uri",
+            "description": "GitHub profile URL."
           },
           "linkedin": {
             "description": "LinkedIn profile URL.",
@@ -59,10 +58,20 @@
             "format": "uri"
           }
         },
-        "additionalProperties": false
+        "required": [
+          "github"
+        ],
+        "additionalProperties": false,
+        "description": "Social media profiles of the author."
       }
     },
-    "required": ["slug", "name", "bio", "skills"],
+    "required": [
+      "slug",
+      "name",
+      "bio",
+      "skills",
+      "socials"
+    ],
     "additionalProperties": false,
     "title": "Author Metadata",
     "description": "Schema for validating metadata of a blog author."

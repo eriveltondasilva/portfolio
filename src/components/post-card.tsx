@@ -78,7 +78,9 @@ export function PostCard({ post, className }: PostCardProps) {
       <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={CalendarIcon} className='size-3.5' />
-          {formatDate(post.publishedAt)}
+          <time dateTime={post.publishedAt}>
+            {formatDate(post.publishedAt)}
+          </time>
         </span>
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={ClockIcon} className='size-3.5' />
