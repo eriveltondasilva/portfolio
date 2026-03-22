@@ -32,11 +32,6 @@ export const authorSchema = z
       .max(300)
       .describe('Short summary of the author.'),
     //
-    avatar: z
-      .url()
-      .optional()
-      .describe('Path to the avatar image of the author.'),
-    //
     skills: z
       .array(z.string().min(1).describe('Skill name.'))
       .min(1, 'At least one skill is required.')
@@ -45,7 +40,12 @@ export const authorSchema = z
     //
     socials: z
       .object({
-        github: z.url().describe('GitHub profile URL.'),
+        github: z
+          .url({
+            protocol: /^https$/,
+            hostname: /^github\.com$/,
+          })
+          .describe('GitHub profile URL.'),
         linkedin: z.url().optional().describe('LinkedIn profile URL.'),
         twitter: z.url().optional().describe('Twitter profile URL.'),
       })

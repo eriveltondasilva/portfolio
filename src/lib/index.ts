@@ -1,5 +1,7 @@
 import { styleText } from 'node:util'
 
+import type { Author } from '@/types'
+
 export const logSuccess = (text: string) =>
   console.info(styleText('green', text))
 
@@ -15,9 +17,9 @@ export async function writeJson(
   }
 }
 
-export function getGitHubUsername(url: string): string | null {
+export function getGitHubUsername(author: Author): string | null {
   try {
-    return new URL(url).pathname.replace('/', '')
+    return new URL(author.socials.github).pathname.replace('/', '')
   } catch {
     return null
   }
@@ -30,6 +32,10 @@ export function getInitials(name: string): string {
     .slice(0, 2)
     .join('')
     .toUpperCase()
+}
+
+export function getGithubAvatar(author: Author, size = 40): string {
+  return `${author.socials.github}.png?size=${size}`
 }
 
 export function formatDate(

@@ -1,9 +1,10 @@
 import { dirname } from 'node:path'
 
+import authorsData from '@/authors/index.json'
 import postsIndex from '@/posts-index.json'
 import seriesIndex from '@/series-index.json'
 
-import type { PostIndex, SeriesIndex } from '@/types'
+import type { Author, PostIndex, SeriesIndex } from '@/types'
 import type { MDXContent } from 'mdx/types'
 
 interface TagCount {
@@ -29,6 +30,12 @@ export function getAllPosts(): PostIndex[] {
 
 export function getAllSeries(): SeriesIndex[] {
   return seriesIndex as SeriesIndex[]
+}
+
+// # AUTHORS
+
+export function getAuthorBySlug(slug: string): Author | null {
+  return (authorsData as Author[]).find((a) => a.slug === slug) ?? null
 }
 
 // # POSTS

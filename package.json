@@ -14,6 +14,7 @@
     "fmt": "bunx prettier . --check",
     "fmt:fix": "bunx prettier . --write --cache",
     "fix": "bun run lint:fix && bun run fmt:fix",
+    "types": "tsc --noEmit",
     "build:indexes": "bun run scripts/generate-blog-index.ts",
     "build:schemas": "bun run scripts/generate-zod-schemas.ts"
   },

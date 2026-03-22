@@ -2,12 +2,12 @@ import { cn } from '@/lib/utils'
 
 import type { LucideIcon, LucideProps } from 'lucide-react'
 
-interface IconProps extends LucideProps {
+interface Props extends LucideProps {
   iconNode: LucideIcon
   label?: string
 }
 
-export function Icon({ iconNode, className, label, ...props }: IconProps) {
+export function Icon({ iconNode, className, label, ...props }: Props) {
   const Comp = iconNode
 
   return (

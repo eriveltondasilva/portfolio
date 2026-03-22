@@ -2,21 +2,32 @@ import {
   ArrowLeftIcon,
   CalendarIcon,
   ClockIcon,
+  GitForkIcon,
   LayersIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { AdjacentPostCard } from '@/components/adjacent-post-card'
 import { Icon } from '@/components/icon'
+import { PostAuthors } from '@/components/post-authors'
+import { PostCover } from '@/components/post-cover'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatDate } from '@/lib'
-import { getAllPosts, getPostWithContent } from '@/lib/posts'
-
-import { Badge } from '../../../components/ui/badge'
+import {
+  getAdjacentPosts,
+  getAllPosts,
+  getAuthorBySlug,
+  getPostWithContent,
+} from '@/lib/posts'
 
 import type { Metadata } from 'next'
 
 export const dynamicParams = false
+
+const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 export async function generateMetadata({
   params,
@@ -29,12 +40,18 @@ export async function generateMetadata({
   return {
     title: post.meta.title,
     description: post.meta.description,
+    openGraph: {
+      type: 'article',
+      url: `https://erivelton.dev/blog/${slug}`,
+      title: post.meta.title,
+      description: post.meta.description,
+    },
   }
 }
 
 export function generateStaticParams() {
   const posts = getAllPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  return posts.map(({ slug }) => ({ slug }))
 }
 
 export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
@@ -44,6 +61,12 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   if (!post) return notFound()
 
   const { meta, Content } = post
+  delete meta.cover
+  const { prev, next } = getAdjacentPosts(slug)
+  const hasAdjacentPosts = prev !== null || next !== null
+  const authors = meta.authors
+    .map(getAuthorBySlug)
+    .filter((author) => author !== null)
 
   return (
     <div>
@@ -94,6 +117,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           )}
         </div>
 
+        {/* Authors */}
+        <PostAuthors authors={authors} />
+
         {/* Tags */}
         {meta.tags.length > 0 && (
           <div className='flex flex-wrap gap-1.5'>
@@ -111,6 +137,8 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         )}
       </header>
 
+      {meta.cover && <PostCover cover={meta.cover} title={meta.title} />}
+
       <Separator className='mb-8 dark:bg-zinc-700/60' />
 
       {/* Article content */}
@@ -118,18 +146,34 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <Content />
       </article>
 
-      {/* Footer */}
       <Separator className='my-8 dark:bg-zinc-700/60' />
 
-      <div className='flex justify-between text-sm'>
-        <Link
-          href='/blog'
-          className='flex items-center gap-1.5 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
-        >
-          <Icon iconNode={ArrowLeftIcon} />
-          Todos os posts
-        </Link>
+      {/* Footer actions */}
+      <div className='flex justify-end'>
+        <Button variant='link' asChild>
+          <a
+            href={`${GITHUB_REPO}/edit/main/${meta.filePath}`}
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Icon iconNode={GitForkIcon} className='size-3.5' />
+            Sugerir alterações
+          </a>
+        </Button>
       </div>
+
+      {/* Prev / Next navigation */}
+      {hasAdjacentPosts && (
+        <nav
+          aria-label='Navegação entre posts'
+          className='mt-4 flex flex-col gap-3 sm:flex-row'
+        >
+          {prev && <AdjacentPostCard post={prev} direction='prev' />}
+          {!prev && <div className='flex-1' />}
+
+          {next && <AdjacentPostCard post={next} direction='next' />}
+        </nav>
+      )}
     </div>
   )
 }

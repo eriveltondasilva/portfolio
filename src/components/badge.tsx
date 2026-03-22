@@ -2,7 +2,7 @@ import { Badge as BadgeBase } from './ui/badge'
 
 export default function Badge() {}
 
-const SoftBadgeDemo = () => {
+export const SoftBadgeDemo = () => {
   return (
     <div className='flex flex-wrap items-center gap-3'>
       <BadgeBase className='gap-1.5 bg-amber-600/10 text-amber-500 shadow-none hover:bg-amber-600/10 dark:bg-amber-600/20'>
@@ -18,7 +18,7 @@ const SoftBadgeDemo = () => {
   )
 }
 
-const StatusBadgeBaseDemo = () => {
+export const StatusBadgeBaseDemo = () => {
   return (
     <div className='flex flex-wrap items-center gap-3'>
       <BadgeBase className='gap-1.5 border-amber-600/40 bg-amber-600/10 text-amber-500 shadow-none hover:bg-amber-600/10 dark:bg-amber-600/20'>

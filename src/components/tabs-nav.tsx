@@ -20,11 +20,10 @@ interface Tab {
   label: string
   href: Route
   icon: LucideIcon
-  // count?: number
 }
 
 const tabs: Tab[] = [
-  { label: 'Visão Geral', href: '/', icon: LayoutGridIcon },
+  { label: 'Overview', href: '/', icon: LayoutGridIcon },
   { label: 'Blog', href: '/blog', icon: BookOpenIcon },
   { label: 'Séries', href: '/series', icon: BookMarkedIcon },
   { label: 'Tags', href: '/tags', icon: HashIcon },
@@ -56,18 +55,6 @@ export function TabsNav() {
             >
               <Icon iconNode={icon} />
               {label}
-              {/* {count !== undefined && (
-                <span
-                  className={cn(
-                    'rounded-full px-2 py-0.5 text-xs font-medium',
-                    isActive ?
-                      'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                    : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-700 dark:text-zinc-300',
-                  )}
-                >
-                  {count}
-                </span>
-              )} */}
             </Link>
           )
         })}

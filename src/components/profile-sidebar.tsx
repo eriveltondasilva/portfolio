@@ -1,8 +1,9 @@
 import { Github, Linkedin, MapPinIcon, Twitter } from 'lucide-react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-import authorsData from '@/authors/index.json'
-import { getGitHubUsername, getInitials } from '@/lib'
+import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
+import { getAuthorBySlug } from '@/lib/posts'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -11,15 +12,16 @@ import { Badge } from './ui/badge'
 import type { Route } from 'next'
 
 export function ProfileSidebar() {
-  const author = authorsData[0]
-  const githubUsername = getGitHubUsername(author.socials.github)
+  const author = getAuthorBySlug('erivelton')
+
+  if (!author) return notFound()
 
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
       <div className='relative'>
         <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:h-full md:w-full md:rounded-full dark:border-zinc-700'>
-          <AvatarImage src={author.avatar} alt={author.name} />
+          <AvatarImage src={getGithubAvatar(author, 256)} alt={author.name} />
           <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
             {getInitials(author.name)}
           </AvatarFallback>
@@ -31,11 +33,9 @@ export function ProfileSidebar() {
         <h1 className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
           {author.name}
         </h1>
-        {githubUsername && (
-          <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
-            {githubUsername} • ele/dele
-          </p>
-        )}
+        <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
+          {getGitHubUsername(author)} • ele/dele
+        </p>
       </div>
 
       {/* Bio */}
@@ -63,7 +63,7 @@ export function ProfileSidebar() {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {author.socials?.github && (
+        {author.socials.github && (
           <Link
             href={author.socials.github as Route}
             target='_blank'

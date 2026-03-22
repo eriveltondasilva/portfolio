@@ -132,9 +132,19 @@
 
 /* ================================== */
 
-/* Headings */
-.prose :is(h2, h3, h4, h5, h6) {
-  @apply hover:after:content-['#'];
+/* Headings posts */
+.prose {
+  :is(h2, h3, h4, h5, h6) {
+    @apply relative;
+
+    a[aria-hidden='true'] {
+      @apply absolute -left-4 -translate-x-full no-underline opacity-0 transition-all;
+    }
+
+    &:hover a[aria-hidden='true'] {
+      @apply -translate-x-1 opacity-100;
+    }
+  }
 }
 
 /* Code Block Styles */

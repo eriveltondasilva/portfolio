@@ -1,5 +1,5 @@
 import {
-  ArrowUpRightIcon,
+  ArrowRightIcon,
   BookOpenIcon,
   CalendarIcon,
   ClockIcon,
@@ -14,12 +14,12 @@ import { Badge } from './ui/badge'
 
 import type { PostIndex } from '@/types'
 
-interface PostCardProps {
+interface Props {
   post: PostIndex
   className?: string
 }
 
-export function PostCard({ post, className }: PostCardProps) {
+export function PostCard({ post, className }: Props) {
   return (
     <article
       className={cn(
@@ -45,9 +45,9 @@ export function PostCard({ post, className }: PostCardProps) {
         </div>
 
         {post.series && (
-          <Link href={`/series/${post.series}`} className='shrink-0'>
-            <Badge className='border-orange-600/40 bg-orange-100/10 text-orange-500 shadow-none hover:bg-orange-500/10 dark:bg-orange-600/20'>
-              Série <Icon iconNode={ArrowUpRightIcon} />
+          <Link href={`/series/${post.series}`}>
+            <Badge className='border-orange-300 bg-orange-100/10 text-orange-500 hover:bg-orange-300/10 dark:bg-orange-600/20'>
+              Série <Icon iconNode={ArrowRightIcon} />
             </Badge>
           </Link>
         )}

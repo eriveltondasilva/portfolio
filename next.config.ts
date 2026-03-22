@@ -2,6 +2,15 @@ import createMDX from '@next/mdx'
 
 import type { NextConfig } from 'next'
 import type { Options as PrettyCodeOptions } from 'rehype-pretty-code'
+import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings'
+
+const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
+  behavior: 'prepend',
+  content: {
+    type: 'text',
+    value: '#',
+  },
+}
 
 const prettyCodeOptions: PrettyCodeOptions = {
   theme: 'github-dark-default',
@@ -21,7 +30,7 @@ const withMDX = createMDX({
     remarkPlugins: ['remark-frontmatter', 'remark-gfm', 'remark-gemoji'],
     rehypePlugins: [
       'rehype-slug',
-      'rehype-autolink-headings',
+      ['rehype-autolink-headings', autolinkHeadingsOptions],
       ['rehype-pretty-code', prettyCodeOptions],
     ],
   },
