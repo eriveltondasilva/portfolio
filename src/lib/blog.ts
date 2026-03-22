@@ -3,24 +3,16 @@ import { dirname } from 'node:path'
 import authorsData from '@/authors/index.json'
 import postsIndex from '@/posts-index.json'
 import seriesIndex from '@/series-index.json'
+import { SeriesStatus } from '@/lib/constants'
 
-import type { Author, PostIndex, SeriesIndex } from '@/types'
-import type { MDXContent } from 'mdx/types'
-
-interface TagCount {
-  tag: string
-  count: number
-}
-
-interface AdjacentPosts {
-  prev: PostIndex | null
-  next: PostIndex | null
-}
-
-interface PostWithContent {
-  Content: MDXContent
-  meta: PostIndex
-}
+import type {
+  AdjacentPosts,
+  Author,
+  PostIndex,
+  PostWithContent,
+  SeriesIndex,
+  TagCount,
+} from '@/types'
 
 // # BASE
 
@@ -32,10 +24,14 @@ export function getAllSeries(): SeriesIndex[] {
   return seriesIndex as SeriesIndex[]
 }
 
+export function getAllAuthors(): Author[] {
+  return authorsData as Author[]
+}
+
 // # AUTHORS
 
 export function getAuthorBySlug(slug: string): Author | null {
-  return (authorsData as Author[]).find((a) => a.slug === slug) ?? null
+  return getAllAuthors().find((a) => a.slug === slug) ?? null
 }
 
 // # POSTS
@@ -64,6 +60,7 @@ export function getPostsBySeries(seriesSlug: string): PostIndex[] {
 
 export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
   const post = getPostBySlug(slug)
+
   if (!post) return []
 
   return getAllPosts()
@@ -116,7 +113,9 @@ export function getSeriesBySlug(slug: string): SeriesIndex | null {
 }
 
 export function getRecentSeries(limit = 2): SeriesIndex[] {
-  return getAllSeries().slice(0, limit)
+  return getAllSeries()
+    .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
+    .slice(0, limit)
 }
 
 // # CONTENT
@@ -125,6 +124,7 @@ export async function getPostWithContent(
   slug: string,
 ): Promise<PostWithContent | null> {
   const post = getPostBySlug(slug)
+
   if (!post) return null
 
   const { default: Content } = await import(

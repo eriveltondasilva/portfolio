@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
-import { getAllPosts, getAllTags } from '@/lib/posts'
+import { getAllTags, getPostsByTag } from '@/lib/blog'
 
 import type { Metadata } from 'next'
 
@@ -14,6 +14,7 @@ export async function generateMetadata({
   params,
 }: PageProps<'/tags/[slug]'>): Promise<Metadata> {
   const { slug } = await params
+
   return {
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
@@ -31,7 +32,8 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
 
   if (!allTags.includes(slug)) return notFound()
 
-  const posts = getAllPosts().filter((post) => post.tags.includes(slug))
+  const posts = getPostsByTag(slug)
+  const hasPosts = posts.length > 0
 
   return (
     <div className='space-y-6'>
@@ -56,18 +58,21 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
       </header>
 
       {/* Posts */}
-      {posts.length > 0 ?
+      {hasPosts && (
         <div className='space-y-3'>
           {posts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
-      : <div className='py-16 text-center'>
+      )}
+
+      {!hasPosts && (
+        <div className='py-16 text-center'>
           <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             Nenhum post com esta tag.
           </p>
         </div>
-      }
+      )}
     </div>
   )
 }

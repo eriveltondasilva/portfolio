@@ -13,12 +13,12 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 
-interface ErrorPageProps {
+interface Props {
   error: Error & { digest?: string }
   reset: () => void
 }
 
-export default function GlobalError({ error, reset }: ErrorPageProps) {
+export default function GlobalError({ error, reset }: Props) {
   useEffect(() => {
     console.error(error)
   }, [error])

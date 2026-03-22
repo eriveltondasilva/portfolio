@@ -1,5 +1,5 @@
 import { SeriesCard } from '@/components/series-card'
-import { getAllSeries } from '@/lib/posts'
+import { getAllSeries } from '@/lib/blog'
 
 import type { Metadata } from 'next'
 
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default function SeriesPage() {
   const series = getAllSeries()
+  const hasSeries = series.length > 0
 
   return (
     <div className='space-y-6'>
@@ -21,18 +22,21 @@ export default function SeriesPage() {
       </div>
 
       {/* Series list */}
-      {series.length > 0 ?
+      {hasSeries && (
         <div className='space-y-3'>
           {series.map((s) => (
             <SeriesCard key={s.slug} series={s} />
           ))}
         </div>
-      : <div className='py-16 text-center'>
+      )}
+
+      {!hasSeries && (
+        <div className='py-16 text-center'>
           <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             Nenhuma série criada ainda.
           </p>
         </div>
-      }
+      )}
     </div>
   )
 }

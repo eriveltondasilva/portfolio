@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
-import { getAuthorBySlug } from '@/lib/posts'
+import { getAuthorBySlug } from '@/lib/blog'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'

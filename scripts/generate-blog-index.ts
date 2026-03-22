@@ -4,8 +4,8 @@ import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
 import { logSuccess, writeJson } from '@/lib'
-import { authorSchema, postSchema, seriesSchema } from '@/schemas/blog'
-import { PostStatus } from '@/types'
+import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
+import { PostStatus } from '@/lib/constants'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 

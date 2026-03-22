@@ -1,5 +1,5 @@
 import { PostCard } from '@/components/post-card'
-import { getAllPosts } from '@/lib/posts'
+import { getAllPosts } from '@/lib/blog'
 
 import type { Metadata } from 'next'
 
@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getAllPosts()
+  const hasPosts = posts.length > 0
 
   return (
     <div className='space-y-6'>
@@ -22,18 +23,21 @@ export default function BlogPage() {
       </div>
 
       {/* Posts list */}
-      {posts.length > 0 ?
+      {hasPosts && (
         <div className='space-y-3'>
           {posts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
-      : <div className='py-16 text-center'>
+      )}
+
+      {!hasPosts && (
+        <div className='py-16 text-center'>
           <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             Nenhum post publicado ainda.
           </p>
         </div>
-      }
+      )}
     </div>
   )
 }

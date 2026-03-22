@@ -3,7 +3,7 @@ import { join } from 'node:path'
 import { z } from 'zod'
 
 import { logSuccess, writeJson } from '@/lib'
-import { authorSchema, seriesSchema } from '@/schemas/blog'
+import { authorSchema, seriesSchema } from '@/lib/schemas'
 
 const SCHEMAS_DIR = join(import.meta.dir, '..', 'content', 'schemas')
 const OUTPUT_SERIES = join(SCHEMAS_DIR, 'series.json')

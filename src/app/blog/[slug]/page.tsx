@@ -16,18 +16,17 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatDate } from '@/lib'
+import { GITHUB_REPO } from '@/lib/constants'
 import {
   getAdjacentPosts,
   getAllPosts,
   getAuthorBySlug,
   getPostWithContent,
-} from '@/lib/posts'
+} from '@/lib/blog'
 
 import type { Metadata } from 'next'
 
 export const dynamicParams = false
-
-const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 export async function generateMetadata({
   params,
@@ -61,7 +60,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   if (!post) return notFound()
 
   const { meta, Content } = post
+
   delete meta.cover
+
   const { prev, next } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prev !== null || next !== null
   const authors = meta.authors
@@ -109,12 +110,10 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
             </time>
           </span>
 
-          {post.meta.readingTime && (
-            <span className='flex items-center gap-1.5'>
-              <Icon iconNode={ClockIcon} />
-              {post.meta.readingTime} min de leitura
-            </span>
-          )}
+          <span className='flex items-center gap-1.5'>
+            <Icon iconNode={ClockIcon} />
+            {post.meta.readingTime} min de leitura
+          </span>
         </div>
 
         {/* Authors */}

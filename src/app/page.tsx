@@ -9,11 +9,11 @@ import Link from 'next/link'
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { SeriesCard } from '@/components/series-card'
-import { getRecentPosts, getRecentSeries } from '@/lib/posts'
+import { getRecentPosts, getRecentSeries } from '@/lib/blog'
 
 export default function HomePage() {
   const recentPosts = getRecentPosts()
-  const activeSeries = getRecentSeries()
+  const recentSeries = getRecentSeries()
 
   return (
     <div className='space-y-10'>
@@ -75,7 +75,7 @@ export default function HomePage() {
       )}
 
       {/* Active Series */}
-      {activeSeries.length > 0 && (
+      {recentSeries.length > 0 && (
         <section>
           <div className='mb-4 flex items-center justify-between'>
             <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
@@ -91,7 +91,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className='grid gap-3 sm:grid-cols-2'>
-            {activeSeries.map((series) => (
+            {recentSeries.map((series) => (
               <SeriesCard key={series.slug} series={series} />
             ))}
           </div>

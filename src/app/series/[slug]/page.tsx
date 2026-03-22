@@ -6,15 +6,28 @@ import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-import { getAllPosts, getAllSeries, getSeriesBySlug } from '@/lib/posts'
-import { SeriesStatus } from '@/types'
+import { getAllSeries, getPostsBySeries, getSeriesBySlug } from '@/lib/blog'
+import { SeriesStatus } from '@/lib/constants'
 
 import type { Metadata } from 'next'
 
 export const dynamicParams = false
 
-export function generateStaticParams() {
-  return getAllSeries().map((s) => ({ slug: s.slug }))
+const statusMap = {
+  [SeriesStatus.PLANNED]: {
+    label: 'Planejada',
+    color: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
+  },
+  [SeriesStatus.IN_PROGRESS]: {
+    label: 'Em andamento',
+    color:
+      'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  },
+  [SeriesStatus.COMPLETE]: {
+    label: 'Completa',
+    color:
+      'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  },
 }
 
 export async function generateMetadata({
@@ -22,23 +35,15 @@ export async function generateMetadata({
 }: PageProps<'/series/[slug]'>): Promise<Metadata> {
   const { slug } = await params
   const series = getSeriesBySlug(slug)
+
   if (!series) return {}
+
   return { title: series.title, description: series.description }
 }
 
-const statusLabels: Record<SeriesStatus, string> = {
-  [SeriesStatus.PLANNED]: 'Planejada',
-  [SeriesStatus.IN_PROGRESS]: 'Em andamento',
-  [SeriesStatus.COMPLETE]: 'Completa',
-}
-
-const statusColors: Record<SeriesStatus, string> = {
-  [SeriesStatus.PLANNED]:
-    'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
-  [SeriesStatus.IN_PROGRESS]:
-    'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  [SeriesStatus.COMPLETE]:
-    'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+export function generateStaticParams() {
+  const series = getAllSeries()
+  return series.map(({ slug }) => ({ slug }))
 }
 
 export default async function SeriesDetailPage({
@@ -49,12 +54,9 @@ export default async function SeriesDetailPage({
 
   if (!series) return notFound()
 
-  const allPosts = getAllPosts()
-  const seriesPosts = allPosts
-    .filter((post) => post.series === slug)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-
-  const statusKey = series.status as SeriesStatus
+  const posts = getPostsBySeries(slug)
+  const hasPosts = posts.length > 0
+  const status = statusMap[series.status]
 
   return (
     <div className='space-y-6'>
@@ -75,33 +77,35 @@ export default async function SeriesDetailPage({
           </h1>
           <Badge
             variant='secondary'
-            className={`shrink-0 rounded-full text-xs ${statusColors[statusKey]}`}
+            className={`shrink-0 rounded-full text-xs ${status.color}`}
           >
-            {statusLabels[statusKey]}
+            {status.label}
           </Badge>
         </div>
         <p className='text-zinc-600 dark:text-zinc-400'>{series.description}</p>
         <p className='text-sm text-zinc-500 dark:text-zinc-500'>
-          {seriesPosts.length} {seriesPosts.length === 1 ? 'post' : 'posts'}{' '}
-          nesta série
+          {posts.length} {posts.length === 1 ? 'post' : 'posts'} nesta série
         </p>
       </header>
 
       <Separator className='dark:bg-zinc-700/60' />
 
       {/* Posts */}
-      {seriesPosts.length > 0 ?
+      {hasPosts && (
         <div className='space-y-3'>
-          {seriesPosts.map((post) => (
+          {posts.map((post) => (
             <PostCard key={post.slug} post={post} />
           ))}
         </div>
-      : <div className='py-16 text-center'>
+      )}
+
+      {!hasPosts && (
+        <div className='py-16 text-center'>
           <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             Nenhum post nesta série ainda.
           </p>
         </div>
-      }
+      )}
     </div>
   )
 }

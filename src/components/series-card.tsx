@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { formatDate } from '@/lib'
 import { cn } from '@/lib/utils'
-import { SeriesStatus } from '@/types'
+import { SeriesStatus } from '@/lib/constants'
 
 import { Icon } from './icon'
 import { Badge } from './ui/badge'

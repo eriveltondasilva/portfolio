@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { getTagsWithCount } from '@/lib/posts'
+import { getTagsWithCount } from '@/lib/blog'
 
 import type { Metadata } from 'next'
 
@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 export default function TagsPage() {
   const tagsWithCount = getTagsWithCount()
+  const hasTags = tagsWithCount.length > 0
 
   return (
     <div className='space-y-6'>
@@ -22,7 +23,7 @@ export default function TagsPage() {
       </div>
 
       {/* Tags grid */}
-      {tagsWithCount.length > 0 ?
+      {hasTags && (
         <div className='flex flex-wrap gap-2'>
           {tagsWithCount.map(({ tag, count }) => (
             <Link
@@ -39,12 +40,15 @@ export default function TagsPage() {
             </Link>
           ))}
         </div>
-      : <div className='py-16 text-center'>
+      )}
+
+      {!hasTags && (
+        <div className='py-16 text-center'>
           <p className='text-sm text-zinc-500 dark:text-zinc-400'>
             Nenhuma tag encontrada.
           </p>
         </div>
-      }
+      )}
     </div>
   )
 }
