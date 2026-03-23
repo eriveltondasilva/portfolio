@@ -1,13 +1,15 @@
 import { dirname } from 'node:path'
 
-import authorsData from '@/authors/index.json'
-import postsIndex from '@/posts-index.json'
-import seriesIndex from '@/series-index.json'
+import authorsData from '@/authors.json'
+import postsIndex from '@/indexes/posts.json'
+import seriesIndex from '@/indexes/series.json'
+import projectsIndex from '@/indexes/projects.json'
 import { SeriesStatus } from '@/lib/constants'
 
 import type {
   AdjacentPosts,
   Author,
+  Project,
   PostIndex,
   PostWithContent,
   SeriesIndex,
@@ -53,9 +55,7 @@ export function getPostsByAuthor(authorSlug: string): PostIndex[] {
 }
 
 export function getPostsBySeries(seriesSlug: string): PostIndex[] {
-  return getAllPosts()
-    .filter((post) => post.series === seriesSlug)
-    .toSorted((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  return getAllPosts().filter((post) => post.series === seriesSlug)
 }
 
 export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
@@ -117,6 +117,16 @@ export function getRecentSeries(limit = 2): SeriesIndex[] {
   return getAllSeries()
     .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
     .slice(0, limit)
+}
+
+// # PROJECTS
+
+export function getAllProjects(): Project[] {
+  return projectsIndex as Project[]
+}
+
+export function getFeaturedProjects(): Project[] {
+  return getAllProjects().filter((p) => p.featured)
 }
 
 // # CONTENT

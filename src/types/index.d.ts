@@ -1,7 +1,9 @@
 import { z } from 'zod'
 
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
+import { ProjectStatus } from '@/lib/constants'
 
+import type { Octokit } from '@octokit/rest'
 import type { MDXContent } from 'mdx/types'
 
 export type Series = z.infer<typeof seriesSchema>
@@ -37,3 +39,18 @@ export interface PostWithContent {
   Content: MDXContent
   meta: PostIndex
 }
+
+export interface Project {
+  slug: string
+  name: string
+  description: string
+  repository: string
+  url?: string
+  tags: string[]
+  status: ProjectStatus
+  featured: boolean
+}
+
+export type GithubRepo = Awaited<
+  ReturnType<Octokit['repos']['listForUser']>
+>['data'][number]

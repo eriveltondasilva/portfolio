@@ -3,21 +3,28 @@ import { join, relative } from 'node:path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
 
-import { logSuccess, writeJson } from '@/lib'
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
-import { PostStatus } from '@/lib/constants'
+import {
+  AUTHORS_FILE,
+  POSTS_DIR,
+  POSTS_INDEX_OUTPUT,
+  PostStatus,
+  SERIES_DIR,
+  SERIES_INDEX_OUTPUT,
+} from '@/lib/constants'
+
+import {
+  logSuccess,
+  writeJson,
+  BuildError,
+  readJson,
+  assertUniqueSlugs,
+  errorMessage,
+  unwrapFulfilled,
+} from './utils'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
-const ROOT = join(import.meta.dir, '..')
-const CONTENT_DIR = join(ROOT, 'content')
-const POSTS_DIR = join(CONTENT_DIR, 'posts')
-const SERIES_DIR = join(CONTENT_DIR, 'series')
-const AUTHORS_FILE = join(CONTENT_DIR, 'authors', 'index.json')
-const OUTPUT_POSTS = join(CONTENT_DIR, 'posts-index.json')
-const OUTPUT_SERIES = join(CONTENT_DIR, 'series-index.json')
-
-type BuildContext = 'authors' | 'series' | 'posts'
 type SeriesPost = PostIndex & { series: string; order: number }
 
 // ###
@@ -29,66 +36,7 @@ function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
   )
 }
 
-function errorMessage(reason: unknown): string {
-  return reason instanceof Error ? reason.message : String(reason)
-}
-
-function unwrapFulfilled<T>(result: PromiseSettledResult<T>): T {
-  if (result.status !== 'fulfilled') {
-    throw new Error('Expected a fulfilled result, got rejected.')
-  }
-  return result.value
-}
-
 // ###
-
-class BuildError extends Error {
-  constructor(
-    readonly context: BuildContext,
-    messages: string[],
-  ) {
-    super(
-      `[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n')}`,
-    )
-    this.name = 'BuildError'
-  }
-}
-
-// ###
-
-async function readJson(filePath: string): Promise<unknown> {
-  try {
-    return await Bun.file(filePath).json()
-  } catch (cause) {
-    throw new Error(`Failed to read file: ${filePath}`, { cause })
-  }
-}
-
-// ###
-
-function assertUniqueSlugs(
-  entries: { slug: string; source: string }[],
-  context: BuildContext,
-): void {
-  const grouped = Object.groupBy(entries, ({ slug }) => slug)
-
-  const duplicates = Object.entries(grouped).filter(
-    ([, group]) => (group?.length ?? 0) > 1,
-  )
-
-  if (duplicates.length === 0) return
-
-  const detail = duplicates
-    .map(([slug, group]) => {
-      const files = (group ?? [])
-        .map(({ source }) => `\n    - ${source}`)
-        .join('')
-      return `  "${slug}" found in:${files}`
-    })
-    .join('\n')
-
-  throw new BuildError(context, [`Duplicate slugs found:\n${detail}`])
-}
 
 function assertUniqueSeriesOrder(posts: PostIndex[]): void {
   const seriesPosts = posts.filter(
@@ -223,7 +171,7 @@ async function readSeries(): Promise<Map<string, Series>> {
 
 async function readPosts(): Promise<PostIndex[]> {
   const glob = new Bun.Glob('*/index.mdx')
-  const files = [...glob.scanSync({ cwd: POSTS_DIR, absolute: true })]
+  const files = Array.from(glob.scanSync({ cwd: POSTS_DIR, absolute: true }))
 
   const results = await Promise.allSettled(
     files.map(async (filePath) => {
@@ -243,7 +191,7 @@ async function readPosts(): Promise<PostIndex[]> {
       return {
         ...data,
         readingTime: Math.ceil(readingTime(content).minutes),
-        filePath: relative(ROOT, filePath).replaceAll('\\', '/'),
+        filePath: relative(process.cwd(), filePath).replaceAll('\\', '/'),
       } satisfies PostIndex
     }),
   )
@@ -276,8 +224,8 @@ async function readPosts(): Promise<PostIndex[]> {
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   const sorted = sortByDateDesc(posts)
-  await writeJson(OUTPUT_POSTS, sorted)
-  console.info(`> posts-index.json → ${sorted.length} post(s)`)
+  await writeJson(POSTS_INDEX_OUTPUT, sorted)
+  console.info(`> content/indexes/posts.json → ${sorted.length} post(s)`)
 }
 
 async function buildSeriesIndex(
@@ -302,16 +250,16 @@ async function buildSeriesIndex(
     return { ...series, posts: relatedPosts }
   })
 
-  await writeJson(OUTPUT_SERIES, seriesWithPosts)
-  console.info(`> series-index.json → ${seriesWithPosts.length} series`)
+  await writeJson(SERIES_INDEX_OUTPUT, seriesWithPosts)
+  console.info(
+    `> content/indexes/series.json → ${seriesWithPosts.length} series`,
+  )
 }
 
-// ---------------------------------------------------------------------------
-// # Entry point
-// ---------------------------------------------------------------------------
+// ###
 
 async function main(): Promise<void> {
-  console.info('⏳ Generating blog indices...\n')
+  console.info('\n⏳ Generating blog indices...\n')
 
   const [authorsResult, seriesResult, postsResult] = await Promise.allSettled([
     readAuthors(),

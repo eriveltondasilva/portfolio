@@ -1,6 +1,5 @@
 import { ArrowLeft, Hash } from 'lucide-react'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
@@ -28,10 +27,6 @@ export function generateStaticParams() {
 
 export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
   const { slug } = await params
-  const allTags = getAllTags()
-
-  if (!allTags.includes(slug)) return notFound()
-
   const posts = getPostsByTag(slug)
   const hasPosts = posts.length > 0
 

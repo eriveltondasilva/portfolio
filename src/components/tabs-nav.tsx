@@ -3,6 +3,7 @@
 import {
   BookMarkedIcon,
   BookOpenIcon,
+  FolderGit2,
   HashIcon,
   LayoutGridIcon,
   type LucideIcon,
@@ -25,6 +26,7 @@ const tabs: Tab[] = [
   { label: 'Overview', href: '/', icon: LayoutGridIcon },
   { label: 'Blog', href: '/blog', icon: BookOpenIcon },
   { label: 'Séries', href: '/series', icon: BookMarkedIcon },
+  { label: 'Projetos', href: '/projects', icon: FolderGit2 },
   { label: 'Tags', href: '/tags', icon: HashIcon },
 ]
 

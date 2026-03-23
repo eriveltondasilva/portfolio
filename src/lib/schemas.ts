@@ -7,8 +7,9 @@ const imageRegex = /\.(png|jpg|jpeg|webp|avif)$/i
 
 // z.config(z.locales.pt())
 
-const setRegexChecks = (schema: z.ZodString) =>
-  schema.regex(slugRegex, 'Slug must be in kebab-case.')
+function setRegexChecks(schema: z.ZodString) {
+  return schema.regex(slugRegex, 'Slug must be in kebab-case.')
+}
 
 export const authorSchema = z
   .object({
@@ -200,4 +201,53 @@ export const seriesSchema = z
   .meta({
     title: 'Series Metadata',
     description: 'Schema for validating metadata of a content series.',
+  })
+
+export const projectSchema = z
+  .object({
+    //
+    slug: z
+      .string()
+      .min(1)
+      .max(80)
+      .apply(setRegexChecks)
+      .describe('Unique identifier for the project in kebab-case.'),
+    //
+    name: z.string().min(1).max(100).describe('Display name of the project.'),
+    //
+    description: z
+      .string()
+      .min(10)
+      .max(300)
+      .describe('Short summary of the project.'),
+    //
+    repository: z
+      .url({
+        protocol: /^https$/,
+        hostname: /^github\.com$/,
+      })
+      .describe('GitHub repository URL.'),
+    //
+    url: z.url().optional().describe('Live URL of the project, if deployed.'),
+    //
+    tags: z
+      .array(z.string().min(1).apply(setRegexChecks))
+      .min(1)
+      .max(10)
+      .describe('Technologies or topics related to the project.'),
+
+    status: z
+      .enum(['active', 'archived', 'wip'])
+      .default('active')
+      .describe('Current state of the project.'),
+    //
+    featured: z
+      .boolean()
+      .default(false)
+      .describe('Whether the project should be highlighted.'),
+  })
+  .strict()
+  .meta({
+    title: 'Project Metadata',
+    description: 'Schema for validating metadata of a portfolio project.',
   })

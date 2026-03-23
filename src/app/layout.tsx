@@ -1,8 +1,8 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
+import clsx from 'clsx'
 
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
-import { cn } from '@/lib/utils'
 import { getAuthorBySlug } from '@/lib/blog'
 import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants'
 
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang='pt-BR'
-      className={cn(inter.variable, robotoMono.variable)}
+      className={clsx(inter.variable, robotoMono.variable)}
       suppressHydrationWarning
     >
       <body className='min-h-screen bg-white font-sans antialiased dark:bg-[#0d1117]'>

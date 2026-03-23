@@ -1,0 +1,31 @@
+[
+  {
+    "slug": "css-master",
+    "title": "CSS Master",
+    "description": "Domine a arte de criar layouts modernos e responsivos utilizando Flexbox, Grid, Variáveis CSS e as melhores práticas de arquitetura de estilos.",
+    "publishedAt": "2026-01-01",
+    "status": "in-progress",
+    "cover": "./covers/series-css.png",
+    "posts": [
+      {
+        "slug": "tailwind-dicas",
+        "title": "Tailwind CSS Produtivo",
+        "order": 1
+      },
+      {
+        "slug": "performance-web",
+        "title": "Web Vitals e Performance",
+        "order": 2
+      }
+    ]
+  },
+  {
+    "slug": "nextjs-pro",
+    "title": "Next.js Pro",
+    "description": "Uma jornada completa do zero ao avançado no framework React mais popular do mercado, cobrindo Server Components, Actions e Otimização.",
+    "publishedAt": "2026-01-01",
+    "status": "in-progress",
+    "cover": "./covers/series-nextjs.png",
+    "posts": []
+  }
+]
