@@ -3,6 +3,13 @@ import createMDX from '@next/mdx'
 import type { NextConfig } from 'next'
 import type { Options as PrettyCodeOptions } from 'rehype-pretty-code'
 import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings'
+import type { Options as RemarkGfmOptions } from 'remark-gfm'
+
+// ###
+
+const remarkGFMOptions: RemarkGfmOptions = {
+  singleTilde: false,
+}
 
 const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
   behavior: 'prepend',
@@ -17,6 +24,8 @@ const prettyCodeOptions: PrettyCodeOptions = {
   defaultLang: 'plaintext',
 }
 
+// ###
+
 const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
@@ -27,7 +36,11 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ['remark-frontmatter', 'remark-gfm', 'remark-gemoji'],
+    remarkPlugins: [
+      'remark-frontmatter',
+      ['remark-gfm', remarkGFMOptions],
+      'remark-gemoji',
+    ],
     rehypePlugins: [
       'rehype-slug',
       ['rehype-autolink-headings', autolinkHeadingsOptions],
@@ -35,5 +48,7 @@ const withMDX = createMDX({
     ],
   },
 })
+
+// ###
 
 export default withMDX(nextConfig)
