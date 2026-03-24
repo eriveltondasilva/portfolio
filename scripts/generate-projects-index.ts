@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest'
 
 import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '@/lib/constants'
 
-import { logSuccess, writeJson } from './utils'
+import { log, writeJson } from './utils'
 
 import type { Project, GithubRepo } from '@/types'
 
@@ -22,21 +22,6 @@ function getStatus(repo: GithubRepo): ProjectStatus {
   return ProjectStatus.ACTIVE
 }
 
-function toProject(repo: GithubRepo): Project {
-  return {
-    slug: repo.name,
-    name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
-    description: repo.description ?? 'Sem descrição.',
-    repository: repo.html_url,
-    url: repo.homepage || undefined,
-    tags: (repo.topics ?? []).filter(
-      (tag) => !UTILITY_TOPICS.has(tag as Topics),
-    ),
-    status: getStatus(repo),
-    featured: repo.topics?.includes(Topics.FEATURED) ?? false,
-  }
-}
-
 async function fetchPortfolioProjects(): Promise<Project[]> {
   const token = process.env.GITHUB_TOKEN
 
@@ -47,8 +32,7 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
   }
 
   const octokit = new Octokit({ auth: token })
-
-  console.info(`> Fetching repos for @${GITHUB_USERNAME}...`)
+  log.detail(`Fetching repos for @${GITHUB_USERNAME}...`)
 
   const { data: repos } = await octokit.repos.listForUser({
     username: GITHUB_USERNAME,
@@ -60,14 +44,38 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     repo.topics?.includes(Topics.INCLUDE),
   )
 
-  console.info(
-    `> Found ${portfolioRepos.length} repo(s) with topic "${Topics.INCLUDE}".`,
+  log.ok(
+    'repos fetched',
+    `${repos.length} total · ${portfolioRepos.length} with topic "${Topics.INCLUDE}"`,
   )
 
-  return portfolioRepos.map(toProject)
+  const featured = portfolioRepos.filter((r) =>
+    r.topics?.includes(Topics.FEATURED),
+  ).length
+  const wip = portfolioRepos.filter((r) =>
+    r.topics?.includes(Topics.WIP),
+  ).length
+  const archived = portfolioRepos.filter((r) => r.archived).length
+
+  if (featured > 0) log.detail(`${featured} featured`)
+  if (wip > 0) log.detail(`${wip} wip`)
+  if (archived > 0) log.skip('archived', `${archived} excluded from active`)
+
+  return portfolioRepos.map((repo) => ({
+    slug: repo.name,
+    name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    description: repo.description ?? 'Sem descrição.',
+    repository: repo.html_url,
+    url: repo.homepage || undefined,
+    tags: (repo.topics ?? []).filter(
+      (tag) => !UTILITY_TOPICS.has(tag as Topics),
+    ),
+    status: getStatus(repo),
+    featured: repo.topics?.includes(Topics.FEATURED) ?? false,
+  }))
 }
 
-// ###
+// # Builders
 
 async function buildProjectsIndex(projects: Project[]): Promise<void> {
   const sorted = projects.toSorted((a, b) => {
@@ -76,23 +84,35 @@ async function buildProjectsIndex(projects: Project[]): Promise<void> {
   })
 
   await writeJson(PROJECTS_INDEX_OUTPUT, sorted)
-  console.info(`> content/indexes/projects.json → ${sorted.length} project(s)`)
 }
 
-// ###
+// # Main
 
 async function main(): Promise<void> {
-  console.info('\n⏳ Generating projects index...\n')
+  const startedAt = performance.now()
+  console.info('\n⏳ Generating projects index...')
+
+  // -- Fetch ------------------------------------------------------------------
+
+  log.section('Fetching from GitHub...')
 
   const projects = await fetchPortfolioProjects()
-  await buildProjectsIndex(projects)
 
-  logSuccess('\n✔ Projects index generated successfully.')
+  // -- Write  -----------------------------------------------------------------
+
+  log.section('Writing index...')
+
+  await buildProjectsIndex(projects)
+  log.ok(PROJECTS_INDEX_OUTPUT, `${projects.length} project(s)`)
+
+  // -- Done  ------------------------------------------------------------------
+
+  const elapsed = (performance.now() - startedAt).toFixed(0)
+  log.success(`\n✔ Done in ${elapsed}ms`)
 }
 
 main().catch((error: unknown) => {
-  console.error('❌ Error generating projects index:')
-  console.error(error instanceof Error ? error.message : error)
-  console.error('> Fix the errors above and try again.\n')
+  const message = error instanceof Error ? error.message : String(error)
+  log.failure(message)
   process.exit(1)
 })

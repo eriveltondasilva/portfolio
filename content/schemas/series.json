@@ -34,18 +34,6 @@
         "description": "Indicates the current state of the series.",
         "type": "string",
         "enum": ["planned", "in-progress", "complete"]
-      },
-      "cover": {
-        "description": "Path to the cover image used for the series.",
-        "type": "string",
-        "allOf": [
-          {
-            "pattern": "^\\.\\/.*"
-          },
-          {
-            "pattern": "\\.(png|jpg|jpeg|webp|avif)$"
-          }
-        ]
       }
     },
     "required": ["slug", "title", "description", "publishedAt", "status"],

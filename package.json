@@ -1,8 +1,21 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
   "name": "portfolio",
-  "version": "0.1.0",
+  "description": "Uma aplicação de um portfólio pessoal com blog desenvolvida com Next.js e MDX.",
+  "author": "Erivelton Silva <eriveltondasilva13@gmail.com>",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eriveltondasilva/portfolio.git"
+  },
   "private": true,
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "nextjs",
+    "reactjs",
+    "portfolio"
+  ],
   "scripts": {
     "dev": "bun --bun next dev",
     "build": "bun --bun next build",
@@ -15,8 +28,10 @@
     "fmt:fix": "bunx prettier . --write --cache",
     "types": "tsc --noEmit",
     "fix": "bun run types && bun run lint:fix && bun run fmt:fix",
-    "build:indexes": "bun run scripts/generate-blog-index.ts && bun run scripts/generate-projects-index.ts",
-    "build:schemas": "bun run scripts/generate-zod-schemas.ts"
+    "build:blog": "bun run scripts/generate-blog-index.ts",
+    "build:projects": "bun run scripts/generate-projects-index.ts",
+    "build:schemas": "bun run scripts/generate-zod-schemas.ts",
+    "build:indexes": "bun run build:blog && bun run build:projects"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",

@@ -6,10 +6,10 @@
     "tags": ["css", "tailwind"],
     "publishedAt": "2026-03-10",
     "status": "published",
-    "hasCover": true,
     "authors": ["erivelton", "maria"],
     "series": "css-master",
     "order": 1,
+    "hasCover": true,
     "readingTime": 6,
     "filePath": "content/posts/2026-03-10-tailwind-dicas/index.mdx"
   },
@@ -20,10 +20,10 @@
     "tags": ["performance", "nextjs"],
     "publishedAt": "2026-03-09",
     "status": "published",
-    "hasCover": false,
     "authors": ["erivelton"],
     "series": "css-master",
     "order": 2,
+    "hasCover": false,
     "readingTime": 1,
     "filePath": "content/posts/2026-03-09-performance-web/index.mdx"
   },
@@ -34,8 +34,8 @@
     "tags": ["typescript", "backend", "zod"],
     "publishedAt": "2026-03-08",
     "status": "published",
-    "hasCover": false,
     "authors": ["erivelton"],
+    "hasCover": false,
     "readingTime": 1,
     "filePath": "content/posts/2026-03-08-zod-validacao/index.mdx"
   },
@@ -46,8 +46,8 @@
     "tags": ["nextjs", "backend"],
     "publishedAt": "2026-03-06",
     "status": "published",
-    "hasCover": false,
     "authors": ["erivelton"],
+    "hasCover": false,
     "readingTime": 1,
     "filePath": "content/posts/2026-03-06-api-routes/index.mdx"
   }

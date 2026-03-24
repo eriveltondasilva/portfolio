@@ -1,6 +1,6 @@
 import { dirname } from 'node:path'
 
-import authorsData from '@/authors.json'
+import authorsData from '@/authors/index.json'
 import postsIndex from '@/indexes/posts.json'
 import seriesIndex from '@/indexes/series.json'
 import projectsIndex from '@/indexes/projects.json'

@@ -1,7 +1,7 @@
 {
   "json.schemas": [
     {
-      "fileMatch": ["/content/series/**/index.json"],
+      "fileMatch": ["/content/series/index.json"],
       "url": "./content/schemas/series.json"
     },
     {

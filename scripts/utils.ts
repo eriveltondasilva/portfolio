@@ -1,5 +1,53 @@
 import { styleText } from 'node:util'
 
+// # Logger
+
+export const log = {
+  section: function (label: string) {
+    console.info(styleText(['bold', 'cyan'], `\n  ${label}`))
+  },
+  //
+  ok: function (label: string, detail = '') {
+    console.info(
+      styleText('green', '  ✔') +
+        '  ' +
+        label +
+        (detail ? '  ' + styleText('dim', detail) : ''),
+    )
+  },
+  //
+  skip: function (label: string, detail = '') {
+    console.info(
+      styleText('yellow', '  –') +
+        '  ' +
+        label +
+        (detail ? '  ' + styleText('dim', detail) : ''),
+    )
+  },
+  //
+  detail: function (text: string) {
+    console.info(styleText('gray', `     ${text}`))
+  },
+  //
+  success: function (text: string) {
+    console.info(styleText('green', text))
+  },
+  //
+  failure: function (message: string) {
+    const divider = styleText('red', `  ${'─'.repeat(60)}`)
+
+    console.error(styleText(['bold', 'red'], '\n❌ Build failed\n'))
+    console.error(divider)
+    console.error(`\n${message}\n`)
+    console.error(divider)
+    console.error(
+      styleText('yellow', '\n  Fix the errors above and try again.\n'),
+    )
+  },
+}
+
+// # Errors
+
 export class BuildError extends Error {
   constructor(
     readonly context: string,
@@ -12,7 +60,7 @@ export class BuildError extends Error {
   }
 }
 
-// ###
+// # Files
 
 export async function readJson(filePath: string): Promise<unknown> {
   try {
@@ -28,13 +76,12 @@ export async function writeJson(
 ): Promise<void> {
   try {
     await Bun.write(filePath, JSON.stringify(data, null, 2))
-    console.info(`> File saved: ${filePath}`)
   } catch (cause) {
     throw new Error(`Failed to write file: ${filePath}`, { cause })
   }
 }
 
-// ###
+// #
 
 export function assertUniqueSlugs(
   entries: { slug: string; source: string }[],
@@ -60,11 +107,7 @@ export function assertUniqueSlugs(
   throw new BuildError(context, [`Duplicate slugs found:\n${detail}`])
 }
 
-// ###
-
-export function logSuccess(text: string): void {
-  console.info(styleText('green', text))
-}
+// #
 
 export function errorMessage(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason)

@@ -3,7 +3,6 @@ import { z } from 'zod'
 import { PostStatus, SeriesStatus } from '@/lib/constants'
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-const imageRegex = /\.(png|jpg|jpeg|webp|avif)$/i
 
 // z.config(z.locales.pt())
 
@@ -102,11 +101,6 @@ export const postSchema = z
       .default(PostStatus.DRAFT)
       .describe('Visibility state of the post.'),
     //
-    hasCover: z
-      .boolean()
-      .default(false)
-      .describe('Flag to indicate if the post has a cover image.'),
-    //
     authors: z
       .array(z.string().apply(setRegexChecks).describe('Author slug.'))
       .min(1, 'At least one author is required.')
@@ -187,13 +181,6 @@ export const seriesSchema = z
       .enum(SeriesStatus)
       .default(SeriesStatus.PLANNED)
       .describe('Indicates the current state of the series.'),
-    //
-    cover: z
-      .string()
-      .startsWith('./', 'Cover path must be an absolute path.')
-      .regex(imageRegex, 'Cover must be a valid image file.')
-      .optional()
-      .describe('Path to the cover image used for the series.'),
   })
   .strict()
   .meta({

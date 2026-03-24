@@ -19,6 +19,7 @@ export interface SeriesPostRef {
 export interface PostIndex extends Post {
   readingTime: number
   filePath: string
+  hasCover: boolean
 }
 
 export interface SeriesIndex extends Series {

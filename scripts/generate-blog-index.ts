@@ -1,7 +1,7 @@
 import { join, relative } from 'node:path'
 
 import matter from 'gray-matter'
-import readingTime from 'reading-time'
+import getReadingTime from 'reading-time'
 
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 import {
@@ -9,25 +9,26 @@ import {
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   PostStatus,
-  SERIES_DIR,
+  SERIES_FILE,
   SERIES_INDEX_OUTPUT,
 } from '@/lib/constants'
 
 import {
-  logSuccess,
   writeJson,
   BuildError,
   readJson,
   assertUniqueSlugs,
   errorMessage,
   unwrapFulfilled,
+  log,
 } from './utils'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 type SeriesPost = PostIndex & { series: string; order: number }
 
-// ###
+// #
+const COVER_NAME = 'cover.jpg'
 
 function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
   return items.toSorted(
@@ -124,12 +125,12 @@ function assertAuthorsExist(
   ])
 }
 
-// ###
+// # Readers
 
 async function readAuthors(): Promise<Set<string>> {
   const parsed = await readJson(AUTHORS_FILE)
-
   const result = authorSchema.array().safeParse(parsed)
+
   if (!result.success) {
     throw new BuildError('authors', [
       AUTHORS_FILE + '\n',
@@ -148,13 +149,12 @@ async function readAuthors(): Promise<Set<string>> {
 }
 
 async function readSeries(): Promise<Map<string, Series>> {
-  const filePath = join(SERIES_DIR, 'index.json')
-  const parsed = await readJson(filePath)
-
+  const parsed = await readJson(SERIES_FILE)
   const result = seriesSchema.array().safeParse(parsed)
+
   if (!result.success) {
     throw new BuildError('series', [
-      filePath + '\n',
+      SERIES_FILE + '\n',
       ...result.error.issues.map(
         ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
       ),
@@ -162,36 +162,52 @@ async function readSeries(): Promise<Map<string, Series>> {
   }
 
   assertUniqueSlugs(
-    result.data.map((series) => ({ slug: series.slug, source: filePath })),
+    result.data.map((series) => ({ slug: series.slug, source: SERIES_FILE })),
     'series',
   )
 
   return new Map(result.data.map((series) => [series.slug, series]))
 }
 
-async function readPosts(): Promise<PostIndex[]> {
+interface PostsData {
+  posts: PostIndex[]
+  stats: {
+    scanned: number
+    published: number
+    drafts: number
+    withCover: number
+  }
+}
+
+async function readPosts(): Promise<PostsData> {
   const glob = new Bun.Glob('*/index.mdx')
   const files = Array.from(glob.scanSync({ cwd: POSTS_DIR, absolute: true }))
 
   const results = await Promise.allSettled(
-    files.map(async (filePath) => {
-      const raw = await Bun.file(filePath).text()
+    files.map(async (file) => {
+      const raw = await Bun.file(file).text()
       const { data: frontmatter, content } = matter(raw)
 
       const { success, data, error } = postSchema.safeParse(frontmatter)
+
       if (!success) {
         const issues = error.issues
           .map(({ path, message }) => `\t- ${path.join('.')}: ${message}`)
           .join('\n')
-        throw new Error(`${filePath}\n\n${issues}`)
+        throw new Error(`${file}\n\n${issues}`)
       }
 
       if (data.status === PostStatus.DRAFT) return null
 
+      const hasCover = await Bun.file(join(file, '..', COVER_NAME)).exists()
+      const readingTime = Math.ceil(getReadingTime(content).minutes)
+      const filePath = relative(process.cwd(), file).replaceAll('\\', '/')
+
       return {
         ...data,
-        readingTime: Math.ceil(readingTime(content).minutes),
-        filePath: relative(process.cwd(), filePath).replaceAll('\\', '/'),
+        hasCover,
+        readingTime,
+        filePath,
       } satisfies PostIndex
     }),
   )
@@ -204,34 +220,43 @@ async function readPosts(): Promise<PostIndex[]> {
 
   if (errors.length > 0) throw new BuildError('posts', errors)
 
-  const publishedPosts = results.filter(
+  const publishedResults = results.filter(
     (result): result is PromiseFulfilledResult<PostIndex> =>
       result.status === 'fulfilled' && result.value !== null,
   )
 
   assertUniqueSlugs(
-    publishedPosts.map(({ value: post }) => ({
+    publishedResults.map(({ value: post }) => ({
       slug: post.slug,
       source: post.filePath,
     })),
     'posts',
   )
 
-  return publishedPosts.map(({ value }) => value)
+  const posts = publishedResults.map(({ value }) => value)
+
+  return {
+    posts,
+    stats: {
+      scanned: files.length,
+      published: posts.length,
+      drafts: files.length - publishedResults.length,
+      withCover: posts.filter((p) => p.hasCover).length,
+    },
+  }
 }
 
-// ###
+// # Builders
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
   const sorted = sortByDateDesc(posts)
   await writeJson(POSTS_INDEX_OUTPUT, sorted)
-  console.info(`> content/indexes/posts.json → ${sorted.length} post(s)`)
 }
 
 async function buildSeriesIndex(
   seriesMap: Map<string, Series>,
   posts: PostIndex[],
-): Promise<void> {
+): Promise<SeriesIndex[]> {
   const postsBySeries = Object.groupBy(
     posts.filter(
       (post): post is SeriesPost =>
@@ -251,15 +276,19 @@ async function buildSeriesIndex(
   })
 
   await writeJson(SERIES_INDEX_OUTPUT, seriesWithPosts)
-  console.info(
-    `> content/indexes/series.json → ${seriesWithPosts.length} series`,
-  )
+
+  return seriesWithPosts
 }
 
-// ###
+// # Main
 
 async function main(): Promise<void> {
-  console.info('\n⏳ Generating blog indices...\n')
+  const startedAt = performance.now()
+  console.info('\n⏳ Generating blog indices...')
+
+  // -- Read -------------------------------------------------------------------
+
+  log.section('Reading content...')
 
   const [authorsResult, seriesResult, postsResult] = await Promise.allSettled([
     readAuthors(),
@@ -281,23 +310,64 @@ async function main(): Promise<void> {
 
   const authors = unwrapFulfilled(authorsResult)
   const seriesMap = unwrapFulfilled(seriesResult)
-  const posts = unwrapFulfilled(postsResult)
+  const { posts, stats } = unwrapFulfilled(postsResult)
+
+  log.ok('authors', `${authors.size} loaded`)
+  log.ok('series', `${seriesMap.size} loaded`)
+  log.ok(
+    'posts',
+    `${stats.published} published · ${stats.withCover} with cover`,
+  )
+
+  if (stats.drafts > 0) {
+    log.skip('drafts', `${stats.drafts} skipped`)
+  }
+
+  // -- Validate ---------------------------------------------------------------
+
+  log.section('Validating...')
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
-  assertUniqueSeriesOrder(posts)
-  assertAuthorsExist(posts, authors)
+  log.ok('series references')
 
-  await Promise.all([
-    buildPostsIndex(posts),
+  assertUniqueSeriesOrder(posts)
+  log.ok('series order')
+
+  assertAuthorsExist(posts, authors)
+  log.ok('author references')
+
+  const seriesPosts = posts.filter((post) => post.series !== undefined)
+
+  if (seriesPosts.length > 0) {
+    log.detail(`${seriesPosts.length} post(s) assigned to series`)
+  }
+
+  // -- Write ------------------------------------------------------------------
+
+  log.section('Writing indexes...')
+
+  const [seriesWithPosts] = await Promise.all([
     buildSeriesIndex(seriesMap, posts),
+    buildPostsIndex(posts),
   ])
 
-  logSuccess('\n✔ Indices generated successfully.')
+  log.ok(POSTS_INDEX_OUTPUT, `${stats.published} post(s)`)
+  log.ok(SERIES_INDEX_OUTPUT, `${seriesWithPosts.length} series`)
+
+  for (const series of seriesWithPosts) {
+    if (series.posts.length > 0) {
+      log.detail(`${series.slug}  (${series.posts.length} posts)`)
+    }
+  }
+
+  // -- Done -------------------------------------------------------------------
+
+  const elapsed = (performance.now() - startedAt).toFixed(0)
+  log.success(`\n✔ Done in ${elapsed}ms`)
 }
 
 main().catch((error: unknown) => {
-  console.error('❌ Error generating indices:')
-  console.error(error instanceof Error ? error.message : error)
-  console.error('> Fix the errors above and try again.\n')
+  const message = error instanceof Error ? error.message : String(error)
+  log.failure(message)
   process.exit(1)
 })

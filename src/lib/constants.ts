@@ -22,25 +22,30 @@ export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 export const PRIMARY_AUTHOR_SLUG = 'erivelton'
 
+export const URL_BASE =
+  process.env.VERCEL_URL ?
+    `https://${process.env.VERCEL_URL}`
+  : `http://localhost:3000`
+
 // ###
 
 export const CONTENT_DIR = join(process.cwd(), 'content')
 
+// # Directories
+export const AUTHORS_DIR = join(CONTENT_DIR, 'authors')
 export const POSTS_DIR = join(CONTENT_DIR, 'posts')
 export const SERIES_DIR = join(CONTENT_DIR, 'series')
 export const SCHEMAS_DIR = join(CONTENT_DIR, 'schemas')
 export const INDEXES_DIR = join(CONTENT_DIR, 'indexes')
 
-export const AUTHORS_FILE = join(CONTENT_DIR, 'authors.json')
+export const AUTHORS_FILE = join(AUTHORS_DIR, 'index.json')
+export const SERIES_FILE = join(SERIES_DIR, 'index.json')
 
+// # Schemas
 export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json')
 export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json')
 
+// # Indexes
 export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json')
 export const PROJECTS_INDEX_OUTPUT = join(INDEXES_DIR, 'projects.json')
 export const SERIES_INDEX_OUTPUT = join(INDEXES_DIR, 'series.json')
-
-export const URL_BASE =
-  process.env.VERCEL_URL ?
-    `https://${process.env.VERCEL_URL}`
-  : `http://localhost:3000`
