@@ -102,12 +102,10 @@ export const postSchema = z
       .default(PostStatus.DRAFT)
       .describe('Visibility state of the post.'),
     //
-    cover: z
-      .string()
-      .startsWith('./', 'Cover path must be absolute.')
-      .regex(imageRegex, 'Cover must be a valid image file.')
-      .optional()
-      .describe('Path to the cover image of the post.'),
+    hasCover: z
+      .boolean()
+      .default(false)
+      .describe('Flag to indicate if the post has a cover image.'),
     //
     authors: z
       .array(z.string().apply(setRegexChecks).describe('Author slug.'))

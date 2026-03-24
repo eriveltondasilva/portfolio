@@ -6,11 +6,11 @@
     "tags": ["css", "tailwind"],
     "publishedAt": "2026-03-10",
     "status": "published",
-    "cover": "./cover.png",
+    "hasCover": true,
     "authors": ["erivelton", "maria"],
     "series": "css-master",
     "order": 1,
-    "readingTime": 1,
+    "readingTime": 6,
     "filePath": "content/posts/2026-03-10-tailwind-dicas/index.mdx"
   },
   {
@@ -20,6 +20,7 @@
     "tags": ["performance", "nextjs"],
     "publishedAt": "2026-03-09",
     "status": "published",
+    "hasCover": false,
     "authors": ["erivelton"],
     "series": "css-master",
     "order": 2,
@@ -33,7 +34,7 @@
     "tags": ["typescript", "backend", "zod"],
     "publishedAt": "2026-03-08",
     "status": "published",
-    "cover": "./cover.png",
+    "hasCover": false,
     "authors": ["erivelton"],
     "readingTime": 1,
     "filePath": "content/posts/2026-03-08-zod-validacao/index.mdx"
@@ -45,66 +46,9 @@
     "tags": ["nextjs", "backend"],
     "publishedAt": "2026-03-06",
     "status": "published",
+    "hasCover": false,
     "authors": ["erivelton"],
     "readingTime": 1,
     "filePath": "content/posts/2026-03-06-api-routes/index.mdx"
-  },
-  {
-    "slug": "typescript-basico",
-    "title": "TypeScript em 5 minutos",
-    "description": "Tipagem básica para quem está saindo do JavaScript.",
-    "tags": ["typescript", "javascript"],
-    "publishedAt": "2026-03-05",
-    "status": "published",
-    "authors": ["erivelton"],
-    "readingTime": 1,
-    "filePath": "content/posts/2026-03-05-typescript-basico/index.mdx"
-  },
-  {
-    "slug": "variaveis-css",
-    "title": "Poder das Variáveis CSS",
-    "description": "Como criar temas dark/light apenas com CSS nativo.",
-    "tags": ["css", "frontend"],
-    "publishedAt": "2026-03-04",
-    "status": "published",
-    "authors": ["erivelton"],
-    "readingTime": 1,
-    "filePath": "content/posts/2026-03-04-variaveis-css/index.mdx"
-  },
-  {
-    "slug": "flexbox-vs-grid",
-    "title": "Flexbox vs Grid",
-    "description": "Quando usar cada um no seu layout moderno.",
-    "tags": ["css", "design"],
-    "publishedAt": "2026-03-03",
-    "status": "published",
-    "cover": "./cover.png",
-    "authors": ["erivelton"],
-    "readingTime": 1,
-    "filePath": "content/posts/2026-03-03-flexbox-vs-grid/index.mdx"
-  },
-  {
-    "slug": "server-components",
-    "title": "Entendendo Server Components",
-    "description": "A diferença entre Client e Server components de forma simples.",
-    "tags": ["nextjs", "react"],
-    "publishedAt": "2026-03-02",
-    "status": "published",
-    "cover": "./cover.png",
-    "authors": ["erivelton"],
-    "readingTime": 1,
-    "filePath": "content/posts/2026-03-02-server-components/index.mdx"
-  },
-  {
-    "slug": "intro-nextjs",
-    "title": "Introdução ao Next.js 14",
-    "description": "Dando os primeiros passos no framework mais popular do React.",
-    "tags": ["nextjs", "react", "frontend"],
-    "publishedAt": "2026-03-01",
-    "status": "published",
-    "cover": "./cover.png",
-    "authors": ["erivelton"],
-    "readingTime": 1,
-    "filePath": "content/posts/2026-03-01-intro-nextjs/index.mdx"
   }
 ]

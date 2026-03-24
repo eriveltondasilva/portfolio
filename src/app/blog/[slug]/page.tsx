@@ -61,8 +61,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { meta, Content } = post
 
-  delete meta.cover
-
   const { prev, next } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prev !== null || next !== null
   const authors = meta.authors
@@ -132,12 +130,8 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         )}
       </header>
 
-      {meta.cover && (
-        <PostCover
-          cover={meta.cover}
-          filePath={meta.filePath}
-          title={meta.title}
-        />
+      {meta.hasCover && (
+        <PostCover filePath={meta.filePath} title={meta.title} />
       )}
 
       <Separator className='mb-8 dark:bg-zinc-700/60' />
