@@ -17,10 +17,10 @@ export async function PostCover({ filePath, title }: Props) {
       <Image
         src={cover}
         alt={`Cover: ${title}`}
-        fill
-        loading='eager'
         className='object-cover'
         sizes='(max-width: 768px) 100vw, 768px'
+        preload
+        fill
       />
     </div>
   )

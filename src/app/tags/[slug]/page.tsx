@@ -1,4 +1,4 @@
-import { ArrowLeft, Hash } from 'lucide-react'
+import { ArrowLeftIcon, HashIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
@@ -37,14 +37,14 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
         href='/tags'
         className='inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
       >
-        <Icon iconNode={ArrowLeft} />
+        <Icon iconNode={ArrowLeftIcon} />
         Todas as tags
       </Link>
 
       {/* Header */}
       <header className='space-y-1 border-b border-zinc-100 pb-4 dark:border-zinc-800'>
         <h1 className='flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-zinc-50'>
-          <Icon iconNode={Hash} className='size-5 text-zinc-400' />
+          <Icon iconNode={HashIcon} className='size-5 text-zinc-400' />
           {slug}
         </h1>
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>

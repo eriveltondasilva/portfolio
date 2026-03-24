@@ -36,6 +36,9 @@ export default function PostLoading() {
         </div>
       </header>
 
+      {/* Cover */}
+      <Skeleton className='mb-8 aspect-2/1 w-full rounded-lg' />
+
       <Separator className='mb-8 dark:bg-zinc-700/60' />
 
       {/* Article body */}

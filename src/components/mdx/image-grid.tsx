@@ -24,7 +24,7 @@ const imageGridVariants = cva('my-8 grid gap-4', {
   },
 })
 
-const sizesForColumns = {
+const sizesMap = {
   2: '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc((100vw - 4rem - 1rem) / 2), 312px',
   3: '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc((100vw - 4rem - 1rem) / 2), 203px',
   4: '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc((100vw - 4rem - 1rem) / 2), 148px',
@@ -48,27 +48,34 @@ export function ImageGrid({
   className,
   classNameImages,
 }: ImageGridProps) {
-  const sizes =
-    sizesForColumns[columns as keyof typeof sizesForColumns] ??
-    sizesForColumns[3]
+  const sizes = sizesMap[columns as keyof typeof sizesMap]
 
   return (
     <div className={imageGridVariants({ columns, className })}>
       {images.map(
-        ({ className: classNameImage, caption, alt, ...props }, i) => (
-          <figure key={i} className='not-prose'>
-            <div className='relative aspect-square overflow-hidden rounded-lg bg-muted'>
-              <Image
-                className={cn('object-cover', classNameImages, classNameImage)}
-                sizes={sizes}
-                alt={alt}
-                fill
-                {...props}
-              />
-            </div>
-            {caption && <Figcaption>{caption}</Figcaption>}
-          </figure>
-        ),
+        ({ className: classNameImage, caption, alt, ...props }, i) => {
+          const effectivePlaceholder = props.blurDataURL ? 'blur' : 'empty'
+
+          return (
+            <figure key={i} className='not-prose'>
+              <div className='relative aspect-square overflow-hidden rounded-lg bg-muted'>
+                <Image
+                  className={cn(
+                    'object-cover',
+                    classNameImages,
+                    classNameImage,
+                  )}
+                  sizes={sizes}
+                  alt={alt}
+                  placeholder={effectivePlaceholder}
+                  fill
+                  {...props}
+                />
+              </div>
+              {caption && <Figcaption>{caption}</Figcaption>}
+            </figure>
+          )
+        },
       )}
     </div>
   )

@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
 import { getAuthorBySlug } from '@/lib/blog'
-import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants'
+import { PRIMARY_AUTHOR_SLUG, URL_BASE } from '@/lib/constants'
 
 import './globals.css'
 
@@ -23,12 +23,22 @@ const robotoMono = Roboto_Mono({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(URL_BASE),
   title: {
     default: 'Erivelton Silva — Dev Blog',
     template: '%s — Erivelton Silva',
   },
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
+  openGraph: {
+    siteName: 'Erivelton Silva',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    creator: '@erivelton_silv4',
+  },
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {

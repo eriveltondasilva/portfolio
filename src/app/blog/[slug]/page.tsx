@@ -41,7 +41,15 @@ export async function generateMetadata({
     description: post.meta.description,
     openGraph: {
       type: 'article',
-      url: `https://erivelton.dev/blog/${slug}`,
+      url: `/blog/${slug}`,
+      title: post.meta.title,
+      description: post.meta.description,
+      publishedTime: post.meta.publishedAt,
+      authors: post.meta.authors,
+      tags: post.meta.tags,
+    },
+    twitter: {
+      card: 'summary_large_image',
       title: post.meta.title,
       description: post.meta.description,
     },

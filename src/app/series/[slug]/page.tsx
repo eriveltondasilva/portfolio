@@ -38,7 +38,16 @@ export async function generateMetadata({
 
   if (!series) return {}
 
-  return { title: series.title, description: series.description }
+  return {
+    title: series.title,
+    description: series.description,
+    openGraph: {
+      type: 'website',
+      url: `/series/${slug}`,
+      title: series.title,
+      description: series.description,
+    },
+  }
 }
 
 export function generateStaticParams() {

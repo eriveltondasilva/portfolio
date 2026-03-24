@@ -39,3 +39,8 @@ export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json')
 export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json')
 export const PROJECTS_INDEX_OUTPUT = join(INDEXES_DIR, 'projects.json')
 export const SERIES_INDEX_OUTPUT = join(INDEXES_DIR, 'series.json')
+
+export const URL_BASE =
+  process.env.VERCEL_URL ?
+    `https://${process.env.VERCEL_URL}`
+  : `http://localhost:3000`

@@ -10,12 +10,22 @@ interface Props extends ImageProps {
   caption?: string
 }
 
-export function Image({ className, caption, sizes, ...props }: Props) {
+export function Image({
+  className,
+  caption,
+  sizes,
+  placeholder,
+  ...props
+}: Props) {
+  const effectivePlaceholder =
+    placeholder ?? (props.blurDataURL ? 'blur' : 'empty')
+
   return (
     <figure className='my-4'>
       <ImageNext
         className={cn('rounded-md', className)}
         sizes={sizes ?? DEFAULT_SIZES}
+        placeholder={effectivePlaceholder}
         {...props}
       />
       {caption && <Figcaption>{caption}</Figcaption>}
