@@ -1,20 +1,16 @@
-interface Data {
+interface Props {
   headers: string[]
   rows: string[][]
-}
-
-interface TableProps {
-  data: Data
   caption?: string
 }
 
-export function Table({ data, caption }: TableProps) {
+export function Table({ headers, rows, caption }: Props) {
   return (
     <table>
       {caption && <caption className='sr-only'>{caption}</caption>}
       <thead>
         <tr>
-          {data.headers.map((header, i) => (
+          {headers.map((header, i) => (
             <th key={i} scope='col'>
               {header}
             </th>
@@ -22,7 +18,7 @@ export function Table({ data, caption }: TableProps) {
         </tr>
       </thead>
       <tbody>
-        {data.rows.map((row, i) => (
+        {rows.map((row, i) => (
           <tr key={i}>
             {row.map((cell, cellIndex) => (
               <td key={cellIndex}>{cell}</td>

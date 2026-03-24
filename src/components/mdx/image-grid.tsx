@@ -3,6 +3,8 @@ import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
 
+import { Figcaption } from './utils'
+
 import type { ComponentProps } from 'react'
 import type { VariantProps } from 'class-variance-authority'
 import type { ImageProps } from 'next/image'
@@ -60,16 +62,12 @@ export function ImageGrid({
                 className={cn('object-cover', classNameImages, classNameImage)}
                 sizes={sizes}
                 loading='lazy'
-                alt={alt || ''}
+                alt={alt}
                 fill
                 {...props}
               />
             </div>
-            {caption && (
-              <figcaption className='mt-2 text-center text-sm text-muted-foreground'>
-                {caption}
-              </figcaption>
-            )}
+            {caption && <Figcaption>{caption}</Figcaption>}
           </figure>
         ),
       )}

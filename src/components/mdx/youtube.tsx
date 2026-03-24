@@ -5,6 +5,6 @@ interface Props {
   params?: string
 }
 
-export function Youtube({ videoId, params }: Props) {
+export function Youtube({ videoId, params = 'controls=0' }: Props) {
   return <YouTubeEmbed videoid={videoId} params={params} />
 }

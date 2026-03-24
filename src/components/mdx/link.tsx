@@ -8,6 +8,8 @@ import { Icon } from '../icon'
 import type { ComponentProps } from 'react'
 import type { Route } from 'next'
 
+const EXTERNAL_PROTOCOLS = ['http://', 'https://', 'www.']
+
 export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
   if (!href) return <>{children}</>
 
@@ -19,23 +21,7 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
     )
   }
 
-  if (href.startsWith('#')) {
-    return (
-      <a href={href} {...props}>
-        {children}
-      </a>
-    )
-  }
-
-  if (href.startsWith('mailto:') || href.startsWith('tel:')) {
-    return (
-      <a href={href} {...props}>
-        {children}
-      </a>
-    )
-  }
-
-  if (href.startsWith('http://') || href.startsWith('https://')) {
+  if (EXTERNAL_PROTOCOLS.some((protocol) => href.startsWith(protocol))) {
     return (
       <a
         href={href}
@@ -51,8 +37,8 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
   }
 
   return (
-    <LinkNext href={href as Route} {...props}>
+    <a href={href} {...props}>
       {children}
-    </LinkNext>
+    </a>
   )
 }

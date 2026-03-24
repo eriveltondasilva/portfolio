@@ -13,11 +13,14 @@ authors:
   - maria
 ---
 
+import BlogImage from '../../../public/blog.jpg'
+
+
 O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
 
 ## Autolink literals
 
-www.example.com, https://example.com, and contact@example.com.
+www.example.com, http://example.com, https://example.com, and contact@example.com.
 
 ## Strikethrough
 
@@ -37,7 +40,15 @@ www.example.com, https://example.com, and contact@example.com.
 
 ## Shiki
 
-```js title="teste"
+```js title="teste.js"
 const a = 1
 const b = 'hello'
 ```
+
+## Image
+
+<Image src={BlogImage} alt="teste" />
+
+## Vídeo
+
+<Youtube videoId='PFAUCpn9yX0' />
