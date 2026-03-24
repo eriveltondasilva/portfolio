@@ -61,7 +61,6 @@ export function ImageGrid({
               <Image
                 className={cn('object-cover', classNameImages, classNameImage)}
                 sizes={sizes}
-                loading='lazy'
                 alt={alt}
                 fill
                 {...props}

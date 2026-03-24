@@ -97,10 +97,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           {meta.title}
         </h1>
 
-        <p className='text-lg leading-relaxed text-zinc-600 dark:text-zinc-400'>
-          {meta.description}
-        </p>
-
         {/* Meta info */}
         <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
           <span className='flex items-center gap-1.5'>

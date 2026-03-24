@@ -138,7 +138,7 @@
     @apply relative;
 
     a[aria-hidden='true'] {
-      @apply absolute -left-4 -translate-x-full no-underline opacity-0 transition-all;
+      @apply absolute -left-3.5 -translate-x-full no-underline opacity-0 transition-all;
     }
 
     &:hover a[aria-hidden='true'] {
@@ -170,7 +170,7 @@ figure[data-rehype-pretty-code-figure] {
 
 /* Inline Code */
 span[data-rehype-pretty-code-figure] > code {
-  @apply rounded-lg bg-muted px-1.5 py-0.5 text-foreground;
+  @apply rounded-lg bg-muted px-1.5 py-1 text-foreground;
 }
 
 /* Line Numbers */

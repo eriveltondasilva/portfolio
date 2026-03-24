@@ -15,7 +15,8 @@ authors:
 
 import BlogImage from '../../../public/blog.jpg'
 
-
+O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
+O Tailwind permite estilizar `componentes` sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
 O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
 
 ## Autolink literals
@@ -40,15 +41,104 @@ www.example.com, http://example.com, https://example.com, and contact@example.co
 
 ## Shiki
 
-```js title="teste.js"
+```js title="teste.js" caption="teste..."
 const a = 1
 const b = 'hello'
 ```
 
+---
+---
+
+## Accordion
+
+<Accordion
+  items={[
+    { title: 'teste', content: 'lorem lorem lorem' },
+    { title: 'teste', content: 'lorem lorem lorem' },
+  ]}
+/>
+
+## Tab
+
+<Tabs items={['bun', 'npm', 'pnpm']}>
+  ```bash
+  bun install
+  ```
+
+```bash
+npm install
+```
+
+```bash
+pnpm install
+```
+
+</Tabs>
+
+## File tree
+
+<FileTree>
+  <FileTree.Folder name='src' open>
+    <FileTree.Folder name='app' open>
+      <FileTree.File name='page.tsx' />
+      <FileTree.File name='layout.tsx' />
+    </FileTree.Folder>
+    <FileTree.Folder name='components'>
+      <FileTree.File name='button.tsx' />
+    </FileTree.Folder>
+  </FileTree.Folder>
+  <FileTree.File name='next.config.ts' />
+</FileTree>
+
+## Step
+
+<Steps>
+  <Step title='Instale as dependências'>```bash bun install ```</Step>
+  <Step title='Configure o .env'>...</Step>
+</Steps>
+
+## Kbd
+
+Pressione <Kbd>⌘</Kbd> + <Kbd>K</Kbd> para abrir a paleta de comandos.
+
+Para salvar, use <Kbd>Ctrl</Kbd> + <Kbd>S</Kbd> no Windows ou <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS.
+
+## Badge
+
+Testado no <Badge>Next.js 16</Badge> com <Badge variant="success">estável</Badge>.
+
+Essa API está <Badge variant="warning">depreciada</Badge> e será removida em breve.
+
+Evite usar essa abordagem em produção — ela está <Badge variant="danger">quebrada</Badge> no Safari.
+
+Novidade <Badge variant="info">experimental</Badge> disponível desde a versão 15.
+
+Esse pacote está <Badge variant="primary">recomendado</Badge> pela equipe do Next.js.
+
+## Callout
+
+<Callout>Mensagem informativa simples.</Callout>
+
+<Callout variant='tip' title='Dica'>
+  Use `??` em vez de `||` para checar null/undefined com precisão.
+</Callout>
+
+<Callout variant='warning' title='Atenção'>
+  Essa API foi depreciada no Next.js `16.0`.
+</Callout>
+
+<Callout variant='danger' title='Cuidado'>
+  Nunca exponha sua chave de API no cliente.
+</Callout>
+
 ## Image
 
-<Image src={BlogImage} alt="teste" />
+<Image src={BlogImage} alt='teste' />
 
 ## Vídeo
 
 <Youtube videoId='PFAUCpn9yX0' />
+
+## Tweet
+
+<Tweet id='2036162397837119866' />

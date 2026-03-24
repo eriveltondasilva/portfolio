@@ -3,20 +3,37 @@ import { Youtube } from './components/mdx/youtube'
 import { Image } from './components/mdx/image'
 import { RatioImage } from './components/mdx/ratio-image'
 import { ImageGrid } from './components/mdx/image-grid'
-import { Table } from './components/mdx/table'
+import { Callout } from './components/mdx/callout'
+import { CodeBlock } from './components/mdx/code-block'
+import { Tweet } from './components/mdx/tweet'
+import { Steps, Step } from './components/mdx/steps'
+import { Tabs } from './components/mdx/tabs'
+import { Accordion } from './components/mdx/accordion'
+import { FileTree } from './components/mdx/file-tree'
+import { Kbd } from './components/mdx/kbd'
+import { Badge } from './components/mdx/badge'
 
 import type { MDXComponents } from 'mdx/types'
 
 const components = {
   a: Link,
   img: Image,
+  pre: CodeBlock,
+  Accordion,
   Image,
+  Callout,
+  FileTree,
+  Kbd,
+  Badge,
   RatioImage,
   ImageGrid,
-  Table,
   Youtube,
+  Tabs,
+  Steps,
+  Step,
+  Tweet,
 } satisfies MDXComponents
 
-export function useMDXComponents(): MDXComponents {
-  return components
+export function useMDXComponents(inherited?: MDXComponents): MDXComponents {
+  return { ...inherited, ...components }
 }

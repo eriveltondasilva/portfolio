@@ -10,21 +10,12 @@ interface Props extends ImageProps {
   caption?: string
 }
 
-export function Image({
-  className,
-  caption,
-  loading = 'lazy',
-  sizes,
-  priority,
-  ...props
-}: Props) {
+export function Image({ className, caption, sizes, ...props }: Props) {
   return (
     <figure className='my-4'>
       <ImageNext
-        className={cn('rounded-lg', className)}
-        sizes={sizes || DEFAULT_SIZES}
-        loading={priority ? undefined : loading}
-        priority={priority}
+        className={cn('rounded-md', className)}
+        sizes={sizes ?? DEFAULT_SIZES}
         {...props}
       />
       {caption && <Figcaption>{caption}</Figcaption>}

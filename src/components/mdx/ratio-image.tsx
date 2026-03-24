@@ -14,15 +14,13 @@ interface Props extends Omit<ImageProps, 'fill'> {
 
 export function RatioImage({
   ratio = 16 / 9,
-  loading = 'lazy',
   caption,
-  priority,
   className,
   sizes,
   ...props
 }: Props) {
   return (
-    <figure className='not-prose my-4'>
+    <figure className='not-prose'>
       <AspectRatio
         ratio={ratio}
         className='overflow-hidden rounded-lg bg-muted'
@@ -30,8 +28,6 @@ export function RatioImage({
         <ImageNext
           className={cn('rounded-lg object-cover', className)}
           sizes={sizes || DEFAULT_SIZES}
-          loading={priority ? undefined : loading}
-          priority={priority}
           fill
           {...props}
         />
