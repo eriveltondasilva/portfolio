@@ -13,11 +13,7 @@ function IndentGuides({ depth }: { depth: number }) {
   return (
     <>
       {Array.from({ length: depth }).map((_, i) => (
-        <span
-          key={i}
-          className='flex w-4 shrink-0 justify-center'
-          aria-hidden
-        >
+        <span key={i} className='flex w-4 shrink-0 justify-center' aria-hidden>
           <span className='w-px bg-border' />
         </span>
       ))}
@@ -40,9 +36,9 @@ function File({ name, highlighted = false, depth = 0 }: FileProps) {
       <div
         className={cn(
           'flex min-w-0 flex-1 items-center gap-1.5 rounded px-1 text-sm',
-          highlighted
-            ? 'bg-primary/10 font-medium text-primary'
-            : 'text-muted-foreground',
+          highlighted ?
+            'bg-primary/10 font-medium text-primary'
+          : 'text-muted-foreground',
         )}
       >
         <FileIcon
@@ -84,17 +80,17 @@ function Folder({
         <div
           className={cn(
             'flex min-w-0 flex-1 items-center gap-1.5 rounded px-1 text-sm',
-            highlighted
-              ? 'bg-primary/10 font-medium text-primary'
-              : 'text-muted-foreground',
+            highlighted ?
+              'bg-primary/10 font-medium text-primary'
+            : 'text-muted-foreground',
           )}
         >
           <Icon
             className={cn(
               'size-4 shrink-0',
-              highlighted
-                ? 'text-primary'
-                : 'text-yellow-500/80 dark:text-yellow-400/80',
+              highlighted ? 'text-primary' : (
+                'text-yellow-500/80 dark:text-yellow-400/80'
+              ),
             )}
             aria-hidden
           />
@@ -102,16 +98,17 @@ function Folder({
         </div>
       </div>
 
-      {children && (
-        <div>{injectDepth(children, depth + 1)}</div>
-      )}
+      {children && <div>{injectDepth(children, depth + 1)}</div>}
     </>
   )
 }
 
 // ─── Depth injection ──────────────────────────────────────────────────────────
 
-function injectDepth(children: React.ReactNode, depth: number): React.ReactNode {
+function injectDepth(
+  children: React.ReactNode,
+  depth: number,
+): React.ReactNode {
   return React.Children.map(children, (child) => {
     if (!React.isValidElement(child)) return child
 

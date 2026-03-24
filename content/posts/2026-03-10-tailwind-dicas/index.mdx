@@ -5,7 +5,7 @@ description: 'Classes utilitárias que economizam horas de trabalho.'
 publishedAt: '2026-03-10'
 tags: ['css', 'tailwind']
 status: 'published'
-cover: './cover.png'
+cover: './cover.jpg'
 series: 'css-master'
 order: 1
 authors:
@@ -15,130 +15,336 @@ authors:
 
 import BlogImage from '../../../public/blog.jpg'
 
-O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
-O Tailwind permite estilizar `componentes` sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
-O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável. O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável.
+O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável quando combinado com um design system bem estruturado — classes utilitárias eliminam a alternância entre arquivos CSS e componentes, mantendo o contexto visual sempre próximo do código.
 
-## Autolink literals
+---
 
-www.example.com, http://example.com, https://example.com, and contact@example.com.
+## Tipografia
 
-## Strikethrough
+Parágrafo com **negrito**, _itálico_, ~~tachado~~ e `código inline`.
 
-~one~ or ~~two~~ tildes.
+Texto com [link interno](/blog) e [link externo](https://tailwindcss.com) que abre em nova aba automaticamente.
 
-## Table
+> Blockquote: o Tailwind não é sobre abandonar o CSS — é sobre escrever CSS de forma mais intencional e colocada.
 
-| a   | b   | c   | d   |
-| --- | --- | --- | --- |
-| 1   | 2   | 3   | 4   |
-| 5   | 6   | 7   | 8   |
+Lista não ordenada:
 
-## Tasklist
+- Item um com `código inline`
+- Item dois com **negrito**
+- Item três com _itálico_
 
-- [ ] to do
-- [x] done
+Lista ordenada:
 
-## Shiki
+1. Instale as dependências
+2. Configure o `tailwind.config.ts`
+3. Importe no CSS global
 
-```js title="teste.js" caption="teste..."
-const a = 1
-const b = 'hello'
+Lista de tarefas:
+
+- [x] Configurar o projeto
+- [x] Instalar dependências
+- [ ] Escrever testes
+- [ ] Fazer deploy
+
+### Autolink literals
+
+URLs detectadas automaticamente pelo remark-gfm: www.example.com, https://example.com e e-mails como contact@example.com.
+
+---
+
+## Tabela
+
+Tabela nativa gerada pelo remark-gfm:
+
+| Utilitário | Descrição                    |                  Exemplo |
+| ---------- | ---------------------------- | -----------------------: |
+| `flex`     | Ativa o flexbox              |      `flex items-center` |
+| `grid`     | Ativa o grid                 |       `grid grid-cols-3` |
+| `truncate` | Corta texto com reticências  |          `truncate w-32` |
+| `sr-only`  | Visível apenas para leitores | `<span class="sr-only">` |
+
+---
+
+## Código
+
+Bloco de código com syntax highlight via rehype-pretty-code, título e legenda:
+
+```ts title="tailwind.config.ts" caption="Configuração básica com tema customizado." showLineNumber
+import type { Config } from 'tailwindcss'
+
+export default {
+  content: ['./src/**/*.{ts,tsx,mdx}'],
+  theme: {
+    extend: {
+      colors: {
+        brand: '#6366f1',
+      },
+    },
+  },
+} satisfies Config
+```
+
+```tsx title="button.tsx"
+interface ButtonProps extends React.ComponentProps<'button'> {
+  variant?: 'default' | 'outline' | 'ghost'
+}
+
+export function Button({
+  variant = 'default',
+  className,
+  ...props
+}: ButtonProps) {
+  return (
+    <button className={cn(buttonVariants({ variant }), className)} {...props} />
+  )
+}
 ```
 
 ---
+
+## Callout
+
+<Callout>Mensagem informativa simples, sem título.</Callout>
+
+<Callout variant='info' title='Informação'>
+  O `@tailwindcss/typography` aplica estilos automáticos em conteúdo MDX via
+  classe `prose`.
+</Callout>
+
+<Callout variant='tip' title='Dica'>
+  Use `??` em vez de `||` para checar `null` e `undefined` com precisão — `||`
+  também descarta `0` e `""`.
+</Callout>
+
+<Callout variant='warning' title='Atenção'>
+  A prop `priority` foi depreciada no Next.js 16. Use `preload` no lugar.
+</Callout>
+
+<Callout variant='danger' title='Cuidado'>
+  Nunca exponha sua chave de API no cliente. Use variáveis de ambiente com
+  prefixo `NEXT_PUBLIC_` apenas para dados públicos.
+</Callout>
+
+---
+
+## Badge
+
+Componentes inline para marcar status e tecnologias:
+
+Testado no <Badge>Next.js 16</Badge> com React <Badge variant='primary'>19</Badge> — considerado <Badge variant='success'>estável</Badge> para produção.
+
+A prop `loading` está <Badge variant='warning'>depreciada</Badge> no Next.js 16 e será removida em breve.
+
+Evite usar essa abordagem em produção — está <Badge variant='danger'>quebrada</Badge> no Safari 16 e anteriores.
+
+Suporte a Server Components é <Badge variant='info'>experimental</Badge> nessa versão.
+
+---
+
+## Kbd
+
+Atalhos de teclado inline:
+
+Abra a paleta de comandos com <Kbd>⌘</Kbd> + <Kbd>K</Kbd> no macOS ou <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> no Windows.
+
+Para salvar: <Kbd>⌘</Kbd> + <Kbd>S</Kbd>. Para desfazer: <Kbd>⌘</Kbd> + <Kbd>Z</Kbd>. Para refazer: <Kbd>⌘</Kbd> + <Kbd>Shift</Kbd> + <Kbd>Z</Kbd>.
+
+No terminal, use <Kbd>Ctrl</Kbd> + <Kbd>C</Kbd> para interromper um processo e <Kbd>Ctrl</Kbd> + <Kbd>D</Kbd> para encerrar a sessão.
+
+---
+
+## Tabs
+
+Ideal para mostrar o mesmo conteúdo em múltiplas variações:
+
+<Tabs items={['bun', 'npm', 'pnpm', 'yarn']}>
+  <>```bash bun add tailwindcss @tailwindcss/postcss ```</>
+  <>```bash npm install tailwindcss @tailwindcss/postcss ```</>
+  <>```bash pnpm add tailwindcss @tailwindcss/postcss ```</>
+  <>```bash yarn add tailwindcss @tailwindcss/postcss ```</>
+</Tabs>
+
+Também útil para mostrar código em diferentes linguagens:
+
+<Tabs items={['TypeScript', 'JavaScript']}>
+  <>
+    ```ts
+    function greet(name: string): string {
+      return `Hello, ${name}!`
+    }
+    ```
+  </>
+  <>
+    ```js
+    function greet(name) {
+      return `Hello, ${name}!`
+    }
+    ```
+  </>
+</Tabs>
+
+---
+
+## Steps
+
+<Steps>
+  <Step title='Instale as dependências'>
+    Adicione o Tailwind e o plugin PostCSS ao projeto:
+
+    ```bash
+    bun add tailwindcss @tailwindcss/postcss
+    ```
+
+  </Step>
+
+  <Step title='Configure o PostCSS'>
+    Crie ou edite o arquivo `postcss.config.mjs` na raiz do projeto:
+
+    ```js title="postcss.config.mjs"
+    export default {
+      plugins: {
+        '@tailwindcss/postcss': {},
+      },
+    }
+    ```
+
+  </Step>
+
+  <Step title='Importe no CSS global'>
+    Adicione a diretiva de importação no topo do seu arquivo CSS principal:
+
+    ```css title="globals.css"
+    @import 'tailwindcss';
+    ```
+
+  </Step>
+
+  <Step title='Use no projeto'>
+    Agora você já pode usar as classes utilitárias nos seus componentes:
+
+    ```tsx
+    export function Card() {
+      return (
+        <div className='rounded-lg border bg-card p-6 shadow-sm'>
+          <h2 className='text-lg font-semibold'>Pronto!</h2>
+        </div>
+      )
+    }
+    ```
+
+  </Step>
+</Steps>
+
 ---
 
 ## Accordion
 
 <Accordion
   items={[
-    { title: 'teste', content: 'lorem lorem lorem' },
-    { title: 'teste', content: 'lorem lorem lorem' },
+    {
+      title: 'O que é o Tailwind CSS?',
+      content:
+        'É um framework CSS utilitário que fornece classes de baixo nível para construir designs customizados diretamente no HTML, sem a necessidade de escrever CSS personalizado.',
+    },
+    {
+      title: 'Tailwind vs CSS Modules',
+      content:
+        'CSS Modules isola estilos por componente usando classes geradas. Tailwind usa classes utilitárias compartilhadas. A principal diferença está na colocação: com Tailwind, o estilo vive junto do markup, eliminando a troca de contexto.',
+    },
+    {
+      title: 'Como funciona o purge/treeshaking?',
+      content:
+        'O Tailwind analisa os arquivos configurados no campo `content` do tailwind.config e remove todas as classes não utilizadas no build de produção, resultando em um CSS final extremamente pequeno.',
+    },
+    {
+      title: 'Vale a pena usar em projetos grandes?',
+      content:
+        'Sim. Em projetos grandes o Tailwind escala bem porque o tamanho do CSS não cresce com o projeto — ele permanece constante já que as classes são reutilizadas. O maior desafio é manter consistência nas classes, o que pode ser resolvido com componentes reutilizáveis.',
+    },
   ]}
 />
 
-## Tab
+---
 
-<Tabs items={['bun', 'npm', 'pnpm']}>
-  ```bash
-  bun install
-  ```
+## FileTree
 
-```bash
-npm install
-```
-
-```bash
-pnpm install
-```
-
-</Tabs>
-
-## File tree
+Estrutura de um projeto Next.js com App Router:
 
 <FileTree>
   <FileTree.Folder name='src' open>
     <FileTree.Folder name='app' open>
+      <FileTree.File name='layout.tsx' highlighted />
       <FileTree.File name='page.tsx' />
-      <FileTree.File name='layout.tsx' />
+      <FileTree.Folder name='blog' open>
+        <FileTree.File name='page.tsx' />
+        <FileTree.Folder name='[slug]'>
+          <FileTree.File name='page.tsx' />
+        </FileTree.Folder>
+      </FileTree.Folder>
     </FileTree.Folder>
     <FileTree.Folder name='components'>
-      <FileTree.File name='button.tsx' />
+      <FileTree.Folder name='ui'>
+        <FileTree.File name='button.tsx' />
+        <FileTree.File name='card.tsx' />
+      </FileTree.Folder>
+      <FileTree.Folder name='mdx'>
+        <FileTree.File name='callout.tsx' />
+        <FileTree.File name='code-block.tsx' />
+      </FileTree.Folder>
+    </FileTree.Folder>
+    <FileTree.Folder name='lib'>
+      <FileTree.File name='utils.ts' />
     </FileTree.Folder>
   </FileTree.Folder>
-  <FileTree.File name='next.config.ts' />
+  <FileTree.File name='next.config.ts' highlighted />
+  <FileTree.File name='tailwind.config.ts' />
+  <FileTree.File name='package.json' />
 </FileTree>
 
-## Step
+---
 
-<Steps>
-  <Step title='Instale as dependências'>```bash bun install ```</Step>
-  <Step title='Configure o .env'>...</Step>
-</Steps>
+## Imagens
 
-## Kbd
+Imagem:
 
-Pressione <Kbd>⌘</Kbd> + <Kbd>K</Kbd> para abrir a paleta de comandos.
+![teste](./cover.jpg 'title')
 
-Para salvar, use <Kbd>Ctrl</Kbd> + <Kbd>S</Kbd> no Windows ou <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS.
+Imagem simples com legenda:
 
-## Badge
+<Image
+  src={BlogImage}
+  alt='Exemplo de imagem no blog'
+  caption='Legenda opcional abaixo da imagem.'
+/>
 
-Testado no <Badge>Next.js 16</Badge> com <Badge variant="success">estável</Badge>.
+Imagem com proporção fixa (aspect ratio 16/9):
 
-Essa API está <Badge variant="warning">depreciada</Badge> e será removida em breve.
+<RatioImage
+  src={BlogImage}
+  alt='Imagem com aspect ratio 16/9'
+  ratio={16 / 9}
+  caption='RatioImage com ratio 16/9 e object-cover.'
+/>
 
-Evite usar essa abordagem em produção — ela está <Badge variant="danger">quebrada</Badge> no Safari.
+Grade de imagens com 3 colunas:
 
-Novidade <Badge variant="info">experimental</Badge> disponível desde a versão 15.
+<ImageGrid
+  columns={3}
+  images={[
+    { src: BlogImage, alt: 'Imagem 1', caption: 'Legenda 1' },
+    { src: BlogImage, alt: 'Imagem 2', caption: 'Legenda 2' },
+    { src: BlogImage, alt: 'Imagem 3', caption: 'Legenda 3' },
+  ]}
+/>
 
-Esse pacote está <Badge variant="primary">recomendado</Badge> pela equipe do Next.js.
-
-## Callout
-
-<Callout>Mensagem informativa simples.</Callout>
-
-<Callout variant='tip' title='Dica'>
-  Use `??` em vez de `||` para checar null/undefined com precisão.
-</Callout>
-
-<Callout variant='warning' title='Atenção'>
-  Essa API foi depreciada no Next.js `16.0`.
-</Callout>
-
-<Callout variant='danger' title='Cuidado'>
-  Nunca exponha sua chave de API no cliente.
-</Callout>
-
-## Image
-
-<Image src={BlogImage} alt='teste' />
+---
 
 ## Vídeo
 
-<Youtube videoId='PFAUCpn9yX0' />
+<Youtube videoId='m3DJmtLdqhU' />
+
+---
 
 ## Tweet
 
-<Tweet id='2036162397837119866' />
+<Tweet id='2026946487599697948' />
