@@ -3,8 +3,8 @@ import clsx from 'clsx'
 
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
-import { getAuthorBySlug } from '@/lib/blog'
-import { PRIMARY_AUTHOR_SLUG, URL_BASE } from '@/lib/constants'
+import { getPrimaryAuthor } from '@/lib/blog'
+import { URL_BASE } from '@/lib/constants'
 
 import './globals.css'
 
@@ -42,9 +42,7 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
-  const author = getAuthorBySlug(PRIMARY_AUTHOR_SLUG)
-
-  if (!author) throw new Error('Author not found')
+  const author = getPrimaryAuthor()
 
   return (
     <html

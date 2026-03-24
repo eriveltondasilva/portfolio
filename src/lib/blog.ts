@@ -4,7 +4,7 @@ import authorsData from '@/authors/index.json'
 import postsIndex from '@/indexes/posts.json'
 import seriesIndex from '@/indexes/series.json'
 import projectsIndex from '@/indexes/projects.json'
-import { SeriesStatus } from '@/lib/constants'
+import { PRIMARY_AUTHOR_SLUG, SeriesStatus } from '@/lib/constants'
 
 import type {
   AdjacentPosts,
@@ -16,27 +16,31 @@ import type {
   TagCount,
 } from '@/types'
 
-// # BASE
-
-export function getAllPosts(): PostIndex[] {
-  return postsIndex as PostIndex[]
-}
-
-export function getAllSeries(): SeriesIndex[] {
-  return seriesIndex as SeriesIndex[]
-}
+// # AUTHORS
 
 export function getAllAuthors(): Author[] {
   return authorsData as Author[]
 }
 
-// # AUTHORS
-
 export function getAuthorBySlug(slug: string): Author | null {
   return getAllAuthors().find((a) => a.slug === slug) ?? null
 }
 
+export function getPrimaryAuthor(): Author {
+  const author = getAuthorBySlug(PRIMARY_AUTHOR_SLUG)
+
+  if (!author) {
+    throw new Error(`Author not found: ${PRIMARY_AUTHOR_SLUG}`)
+  }
+
+  return author
+}
+
 // # POSTS
+
+export function getAllPosts(): PostIndex[] {
+  return postsIndex as PostIndex[]
+}
 
 export function getPostBySlug(slug: string): PostIndex | null {
   return getAllPosts().find((post) => post.slug === slug) ?? null
@@ -85,6 +89,20 @@ export function getAdjacentPosts(slug: string): AdjacentPosts {
   }
 }
 
+export async function getPostWithContent(
+  slug: string,
+): Promise<PostWithContent | null> {
+  const post = getPostBySlug(slug)
+
+  if (!post) return null
+
+  const { default: Content } = await import(
+    `../../${dirname(post.filePath)}/index.mdx`
+  )
+
+  return { Content, meta: post }
+}
+
 // # TAGS
 
 function buildTagCounts(): Record<string, number> {
@@ -108,6 +126,10 @@ export function getTagsWithCount(): TagCount[] {
 
 // # SERIES
 
+export function getAllSeries(): SeriesIndex[] {
+  return seriesIndex as SeriesIndex[]
+}
+
 export function getSeriesBySlug(slug: string): SeriesIndex | null {
   return getAllSeries().find((series) => series.slug === slug) ?? null
 }
@@ -127,20 +149,4 @@ export function getAllProjects(): Project[] {
 
 export function getFeaturedProjects(): Project[] {
   return getAllProjects().filter((p) => p.featured)
-}
-
-// # CONTENT
-
-export async function getPostWithContent(
-  slug: string,
-): Promise<PostWithContent | null> {
-  const post = getPostBySlug(slug)
-
-  if (!post) return null
-
-  const { default: Content } = await import(
-    `../../${dirname(post.filePath)}/index.mdx`
-  )
-
-  return { Content, meta: post }
 }

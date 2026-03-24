@@ -11,7 +11,7 @@ async function main(): Promise<void> {
 
   // -- Generate ---------------------------------------------------------------
 
-  log.section('Generating schemas...')
+  log.section('Generating schemas:')
 
   const seriesJsonSchema = z.toJSONSchema(seriesSchema.array())
   const authorsJsonSchema = z.toJSONSchema(authorSchema.array())
@@ -21,7 +21,7 @@ async function main(): Promise<void> {
 
   // -- Write ------------------------------------------------------------------
 
-  log.section('Writing files')
+  log.section('Writing files:')
 
   await Promise.all([
     writeJson(SERIES_SCHEMA_OUTPUT, seriesJsonSchema),

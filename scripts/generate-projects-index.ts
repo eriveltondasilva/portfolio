@@ -1,12 +1,12 @@
 import { Octokit } from '@octokit/rest'
 
 import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '@/lib/constants'
+import { getPrimaryAuthor } from '@/lib/blog'
+import { getGitHubUsername } from '@/lib'
 
 import { log, writeJson } from './utils'
 
 import type { Project, GithubRepo } from '@/types'
-
-const GITHUB_USERNAME = 'eriveltondasilva'
 
 enum Topics {
   INCLUDE = 'portfolio',
@@ -24,6 +24,7 @@ function getStatus(repo: GithubRepo): ProjectStatus {
 
 async function fetchPortfolioProjects(): Promise<Project[]> {
   const token = process.env.GITHUB_TOKEN
+  const githubUsername = getGitHubUsername(getPrimaryAuthor())
 
   if (!token) {
     throw new Error(
@@ -32,10 +33,10 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
   }
 
   const octokit = new Octokit({ auth: token })
-  log.detail(`Fetching repos for @${GITHUB_USERNAME}...`)
+  log.detail(`Fetching repos for @${githubUsername}...`)
 
   const { data: repos } = await octokit.repos.listForUser({
-    username: GITHUB_USERNAME,
+    username: githubUsername as string,
     type: 'owner',
     per_page: 100,
   })
@@ -94,13 +95,13 @@ async function main(): Promise<void> {
 
   // -- Fetch ------------------------------------------------------------------
 
-  log.section('Fetching from GitHub...')
+  log.section('Fetching from GitHub:')
 
   const projects = await fetchPortfolioProjects()
 
   // -- Write  -----------------------------------------------------------------
 
-  log.section('Writing index...')
+  log.section('Writing index:')
 
   await buildProjectsIndex(projects)
   log.ok(PROJECTS_INDEX_OUTPUT, `${projects.length} project(s)`)

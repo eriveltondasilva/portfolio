@@ -288,7 +288,7 @@ async function main(): Promise<void> {
 
   // -- Read -------------------------------------------------------------------
 
-  log.section('Reading content...')
+  log.section('Reading content:')
 
   const [authorsResult, seriesResult, postsResult] = await Promise.allSettled([
     readAuthors(),
@@ -325,7 +325,7 @@ async function main(): Promise<void> {
 
   // -- Validate ---------------------------------------------------------------
 
-  log.section('Validating...')
+  log.section('Validating:')
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
   log.ok('series references')
@@ -344,7 +344,7 @@ async function main(): Promise<void> {
 
   // -- Write ------------------------------------------------------------------
 
-  log.section('Writing indexes...')
+  log.section('Writing indexes:')
 
   const [seriesWithPosts] = await Promise.all([
     buildSeriesIndex(seriesMap, posts),
