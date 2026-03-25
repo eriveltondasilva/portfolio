@@ -1,4 +1,4 @@
-import { dirname } from 'node:path'
+import { basename, dirname } from 'node:path'
 
 import Image from 'next/image'
 
@@ -9,7 +9,7 @@ interface Props {
 
 export async function PostCover({ filePath, title }: Props) {
   const { default: cover } = await import(
-    `../../${dirname(filePath)}/cover.jpg`
+    `@/posts/${basename(dirname(filePath))}/cover.jpg`
   )
 
   return (
@@ -19,7 +19,7 @@ export async function PostCover({ filePath, title }: Props) {
         alt={`Cover: ${title}`}
         className='object-cover'
         sizes='(max-width: 768px) 100vw, 768px'
-        preload
+        loading='eager'
         fill
       />
     </div>

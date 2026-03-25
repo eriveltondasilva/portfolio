@@ -1,4 +1,4 @@
-import { dirname } from 'node:path'
+import { basename, dirname } from 'node:path'
 
 import postsIndex from '@/indexes/posts.json'
 
@@ -68,7 +68,7 @@ export async function getPostWithContent(
   if (!post) return null
 
   const { default: Content } = await import(
-    `../../${dirname(post.filePath)}/index.mdx`
+    `@/posts/${basename(dirname(post.filePath))}/index.mdx`
   )
 
   return { Content, meta: post }
