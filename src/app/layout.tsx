@@ -22,20 +22,30 @@ const robotoMono = Roboto_Mono({
   display: 'swap',
 })
 
+const meta = {
+  title: 'Erivelton Silva — Dev Blog',
+  description:
+    'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(URL_BASE),
   title: {
-    default: 'Erivelton Silva — Dev Blog',
+    default: meta.title,
     template: '%s — Erivelton Silva',
   },
-  description:
-    'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
+  description: meta.description,
   openGraph: {
+    title: meta.title,
+    description: meta.description,
+    url: URL_BASE,
     siteName: 'Erivelton Silva',
     locale: 'pt_BR',
     type: 'website',
   },
   twitter: {
+    title: meta.title,
+    description: meta.description,
     card: 'summary_large_image',
     creator: '@erivelton_silv4',
   },

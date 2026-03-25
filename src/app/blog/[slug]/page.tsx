@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   CalendarIcon,
+  CalendarSyncIcon,
   ClockIcon,
   GitForkIcon,
   LayersIcon,
@@ -46,6 +47,7 @@ export async function generateMetadata({
       title: post.title,
       description: post.description,
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       authors: post.authors,
       tags: post.tags,
     },
@@ -72,6 +74,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { prev, next } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prev !== null || next !== null
+
   const authors = meta.authors
     .map(getAuthorBySlug)
     .filter((author) => author !== null)
@@ -106,12 +109,20 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
         {/* Meta info */}
         <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
-          <span className='flex items-center gap-1.5'>
-            <Icon iconNode={CalendarIcon} />
-            <time dateTime={meta.publishedAt}>
-              {formatDate(meta.publishedAt, { dateStyle: 'long' })}
-            </time>
-          </span>
+          {meta.updatedAt ?
+            <span className='flex items-center gap-1.5'>
+              <Icon iconNode={CalendarSyncIcon} />
+              <time dateTime={meta.updatedAt}>
+                {formatDate(meta.updatedAt, { dateStyle: 'long' })}
+              </time>
+            </span>
+          : <span className='flex items-center gap-1.5'>
+              <Icon iconNode={CalendarIcon} />
+              <time dateTime={meta.publishedAt}>
+                {formatDate(meta.publishedAt, { dateStyle: 'long' })}
+              </time>
+            </span>
+          }
 
           <span className='flex items-center gap-1.5'>
             <Icon iconNode={ClockIcon} />
