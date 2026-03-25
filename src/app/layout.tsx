@@ -1,9 +1,6 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
 import clsx from 'clsx'
 
-import { ProfileSidebar } from '@/components/profile-sidebar'
-import { TabsNav } from '@/components/tabs-nav'
-import { getPrimaryAuthor } from '@/lib/blog/authors'
 import { URL_BASE } from '@/lib/constants'
 
 import './globals.css'
@@ -52,8 +49,6 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
-  const author = getPrimaryAuthor()
-
   return (
     <html
       lang='pt-BR'
@@ -63,19 +58,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       <body className='min-h-screen bg-white font-sans antialiased dark:bg-[#0d1117]'>
         {/* Top border accent */}
         <div className='h-0.5 w-full bg-linear-to-r from-orange-500 via-amber-400 to-orange-600' />
-
-        <div className='mx-auto max-w-7xl px-4 py-8 md:px-8 lg:px-12'>
-          <div className='flex flex-col gap-8 md:flex-row md:items-start md:gap-10 lg:gap-14'>
-            {/* Sidebar - fixed on desktop */}
-            <ProfileSidebar author={author} />
-
-            {/* Main content area */}
-            <main className='min-w-0 flex-1'>
-              <TabsNav />
-              <div className='py-6'>{children}</div>
-            </main>
-          </div>
-        </div>
+        {children}
       </body>
     </html>
   )

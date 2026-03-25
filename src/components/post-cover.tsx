@@ -2,18 +2,26 @@ import { basename, dirname } from 'node:path'
 
 import Image from 'next/image'
 
+import { cn } from '@/lib/utils'
+
 interface Props {
   filePath: string
   title: string
+  className?: string
 }
 
-export async function PostCover({ filePath, title }: Props) {
+export async function PostCover({ title, filePath, className }: Props) {
   const { default: cover } = await import(
     `@/posts/${basename(dirname(filePath))}/cover.jpg`
   )
 
   return (
-    <div className='relative mb-8 aspect-2/1 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700/60'>
+    <div
+      className={cn(
+        'relative aspect-2/1 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700/60',
+        className,
+      )}
+    >
       <Image
         src={cover}
         alt={`Cover: ${title}`}

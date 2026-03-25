@@ -12,10 +12,10 @@ import { notFound } from 'next/navigation'
 import { AdjacentPostCard } from '@/components/adjacent-post-card'
 import { Icon } from '@/components/icon'
 import { PostAuthors } from '@/components/post-authors'
-import { PostCover } from '@/components/post-cover'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
 import { GITHUB_REPO } from '@/lib/constants'
 import { getAuthorBySlug } from '@/lib/blog/authors'
@@ -91,69 +91,75 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       </Link>
 
       {/* Post header */}
-      <header className='mb-8 space-y-4'>
+      <header className='mb-8'>
         {/* Series badge */}
         {meta.series && (
           <Link
             href={`/series/${meta.series}`}
-            className='inline-flex items-center gap-1.5 text-xs font-medium text-orange-600 hover:underline dark:text-orange-400'
+            className='mb-3 inline-flex items-center gap-1.5 text-xs font-medium text-orange-600 hover:underline dark:text-orange-400'
           >
             <Icon iconNode={LayersIcon} className='size-3.5' />
             Parte {meta.order} da série
           </Link>
         )}
 
-        <h1 className='text-3xl leading-tight font-bold tracking-tight text-zinc-900 dark:text-zinc-50'>
+        <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
           {meta.title}
         </h1>
 
-        {/* Meta info */}
-        <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
-          {meta.updatedAt ?
-            <span className='flex items-center gap-1.5'>
-              <Icon iconNode={CalendarSyncIcon} />
-              <time dateTime={meta.updatedAt}>
-                {formatDate(meta.updatedAt, { dateStyle: 'long' })}
-              </time>
-            </span>
-          : <span className='flex items-center gap-1.5'>
-              <Icon iconNode={CalendarIcon} />
-              <time dateTime={meta.publishedAt}>
-                {formatDate(meta.publishedAt, { dateStyle: 'long' })}
-              </time>
-            </span>
-          }
-
-          <span className='flex items-center gap-1.5'>
-            <Icon iconNode={ClockIcon} />
-            {post.meta.readingTime} min de leitura
-          </span>
-        </div>
-
-        {/* Authors */}
-        <PostAuthors authors={authors} />
-
-        {/* Tags */}
-        {meta.tags.length > 0 && (
-          <div className='flex flex-wrap gap-1.5'>
-            {meta.tags.map((tag) => (
-              <Link key={tag} href={`/tags/${tag}`}>
-                <Badge
-                  variant='secondary'
-                  className='rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300'
-                >
-                  {tag}
-                </Badge>
-              </Link>
-            ))}
-          </div>
+        {/* Cover image */}
+        {meta.hasCover && (
+          <PostCover
+            filePath={meta.filePath}
+            title={meta.title}
+            className='mt-6'
+          />
         )}
-      </header>
 
-      {/* Cover image */}
-      {meta.hasCover && (
-        <PostCover filePath={meta.filePath} title={meta.title} />
-      )}
+        {/* Meta info */}
+        <div className='mt-6 space-y-2'>
+          <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
+            {meta.updatedAt ?
+              <span className='flex items-center gap-1.5'>
+                <Icon iconNode={CalendarSyncIcon} />
+                <time dateTime={meta.updatedAt}>
+                  {formatDate(meta.updatedAt, { dateStyle: 'long' })}
+                </time>
+              </span>
+            : <span className='flex items-center gap-1.5'>
+                <Icon iconNode={CalendarIcon} />
+                <time dateTime={meta.publishedAt}>
+                  {formatDate(meta.publishedAt, { dateStyle: 'long' })}
+                </time>
+              </span>
+            }
+
+            <span className='flex items-center gap-1.5'>
+              <Icon iconNode={ClockIcon} />
+              {post.meta.readingTime} min de leitura
+            </span>
+          </div>
+
+          {/* Authors */}
+          <PostAuthors authors={authors} />
+
+          {/* Tags */}
+          {meta.tags.length > 0 && (
+            <div className='flex flex-wrap gap-1.5'>
+              {meta.tags.map((tag) => (
+                <Link key={tag} href={`/tags/${tag}`}>
+                  <Badge
+                    variant='secondary'
+                    className='rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300'
+                  >
+                    {tag}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </header>
 
       <Separator className='mb-8 dark:bg-zinc-700/60' />
 
