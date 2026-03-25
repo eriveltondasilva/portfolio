@@ -8,5 +8,8 @@
       "fileMatch": ["/content/authors/index.json"],
       "url": "./content/schemas/authors.json"
     }
-  ]
+  ],
+  "yaml.schemas": {
+    "./content/schemas/posts.json": "content/posts/**/index.mdx"
+  }
 }

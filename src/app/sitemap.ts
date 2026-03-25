@@ -1,4 +1,4 @@
-import { getAllPosts } from '@/lib/blog'
+import { getAllPosts } from '@/lib/blog/posts'
 import { URL_BASE } from '@/lib/constants'
 
 import type { MetadataRoute } from 'next'

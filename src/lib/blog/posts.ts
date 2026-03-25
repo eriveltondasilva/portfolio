@@ -1,42 +1,13 @@
 import { dirname } from 'node:path'
 
-import authorsData from '@/authors/index.json'
 import postsIndex from '@/indexes/posts.json'
-import seriesIndex from '@/indexes/series.json'
-import projectsIndex from '@/indexes/projects.json'
-import { PRIMARY_AUTHOR_SLUG, SeriesStatus } from '@/lib/constants'
 
 import type {
   AdjacentPosts,
-  Author,
-  Project,
   PostIndex,
   PostWithContent,
-  SeriesIndex,
   TagCount,
 } from '@/types'
-
-// # AUTHORS
-
-export function getAllAuthors(): Author[] {
-  return authorsData as Author[]
-}
-
-export function getAuthorBySlug(slug: string): Author | null {
-  return getAllAuthors().find((a) => a.slug === slug) ?? null
-}
-
-export function getPrimaryAuthor(): Author {
-  const author = getAuthorBySlug(PRIMARY_AUTHOR_SLUG)
-
-  if (!author) {
-    throw new Error(`Author not found: ${PRIMARY_AUTHOR_SLUG}`)
-  }
-
-  return author
-}
-
-// # POSTS
 
 export function getAllPosts(): PostIndex[] {
   return postsIndex as PostIndex[]
@@ -122,31 +93,4 @@ export function getTagsWithCount(): TagCount[] {
   return Object.entries(buildTagCounts())
     .map(([tag, count]) => ({ tag, count }))
     .toSorted((a, b) => b.count - a.count)
-}
-
-// # SERIES
-
-export function getAllSeries(): SeriesIndex[] {
-  return seriesIndex as SeriesIndex[]
-}
-
-export function getSeriesBySlug(slug: string): SeriesIndex | null {
-  return getAllSeries().find((series) => series.slug === slug) ?? null
-}
-
-/** Retorna séries com status IN_PROGRESS, usadas na home. */
-export function getRecentSeries(limit = 2): SeriesIndex[] {
-  return getAllSeries()
-    .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
-    .slice(0, limit)
-}
-
-// # PROJECTS
-
-export function getAllProjects(): Project[] {
-  return projectsIndex as Project[]
-}
-
-export function getFeaturedProjects(): Project[] {
-  return getAllProjects().filter((p) => p.featured)
 }

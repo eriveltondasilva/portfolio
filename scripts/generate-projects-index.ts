@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest'
 
 import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '@/lib/constants'
-import { getPrimaryAuthor } from '@/lib/blog'
+import { getPrimaryAuthor } from '@/lib/blog/authors'
 import { getGitHubUsername } from '@/lib'
 
 import { log, writeJson } from './utils'

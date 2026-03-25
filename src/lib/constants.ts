@@ -22,6 +22,9 @@ export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 export const PRIMARY_AUTHOR_SLUG = 'erivelton'
 
+/** Cover image convention: always named `cover.jpg` inside the post folder. */
+export const COVER_NAME = 'cover.jpg'
+
 export const URL_BASE =
   process.env.VERCEL_URL ?
     `https://${process.env.VERCEL_URL}`
@@ -44,6 +47,7 @@ export const SERIES_FILE = join(SERIES_DIR, 'index.json')
 // # Schemas
 export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json')
 export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json')
+export const POSTS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'posts.json')
 
 // # Indexes
 export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json')

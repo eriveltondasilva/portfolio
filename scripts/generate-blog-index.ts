@@ -6,6 +6,7 @@ import getReadingTime from 'reading-time'
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 import {
   AUTHORS_FILE,
+  COVER_NAME,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   PostStatus,
@@ -19,16 +20,12 @@ import {
   readJson,
   assertUniqueSlugs,
   errorMessage,
-  unwrapFulfilled,
   log,
 } from './utils'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 type SeriesPost = PostIndex & { series: string; order: number }
-
-// #
-const COVER_NAME = 'cover.jpg'
 
 function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
   return items.toSorted(
@@ -197,7 +194,7 @@ async function readPosts(): Promise<PostsData> {
         throw new Error(`${file}\n\n${issues}`)
       }
 
-      if (data.status === PostStatus.DRAFT) return null
+      if (data.status !== PostStatus.PUBLISHED) return null
 
       const hasCover = await Bun.file(join(file, '..', COVER_NAME)).exists()
       const readingTime = Math.ceil(getReadingTime(content).minutes)
@@ -241,7 +238,7 @@ async function readPosts(): Promise<PostsData> {
       scanned: files.length,
       published: posts.length,
       drafts: files.length - publishedResults.length,
-      withCover: posts.filter((p) => p.hasCover).length,
+      withCover: posts.filter((post) => post.hasCover).length,
     },
   }
 }
@@ -308,9 +305,12 @@ async function main(): Promise<void> {
     )
   }
 
-  const authors = unwrapFulfilled(authorsResult)
-  const seriesMap = unwrapFulfilled(seriesResult)
-  const { posts, stats } = unwrapFulfilled(postsResult)
+  const authors = (authorsResult as PromiseFulfilledResult<Set<string>>).value
+  const seriesMap = (
+    seriesResult as PromiseFulfilledResult<Map<string, Series>>
+  ).value
+  const { posts, stats } = (postsResult as PromiseFulfilledResult<PostsData>)
+    .value
 
   log.ok('authors', `${authors.size} loaded`)
   log.ok('series', `${seriesMap.size} loaded`)

@@ -3,7 +3,7 @@ import clsx from 'clsx'
 
 import { ProfileSidebar } from '@/components/profile-sidebar'
 import { TabsNav } from '@/components/tabs-nav'
-import { getPrimaryAuthor } from '@/lib/blog'
+import { getPrimaryAuthor } from '@/lib/blog/authors'
 import { URL_BASE } from '@/lib/constants'
 
 import './globals.css'

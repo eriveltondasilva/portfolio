@@ -112,11 +112,3 @@ export function assertUniqueSlugs(
 export function errorMessage(reason: unknown): string {
   return reason instanceof Error ? reason.message : String(reason)
 }
-
-export function unwrapFulfilled<T>(result: PromiseSettledResult<T>): T {
-  if (result.status !== 'fulfilled') {
-    throw new Error('Expected a fulfilled result, got rejected.')
-  }
-
-  return result.value
-}

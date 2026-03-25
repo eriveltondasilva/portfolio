@@ -17,12 +17,13 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { formatDate } from '@/lib'
 import { GITHUB_REPO } from '@/lib/constants'
+import { getAuthorBySlug } from '@/lib/blog/authors'
 import {
   getAdjacentPosts,
   getAllPosts,
-  getAuthorBySlug,
+  getPostBySlug,
   getPostWithContent,
-} from '@/lib/blog'
+} from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 
@@ -32,26 +33,26 @@ export async function generateMetadata({
   params,
 }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPostWithContent(slug)
+  const post = getPostBySlug(slug)
 
   if (!post) return {}
 
   return {
-    title: post.meta.title,
-    description: post.meta.description,
+    title: post.title,
+    description: post.description,
     openGraph: {
       type: 'article',
       url: `/blog/${slug}`,
-      title: post.meta.title,
-      description: post.meta.description,
-      publishedTime: post.meta.publishedAt,
-      authors: post.meta.authors,
-      tags: post.meta.tags,
+      title: post.title,
+      description: post.description,
+      publishedTime: post.publishedAt,
+      authors: post.authors,
+      tags: post.tags,
     },
     twitter: {
       card: 'summary_large_image',
-      title: post.meta.title,
-      description: post.meta.description,
+      title: post.title,
+      description: post.description,
     },
   }
 }
@@ -138,6 +139,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         )}
       </header>
 
+      {/* Cover image */}
       {meta.hasCover && (
         <PostCover filePath={meta.filePath} title={meta.title} />
       )}

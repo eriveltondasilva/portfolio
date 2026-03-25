@@ -9,7 +9,8 @@ import Link from 'next/link'
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { SeriesCard } from '@/components/series-card'
-import { getRecentPosts, getRecentSeries } from '@/lib/blog'
+import { getRecentPosts } from '@/lib/blog/posts'
+import { getRecentSeries } from '@/lib/blog/series'
 
 export default function HomePage() {
   const recentPosts = getRecentPosts()

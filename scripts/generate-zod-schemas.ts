@@ -1,7 +1,11 @@
 import { z } from 'zod'
 
-import { AUTHORS_SCHEMA_OUTPUT, SERIES_SCHEMA_OUTPUT } from '@/lib/constants'
-import { authorSchema, seriesSchema } from '@/lib/schemas'
+import {
+  AUTHORS_SCHEMA_OUTPUT,
+  POSTS_SCHEMA_OUTPUT,
+  SERIES_SCHEMA_OUTPUT,
+} from '@/lib/constants'
+import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 
 import { log, writeJson } from './utils'
 
@@ -15,9 +19,11 @@ async function main(): Promise<void> {
 
   const seriesJsonSchema = z.toJSONSchema(seriesSchema.array())
   const authorsJsonSchema = z.toJSONSchema(authorSchema.array())
+  const postsJsonSchema = z.toJSONSchema(postSchema.array())
 
   log.ok('series schema')
   log.ok('authors schema')
+  log.ok('posts schema')
 
   // -- Write ------------------------------------------------------------------
 
@@ -26,10 +32,12 @@ async function main(): Promise<void> {
   await Promise.all([
     writeJson(SERIES_SCHEMA_OUTPUT, seriesJsonSchema),
     writeJson(AUTHORS_SCHEMA_OUTPUT, authorsJsonSchema),
+    writeJson(POSTS_SCHEMA_OUTPUT, postsJsonSchema),
   ])
 
   log.ok(SERIES_SCHEMA_OUTPUT)
   log.ok(AUTHORS_SCHEMA_OUTPUT)
+  log.ok(POSTS_SCHEMA_OUTPUT)
 
   // -- Done -------------------------------------------------------------------
 
