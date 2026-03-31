@@ -26,19 +26,16 @@ function AuthorHoverCard({ author }: { author: Author }) {
     {
       label: 'GitHub',
       href: author.socials.github,
-      // icon: AArrowDownIcon,
       icon: Github,
     },
     {
       label: 'Linkedin',
       href: author.socials.linkedin,
-      // icon: AArrowDownIcon,
       icon: Linkedin,
     },
     {
       label: 'Twitter',
       href: author.socials.twitter,
-      // icon: AArrowDownIcon,
       icon: TwitterX,
     },
   ]
@@ -121,7 +118,14 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 rel='noopener noreferrer'
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
-                <Image src={Icon} alt={label} title={label} width={16} height={16} />
+                <Image
+                  src={Icon}
+                  alt={label}
+                  title={label}
+                  width={16}
+                  height={16}
+                  unoptimized
+                />
               </a>
             )
           })}

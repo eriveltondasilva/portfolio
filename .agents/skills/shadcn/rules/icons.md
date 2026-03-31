@@ -12,7 +12,7 @@ Add `data-icon="inline-start"` (prefix) or `data-icon="inline-end"` (suffix) to 
 
 ```tsx
 <Button>
-  <SearchIcon className="mr-2 size-4" />
+  <SearchIcon className='mr-2 size-4' />
   Search
 </Button>
 ```
@@ -84,18 +84,18 @@ function StatusBadge({ icon }: { icon: string }) {
   return <Icon />
 }
 
-<StatusBadge icon="check" />
+;<StatusBadge icon='check' />
 ```
 
 **Correct:**
 
 ```tsx
 // Import from the project's configured iconLibrary (e.g. lucide-react, @tabler/icons-react).
-import { CheckIcon } from "lucide-react"
+import { CheckIcon } from 'lucide-react'
 
 function StatusBadge({ icon: Icon }: { icon: React.ComponentType }) {
   return <Icon />
 }
 
-<StatusBadge icon={CheckIcon} />
+;<StatusBadge icon={CheckIcon} />
 ```

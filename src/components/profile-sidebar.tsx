@@ -1,6 +1,10 @@
-import { MapPinIcon, AArrowDownIcon } from 'lucide-react'
+import { MapPinIcon } from 'lucide-react'
+import Image from 'next/image'
 
 import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
+import TwitterX from '@/assets/twitter-x.svg'
+import Linkedin from '@/assets/linkedin.svg'
+import Github from '@/assets/github.svg'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -13,20 +17,17 @@ export function ProfileSidebar({ author }: { author: Author }) {
     {
       label: 'GitHub',
       href: author.socials.github,
-      icon: AArrowDownIcon,
-      // icon: Github,
+      icon: Github,
     },
     {
       label: 'Linkedin',
       href: author.socials.linkedin,
-      icon: AArrowDownIcon,
-      // icon: Linkedin,
+      icon: Linkedin,
     },
     {
       label: 'Twitter',
       href: author.socials.twitter,
-      icon: AArrowDownIcon,
-      // icon: Twitter,
+      icon: TwitterX,
     },
   ]
 
@@ -77,19 +78,25 @@ export function ProfileSidebar({ author }: { author: Author }) {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {socialMap.map((social) => {
-          if (!social.href) return null
+        {socialMap.map(({ href, icon, label }) => {
+          if (!href) return null
 
           return (
             <a
-              key={social.label}
-              href={social.href}
+              key={label}
+              href={href}
               target='_blank'
               rel='noopener noreferrer'
               className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
             >
-              <Icon iconNode={social.icon} className='shrink-0' />
-              <span className='truncate'>{social.label}</span>
+              <Image
+                src={icon}
+                alt={label}
+                width={16}
+                height={16}
+                unoptimized
+              />
+              <span className='truncate'>{label}</span>
             </a>
           )
         })}
