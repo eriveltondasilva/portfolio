@@ -1,4 +1,4 @@
-import { Github, Linkedin, MapPinIcon, Twitter } from 'lucide-react'
+import { MapPinIcon, AArrowDownIcon } from 'lucide-react'
 
 import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
 
@@ -13,17 +13,20 @@ export function ProfileSidebar({ author }: { author: Author }) {
     {
       label: 'GitHub',
       href: author.socials.github,
-      icon: Github,
+      icon: AArrowDownIcon,
+      // icon: Github,
     },
     {
       label: 'Linkedin',
       href: author.socials.linkedin,
-      icon: Linkedin,
+      icon: AArrowDownIcon,
+      // icon: Linkedin,
     },
     {
       label: 'Twitter',
       href: author.socials.twitter,
-      icon: Twitter,
+      icon: AArrowDownIcon,
+      // icon: Twitter,
     },
   ]
 

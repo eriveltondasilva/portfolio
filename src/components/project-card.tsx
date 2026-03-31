@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, GithubIcon, StarIcon } from 'lucide-react'
+import { ExternalLinkIcon, AArrowDownIcon, StarIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -53,7 +53,7 @@ export function ProjectCard({ project, className }: Props) {
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2'>
           <Icon
-            iconNode={GithubIcon}
+            iconNode={AArrowDownIcon}
             className='shrink-0 text-zinc-400 dark:text-zinc-500'
           />
           <a
@@ -106,7 +106,7 @@ export function ProjectCard({ project, className }: Props) {
           rel='noopener noreferrer'
           className='flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
         >
-          <Icon iconNode={GithubIcon} className='size-3.5' />
+          <Icon iconNode={AArrowDownIcon} className='size-3.5' />
           Repositório
         </a>
 

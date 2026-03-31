@@ -35,3 +35,11 @@ export function formatDate(
     return 'Data inválida'
   }
 }
+
+export function formatList() {
+  return new Intl.ListFormat('pt-BR', {
+    style: 'long',
+    type: 'conjunction',
+  })
+}
+

@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, Linkedin, Twitter } from 'lucide-react'
+import Image from 'next/image'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -9,9 +9,15 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card'
-import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
-
-import { Icon } from './icon'
+import {
+  formatList,
+  getGithubAvatar,
+  getGitHubUsername,
+  getInitials,
+} from '@/lib'
+import TwitterX from '@/assets/twitter-x.svg'
+import Linkedin from '@/assets/linkedin.svg'
+import Github from '@/assets/github.svg'
 
 import type { Author } from '@/types'
 
@@ -20,17 +26,20 @@ function AuthorHoverCard({ author }: { author: Author }) {
     {
       label: 'GitHub',
       href: author.socials.github,
+      // icon: AArrowDownIcon,
       icon: Github,
     },
     {
       label: 'Linkedin',
       href: author.socials.linkedin,
+      // icon: AArrowDownIcon,
       icon: Linkedin,
     },
     {
       label: 'Twitter',
       href: author.socials.twitter,
-      icon: Twitter,
+      // icon: AArrowDownIcon,
+      icon: TwitterX,
     },
   ]
 
@@ -100,22 +109,19 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {socialMap.map((social) => {
-            if (!social.href) return null
+          {socialMap.map(({ href, label, icon: Icon }) => {
+            if (!href) return null
+            // const Icon = social.icon
 
             return (
               <a
-                key={social.label}
-                href={social.href}
+                key={label}
+                href={href}
                 target='_blank'
                 rel='noopener noreferrer'
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
-                <Icon
-                  iconNode={social.icon}
-                  label={social.label}
-                  className='size-3.5'
-                />
+                <Image src={Icon} alt={label} title={label} width={16} height={16} />
               </a>
             )
           })}
@@ -125,16 +131,11 @@ function AuthorHoverCard({ author }: { author: Author }) {
   )
 }
 
-const listFormat = new Intl.ListFormat('pt-BR', {
-  style: 'long',
-  type: 'conjunction',
-})
-
 export function PostAuthors({ authors }: { authors: Author[] }) {
   if (authors.length === 0) return null
 
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
-  const parts = listFormat.formatToParts(authors.map((author) => author.slug))
+  const parts = formatList().formatToParts(authors.map((author) => author.slug))
 
   return (
     <span className='flex flex-wrap items-baseline gap-x-0.5 text-sm text-zinc-500 dark:text-zinc-500'>
