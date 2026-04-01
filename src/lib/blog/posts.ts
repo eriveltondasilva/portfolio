@@ -68,7 +68,7 @@ export async function getPostWithContent(
   if (!post) return null
 
   const { default: Content } = await import(
-    `@/posts/${basename(dirname(post.filePath))}/index.mdx`
+    `#/content/posts/${basename(dirname(post.filePath))}/index.mdx`
   )
 
   return { Content, meta: post }
