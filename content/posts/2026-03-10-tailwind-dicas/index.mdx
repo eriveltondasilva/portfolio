@@ -155,24 +155,45 @@ No terminal, use <Kbd>Ctrl</Kbd> + <Kbd>C</Kbd> para interromper um processo e <
 Ideal para mostrar o mesmo conteúdo em múltiplas variações:
 
 <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-  ```bash npm install tailwindcss @tailwindcss/postcss ``` ```bash yarn add
-  tailwindcss @tailwindcss/postcss ``` ```bash pnpm add tailwindcss
-  @tailwindcss/postcss ``` ```bash bun add tailwindcss @tailwindcss/postcss ```
+  <>
+    ```bash
+    npm install tailwindcss @tailwindcss/postcss
+    ```
+  </>
+  <>
+    ```bash
+    yarn add tailwindcss @tailwindcss/postcss
+    ```
+  </>
+  <>
+    ```bash
+    pnpm add tailwindcss @tailwindcss/postcss
+    ```
+  </>
+  <>
+    ```bash
+    bun add tailwindcss @tailwindcss/postcss
+    ```
+  </>
 </Tabs>
 
 Também útil para mostrar código em diferentes linguagens:
 
 <Tabs items={['TypeScript', 'JavaScript']}>
+  <>
     ```ts
     function greet(name: string): string {
       return `Hello, ${name}!`
     }
     ```
+  </>
+  <>
     ```js
     function greet(name) {
       return `Hello, ${name}!`
     }
     ```
+  </>
 </Tabs>
 
 ---
@@ -297,14 +318,15 @@ Estrutura de um projeto Next.js com App Router:
 
 ## Imagens
 
-Imagem tipo md:
+Imagem simples sem legenda:
 
-![teste](./cover.jpg 'title')
+![teste](./cover.jpg 'Título lorem.')
 
 Imagem simples com legenda:
 
 <Image
   src={BlogImage}
+  title='Título lorem.'
   alt='Exemplo de imagem no blog'
   caption='Legenda opcional abaixo da imagem.'
 />
@@ -313,8 +335,9 @@ Imagem com proporção fixa (aspect ratio 16/9):
 
 <RatioImage
   src={BlogImage}
-  alt='Imagem com aspect ratio 16/9'
   ratio={16 / 9}
+  title='Título lorem.'
+  alt='Imagem com aspect ratio 16/9'
   caption='RatioImage com ratio 16/9 e object-cover.'
 />
 
@@ -323,9 +346,9 @@ Grade de imagens com 3 colunas:
 <ImageGrid
   columns={3}
   images={[
-    { src: BlogImage, alt: 'Imagem 1', caption: 'Legenda 1' },
-    { src: BlogImage, alt: 'Imagem 2', caption: 'Legenda 2' },
-    { src: BlogImage, alt: 'Imagem 3', caption: 'Legenda 3' },
+    { src: BlogImage, title: 'Imagem 1', alt: 'Imagem 1', caption: 'Legenda 1' },
+    { src: BlogImage, title: 'Imagem 2', alt: 'Imagem 2', caption: 'Legenda 2' },
+    { src: BlogImage, title: 'Imagem 3', alt: 'Imagem 3', caption: 'Legenda 3' },
   ]}
 />
 
