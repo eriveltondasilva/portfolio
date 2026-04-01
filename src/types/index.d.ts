@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
-import { ProjectStatus } from '@/lib/constants'
+import { authorSchema, postSchema, seriesSchema } from '#/lib/schemas'
+import { ProjectStatus } from '#/lib/constants'
 
 import type { Octokit } from '@octokit/rest'
 import type { MDXContent } from 'mdx/types'
@@ -46,7 +46,7 @@ export interface Project {
   name: string
   description: string
   repository: string
-  url?: string
+  url: string | null
   tags: string[]
   status: ProjectStatus
   featured: boolean

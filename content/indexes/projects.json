@@ -1,12 +1,1 @@
-[
-  {
-    "slug": "portfolio",
-    "name": "Portfolio",
-    "description": "Este é um projeto de portfólio pessoal desenvolvido com Next.js, incorporando seções de blog e projetos. A aplicação foi projetada para ser rápida, responsiva e fácil de manter, utilizando as melhores práticas e ferramentas do ecossistema React e Next.js.",
-    "repository": "https://github.com/eriveltondasilva/portfolio",
-    "url": "https://portfolio-brown-omega-84.vercel.app",
-    "tags": ["mdx", "nextjs", "reactjs", "typescript"],
-    "status": "active",
-    "featured": false
-  }
-]
+[]

@@ -1,7 +1,7 @@
-import authorsData from '@/authors/index.json'
-import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants'
+import { PRIMARY_AUTHOR_SLUG } from '#/lib/constants'
+import authorsData from '#/content/authors/index.json'
 
-import type { Author } from '@/types'
+import type { Author } from '#/types'
 
 export function getAllAuthors(): Author[] {
   return authorsData as Author[]

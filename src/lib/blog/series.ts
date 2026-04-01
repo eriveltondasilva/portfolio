@@ -1,7 +1,7 @@
-import seriesIndex from '@/indexes/series.json'
-import { SeriesStatus } from '@/lib/constants'
+import seriesIndex from '#/content/indexes/series.json'
+import { SeriesStatus } from '#/lib/constants'
 
-import type { SeriesIndex } from '@/types'
+import type { SeriesIndex } from '#/types'
 
 export function getAllSeries(): SeriesIndex[] {
   return seriesIndex as SeriesIndex[]

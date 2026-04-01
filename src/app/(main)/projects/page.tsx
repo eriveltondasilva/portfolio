@@ -1,5 +1,5 @@
-import { ProjectCard } from '@/components/project-card'
-import { getAllProjects } from '@/lib/blog/projects'
+import { ProjectCard } from '#/components/project-card'
+import { getAllProjects } from '#/lib/blog/projects'
 
 import type { Metadata } from 'next'
 

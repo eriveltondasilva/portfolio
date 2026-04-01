@@ -1,7 +1,7 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
 import clsx from 'clsx'
 
-import { URL_BASE } from '@/lib/constants'
+import { URL_BASE } from '#/lib/constants'
 
 import './globals.css'
 

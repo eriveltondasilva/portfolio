@@ -5,8 +5,8 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
+} from '#/components/ui/tabs'
+import { cn } from '#/lib/utils'
 
 import type { ComponentProps } from 'react'
 

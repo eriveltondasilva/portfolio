@@ -3,7 +3,7 @@
 import { AlertTriangle } from 'lucide-react'
 import { useEffect } from 'react'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '#/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -11,7 +11,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '#/components/ui/empty'
 
 interface Props {
   error: Error & { digest?: string }

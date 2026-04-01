@@ -1,13 +1,13 @@
 import { basename, dirname } from 'node:path'
 
-import postsIndex from '@/indexes/posts.json'
+import postsIndex from '#/content/indexes/posts.json'
 
 import type {
   AdjacentPosts,
   PostIndex,
   PostWithContent,
   TagCount,
-} from '@/types'
+} from '#/types'
 
 export function getAllPosts(): PostIndex[] {
   return postsIndex as PostIndex[]

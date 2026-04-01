@@ -1,24 +1,22 @@
 import { ExternalLinkIcon } from 'lucide-react'
 import LinkNext from 'next/link'
 
-import { cn } from '@/lib/utils'
-
 import { Icon } from '../icon'
 
-import type { ComponentProps } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
 import type { Route } from 'next'
 
 const EXTERNAL_PROTOCOLS = ['http://', 'https://', 'www.']
 
-export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
+export function Link({
+  href = '',
+  children,
+  ...props
+}: ComponentPropsWithoutRef<'a'>) {
   if (!href) return <>{children}</>
 
   if (href.startsWith('/')) {
-    return (
-      <LinkNext href={href as Route} {...props}>
-        {children}
-      </LinkNext>
-    )
+    return <LinkNext href={href as Route}>{children}</LinkNext>
   }
 
   if (EXTERNAL_PROTOCOLS.some((protocol) => href.startsWith(protocol))) {
@@ -28,7 +26,7 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
         target='_blank'
         rel='noopener noreferrer'
         {...props}
-        className={cn('inline-flex items-center gap-1', props.className)}
+        className='inline-flex items-center gap-1'
       >
         {children}
         <Icon iconNode={ExternalLinkIcon} />

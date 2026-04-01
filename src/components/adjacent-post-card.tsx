@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { Icon } from './icon'
 
-import type { PostIndex } from '@/types'
+import type { PostIndex } from '#/types'
 
 interface Props {
   post: PostIndex

@@ -1,4 +1,4 @@
-import type { Author } from '@/types'
+import type { Author } from '#/types'
 
 export function getGitHubUsername(author: Author): string | null {
   try {

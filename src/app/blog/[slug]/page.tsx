@@ -9,22 +9,22 @@ import {
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { AdjacentPostCard } from '@/components/adjacent-post-card'
-import { Icon } from '@/components/icon'
-import { PostAuthors } from '@/components/post-authors'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { PostCover } from '@/components/post-cover'
-import { formatDate } from '@/lib'
-import { GITHUB_REPO } from '@/lib/constants'
-import { getAuthorBySlug } from '@/lib/blog/authors'
+import { AdjacentPostCard } from '#/components/adjacent-post-card'
+import { Icon } from '#/components/icon'
+import { PostAuthors } from '#/components/post-authors'
+import { Badge } from '#/components/ui/badge'
+import { Button } from '#/components/ui/button'
+import { Separator } from '#/components/ui/separator'
+import { PostCover } from '#/components/post-cover'
+import { formatDate } from '#/lib'
+import { GITHUB_REPO } from '#/lib/constants'
+import { getAuthorBySlug } from '#/lib/blog/authors'
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug,
   getPostWithContent,
-} from '@/lib/blog/posts'
+} from '#/lib/blog/posts'
 
 import type { Metadata } from 'next'
 

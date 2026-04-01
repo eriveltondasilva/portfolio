@@ -1,12 +1,12 @@
 import { ExternalLinkIcon, AArrowDownIcon, StarIcon } from 'lucide-react'
 
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { ProjectStatus } from '@/lib/constants'
+import { Badge } from '#/components/ui/badge'
+import { cn } from '#/lib/utils'
+import { ProjectStatus } from '#/lib/constants'
 
 import { Icon } from './icon'
 
-import type { Project } from '@/types'
+import type { Project } from '#/types'
 
 interface Props {
   project: Project

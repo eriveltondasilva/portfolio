@@ -1,12 +1,12 @@
 import { Octokit } from '@octokit/rest'
 
-import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '@/lib/constants'
-import { getPrimaryAuthor } from '@/lib/blog/authors'
-import { getGitHubUsername } from '@/lib'
+import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '#/lib/constants'
+import { getPrimaryAuthor } from '#/lib/blog/authors'
+import { getGitHubUsername } from '#/lib'
 
 import { log, writeJson } from './utils'
 
-import type { Project, GithubRepo } from '@/types'
+import type { Project, GithubRepo } from '#/types'
 
 enum Topics {
   INCLUDE = 'portfolio',
@@ -16,14 +16,25 @@ enum Topics {
 
 const UTILITY_TOPICS = new Set(Object.values(Topics))
 
+function getProjectName(repo: GithubRepo): string {
+  return repo.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 function getStatus(repo: GithubRepo): ProjectStatus {
   if (repo.archived) return ProjectStatus.ARCHIVED
   if (repo.topics?.includes(Topics.WIP)) return ProjectStatus.WIP
+
   return ProjectStatus.ACTIVE
 }
 
+function getTags(repo: GithubRepo): string[] {
+  return (repo.topics ?? []).filter((tag) => !UTILITY_TOPICS.has(tag as Topics))
+}
+
+// # Fetchers
+
 async function fetchPortfolioProjects(): Promise<Project[]> {
-  const token = process.env.GITHUB_TOKEN
+  const token = process.env['GITHUB_TOKEN']
   const githubUsername = getGitHubUsername(getPrimaryAuthor())
 
   if (!token) {
@@ -39,6 +50,7 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     username: githubUsername as string,
     type: 'owner',
     per_page: 100,
+    sort: 'full_name',
   })
 
   const portfolioRepos = repos.filter((repo) =>
@@ -50,27 +62,27 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     `${repos.length} total · ${portfolioRepos.length} with topic "${Topics.INCLUDE}"`,
   )
 
-  const featured = portfolioRepos.filter((r) =>
-    r.topics?.includes(Topics.FEATURED),
+  // Count status categories
+  const featured = portfolioRepos.filter((repo) =>
+    repo.topics?.includes(Topics.FEATURED),
   ).length
-  const wip = portfolioRepos.filter((r) =>
-    r.topics?.includes(Topics.WIP),
+  const wip = portfolioRepos.filter((repo) =>
+    repo.topics?.includes(Topics.WIP),
   ).length
-  const archived = portfolioRepos.filter((r) => r.archived).length
+  const archived = portfolioRepos.filter((repo) => repo.archived).length
 
+  // Log status counts
   if (featured > 0) log.detail(`${featured} featured`)
   if (wip > 0) log.detail(`${wip} wip`)
   if (archived > 0) log.skip('archived', `${archived} excluded from active`)
 
   return portfolioRepos.map((repo) => ({
     slug: repo.name,
-    name: repo.name.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+    name: getProjectName(repo),
     description: repo.description ?? 'Sem descrição.',
     repository: repo.html_url,
-    url: repo.homepage || undefined,
-    tags: (repo.topics ?? []).filter(
-      (tag) => !UTILITY_TOPICS.has(tag as Topics),
-    ),
+    url: repo.homepage || null,
+    tags: getTags(repo),
     status: getStatus(repo),
     featured: repo.topics?.includes(Topics.FEATURED) ?? false,
   }))
@@ -81,6 +93,7 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
 async function buildProjectsIndex(projects: Project[]): Promise<void> {
   const sorted = projects.toSorted((a, b) => {
     if (a.featured !== b.featured) return a.featured ? -1 : 1
+
     return a.name.localeCompare(b.name, 'pt-BR')
   })
 

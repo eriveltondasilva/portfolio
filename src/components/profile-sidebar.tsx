@@ -1,16 +1,16 @@
 import { MapPinIcon } from 'lucide-react'
 import Image from 'next/image'
 
-import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
-import TwitterX from '@/assets/twitter-x.svg'
-import Linkedin from '@/assets/linkedin.svg'
-import Github from '@/assets/github.svg'
+import { getGithubAvatar, getGitHubUsername, getInitials } from '#/lib'
+import TwitterX from '#/assets/twitter-x.svg'
+import Linkedin from '#/assets/linkedin.svg'
+import Github from '#/assets/github.svg'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Badge } from './ui/badge'
 
-import type { Author } from '@/types'
+import type { Author } from '#/types'
 
 export function ProfileSidebar({ author }: { author: Author }) {
   const socialMap = [

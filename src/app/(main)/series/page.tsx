@@ -1,5 +1,5 @@
-import { SeriesCard } from '@/components/series-card'
-import { getAllSeries } from '@/lib/blog/series'
+import { SeriesCard } from '#/components/series-card'
+import { getAllSeries } from '#/lib/blog/series'
 
 import type { Metadata } from 'next'
 

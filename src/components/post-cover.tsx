@@ -2,7 +2,7 @@ import { basename, dirname } from 'node:path'
 
 import Image from 'next/image'
 
-import { cn } from '@/lib/utils'
+import { cn } from '#/lib/utils'
 
 interface Props {
   filePath: string

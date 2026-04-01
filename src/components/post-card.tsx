@@ -6,13 +6,13 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-import { formatDate } from '@/lib'
-import { cn } from '@/lib/utils'
+import { formatDate } from '#/lib'
+import { cn } from '#/lib/utils'
 
 import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
-import type { PostIndex } from '@/types'
+import type { PostIndex } from '#/types'
 
 interface Props {
   post: PostIndex

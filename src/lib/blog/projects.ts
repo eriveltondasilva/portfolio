@@ -1,6 +1,6 @@
-import projectsIndex from '@/indexes/projects.json'
+import projectsIndex from '#/content/indexes/projects.json'
 
-import type { Project } from '@/types'
+import type { Project } from '#/types'
 
 export function getAllProjects(): Project[] {
   return projectsIndex as Project[]

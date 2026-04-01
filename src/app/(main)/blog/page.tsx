@@ -1,5 +1,5 @@
-import { PostCard } from '@/components/post-card'
-import { getAllPosts } from '@/lib/blog/posts'
+import { PostCard } from '#/components/post-card'
+import { getAllPosts } from '#/lib/blog/posts'
 
 import type { Metadata } from 'next'
 

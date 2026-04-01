@@ -1,14 +1,14 @@
 import { BookMarkedIcon, CalendarIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { formatDate } from '@/lib'
-import { cn } from '@/lib/utils'
-import { SeriesStatus } from '@/lib/constants'
+import { formatDate } from '#/lib'
+import { cn } from '#/lib/utils'
+import { SeriesStatus } from '#/lib/constants'
 
 import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
-import type { SeriesIndex } from '@/types'
+import type { SeriesIndex } from '#/types'
 
 interface SeriesCardProps {
   series: SeriesIndex
