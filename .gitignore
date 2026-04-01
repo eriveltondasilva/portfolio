@@ -43,3 +43,6 @@ next-env.d.ts
 # content
 content/series-index.json
 content/posts-index.json
+
+#
+.eslintcache
