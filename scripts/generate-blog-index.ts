@@ -3,7 +3,7 @@ import { join, relative } from 'node:path'
 import matter from 'gray-matter'
 import getReadingTime from 'reading-time'
 
-import { authorSchema, postSchema, seriesSchema } from '#/lib/schemas'
+import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 import {
   AUTHORS_FILE,
   COVER_NAME,
@@ -12,7 +12,7 @@ import {
   PostStatus,
   SERIES_FILE,
   SERIES_INDEX_OUTPUT,
-} from '#/lib/constants'
+} from '@/lib/constants'
 
 import {
   writeJson,
@@ -23,7 +23,7 @@ import {
   log,
 } from './utils'
 
-import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '#/types'
+import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 type SeriesPost = PostIndex & { series: string; order: number }
 

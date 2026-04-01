@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-import { getTagsWithCount } from '#/lib/blog/posts'
+import { getTagsWithCount } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 

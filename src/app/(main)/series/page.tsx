@@ -1,5 +1,5 @@
-import { SeriesCard } from '#/components/series-card'
-import { getAllSeries } from '#/lib/blog/series'
+import { SeriesCard } from '@/components/series-card'
+import { getAllSeries } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'
 
@@ -25,7 +25,7 @@ export default function SeriesPage() {
       {hasSeries && (
         <div className='space-y-3'>
           {series.map((s) => (
-            <SeriesCard key={s.slug} series={s} />
+            <SeriesCard key={s.slug} series={s} showStatusBadge />
           ))}
         </div>
       )}

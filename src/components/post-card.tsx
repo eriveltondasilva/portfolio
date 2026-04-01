@@ -6,26 +6,28 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 
-import { formatDate } from '#/lib'
-import { cn } from '#/lib/utils'
+import { formatDate } from '@/lib'
+import { cn } from '@/lib/utils'
 
 import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
-import type { PostIndex } from '#/types'
+import type { PostIndex } from '@/types'
+import type { ComponentPropsWithoutRef } from 'react'
 
-interface Props {
+interface Props extends ComponentPropsWithoutRef<'article'> {
   post: PostIndex
-  className?: string
+  showSeriesBadge?: boolean
 }
 
-export function PostCard({ post, className }: Props) {
+export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
   return (
     <article
       className={cn(
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        className,
+        props.className,
       )}
+      {...props}
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
@@ -44,7 +46,7 @@ export function PostCard({ post, className }: Props) {
           </div>
         </div>
 
-        {post.series && (
+        {showSeriesBadge && post.series && (
           <Link href={`/series/${post.series}`}>
             <Badge className='border-orange-300 bg-orange-100/10 text-orange-500 hover:bg-orange-300/10 dark:bg-orange-600/20'>
               Série <Icon iconNode={ArrowRightIcon} />

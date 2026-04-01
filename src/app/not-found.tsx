@@ -1,7 +1,7 @@
 import { FileQuestion } from 'lucide-react'
 import Link from 'next/link'
 
-import { Button } from '#/components/ui/button'
+import { Button } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -9,7 +9,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '#/components/ui/empty'
+} from '@/components/ui/empty'
 
 export default function NotFound() {
   return (

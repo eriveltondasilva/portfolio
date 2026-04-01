@@ -15,10 +15,6 @@
     "reactjs",
     "portfolio"
   ],
-  "imports": {
-    "#/*": "./src/*",
-    "#/content/*": "./content/*"
-  },
   "scripts": {
     "dev": "bun --bun next dev",
     "build": "bun --bun next build",

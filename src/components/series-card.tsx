@@ -1,18 +1,19 @@
 import { BookMarkedIcon, CalendarIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { formatDate } from '#/lib'
-import { cn } from '#/lib/utils'
-import { SeriesStatus } from '#/lib/constants'
+import { formatDate } from '@/lib'
+import { cn } from '@/lib/utils'
+import { SeriesStatus } from '@/lib/constants'
 
 import { Icon } from './icon'
 import { Badge } from './ui/badge'
 
-import type { SeriesIndex } from '#/types'
+import type { SeriesIndex } from '@/types'
+import type { ComponentPropsWithoutRef } from 'react'
 
-interface SeriesCardProps {
+interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
   series: SeriesIndex
-  className?: string
+  showStatusBadge?: boolean
 }
 
 const statusConfig: Record<
@@ -38,14 +39,18 @@ const statusConfig: Record<
   },
 }
 
-export function SeriesCard({ series, className }: SeriesCardProps) {
+export function SeriesCard({
+  series,
+  showStatusBadge = false,
+  ...props
+}: SeriesCardProps) {
   const status = statusConfig[series.status]
 
   return (
     <article
       className={cn(
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        className,
+        props.className,
       )}
     >
       {/* Header */}
@@ -64,10 +69,12 @@ export function SeriesCard({ series, className }: SeriesCardProps) {
             </Link>
           </div>
         </div>
-        <Badge className={status?.className}>
-          <span className={status?.dot} aria-hidden='true' />
-          {status?.label}
-        </Badge>
+        {showStatusBadge && (
+          <Badge className={status.className}>
+            <span className={status.dot} aria-hidden='true' />
+            {status.label}
+          </Badge>
+        )}
       </div>
 
       {/* Description */}

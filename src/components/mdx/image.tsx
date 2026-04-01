@@ -1,6 +1,6 @@
 import ImageNext from 'next/image'
 
-import { cn } from '#/lib/utils'
+import { cn } from '@/lib/utils'
 
 import { DEFAULT_SIZES, Figcaption } from './utils'
 

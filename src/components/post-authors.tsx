@@ -2,24 +2,24 @@
 
 import Image from 'next/image'
 
-import { Avatar, AvatarFallback, AvatarImage } from '#/components/ui/avatar'
-import { Badge } from '#/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '#/components/ui/hover-card'
+} from '@/components/ui/hover-card'
 import {
   formatList,
   getGithubAvatar,
   getGitHubUsername,
   getInitials,
-} from '#/lib'
-import TwitterX from '#/assets/twitter-x.svg'
-import Linkedin from '#/assets/linkedin.svg'
-import Github from '#/assets/github.svg'
+} from '@/lib'
+import TwitterX from '@/assets/twitter-x.svg'
+import Linkedin from '@/assets/linkedin.svg'
+import Github from '@/assets/github.svg'
 
-import type { Author } from '#/types'
+import type { Author } from '@/types'
 
 function AuthorHoverCard({ author }: { author: Author }) {
   const socialMap = [

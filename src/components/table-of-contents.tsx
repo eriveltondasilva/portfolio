@@ -2,9 +2,9 @@
 
 // import { useEffect, useState } from 'react'
 
-// import { cn } from '#/lib/utils'
+// import { cn } from '@/lib/utils'
 
-// import type { Heading } from '#/lib/headings'
+// import type { Heading } from '@/lib/headings'
 
 // interface Props {
 //   headings: Heading[]

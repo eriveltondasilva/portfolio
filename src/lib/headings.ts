@@ -1,7 +1,7 @@
 // import { readFileSync } from 'node:fs'
 // import { basename, dirname, join } from 'node:path'
 
-// import { POSTS_DIR } from '#/lib/constants'
+// import { POSTS_DIR } from '@/lib/constants'
 
 // export interface Heading {
 //   id: string

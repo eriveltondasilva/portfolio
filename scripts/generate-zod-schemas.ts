@@ -4,8 +4,8 @@ import {
   AUTHORS_SCHEMA_OUTPUT,
   POSTS_SCHEMA_OUTPUT,
   SERIES_SCHEMA_OUTPUT,
-} from '#/lib/constants'
-import { authorSchema, postSchema, seriesSchema } from '#/lib/schemas'
+} from '@/lib/constants'
+import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 
 import { log, writeJson } from './utils'
 

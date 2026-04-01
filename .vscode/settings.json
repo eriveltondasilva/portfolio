@@ -11,5 +11,19 @@
   ],
   "yaml.schemas": {
     "./content/schemas/posts.json": "content/posts/**/index.mdx"
-  }
+  },
+  "favorites.resources": [
+    {
+      "filePath": "src\\app",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\components",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\lib",
+      "group": "Default"
+    }
+  ]
 }

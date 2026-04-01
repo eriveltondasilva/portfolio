@@ -170,7 +170,7 @@ figure[data-rehype-pretty-code-figure] {
 
 /* Inline Code */
 span[data-rehype-pretty-code-figure] > code {
-  @apply rounded-lg bg-muted px-1.5 py-1 text-foreground;
+  @apply rounded-md bg-muted px-1.5 py-1 text-xs text-foreground;
 }
 
 /* Line Numbers */

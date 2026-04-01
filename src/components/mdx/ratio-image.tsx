@@ -1,7 +1,7 @@
 import ImageNext from 'next/image'
 
-import { AspectRatio } from '#/components/ui/aspect-ratio'
-import { cn } from '#/lib/utils'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { cn } from '@/lib/utils'
 
 import { DEFAULT_SIZES, Figcaption } from './utils'
 

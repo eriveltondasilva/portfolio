@@ -28,8 +28,7 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "#/*": ["./src/*"],
-      "#/content/*": ["./content/*"]
+      "@/content/*": ["./content/*"]
     }
   },
   "include": [

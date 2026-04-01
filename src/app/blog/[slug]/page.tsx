@@ -9,22 +9,26 @@ import {
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { AdjacentPostCard } from '#/components/adjacent-post-card'
-import { Icon } from '#/components/icon'
-import { PostAuthors } from '#/components/post-authors'
-import { Badge } from '#/components/ui/badge'
-import { Button } from '#/components/ui/button'
-import { Separator } from '#/components/ui/separator'
-import { PostCover } from '#/components/post-cover'
-import { formatDate } from '#/lib'
-import { GITHUB_REPO } from '#/lib/constants'
-import { getAuthorBySlug } from '#/lib/blog/authors'
+import { AdjacentPostCard } from '@/components/adjacent-post-card'
+import { Icon } from '@/components/icon'
+import { PostAuthors } from '@/components/post-authors'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Separator } from '@/components/ui/separator'
+import { PostCover } from '@/components/post-cover'
+import { formatDate } from '@/lib'
+import { GITHUB_REPO, URL_BASE } from '@/lib/constants'
+import { getAuthorBySlug } from '@/lib/blog/authors'
+import { RelatedPosts } from '@/components/related-posts'
+import { ReadingProgress } from '@/components/reading-progress'
+import { ShareButton } from '@/components/share-button'
+import BackToTop from '@/components/BackToTop'
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug,
   getPostWithContent,
-} from '#/lib/blog/posts'
+} from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 
@@ -79,8 +83,14 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
     .map(getAuthorBySlug)
     .filter((author) => author !== null)
 
+  const postUrl = `${URL_BASE}/blog/${slug}`
+  const editUrl = `${GITHUB_REPO}/edit/main/${meta.filePath}`
+
   return (
     <div>
+      <ReadingProgress />
+      <BackToTop />
+
       {/* Back link */}
       <Link
         href='/blog'
@@ -103,9 +113,13 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           </Link>
         )}
 
-        <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
-          {meta.title}
-        </h1>
+        {/* Title + share button */}
+        <div className='flex items-start justify-between gap-3'>
+          <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
+            {meta.title}
+          </h1>
+          <ShareButton title={meta.title} url={postUrl} />
+        </div>
 
         {/* Cover image */}
         {meta.hasCover && (
@@ -173,16 +187,17 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       {/* Footer actions */}
       <div className='flex justify-end'>
         <Button variant='link' asChild>
-          <a
-            href={`${GITHUB_REPO}/edit/main/${meta.filePath}`}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
+          <a href={editUrl} target='_blank' rel='noopener noreferrer'>
             <Icon iconNode={GitForkIcon} className='size-3.5' />
             Sugerir alterações
           </a>
         </Button>
       </div>
+
+      <Separator className='my-8 dark:bg-zinc-700/60' />
+
+      {/* Related posts */}
+      <RelatedPosts slug={slug} />
 
       {/* Prev / Next navigation */}
       {hasAdjacentPosts && (
@@ -192,7 +207,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         >
           {prev && <AdjacentPostCard post={prev} direction='prev' />}
           {!prev && <div className='flex-1' />}
-
           {next && <AdjacentPostCard post={next} direction='next' />}
         </nav>
       )}

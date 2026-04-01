@@ -2,7 +2,7 @@ import { basename, dirname } from 'node:path'
 
 import Image from 'next/image'
 
-import { cn } from '#/lib/utils'
+import { cn } from '@/lib/utils'
 
 interface Props {
   filePath: string
@@ -12,7 +12,7 @@ interface Props {
 
 export async function PostCover({ title, filePath, className }: Props) {
   const { default: cover } = await import(
-    `@/posts/${basename(dirname(filePath))}/cover.jpg`
+    `@/content/posts/${basename(dirname(filePath))}/cover.jpg`
   )
 
   return (

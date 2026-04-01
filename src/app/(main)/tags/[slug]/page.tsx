@@ -1,9 +1,9 @@
 import { ArrowLeftIcon, HashIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { Icon } from '#/components/icon'
-import { PostCard } from '#/components/post-card'
-import { getAllTags, getPostsByTag } from '#/lib/blog/posts'
+import { Icon } from '@/components/icon'
+import { PostCard } from '@/components/post-card'
+import { getAllTags, getPostsByTag } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 

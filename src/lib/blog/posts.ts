@@ -1,13 +1,13 @@
 import { basename, dirname } from 'node:path'
 
-import postsIndex from '#/content/indexes/posts.json'
+import postsIndex from '@/content/indexes/posts.json'
 
 import type {
   AdjacentPosts,
   PostIndex,
   PostWithContent,
   TagCount,
-} from '#/types'
+} from '@/types'
 
 export function getAllPosts(): PostIndex[] {
   return postsIndex as PostIndex[]
@@ -68,7 +68,7 @@ export async function getPostWithContent(
   if (!post) return null
 
   const { default: Content } = await import(
-    `#/content/posts/${basename(dirname(post.filePath))}/index.mdx`
+    `@/content/posts/${basename(dirname(post.filePath))}/index.mdx`
   )
 
   return { Content, meta: post }

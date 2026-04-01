@@ -1,5 +1,5 @@
-import { PostCard } from '#/components/post-card'
-import { getAllPosts } from '#/lib/blog/posts'
+import { PostCard } from '@/components/post-card'
+import { getAllPosts } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 
@@ -17,7 +17,7 @@ export default function BlogPage() {
       {/* Header */}
       <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
         <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {posts.length}{' '}
+          {posts.length}&nbsp;
           {posts.length === 1 ? 'post publicado' : 'posts publicados'}
         </p>
       </div>
@@ -26,7 +26,7 @@ export default function BlogPage() {
       {hasPosts && (
         <div className='space-y-3'>
           {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <PostCard key={post.slug} post={post} showSeriesBadge />
           ))}
         </div>
       )}

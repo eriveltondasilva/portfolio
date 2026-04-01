@@ -18,11 +18,20 @@ export enum ProjectStatus {
   ARCHIVED = 'archived',
 }
 
+export enum Topics {
+  INCLUDE = 'portfolio',
+  FEATURED = 'featured',
+  WIP = 'wip',
+}
+
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 export const PRIMARY_AUTHOR_SLUG = 'erivelton'
 
-/** Cover image convention: always named `cover.jpg` inside the post folder. */
+/**
+ *  Cover image convention: always named
+ * `cover.jpg` inside the post folder.
+ */
 export const COVER_NAME = 'cover.jpg'
 
 export const URL_BASE =
@@ -41,6 +50,7 @@ export const SERIES_DIR = join(CONTENT_DIR, 'series')
 export const SCHEMAS_DIR = join(CONTENT_DIR, 'schemas')
 export const INDEXES_DIR = join(CONTENT_DIR, 'indexes')
 
+// # Files
 export const AUTHORS_FILE = join(AUTHORS_DIR, 'index.json')
 export const SERIES_FILE = join(SERIES_DIR, 'index.json')
 

@@ -1,6 +1,6 @@
-import { ProfileSidebar } from '#/components/profile-sidebar'
-import { TabsNav } from '#/components/tabs-nav'
-import { getPrimaryAuthor } from '#/lib/blog/authors'
+import { ProfileSidebar } from '@/components/profile-sidebar'
+import { TabsNav } from '@/components/tabs-nav'
+import { getPrimaryAuthor } from '@/lib/blog/authors'
 
 export default function MainLayout({ children }: LayoutProps<'/'>) {
   const author = getPrimaryAuthor()

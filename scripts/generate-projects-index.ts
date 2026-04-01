@@ -1,18 +1,12 @@
 import { Octokit } from '@octokit/rest'
 
-import { PROJECTS_INDEX_OUTPUT, ProjectStatus } from '#/lib/constants'
-import { getPrimaryAuthor } from '#/lib/blog/authors'
-import { getGitHubUsername } from '#/lib'
+import { PROJECTS_INDEX_OUTPUT, ProjectStatus, Topics } from '@/lib/constants'
+import { getPrimaryAuthor } from '@/lib/blog/authors'
+import { getGitHubUsername } from '@/lib'
 
 import { log, writeJson } from './utils'
 
-import type { Project, GithubRepo } from '#/types'
-
-enum Topics {
-  INCLUDE = 'portfolio',
-  FEATURED = 'featured',
-  WIP = 'wip',
-}
+import type { Project, GithubRepo } from '@/types'
 
 const UTILITY_TOPICS = new Set(Object.values(Topics))
 

@@ -29,7 +29,7 @@ export function CodeBlock({ children, ...props }: ComponentProps<'pre'>) {
     <>
       <pre
         ref={preRef}
-        className={clsx(props.className, 'group not-prose relative')}
+        className={clsx(props.className, 'group relative')}
         {...props}
       >
         {children}
