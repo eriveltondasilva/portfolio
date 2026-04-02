@@ -10,11 +10,11 @@ import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { SeriesCard } from '@/components/series-card'
 import { getRecentPosts } from '@/lib/blog/posts'
-import { getRecentSeries } from '@/lib/blog/series'
+import { getInProgressSeries } from '@/lib/blog/series'
 
 export default function HomePage() {
   const recentPosts = getRecentPosts()
-  const recentSeries = getRecentSeries()
+  const recentSeries = getInProgressSeries()
 
   return (
     <div className='space-y-10'>

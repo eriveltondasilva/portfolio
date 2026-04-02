@@ -1,5 +1,7 @@
 import type { Author } from '@/types'
 
+const LOCALES = 'pt-BR'
+
 export function getGitHubUsername(author: Author): string | null {
   try {
     return new URL(author.socials.github).pathname.replace('/', '')
@@ -26,7 +28,7 @@ export function formatDate(
   options?: Intl.DateTimeFormatOptions,
 ): string {
   try {
-    return new Intl.DateTimeFormat('pt-BR', {
+    return new Intl.DateTimeFormat(LOCALES, {
       dateStyle: 'medium',
       timeZone: 'UTC',
       ...options,
@@ -37,7 +39,7 @@ export function formatDate(
 }
 
 export function formatList() {
-  return new Intl.ListFormat('pt-BR', {
+  return new Intl.ListFormat(LOCALES, {
     style: 'long',
     type: 'conjunction',
   })

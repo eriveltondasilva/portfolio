@@ -1,4 +1,4 @@
-import { ArrowRightIcon, ClockIcon, SparklesIcon } from 'lucide-react'
+import { ArrowRightIcon, SparklesIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
@@ -35,12 +35,11 @@ export function RelatedPosts({ slug }: Props) {
                 </p>
 
                 <div className='flex flex-wrap items-center gap-3 text-xs text-zinc-400 dark:text-zinc-600'>
-                  <time dateTime={post.publishedAt}>
-                    {formatDate(post.publishedAt)}
+                  <time dateTime={post.updatedAt ?? post.publishedAt}>
+                    {formatDate(post.updatedAt ?? post.publishedAt)}
                   </time>
 
                   <span className='flex items-center gap-1'>
-                    <Icon iconNode={ClockIcon} className='size-3' />
                     {post.readingTime} min
                   </span>
 

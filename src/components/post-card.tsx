@@ -2,6 +2,7 @@ import {
   ArrowRightIcon,
   BookOpenIcon,
   CalendarIcon,
+  CalendarSyncIcon,
   ClockIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -74,11 +75,15 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
       {/* Meta */}
       <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
         <span className='flex items-center gap-1.5'>
-          <Icon iconNode={CalendarIcon} className='size-3.5' />
-          <time dateTime={post.publishedAt}>
-            {formatDate(post.publishedAt)}
+          <Icon
+            iconNode={post.updatedAt ? CalendarSyncIcon : CalendarIcon}
+            className='size-3.5'
+          />
+          <time dateTime={post.updatedAt ?? post.publishedAt}>
+            {formatDate(post.updatedAt ?? post.publishedAt)}
           </time>
         </span>
+
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={ClockIcon} className='size-3.5' />
           {post.readingTime} min de leitura

@@ -5,12 +5,12 @@ import getReadingTime from 'reading-time'
 
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 import {
-  AUTHORS_FILE,
+  AUTHORS_SOURCE_FILE,
   COVER_NAME,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   PostStatus,
-  SERIES_FILE,
+  SERIES_SOURCE_FILE,
   SERIES_INDEX_OUTPUT,
 } from '@/lib/constants'
 
@@ -125,12 +125,12 @@ function assertAuthorsExist(
 // # Readers
 
 async function readAuthors(): Promise<Set<string>> {
-  const parsed = await readJson(AUTHORS_FILE)
+  const parsed = await readJson(AUTHORS_SOURCE_FILE)
   const result = authorSchema.array().safeParse(parsed)
 
   if (!result.success) {
     throw new BuildError('authors', [
-      AUTHORS_FILE + '\n',
+      AUTHORS_SOURCE_FILE + '\n',
       ...result.error.issues.map(
         ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
       ),
@@ -138,7 +138,10 @@ async function readAuthors(): Promise<Set<string>> {
   }
 
   assertUniqueSlugs(
-    result.data.map((author) => ({ slug: author.slug, source: AUTHORS_FILE })),
+    result.data.map((author) => ({
+      slug: author.slug,
+      source: AUTHORS_SOURCE_FILE,
+    })),
     'authors',
   )
 
@@ -146,12 +149,12 @@ async function readAuthors(): Promise<Set<string>> {
 }
 
 async function readSeries(): Promise<Map<string, Series>> {
-  const parsed = await readJson(SERIES_FILE)
+  const parsed = await readJson(SERIES_SOURCE_FILE)
   const result = seriesSchema.array().safeParse(parsed)
 
   if (!result.success) {
     throw new BuildError('series', [
-      SERIES_FILE + '\n',
+      SERIES_SOURCE_FILE + '\n',
       ...result.error.issues.map(
         ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
       ),
@@ -159,7 +162,10 @@ async function readSeries(): Promise<Map<string, Series>> {
   }
 
   assertUniqueSlugs(
-    result.data.map((series) => ({ slug: series.slug, source: SERIES_FILE })),
+    result.data.map((series) => ({
+      slug: series.slug,
+      source: SERIES_SOURCE_FILE,
+    })),
     'series',
   )
 

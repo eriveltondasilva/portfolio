@@ -51,8 +51,8 @@ export const SCHEMAS_DIR = join(CONTENT_DIR, 'schemas')
 export const INDEXES_DIR = join(CONTENT_DIR, 'indexes')
 
 // # Files
-export const AUTHORS_FILE = join(AUTHORS_DIR, 'index.json')
-export const SERIES_FILE = join(SERIES_DIR, 'index.json')
+export const AUTHORS_SOURCE_FILE = join(AUTHORS_DIR, 'index.json')
+export const SERIES_SOURCE_FILE = join(SERIES_DIR, 'index.json')
 
 // # Schemas
 export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json')

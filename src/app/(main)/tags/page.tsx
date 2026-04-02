@@ -9,7 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { getTagsWithCount } from '@/lib/blog/posts'
+import { getTagsWithCount } from '@/lib/blog/tags'
 
 import type { Metadata } from 'next'
 

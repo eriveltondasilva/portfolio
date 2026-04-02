@@ -1,7 +1,11 @@
 import { z } from 'zod'
 
-import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
-import { ProjectStatus } from '@/lib/constants'
+import {
+  authorSchema,
+  postSchema,
+  projectSchema,
+  seriesSchema,
+} from '@/lib/schemas'
 
 import type { Octokit } from '@octokit/rest'
 import type { MDXContent } from 'mdx/types'
@@ -9,6 +13,7 @@ import type { MDXContent } from 'mdx/types'
 export type Series = z.infer<typeof seriesSchema>
 export type Post = z.infer<typeof postSchema>
 export type Author = z.infer<typeof authorSchema>
+export type Project = z.infer<typeof projectSchema>
 
 export interface SeriesPostRef {
   slug: string
@@ -39,17 +44,6 @@ export interface AdjacentPosts {
 export interface PostWithContent {
   Content: MDXContent
   meta: PostIndex
-}
-
-export interface Project {
-  slug: string
-  name: string
-  description: string
-  repository: string
-  url: string | null
-  tags: string[]
-  status: ProjectStatus
-  featured: boolean
 }
 
 export type GithubRepo = Awaited<

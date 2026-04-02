@@ -1,4 +1,4 @@
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/components/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function PostLoading() {
@@ -40,7 +40,7 @@ export default function PostLoading() {
         </div>
       </header>
 
-      <Separator className='my-8 dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Article body */}
       <div className='space-y-3'>
@@ -65,7 +65,7 @@ export default function PostLoading() {
         <Skeleton className='h-4 w-32' />
       </div>
 
-      <Separator className='my-8 dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Related posts */}
       <div className='space-y-3'>
@@ -75,7 +75,7 @@ export default function PostLoading() {
         <Skeleton className='h-12 w-full rounded-md' />
       </div>
 
-      <Separator className='my-8 dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Prev / Next navigation */}
       <div className='flex flex-col gap-3 sm:flex-row'>

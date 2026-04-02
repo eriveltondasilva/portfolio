@@ -110,36 +110,26 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
         {/* Cover image */}
         {meta.hasCover && (
-          <PostCover
-            filePath={meta.filePath}
-            title={meta.title}
-            className='mt-6'
-          />
+          <PostCover filePath={meta.filePath} title={meta.title} />
         )}
 
         {/* Meta info */}
         <div className='mt-6 space-y-2'>
           <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
-            {meta.updatedAt && (
-              <span className='flex items-center gap-1.5'>
-                <Icon iconNode={CalendarSyncIcon} />
-                <time dateTime={meta.updatedAt}>
-                  {formatDate(meta.updatedAt, { dateStyle: 'long' })}
-                </time>
-              </span>
-            )}
-            {!meta.updatedAt && (
-              <span className='flex items-center gap-1.5'>
-                <Icon iconNode={CalendarIcon} />
-                <time dateTime={meta.publishedAt}>
-                  {formatDate(meta.publishedAt, { dateStyle: 'long' })}
-                </time>
-              </span>
-            )}
+            <span className='flex items-center gap-1.5'>
+              <Icon
+                iconNode={meta.updatedAt ? CalendarSyncIcon : CalendarIcon}
+              />
+              <time dateTime={meta.updatedAt ?? meta.publishedAt}>
+                {formatDate(meta.updatedAt ?? meta.publishedAt, {
+                  dateStyle: 'long',
+                })}
+              </time>
+            </span>
 
             <span className='flex items-center gap-1.5'>
               <Icon iconNode={ClockIcon} />
-              {post.meta.readingTime} min de leitura
+              {meta.readingTime} min de leitura
             </span>
           </div>
 

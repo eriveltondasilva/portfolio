@@ -1,13 +1,8 @@
-import { basename, dirname } from 'node:path'
+import { dirname, basename } from 'node:path'
 
 import postsIndex from '@/content/indexes/posts.json'
 
-import type {
-  AdjacentPosts,
-  PostIndex,
-  PostWithContent,
-  TagCount,
-} from '@/types'
+import type { AdjacentPosts, PostIndex, PostWithContent } from '@/types'
 
 export function getAllPosts(): PostIndex[] {
   return postsIndex as PostIndex[]
@@ -77,25 +72,4 @@ export async function getPostWithContent(
   )
 
   return { Content, meta: post }
-}
-
-// # TAGS
-
-function buildTagCounts(): Record<string, number> {
-  return getAllPosts()
-    .flatMap((post) => post.tags)
-    .reduce<Record<string, number>>((acc, tag) => {
-      acc[tag] = (acc[tag] ?? 0) + 1
-      return acc
-    }, {})
-}
-
-export function getAllTags(): string[] {
-  return Object.keys(buildTagCounts()).toSorted()
-}
-
-export function getTagsWithCount(): TagCount[] {
-  return Object.entries(buildTagCounts())
-    .map(([tag, count]) => ({ tag, count }))
-    .toSorted((a, b) => b.count - a.count)
 }

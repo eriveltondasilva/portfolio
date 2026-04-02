@@ -1,10 +1,8 @@
 import { z } from 'zod'
 
-import { PostStatus, SeriesStatus } from '@/lib/constants'
+import { PostStatus, SeriesStatus, ProjectStatus } from '@/lib/constants'
 
 const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
-
-// z.config(z.locales.pt())
 
 function setRegexChecks(schema: z.ZodString) {
   return schema.regex(slugRegex, 'Slug must be in kebab-case.')
@@ -222,8 +220,8 @@ export const projectSchema = z
       .describe('Technologies or topics related to the project.'),
 
     status: z
-      .enum(['active', 'archived', 'wip'])
-      .default('active')
+      .enum(ProjectStatus)
+      .default(ProjectStatus.ACTIVE)
       .describe('Current state of the project.'),
     //
     featured: z

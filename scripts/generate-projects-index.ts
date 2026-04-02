@@ -75,7 +75,7 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     name: getProjectName(repo),
     description: repo.description ?? 'Sem descrição.',
     repository: repo.html_url,
-    url: repo.homepage || null,
+    url: repo.homepage ?? undefined,
     tags: getTags(repo),
     status: getStatus(repo),
     featured: repo.topics?.includes(Topics.FEATURED) ?? false,
