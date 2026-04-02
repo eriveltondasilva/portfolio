@@ -1,11 +1,8 @@
-import React from 'react'
+import { cloneElement, isValidElement, Children } from 'react'
 import { FileIcon, FolderIcon, FolderOpenIcon } from 'lucide-react'
+import clsx from 'clsx'
 
-import { cn } from '@/lib/utils'
-
-import type { ComponentProps } from 'react'
-
-// ─── Indent guides ────────────────────────────────────────────────────────────
+import type { ComponentProps, ReactNode } from 'react'
 
 function IndentGuides({ depth }: { depth: number }) {
   if (depth === 0) return null
@@ -21,20 +18,20 @@ function IndentGuides({ depth }: { depth: number }) {
   )
 }
 
-// ─── File ─────────────────────────────────────────────────────────────────────
-
-interface FileProps {
+function File({
+  name,
+  highlighted = false,
+  depth = 0,
+}: {
   name: string
   highlighted?: boolean
   depth?: number
-}
-
-function File({ name, highlighted = false, depth = 0 }: FileProps) {
+}) {
   return (
     <div className='flex items-stretch px-2 py-0.5'>
       <IndentGuides depth={depth} />
       <div
-        className={cn(
+        className={clsx(
           'flex min-w-0 flex-1 items-center gap-1.5 rounded px-1 text-sm',
           highlighted ?
             'bg-primary/10 font-medium text-primary'
@@ -42,7 +39,7 @@ function File({ name, highlighted = false, depth = 0 }: FileProps) {
         )}
       >
         <FileIcon
-          className={cn(
+          className={clsx(
             'size-4 shrink-0',
             highlighted ? 'text-primary' : 'text-blue-400/80',
           )}
@@ -54,23 +51,19 @@ function File({ name, highlighted = false, depth = 0 }: FileProps) {
   )
 }
 
-// ─── Folder ───────────────────────────────────────────────────────────────────
-
-interface FolderProps {
-  name: string
-  open?: boolean
-  highlighted?: boolean
-  depth?: number
-  children?: React.ReactNode
-}
-
 function Folder({
   name,
   open = false,
   highlighted = false,
   depth = 0,
   children,
-}: FolderProps) {
+}: {
+  name: string
+  open?: boolean
+  highlighted?: boolean
+  depth?: number
+  children?: ReactNode
+}) {
   const Icon = open ? FolderOpenIcon : FolderIcon
 
   return (
@@ -78,7 +71,7 @@ function Folder({
       <div className='flex items-stretch px-2 py-0.5'>
         <IndentGuides depth={depth} />
         <div
-          className={cn(
+          className={clsx(
             'flex min-w-0 flex-1 items-center gap-1.5 rounded px-1 text-sm',
             highlighted ?
               'bg-primary/10 font-medium text-primary'
@@ -86,7 +79,7 @@ function Folder({
           )}
         >
           <Icon
-            className={cn(
+            className={clsx(
               'size-4 shrink-0',
               highlighted ? 'text-primary' : (
                 'text-yellow-500/80 dark:text-yellow-400/80'
@@ -103,31 +96,24 @@ function Folder({
   )
 }
 
-// ─── Depth injection ──────────────────────────────────────────────────────────
+function injectDepth(children: ReactNode, depth: number): ReactNode {
+  return Children.map(children, (child) => {
+    if (!isValidElement(child)) return child
 
-function injectDepth(
-  children: React.ReactNode,
-  depth: number,
-): React.ReactNode {
-  return React.Children.map(children, (child) => {
-    if (!React.isValidElement(child)) return child
-
-    return React.cloneElement(child as React.ReactElement<{ depth?: number }>, {
+    return cloneElement(child as React.ReactElement<{ depth?: number }>, {
       depth,
     })
   })
 }
 
-// ─── FileTree ─────────────────────────────────────────────────────────────────
-
-interface FileTreeProps extends Omit<ComponentProps<'div'>, 'children'> {
-  children: React.ReactNode
-}
-
-export function FileTree({ children, className, ...props }: FileTreeProps) {
+export function FileTree({
+  children,
+  className,
+  ...props
+}: ComponentProps<'div'>) {
   return (
     <div
-      className={cn(
+      className={clsx(
         'not-prose my-6 rounded-lg border border-border bg-muted/30 py-3 font-mono',
         className,
       )}

@@ -6,7 +6,7 @@ import clsx from 'clsx'
 
 import { Icon } from './icon'
 
-export default function BackToTop() {
+export function BackToTop() {
   const [visible, setVisible] = useState(false)
   const sentinelRef = useRef<HTMLDivElement>(null)
 

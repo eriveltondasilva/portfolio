@@ -20,3 +20,10 @@ export function getPrimaryAuthor(): Author {
 
   return author
 }
+
+export function getAuthorsBySlugs(slugs: string[]): Author[] {
+  const authors = getAllAuthors()
+  return slugs
+    .map((slug) => authors.find((a) => a.slug === slug))
+    .filter((a): a is Author => a !== undefined)
+}

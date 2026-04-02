@@ -3,8 +3,7 @@ import {
   CalendarIcon,
   CalendarSyncIcon,
   ClockIcon,
-  GitForkIcon,
-  LayersIcon,
+  EditIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -18,17 +17,19 @@ import { Separator } from '@/components/ui/separator'
 import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
 import { GITHUB_REPO, URL_BASE } from '@/lib/constants'
-import { getAuthorBySlug } from '@/lib/blog/authors'
+import { getAuthorsBySlugs } from '@/lib/blog/authors'
 import { RelatedPosts } from '@/components/related-posts'
 import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButton } from '@/components/share-button'
-import BackToTop from '@/components/back-to-top'
+import { BackToTop } from '@/components/back-to-top'
+import { PostSeriesBanner } from '@/components/post-series-banner'
 import {
   getAdjacentPosts,
   getAllPosts,
   getPostBySlug,
   getPostWithContent,
 } from '@/lib/blog/posts'
+import { getSeriesBySlug } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'
 
@@ -79,9 +80,8 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   const { prevPost, nextPost } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prevPost !== null || nextPost !== null
 
-  const authors = meta.authors
-    .map(getAuthorBySlug)
-    .filter((author) => author !== null)
+  const authors = getAuthorsBySlugs(meta.authors)
+  const series = meta.series ? getSeriesBySlug(meta.series) : null
 
   const postUrl = `${URL_BASE}/blog/${slug}`
   const editUrl = `${GITHUB_REPO}/edit/main/${meta.filePath}`
@@ -102,17 +102,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
       {/* Post header */}
       <header className='mb-8'>
-        {/* Series badge */}
-        {meta.series && (
-          <Link
-            href={`/series/${meta.series}`}
-            className='mb-3 inline-flex items-center gap-1.5 text-xs font-medium text-orange-600 hover:underline dark:text-orange-400'
-          >
-            <Icon iconNode={LayersIcon} className='size-3.5' />
-            Parte {meta.order} da série
-          </Link>
-        )}
-
         {/* Title + share button */}
         <div className='flex items-start justify-between gap-3'>
           <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
@@ -185,16 +174,25 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       </article>
 
       {/* Footer actions */}
-      <div className='flex justify-end mt-4'>
+      <div className='mt-4 flex justify-end'>
         <Button variant='link' asChild>
           <a href={editUrl} target='_blank' rel='noopener noreferrer'>
-            <Icon iconNode={GitForkIcon} className='size-3.5' />
+            <Icon iconNode={EditIcon} className='size-3.5' />
             Sugerir alterações
           </a>
         </Button>
       </div>
 
       <Separator className='my-8 dark:bg-zinc-700/60' />
+
+      {/* Series banner */}
+      {series && meta.order && (
+        <PostSeriesBanner
+          series={series}
+          currentSlug={slug}
+          currentOrder={meta.order}
+        />
+      )}
 
       {/* Related posts */}
       <RelatedPosts slug={slug} />
