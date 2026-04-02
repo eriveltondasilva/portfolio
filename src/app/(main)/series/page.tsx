@@ -1,7 +1,14 @@
-import { LayersIcon } from 'lucide-react'
+import { BookMarkedIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { SeriesCard } from '@/components/series-card'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 import { getAllSeries } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'
@@ -36,11 +43,17 @@ export default function SeriesPage() {
       )}
 
       {!hasSeries && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhuma série criada ainda.
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <BookMarkedIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhuma série criada</EmptyTitle>
+            <EmptyDescription>
+              As séries de posts aparecerão aqui quando forem criadas.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )

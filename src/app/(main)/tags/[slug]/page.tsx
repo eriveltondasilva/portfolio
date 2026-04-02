@@ -1,9 +1,16 @@
-import { ArrowLeftIcon, HashIcon } from 'lucide-react'
+import { ArrowLeftIcon, FileTextIcon, HashIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { getAllTags, getPostsByTag } from '@/lib/blog/posts'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 import type { Metadata } from 'next'
 
@@ -62,11 +69,18 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
       )}
 
       {!hasPosts && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhum post com esta tag.
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <FileTextIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum post com esta tag</EmptyTitle>
+            <EmptyDescription>
+              Nenhum post foi publicado com a tag <strong>#{slug}</strong>{' '}
+              ainda.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )

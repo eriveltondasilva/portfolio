@@ -1,8 +1,15 @@
-import { LayersIcon } from 'lucide-react'
+import { HashIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
-import { getTagsWithCount } from '@/lib/blog/posts'
 import { Icon } from '@/components/icon'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
+import { getTagsWithCount } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 
@@ -47,11 +54,17 @@ export default function TagsPage() {
       )}
 
       {!hasTags && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhuma tag encontrada.
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <HashIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhuma tag encontrada</EmptyTitle>
+            <EmptyDescription>
+              As tags são criadas automaticamente a partir dos posts publicados.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )

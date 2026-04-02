@@ -1,4 +1,9 @@
-import { ArrowLeftIcon, CalendarIcon, LayersIcon } from 'lucide-react'
+import {
+  ArrowLeftIcon,
+  BookOpenIcon,
+  CalendarIcon,
+  LayersIcon,
+} from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -10,6 +15,13 @@ import { getPostsBySeries } from '@/lib/blog/posts'
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series'
 import { SeriesStatus } from '@/lib/constants'
 import { formatDate } from '@/lib'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 import type { Metadata } from 'next'
 
@@ -125,11 +137,17 @@ export default async function SeriesDetailPage({
       )}
 
       {!hasPosts && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhum post nesta série ainda.
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <BookOpenIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum post nesta série</EmptyTitle>
+            <EmptyDescription>
+              Os posts desta série aparecerão aqui quando forem publicados.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )

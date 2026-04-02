@@ -1,7 +1,14 @@
-import { LayersIcon } from 'lucide-react'
+import { FolderOpenIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { ProjectCard } from '@/components/project-card'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 import { getAllProjects } from '@/lib/blog/projects'
 
 import type { Metadata } from 'next'
@@ -20,7 +27,7 @@ export default function ProjectsPage() {
   const othersProjects = projects.filter((project) => !project.featured)
 
   return (
-    <div className='space-y-8'>
+    <div className='space-y-6'>
       {/* Header */}
       {hasProjects && (
         <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
@@ -59,12 +66,16 @@ export default function ProjectsPage() {
         </section>
       )}
 
-      {projects.length === 0 && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhum projeto cadastrado ainda.
-          </p>
-        </div>
+      {!hasProjects && (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <FolderOpenIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum projeto cadastrado</EmptyTitle>
+            <EmptyDescription>Os projetos aparecerão aqui.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )

@@ -1,7 +1,14 @@
-import { LayersIcon } from 'lucide-react'
+import { BookOpenIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 import { getAllPosts } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
@@ -36,11 +43,17 @@ export default function BlogPage() {
       )}
 
       {!hasPosts && (
-        <div className='py-16 text-center'>
-          <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-            Nenhum post publicado ainda.
-          </p>
-        </div>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <BookOpenIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum post publicado</EmptyTitle>
+            <EmptyDescription>
+              Os artigos aparecerão aqui assim que forem publicados.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   )
