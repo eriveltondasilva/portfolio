@@ -19,6 +19,7 @@ export function RelatedPosts({ slug }: Props) {
         <Icon iconNode={SparklesIcon} className='text-orange-500' />
         Posts relacionados
       </h2>
+
       <div className='grid gap-3 sm:grid-cols-2'>
         {posts.map((post) => (
           <PostCard key={post.slug} post={post} />

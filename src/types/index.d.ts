@@ -32,8 +32,8 @@ export interface TagCount {
 }
 
 export interface AdjacentPosts {
-  prev: PostIndex | null
-  next: PostIndex | null
+  prevPost: PostIndex | null
+  nextPost: PostIndex | null
 }
 
 export interface PostWithContent {

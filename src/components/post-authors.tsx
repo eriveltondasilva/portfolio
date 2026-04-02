@@ -140,18 +140,18 @@ export function PostAuthors({ authors }: { authors: Author[] }) {
 
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
   const parts = formatList().formatToParts(authors.map((author) => author.slug))
+  const authorNames = parts.map(({ type, value }, index) => {
+    if (type === 'element')
+      return <AuthorHoverCard key={index} author={authorsBySlug.get(value)!} />
+
+    return <span key={index}>{value}</span>
+  })
 
   return (
     <span className='flex flex-wrap items-baseline gap-x-0.5 text-sm text-zinc-500 dark:text-zinc-500'>
       <span className='mr-1'>criado por</span>
-      {parts.map(({ type, value }, index) => {
-        if (type === 'element')
-          return (
-            <AuthorHoverCard key={index} author={authorsBySlug.get(value)!} />
-          )
-
-        return <span key={index}>{value}</span>
-      })}
+      {authorNames}
+      {'.'}
     </span>
   )
 }

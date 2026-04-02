@@ -22,7 +22,7 @@ import { getAuthorBySlug } from '@/lib/blog/authors'
 import { RelatedPosts } from '@/components/related-posts'
 import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButton } from '@/components/share-button'
-import BackToTop from '@/components/BackToTop'
+import BackToTop from '@/components/back-to-top'
 import {
   getAdjacentPosts,
   getAllPosts,
@@ -76,8 +76,8 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { meta, Content } = post
 
-  const { prev, next } = getAdjacentPosts(slug)
-  const hasAdjacentPosts = prev !== null || next !== null
+  const { prevPost, nextPost } = getAdjacentPosts(slug)
+  const hasAdjacentPosts = prevPost !== null || nextPost !== null
 
   const authors = meta.authors
     .map(getAuthorBySlug)
@@ -133,20 +133,22 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         {/* Meta info */}
         <div className='mt-6 space-y-2'>
           <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
-            {meta.updatedAt ?
+            {meta.updatedAt && (
               <span className='flex items-center gap-1.5'>
                 <Icon iconNode={CalendarSyncIcon} />
                 <time dateTime={meta.updatedAt}>
                   {formatDate(meta.updatedAt, { dateStyle: 'long' })}
                 </time>
               </span>
-            : <span className='flex items-center gap-1.5'>
+            )}
+            {!meta.updatedAt && (
+              <span className='flex items-center gap-1.5'>
                 <Icon iconNode={CalendarIcon} />
                 <time dateTime={meta.publishedAt}>
                   {formatDate(meta.publishedAt, { dateStyle: 'long' })}
                 </time>
               </span>
-            }
+            )}
 
             <span className='flex items-center gap-1.5'>
               <Icon iconNode={ClockIcon} />
@@ -182,10 +184,8 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <Content />
       </article>
 
-      <Separator className='my-8 dark:bg-zinc-700/60' />
-
       {/* Footer actions */}
-      <div className='flex justify-end'>
+      <div className='flex justify-end mt-4'>
         <Button variant='link' asChild>
           <a href={editUrl} target='_blank' rel='noopener noreferrer'>
             <Icon iconNode={GitForkIcon} className='size-3.5' />
@@ -205,9 +205,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           aria-label='Navegação entre posts'
           className='mt-4 flex flex-col gap-3 sm:flex-row'
         >
-          {prev && <AdjacentPostCard post={prev} direction='prev' />}
-          {!prev && <div className='flex-1' />}
-          {next && <AdjacentPostCard post={next} direction='next' />}
+          {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
+          {!prevPost && <div className='flex-1' />}
+          {nextPost && <AdjacentPostCard post={nextPost} direction='next' />}
         </nav>
       )}
     </div>

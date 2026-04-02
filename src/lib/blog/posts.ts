@@ -52,11 +52,11 @@ export function getAdjacentPosts(slug: string): AdjacentPosts {
   const posts = getAllPosts()
   const index = posts.findIndex((post) => post.slug === slug)
 
-  if (index === -1) return { prev: null, next: null }
+  if (index === -1) return { prevPost: null, nextPost: null }
 
   return {
-    prev: posts[index + 1] ?? null,
-    next: posts[index - 1] ?? null,
+    prevPost: posts[index + 1] ?? null,
+    nextPost: posts[index - 1] ?? null,
   }
 }
 
