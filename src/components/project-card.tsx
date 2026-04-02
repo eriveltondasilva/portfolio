@@ -7,8 +7,9 @@ import { ProjectStatus } from '@/lib/constants'
 import { Icon } from './icon'
 
 import type { Project } from '@/types'
+import type { ComponentPropsWithoutRef } from 'react'
 
-interface Props {
+interface Props extends ComponentPropsWithoutRef<'article'> {
   project: Project
   className?: string
 }
@@ -39,15 +40,16 @@ const statusConfig: Record<ProjectStatus, BadgeProps> = {
   },
 }
 
-export function ProjectCard({ project, className }: Props) {
+export function ProjectCard({ project, ...props }: Props) {
   const status = statusConfig[project.status]
 
   return (
     <article
       className={cn(
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        className,
+        props.className,
       )}
+      {...props}
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>

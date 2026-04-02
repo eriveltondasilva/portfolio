@@ -38,11 +38,16 @@ export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
 
   if (!post) return []
 
+  const postTags = new Set(post.tags)
+
   return getAllPosts()
-    .filter((p) => p.slug !== slug && p.tags.some((t) => post.tags.includes(t)))
+    .filter(
+      (post) =>
+        post.slug !== slug && post.tags.some((tag) => postTags.has(tag)),
+    )
     .toSorted((a, b) => {
-      const scoreA = a.tags.filter((t) => post.tags.includes(t)).length
-      const scoreB = b.tags.filter((t) => post.tags.includes(t)).length
+      const scoreA = a.tags.filter((tag) => postTags.has(tag)).length
+      const scoreB = b.tags.filter((tag) => postTags.has(tag)).length
       return scoreB - scoreA
     })
     .slice(0, limit)

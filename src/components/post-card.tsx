@@ -31,19 +31,14 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-3'>
-          <Icon
-            iconNode={BookOpenIcon}
-            className='shrink-0 text-blue-500 dark:text-blue-400'
-          />
-          <div className='min-w-0 flex-1'>
-            <Link
-              href={`/blog/${post.slug}`}
-              className='font-semibold text-balance text-blue-600 hover:underline dark:text-blue-400'
-            >
-              {post.title}
-            </Link>
-          </div>
+        <div className='flex items-center gap-3 text-blue-500 dark:text-blue-400'>
+          <Icon iconNode={BookOpenIcon} />
+          <Link
+            href={`/blog/${post.slug}`}
+            className='font-semibold text-balance hover:underline'
+          >
+            {post.title}
+          </Link>
         </div>
 
         {showSeriesBadge && post.series && (

@@ -13,7 +13,7 @@ import { Icon } from '@/components/icon'
 import { PostAuthors } from '@/components/post-authors'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/components/separator'
 import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
 import { GITHUB_REPO, URL_BASE } from '@/lib/constants'
@@ -29,7 +29,6 @@ import {
   getPostBySlug,
   getPostWithContent,
 } from '@/lib/blog/posts'
-import { getSeriesBySlug } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'
 
@@ -81,7 +80,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   const hasAdjacentPosts = prevPost !== null || nextPost !== null
 
   const authors = getAuthorsBySlugs(meta.authors)
-  const series = meta.series ? getSeriesBySlug(meta.series) : null
 
   const postUrl = `${URL_BASE}/blog/${slug}`
   const editUrl = `${GITHUB_REPO}/edit/main/${meta.filePath}`
@@ -101,7 +99,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       </Link>
 
       {/* Post header */}
-      <header className='mb-8'>
+      <header>
         {/* Title + share button */}
         <div className='flex items-start justify-between gap-3'>
           <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
@@ -166,7 +164,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         </div>
       </header>
 
-      <Separator className='mb-8 dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Article content */}
       <article className='prose max-w-none prose-zinc dark:prose-invert'>
@@ -177,31 +175,27 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <div className='mt-4 flex justify-end'>
         <Button variant='link' asChild>
           <a href={editUrl} target='_blank' rel='noopener noreferrer'>
-            <Icon iconNode={EditIcon} className='size-3.5' />
+            <Icon iconNode={EditIcon} />
             Sugerir alterações
           </a>
         </Button>
       </div>
 
-      <Separator className='my-8 dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Series banner */}
-      {series && meta.order && (
-        <PostSeriesBanner
-          series={series}
-          currentSlug={slug}
-          currentOrder={meta.order}
-        />
-      )}
+      <PostSeriesBanner slug={meta.series} order={meta.order} />
 
       {/* Related posts */}
       <RelatedPosts slug={slug} />
+
+      <Separator />
 
       {/* Prev / Next navigation */}
       {hasAdjacentPosts && (
         <nav
           aria-label='Navegação entre posts'
-          className='mt-4 flex flex-col gap-3 sm:flex-row'
+          className='flex flex-col gap-3 sm:flex-row'
         >
           {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
           {!prevPost && <div className='flex-1' />}

@@ -52,23 +52,20 @@ export function SeriesCard({
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
         props.className,
       )}
+      {...props}
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-3'>
-          <Icon
-            iconNode={BookMarkedIcon}
-            className='shrink-0 text-orange-500 dark:text-orange-400'
-          />
-          <div>
+        <div className='flex items-center gap-3 text-orange-500 dark:text-orange-400'>
+          <Icon iconNode={BookMarkedIcon}  />
             <Link
               href={`/series/${series.slug}`}
-              className='font-semibold text-balance text-blue-600 hover:underline dark:text-blue-400'
+              className='font-semibold text-balance hover:underline'
             >
               {series.title}
             </Link>
-          </div>
         </div>
+
         {showStatusBadge && (
           <Badge className={status.className}>
             <span className={status.dot} aria-hidden='true' />
@@ -99,7 +96,7 @@ export function SeriesCard({
         </span>
       </div>
 
-      {/* Posts list preview */}
+      {/* Posts list */}
       {series.posts.length > 0 && (
         <ol className='mt-3 space-y-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {series.posts.slice(0, 3).map((post) => (

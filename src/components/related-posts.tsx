@@ -16,17 +16,19 @@ export function RelatedPosts({ slug }: Props) {
   if (posts.length === 0) return null
 
   return (
-    <section>
-      <h2 className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-        <Icon iconNode={SparklesIcon} className='text-orange-500' />
+    <section aria-label='Posts relacionados' className='mb-6'>
+      <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
+        <Icon iconNode={SparklesIcon} className='text-blue-500' />
         Posts relacionados
       </h2>
 
       <ul className='divide-y divide-zinc-100 dark:divide-zinc-800'>
         {posts.map((post) => (
           <li key={post.slug} className='group py-3'>
-            <Link href={`/blog/${post.slug}`} className='flex items-start justify-between gap-4'>
-              {/* Left: title + meta */}
+            <Link
+              href={`/blog/${post.slug}`}
+              className='flex items-start justify-between gap-4'
+            >
               <div className='min-w-0 space-y-1.5'>
                 <p className='truncate text-sm font-medium text-zinc-700 transition-colors group-hover:text-blue-600 dark:text-zinc-300 dark:group-hover:text-blue-400'>
                   {post.title}
@@ -54,7 +56,6 @@ export function RelatedPosts({ slug }: Props) {
                 </div>
               </div>
 
-              {/* Right: arrow */}
               <Icon
                 iconNode={ArrowRightIcon}
                 className='mt-0.5 size-3.5 shrink-0 text-zinc-300 transition-colors group-hover:text-blue-500 dark:text-zinc-700 dark:group-hover:text-blue-400'

@@ -8,7 +8,7 @@ export function getAllAuthors(): Author[] {
 }
 
 export function getAuthorBySlug(slug: string): Author | null {
-  return getAllAuthors().find((a) => a.slug === slug) ?? null
+  return getAllAuthors().find((author) => author.slug === slug) ?? null
 }
 
 export function getPrimaryAuthor(): Author {
@@ -22,8 +22,7 @@ export function getPrimaryAuthor(): Author {
 }
 
 export function getAuthorsBySlugs(slugs: string[]): Author[] {
-  const authors = getAllAuthors()
   return slugs
-    .map((slug) => authors.find((a) => a.slug === slug))
-    .filter((a): a is Author => a !== undefined)
+    .map(getAuthorBySlug)
+    .filter((author): author is Author => author !== null)
 }

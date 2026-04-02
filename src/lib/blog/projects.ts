@@ -7,5 +7,5 @@ export function getAllProjects(): Project[] {
 }
 
 export function getFeaturedProjects(): Project[] {
-  return getAllProjects().filter((p) => p.featured)
+  return getAllProjects().filter((project) => project.featured)
 }
