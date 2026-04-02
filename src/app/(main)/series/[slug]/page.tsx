@@ -1,14 +1,15 @@
-import { ArrowLeftIcon } from 'lucide-react'
+import { ArrowLeftIcon, CalendarIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
+import { Separator } from '@/components/separator'
 import { getPostsBySeries } from '@/lib/blog/posts'
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series'
 import { SeriesStatus } from '@/lib/constants'
+import { formatDate } from '@/lib'
 
 import type { Metadata } from 'next'
 
@@ -66,6 +67,8 @@ export default async function SeriesDetailPage({
 
   const posts = getPostsBySeries(slug)
   const hasPosts = posts.length > 0
+  const postCount = posts.length
+
   const status = statusMap[series.status]
 
   return (
@@ -92,13 +95,25 @@ export default async function SeriesDetailPage({
             {status.label}
           </Badge>
         </div>
+
         <p className='text-zinc-600 dark:text-zinc-400'>{series.description}</p>
-        <p className='text-sm text-zinc-500 dark:text-zinc-500'>
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'} nesta série
-        </p>
+
+        <div className='mt-3 flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
+          <span className='flex items-center gap-1.5'>
+            <Icon iconNode={LayersIcon} className='size-3.5' />
+            {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
+          </span>
+
+          <span className='flex items-center gap-1.5'>
+            <Icon iconNode={CalendarIcon} className='size-3.5' />
+            <time dateTime={series.publishedAt}>
+              {formatDate(series.publishedAt, { dateStyle: 'long' })}
+            </time>
+          </span>
+        </div>
       </header>
 
-      <Separator className='dark:bg-zinc-700/60' />
+      <Separator />
 
       {/* Posts */}
       {hasPosts && (

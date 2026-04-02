@@ -1,3 +1,6 @@
+import { LayersIcon } from 'lucide-react'
+
+import { Icon } from '@/components/icon'
 import { SeriesCard } from '@/components/series-card'
 import { getAllSeries } from '@/lib/blog/series'
 
@@ -11,15 +14,17 @@ export const metadata: Metadata = {
 export default function SeriesPage() {
   const series = getAllSeries()
   const hasSeries = series.length > 0
+  const seriesCount = series.length
 
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
-        <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {series.length} {series.length === 1 ? 'série' : 'séries'}
-        </p>
-      </div>
+      {hasSeries && (
+        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          {seriesCount} {seriesCount > 1 ? 'séries' : 'série'}
+        </div>
+      )}
 
       {/* Series list */}
       {hasSeries && (

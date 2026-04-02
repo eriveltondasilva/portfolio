@@ -1,3 +1,6 @@
+import { LayersIcon } from 'lucide-react'
+
+import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
 import { getAllPosts } from '@/lib/blog/posts'
 
@@ -11,16 +14,17 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   const posts = getAllPosts()
   const hasPosts = posts.length > 0
+  const postCount = posts.length
 
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
-        <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {posts.length}&nbsp;
-          {posts.length === 1 ? 'post publicado' : 'posts publicados'}
-        </p>
-      </div>
+      {hasPosts && (
+        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          {postCount} {postCount > 1 ? 'posts publicados' : 'post publicado'}
+        </div>
+      )}
 
       {/* Posts list */}
       {hasPosts && (

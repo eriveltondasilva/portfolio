@@ -1,6 +1,8 @@
+import { LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { getTagsWithCount } from '@/lib/blog/posts'
+import { Icon } from '@/components/icon'
 
 import type { Metadata } from 'next'
 
@@ -12,15 +14,17 @@ export const metadata: Metadata = {
 export default function TagsPage() {
   const tagsWithCount = getTagsWithCount()
   const hasTags = tagsWithCount.length > 0
+  const tagCount = tagsWithCount.length
 
   return (
     <div className='space-y-6'>
       {/* Header */}
-      <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
-        <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {tagsWithCount.length} {tagsWithCount.length === 1 ? 'tag' : 'tags'}
-        </p>
-      </div>
+      {hasTags && (
+        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          {tagCount} {tagCount > 1 ? 'tags' : 'tag'}
+        </div>
+      )}
 
       {/* Tags grid */}
       {hasTags && (

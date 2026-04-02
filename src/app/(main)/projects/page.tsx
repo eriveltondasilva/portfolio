@@ -1,3 +1,6 @@
+import { LayersIcon } from 'lucide-react'
+
+import { Icon } from '@/components/icon'
 import { ProjectCard } from '@/components/project-card'
 import { getAllProjects } from '@/lib/blog/projects'
 
@@ -10,26 +13,30 @@ export const metadata: Metadata = {
 
 export default function ProjectsPage() {
   const projects = getAllProjects()
-  const featured = projects.filter((p) => p.featured)
-  const others = projects.filter((p) => !p.featured)
+  const hasProjects = projects.length > 0
+  const projectCount = projects.length
+
+  const featuredProjects = projects.filter((project) => project.featured)
+  const othersProjects = projects.filter((project) => !project.featured)
 
   return (
     <div className='space-y-8'>
       {/* Header */}
-      <div className='border-b border-zinc-100 pb-4 dark:border-zinc-800'>
-        <p className='text-sm text-zinc-500 dark:text-zinc-400'>
-          {projects.length} {projects.length === 1 ? 'projeto' : 'projetos'}
-        </p>
-      </div>
+      {hasProjects && (
+        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          {projectCount} {projectCount > 1 ? 'projetos' : 'projeto'}
+        </div>
+      )}
 
       {/* Featured */}
-      {featured.length > 0 && (
+      {featuredProjects.length > 0 && (
         <section className='space-y-3'>
           <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
             Em destaque
           </h2>
           <div className='grid gap-3 sm:grid-cols-2'>
-            {featured.map((project) => (
+            {featuredProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}
           </div>
@@ -37,15 +44,15 @@ export default function ProjectsPage() {
       )}
 
       {/* Others */}
-      {others.length > 0 && (
+      {othersProjects.length > 0 && (
         <section className='space-y-3'>
-          {featured.length > 0 && (
+          {featuredProjects.length > 0 && (
             <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
               Outros projetos
             </h2>
           )}
           <div className='grid gap-3 sm:grid-cols-2'>
-            {others.map((project) => (
+            {othersProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}
           </div>
