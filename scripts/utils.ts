@@ -1,5 +1,14 @@
 import { styleText } from 'node:util'
 
+export function sortByDateDesc<T extends { publishedAt: string }>(
+  items: T[],
+): T[] {
+  return items.toSorted(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+  )
+}
+
 // # Logger
 
 export const log = {
@@ -60,6 +69,10 @@ export class BuildError extends Error {
   }
 }
 
+export function errorMessage(reason: unknown): string {
+  return reason instanceof Error ? reason.message : String(reason)
+}
+
 // # Files
 
 export async function readJson(filePath: string): Promise<unknown> {
@@ -79,36 +92,4 @@ export async function writeJson(
   } catch (cause) {
     throw new Error(`Failed to write file: ${filePath}`, { cause })
   }
-}
-
-// #
-
-export function assertUniqueSlugs(
-  entries: { slug: string; source: string }[],
-  context: string,
-): void {
-  const grouped = Object.groupBy(entries, ({ slug }) => slug)
-
-  const duplicates = Object.entries(grouped).filter(
-    ([, group]) => (group?.length ?? 0) > 1,
-  )
-
-  if (duplicates.length === 0) return
-
-  const detail = duplicates
-    .map(([slug, group]) => {
-      const files = (group ?? [])
-        .map(({ source }) => `\n    - ${source}`)
-        .join('')
-      return `  "${slug}" found in:${files}`
-    })
-    .join('\n')
-
-  throw new BuildError(context, [`Duplicate slugs found:\n${detail}`])
-}
-
-// #
-
-export function errorMessage(reason: unknown): string {
-  return reason instanceof Error ? reason.message : String(reason)
 }

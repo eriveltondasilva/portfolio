@@ -18,109 +18,20 @@ import {
   writeJson,
   BuildError,
   readJson,
-  assertUniqueSlugs,
   errorMessage,
   log,
+  sortByDateDesc,
 } from './utils'
+import {
+  assertAuthorsExist,
+  assertSeriesExist,
+  assertUniqueSeriesOrder,
+  assertUniqueSlugs,
+} from './validations'
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 type SeriesPost = PostIndex & { series: string; order: number }
-
-function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
-  return items.toSorted(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  )
-}
-
-// ###
-
-function assertUniqueSeriesOrder(posts: PostIndex[]): void {
-  const seriesPosts = posts.filter(
-    (p): p is SeriesPost => p.series !== undefined && p.order !== undefined,
-  )
-
-  const bySeries = Object.groupBy(seriesPosts, ({ series }) => series)
-
-  const conflicts = Object.entries(bySeries).flatMap(([seriesSlug, group]) => {
-    const byOrder = Object.groupBy(group!, ({ order }) => order)
-
-    const duplicateOrders = Object.entries(byOrder).filter(
-      ([, items]) => (items?.length ?? 0) > 1,
-    )
-
-    if (duplicateOrders.length === 0) return []
-
-    const detail = duplicateOrders
-      .map(([order, items]) => {
-        const files = items!
-          .map(({ filePath }) => `\n    - ${filePath}`)
-          .join('')
-        return `  order ${order}:${files}`
-      })
-      .join('\n')
-
-    return [`Series "${seriesSlug}" has duplicate "order" values:\n${detail}`]
-  })
-
-  if (conflicts.length > 0) {
-    throw new BuildError('posts', conflicts)
-  }
-}
-
-function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
-  const invalid = posts.filter(
-    (p) => p.series !== undefined && !knownSeries.has(p.series),
-  )
-
-  if (invalid.length === 0) return
-
-  const detail = invalid
-    .map(
-      (post) =>
-        `  - "${post.slug}" → série "${post.series}"\n    ${post.filePath}`,
-    )
-    .join('\n')
-
-  const available =
-    knownSeries.size > 0 ?
-      `\n  Series available: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
-    : '\n  No series found.'
-
-  throw new BuildError('posts', [
-    `Non-existent series referenced:\n${detail}${available}`,
-  ])
-}
-
-function assertAuthorsExist(
-  posts: PostIndex[],
-  knownAuthors: Set<string>,
-): void {
-  const missing = posts.flatMap((post) =>
-    post.authors
-      .filter((author) => !knownAuthors.has(author))
-      .map((author) => ({ author, post })),
-  )
-
-  if (missing.length === 0) return
-
-  const detail = missing
-    .map(
-      ({ author, post }) =>
-        `  - author "${author}" in "${post.slug}"\n    ${post.filePath}`,
-    )
-    .join('\n')
-
-  const available =
-    knownAuthors.size > 0 ?
-      `\n Authors available: ${[...knownAuthors].map((author) => `"${author}"`).join(', ')}`
-    : '\n No authors found.'
-
-  throw new BuildError('posts', [
-    `Non-existent authors referenced:\n${detail}${available}`,
-  ])
-}
 
 // # Readers
 
@@ -138,11 +49,11 @@ async function readAuthors(): Promise<Set<string>> {
   }
 
   assertUniqueSlugs(
+    'authors',
     result.data.map((author) => ({
       slug: author.slug,
       source: AUTHORS_SOURCE_FILE,
     })),
-    'authors',
   )
 
   return new Set(result.data.map((author) => author.slug))
@@ -162,11 +73,11 @@ async function readSeries(): Promise<Map<string, Series>> {
   }
 
   assertUniqueSlugs(
+    'series',
     result.data.map((series) => ({
       slug: series.slug,
       source: SERIES_SOURCE_FILE,
     })),
-    'series',
   )
 
   return new Map(result.data.map((series) => [series.slug, series]))
@@ -229,11 +140,11 @@ async function readPosts(): Promise<PostsData> {
   )
 
   assertUniqueSlugs(
+    'posts',
     publishedResults.map(({ value: post }) => ({
       slug: post.slug,
       source: post.filePath,
     })),
-    'posts',
   )
 
   const posts = publishedResults.map(({ value }) => value)
@@ -334,13 +245,13 @@ async function main(): Promise<void> {
   log.section('Validating:')
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
-  log.ok('series references')
+  log.ok('authors', `${authors.size} loaded`)
 
   assertUniqueSeriesOrder(posts)
-  log.ok('series order')
+  log.ok('series', `${seriesMap.size} loaded`)
 
   assertAuthorsExist(posts, authors)
-  log.ok('author references')
+  log.ok('authors', `${authors.size} loaded`)
 
   const seriesPosts = posts.filter((post) => post.series !== undefined)
 
