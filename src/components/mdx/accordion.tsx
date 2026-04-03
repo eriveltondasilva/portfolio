@@ -8,7 +8,13 @@ import { cn } from '@/lib/utils'
 
 import type { ComponentProps } from 'react'
 
-type AccordionItemProps = ComponentProps<typeof AccordionItemRoot>
+interface AccordionItemProps extends Omit<
+  ComponentProps<typeof AccordionItemRoot>,
+  'value'
+> {
+  title: string
+  value?: string
+}
 
 export function AccordionItem({
   title,
@@ -24,19 +30,32 @@ export function AccordionItem({
   )
 }
 
-type AccordionProps = ComponentProps<typeof AccordionRoot>
+interface AccordionBaseProps {
+  className?: string
+  children: React.ReactNode
+}
+
+type AccordionProps =
+  | (AccordionBaseProps & { type?: 'single' })
+  | (AccordionBaseProps & { type: 'multiple' })
 
 export function Accordion({
   type = 'single',
   className,
   children,
 }: AccordionProps) {
+  const sharedProps = { className: cn('not-prose', className) }
+
+  if (type === 'multiple') {
+    return (
+      <AccordionRoot type='multiple' {...sharedProps}>
+        {children}
+      </AccordionRoot>
+    )
+  }
+
   return (
-    <AccordionRoot
-      type={type}
-      collapsible={type === 'single'}
-      className={cn('not-prose', className)}
-    >
+    <AccordionRoot type='single' collapsible {...sharedProps}>
       {children}
     </AccordionRoot>
   )
