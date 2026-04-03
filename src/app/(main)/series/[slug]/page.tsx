@@ -1,7 +1,7 @@
 import {
   ArrowLeftIcon,
-  BookOpenIcon,
   CalendarIcon,
+  FolderXIcon,
   LayersIcon,
 } from 'lucide-react'
 import Link from 'next/link'
@@ -140,7 +140,7 @@ export default async function SeriesDetailPage({
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant='icon'>
-              <BookOpenIcon />
+              <FolderXIcon />
             </EmptyMedia>
             <EmptyTitle>Nenhum post nesta série</EmptyTitle>
             <EmptyDescription>

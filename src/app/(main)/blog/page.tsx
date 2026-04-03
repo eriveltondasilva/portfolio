@@ -1,4 +1,4 @@
-import { BookOpenIcon, LayersIcon } from 'lucide-react'
+import { FileXIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
@@ -46,7 +46,7 @@ export default function BlogPage() {
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant='icon'>
-              <BookOpenIcon />
+              <FileXIcon />
             </EmptyMedia>
             <EmptyTitle>Nenhum post publicado</EmptyTitle>
             <EmptyDescription>

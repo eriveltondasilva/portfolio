@@ -1,4 +1,4 @@
-import { BookMarkedIcon, LayersIcon } from 'lucide-react'
+import { FolderXIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { SeriesCard } from '@/components/series-card'
@@ -45,7 +45,7 @@ export default function SeriesPage() {
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant='icon'>
-              <BookMarkedIcon />
+              <FolderXIcon />
             </EmptyMedia>
             <EmptyTitle>Nenhuma série criada</EmptyTitle>
             <EmptyDescription>

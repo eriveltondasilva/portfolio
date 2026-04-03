@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, FileTextIcon, HashIcon, LayersIcon } from 'lucide-react'
+import { ArrowLeftIcon, HashIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
@@ -75,7 +75,7 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
         <Empty>
           <EmptyHeader>
             <EmptyMedia variant='icon'>
-              <FileTextIcon />
+              <HashIcon />
             </EmptyMedia>
             <EmptyTitle>Nenhum post com esta tag</EmptyTitle>
             <EmptyDescription>
