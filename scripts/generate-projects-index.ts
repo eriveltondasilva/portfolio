@@ -102,8 +102,7 @@ async function main(): Promise<void> {
   log.success(`\n✔ Done in ${elapsed}ms`)
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error)
-  log.failure(message)
+main().catch((error) => {
+  log.failure(error)
   process.exit(1)
 })

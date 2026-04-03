@@ -42,12 +42,13 @@ export const log = {
     console.info(styleText('green', text))
   },
   //
-  failure: function (message: string) {
+  failure: function (err: unknown) {
     const divider = styleText('red', `  ${'─'.repeat(60)}`)
+    const error = getErrMessage(err)
 
     console.error(styleText(['bold', 'red'], '\n❌ Build failed\n'))
     console.error(divider)
-    console.error(`\n${message}\n`)
+    console.error(`\n${error}\n`)
     console.error(divider)
     console.error(
       styleText('yellow', '\n  Fix the errors above and try again.\n'),
@@ -69,8 +70,8 @@ export class BuildError extends Error {
   }
 }
 
-export function errorMessage(reason: unknown): string {
-  return reason instanceof Error ? reason.message : String(reason)
+export function getErrMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error)
 }
 
 // # Files

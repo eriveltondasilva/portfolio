@@ -18,7 +18,7 @@ import {
   writeJson,
   BuildError,
   readJson,
-  errorMessage,
+  getErrMessage,
   log,
   sortByDateDesc,
 } from './utils'
@@ -32,6 +32,16 @@ import {
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types'
 
 type SeriesPost = PostIndex & { series: string; order: number }
+
+interface PostsData {
+  posts: PostIndex[]
+  stats: {
+    scanned: number
+    published: number
+    drafts: number
+    withCover: number
+  }
+}
 
 // # Readers
 
@@ -83,16 +93,6 @@ async function readSeries(): Promise<Map<string, Series>> {
   return new Map(result.data.map((series) => [series.slug, series]))
 }
 
-interface PostsData {
-  posts: PostIndex[]
-  stats: {
-    scanned: number
-    published: number
-    drafts: number
-    withCover: number
-  }
-}
-
 async function readPosts(): Promise<PostsData> {
   const glob = new Bun.Glob('*/index.mdx')
   const files = Array.from(glob.scanSync({ cwd: POSTS_DIR, absolute: true }))
@@ -130,7 +130,7 @@ async function readPosts(): Promise<PostsData> {
     .filter(
       (result): result is PromiseRejectedResult => result.status === 'rejected',
     )
-    .map(({ reason }) => errorMessage(reason))
+    .map(({ reason }) => getErrMessage(reason))
 
   if (errors.length > 0) throw new BuildError('posts', errors)
 
@@ -214,7 +214,7 @@ async function main(): Promise<void> {
     .filter(
       (result): result is PromiseRejectedResult => result.status === 'rejected',
     )
-    .map(({ reason }) => errorMessage(reason))
+    .map(({ reason }) => getErrMessage(reason))
 
   if (errors.length > 0) {
     throw new Error(
@@ -283,8 +283,7 @@ async function main(): Promise<void> {
   log.success(`\n✔ Done in ${elapsed}ms`)
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error)
-  log.failure(message)
+main().catch((error) => {
+  log.failure(error)
   process.exit(1)
 })
