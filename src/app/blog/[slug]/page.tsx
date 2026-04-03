@@ -3,7 +3,7 @@ import {
   CalendarIcon,
   CalendarSyncIcon,
   ClockIcon,
-  EditIcon,
+  FilePenIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -165,7 +165,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <div className='mt-4 flex justify-end'>
         <Button variant='link' asChild>
           <a href={editUrl} target='_blank' rel='noopener noreferrer'>
-            <Icon iconNode={EditIcon} />
+            <Icon iconNode={FilePenIcon} />
             Sugerir alterações
           </a>
         </Button>

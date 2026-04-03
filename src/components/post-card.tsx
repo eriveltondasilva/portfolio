@@ -1,9 +1,9 @@
 import {
   ArrowRightIcon,
-  BookOpenIcon,
   CalendarIcon,
   CalendarSyncIcon,
   ClockIcon,
+  FileTextIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -32,8 +32,8 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-3 text-blue-500 dark:text-blue-400'>
-          <Icon iconNode={BookOpenIcon} />
+        <div className='flex items-center gap-2 text-blue-500 dark:text-blue-400'>
+          <Icon iconNode={FileTextIcon} />
           <Link
             href={`/blog/${post.slug}`}
             className='font-semibold text-balance hover:underline'

@@ -126,15 +126,21 @@ export function Button({
 
 ## Badge
 
-Componentes inline para marcar status e tecnologias:
+Todas as variantes de cor:
 
-Testado no <Badge>Next.js 16</Badge> com React <Badge variant='primary'>19</Badge> — considerado <Badge variant='success'>estável</Badge> para produção.
+<Badge>default</Badge> <Badge variant='primary'>primary</Badge> <Badge variant='success'>success</Badge> <Badge variant='warning'>warning</Badge> <Badge variant='danger'>danger</Badge> <Badge variant='info'>info</Badge>
 
-A prop `loading` está <Badge variant='warning'>depreciada</Badge> no Next.js 16 e será removida em breve.
+Tamanhos disponíveis:
 
-Evite usar essa abordagem em produção — está <Badge variant='danger'>quebrada</Badge> no Safari 16 e anteriores.
+<Badge size='sm'>small</Badge> <Badge size='md'>medium</Badge> <Badge size='lg'>large</Badge>
 
-Suporte a Server Components é <Badge variant='info'>experimental</Badge> nessa versão.
+Com borda pontilhada (`dashed`):
+
+<Badge dashed>default</Badge> <Badge variant='primary' dashed>primary</Badge> <Badge variant='success' dashed>success</Badge> <Badge variant='warning' dashed>warning</Badge> <Badge variant='danger' dashed>danger</Badge> <Badge variant='info' dashed>info</Badge>
+
+Sem borda (`borderless`):
+
+<Badge borderless>default</Badge> <Badge variant='primary' borderless>primary</Badge> <Badge variant='success' borderless>success</Badge> <Badge variant='warning' borderless>warning</Badge> <Badge variant='danger' borderless>danger</Badge> <Badge variant='info' borderless>info</Badge>
 
 ---
 

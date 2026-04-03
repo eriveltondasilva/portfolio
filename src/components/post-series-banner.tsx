@@ -37,7 +37,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
           </Link>
 
           <span className='shrink-0 text-xs text-zinc-400 dark:text-zinc-500'>
-            {order} de {total} {total === 1 ? 'post' : 'posts'}
+            {order} de {total} {total > 1 ? 'posts' : 'post'}
           </span>
         </div>
 

@@ -1,6 +1,4 @@
-import { Badge as BadgeBase } from './ui/badge'
-
-export default function Badge() {}
+import { Badge as BadgeBase } from '@/components/ui/badge'
 
 export const SoftBadgeDemo = () => {
   return (

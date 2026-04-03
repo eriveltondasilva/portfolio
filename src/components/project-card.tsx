@@ -1,8 +1,10 @@
-import { ExternalLinkIcon, AArrowDownIcon, StarIcon } from 'lucide-react'
+import { ExternalLinkIcon, StarIcon } from 'lucide-react'
+import Image from 'next/image'
 
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { ProjectStatus } from '@/lib/constants'
+import GithubIcon from '@/assets/github.svg'
 
 import { Icon } from './icon'
 
@@ -21,11 +23,10 @@ interface BadgeProps {
 }
 
 const statusConfig: Record<ProjectStatus, BadgeProps> = {
-  [ProjectStatus.ACTIVE]: {
-    label: 'Ativo',
-    dot: 'size-1.5 rounded-full bg-green-500',
-    className:
-      'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
+  [ProjectStatus.ARCHIVED]: {
+    label: 'Arquivado',
+    dot: 'bg-primary size-1.5 rounded-full',
+    className: 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
   },
   [ProjectStatus.WIP]: {
     label: 'Em progresso',
@@ -33,10 +34,11 @@ const statusConfig: Record<ProjectStatus, BadgeProps> = {
     className:
       'border-none bg-amber-600/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400',
   },
-  [ProjectStatus.ARCHIVED]: {
-    label: 'Arquivado',
-    dot: 'bg-primary size-1.5 rounded-full',
-    className: 'bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400',
+  [ProjectStatus.ACTIVE]: {
+    label: 'Ativo',
+    dot: 'size-1.5 rounded-full bg-green-500',
+    className:
+      'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
   },
 }
 
@@ -54,10 +56,7 @@ export function ProjectCard({ project, ...props }: Props) {
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2'>
-          <Icon
-            iconNode={AArrowDownIcon}
-            className='shrink-0 text-zinc-400 dark:text-zinc-500'
-          />
+          <Image src={GithubIcon} alt='Github' width={16} height={16} />
           <a
             href={project.repository}
             target='_blank'
@@ -74,7 +73,7 @@ export function ProjectCard({ project, ...props }: Props) {
           )}
         </div>
 
-        <Badge className={cn('shrink-0 gap-1.5', status.className)}>
+        <Badge className={status.className}>
           <span className={status.dot} aria-hidden='true' />
           {status.label}
         </Badge>
@@ -108,7 +107,7 @@ export function ProjectCard({ project, ...props }: Props) {
           rel='noopener noreferrer'
           className='flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
         >
-          <Icon iconNode={AArrowDownIcon} className='size-3.5' />
+          <Image src={GithubIcon} alt='Github' width={14} height={14} />
           Repositório
         </a>
 

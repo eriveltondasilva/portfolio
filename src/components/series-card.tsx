@@ -1,4 +1,4 @@
-import { BookMarkedIcon, CalendarIcon, LayersIcon } from 'lucide-react'
+import { CalendarIcon, FolderIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { formatDate } from '@/lib'
@@ -16,26 +16,29 @@ interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
   showStatusBadge?: boolean
 }
 
-const statusConfig: Record<
-  SeriesStatus,
-  { label: string; dot: string; className: string }
-> = {
+interface BadgeProps {
+  label: string
+  className: string
+  dot: string
+}
+
+const statusConfig: Record<SeriesStatus, BadgeProps> = {
   [SeriesStatus.PLANNED]: {
-    label: 'Planned',
+    label: 'Em planejamento',
     dot: 'bg-primary size-1.5 rounded-full',
     className: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
   },
   [SeriesStatus.IN_PROGRESS]: {
-    label: 'In Progress',
-    dot: 'size-1.5 rounded-full bg-amber-600 dark:bg-amber-400',
+    label: 'Em progresso',
+    dot: 'size-1.5 rounded-full bg-amber-500',
     className:
-      'border-none bg-amber-600/10 text-amber-600 focus-visible:ring-amber-600/20 focus-visible:outline-none dark:bg-amber-400/10 dark:text-amber-400 dark:focus-visible:ring-amber-400/40 [a&]:hover:bg-amber-600/5 dark:[a&]:hover:bg-amber-400/5',
+      'border-none bg-amber-600/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400',
   },
   [SeriesStatus.COMPLETE]: {
-    label: 'Complete',
-    dot: 'size-1.5 rounded-full bg-green-600 dark:bg-green-400',
+    label: 'Completa',
+    dot: 'size-1.5 rounded-full bg-green-500',
     className:
-      'border-none bg-green-600/10 text-green-600 focus-visible:ring-green-600/20 focus-visible:outline-none dark:bg-green-400/10 dark:text-green-400 dark:focus-visible:ring-green-400/40 [a&]:hover:bg-green-600/5 dark:[a&]:hover:bg-green-400/5',
+      'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
   },
 }
 
@@ -45,6 +48,7 @@ export function SeriesCard({
   ...props
 }: SeriesCardProps) {
   const status = statusConfig[series.status]
+  const postCount = series.posts.length
 
   return (
     <article
@@ -56,8 +60,8 @@ export function SeriesCard({
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-3 text-orange-500 dark:text-orange-400'>
-          <Icon iconNode={BookMarkedIcon} />
+        <div className='flex items-center gap-2 text-orange-500 dark:text-orange-400'>
+          <Icon iconNode={FolderIcon} />
           <Link
             href={`/series/${series.slug}`}
             className='font-semibold text-balance hover:underline'
@@ -84,7 +88,7 @@ export function SeriesCard({
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           <span>
-            {series.posts.length} {series.posts.length === 1 ? 'post' : 'posts'}
+            {postCount} {postCount > 1 ? 'posts' : 'post'} nesta série
           </span>
         </span>
 
@@ -97,7 +101,7 @@ export function SeriesCard({
       </div>
 
       {/* Posts list */}
-      {series.posts.length > 0 && (
+      {postCount > 0 && (
         <ol className='mt-3 space-y-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {series.posts.slice(0, 3).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
@@ -112,9 +116,9 @@ export function SeriesCard({
               </Link>
             </li>
           ))}
-          {series.posts.length > 3 && (
+          {postCount > 3 && (
             <li className='pl-6 text-xs text-zinc-400'>
-              +{series.posts.length - 3} mais
+              +{postCount - 3} mais
             </li>
           )}
         </ol>

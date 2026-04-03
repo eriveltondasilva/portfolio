@@ -1,8 +1,7 @@
-import { ArrowRightIcon, SparklesIcon } from 'lucide-react'
+import { ArrowRightIcon, DotIcon, FileTextIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
-import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib'
 import { getRelatedPosts } from '@/lib/blog/posts'
 
@@ -16,9 +15,9 @@ export function RelatedPosts({ slug }: Props) {
   if (posts.length === 0) return null
 
   return (
-    <section aria-label='Posts relacionados' className='mb-6'>
+    <section aria-label='Posts relacionados'>
       <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-        <Icon iconNode={SparklesIcon} className='text-blue-500' />
+        <Icon iconNode={FileTextIcon} className='text-blue-500' />
         Posts relacionados
       </h2>
 
@@ -34,24 +33,14 @@ export function RelatedPosts({ slug }: Props) {
                   {post.title}
                 </p>
 
-                <div className='flex flex-wrap items-center gap-3 text-xs text-zinc-400 dark:text-zinc-600'>
+                <div className='flex flex-wrap items-center text-xs text-zinc-400 dark:text-zinc-600'>
                   <time dateTime={post.updatedAt ?? post.publishedAt}>
                     {formatDate(post.updatedAt ?? post.publishedAt)}
                   </time>
-
+                  <Icon iconNode={DotIcon} className='size-5' />
                   <span className='flex items-center gap-1'>
-                    {post.readingTime} min
+                    {post.readingTime} min de leitura
                   </span>
-
-                  {post.tags.slice(0, 2).map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant='secondary'
-                      className='rounded-full bg-zinc-100 px-2 py-0 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-500'
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
                 </div>
               </div>
 

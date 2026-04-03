@@ -207,7 +207,7 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
               {postCount}
             </div>
             <span style={{ color: '#6b7280', fontSize: 15 }}>
-              {postCount === 1 ? 'post nesta série' : 'posts nesta série'}
+              {postCount > 1 ? 'posts nesta série' : 'post nesta série'}
             </span>
           </div>
 

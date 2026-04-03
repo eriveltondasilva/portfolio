@@ -12,25 +12,29 @@ import { Badge } from './ui/badge'
 
 import type { Author } from '@/types'
 
-export function ProfileSidebar({ author }: { author: Author }) {
-  const socialMap = [
-    {
-      label: 'GitHub',
-      href: author.socials.github,
-      icon: Github,
-    },
-    {
-      label: 'Linkedin',
-      href: author.socials.linkedin,
-      icon: Linkedin,
-    },
-    {
-      label: 'Twitter',
-      href: author.socials.twitter,
-      icon: TwitterX,
-    },
-  ]
+const socialMap = [
+  {
+    label: 'GitHub',
+    key: 'github',
+    icon: Github,
+  },
+  {
+    label: 'Linkedin',
+    key: 'linkedin',
+    icon: Linkedin,
+  },
+  {
+    label: 'Twitter',
+    key: 'twitter',
+    icon: TwitterX,
+  },
+] as const satisfies ReadonlyArray<{
+  key: keyof Author['socials']
+  label: string
+  icon: string
+}>
 
+export function ProfileSidebar({ author }: { author: Author }) {
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
@@ -78,7 +82,9 @@ export function ProfileSidebar({ author }: { author: Author }) {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {socialMap.map(({ href, icon, label }) => {
+        {socialMap.map(({ key, icon, label }) => {
+          const href = author.socials[key]
+
           if (!href) return null
 
           return (

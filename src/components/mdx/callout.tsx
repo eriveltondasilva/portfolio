@@ -43,7 +43,7 @@ interface Props
 }
 
 export function Callout({
-  variant = 'info',
+  variant,
   title,
   className,
   children,

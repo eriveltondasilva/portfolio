@@ -33,7 +33,6 @@ export default function SeriesPage() {
         </div>
       )}
 
-      {/* Series list */}
       {hasSeries && (
         <div className='space-y-3'>
           {series.map((s) => (

@@ -20,28 +20,33 @@ import Linkedin from '@/assets/linkedin.svg'
 import Github from '@/assets/github.svg'
 
 import type { Author } from '@/types'
+import type { LucideIcon } from 'lucide-react'
+
+const SOCIAL_ICONS = [
+  {
+    label: 'GitHub',
+    key: 'github',
+    icon: Github,
+  },
+  {
+    label: 'Linkedin',
+    key: 'linkedin',
+    icon: Linkedin,
+  },
+  {
+    label: 'Twitter',
+    key: 'twitter',
+    icon: TwitterX,
+  },
+] as const satisfies ReadonlyArray<{
+  key: keyof Author['socials']
+  label: string
+  icon: LucideIcon
+}>
 
 function AuthorHoverCard({ author }: { author: Author }) {
-  const socialMap = [
-    {
-      label: 'GitHub',
-      href: author.socials.github,
-      icon: Github,
-    },
-    {
-      label: 'Linkedin',
-      href: author.socials.linkedin,
-      icon: Linkedin,
-    },
-    {
-      label: 'Twitter',
-      href: author.socials.twitter,
-      icon: TwitterX,
-    },
-  ]
-
   return (
-    <HoverCard openDelay={200} closeDelay={100}>
+    <HoverCard openDelay={300} closeDelay={100}>
       <HoverCardTrigger asChild>
         <span
           tabIndex={0}
@@ -106,9 +111,10 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {socialMap.map(({ href, label, icon: Icon }) => {
+          {SOCIAL_ICONS.map(({ key, label, icon }) => {
+            const href = author.socials[key]
+
             if (!href) return null
-            // const Icon = social.icon
 
             return (
               <a
@@ -119,7 +125,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
                 <Image
-                  src={Icon}
+                  src={icon}
                   alt={label}
                   title={label}
                   width={16}
@@ -141,17 +147,19 @@ export function PostAuthors({ authors }: { authors: Author[] }) {
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
   const parts = formatList().formatToParts(authors.map((author) => author.slug))
   const authorNames = parts.map(({ type, value }, index) => {
-    if (type === 'element')
-      return <AuthorHoverCard key={index} author={authorsBySlug.get(value)!} />
+    if (type === 'element') {
+      const author = authorsBySlug.get(value)
+      if (!author) return null
+      return <AuthorHoverCard key={index} author={author} />
+    }
 
     return <span key={index}>{value}</span>
   })
 
   return (
-    <span className='flex flex-wrap items-baseline gap-x-0.5 text-sm text-zinc-500 dark:text-zinc-500'>
+    <span className='flex flex-wrap items-baseline gap-x-1 text-sm text-zinc-500 dark:text-zinc-500'>
       <span className='mr-1'>criado por</span>
-      {authorNames}
-      {'.'}
+      {authorNames}.
     </span>
   )
 }

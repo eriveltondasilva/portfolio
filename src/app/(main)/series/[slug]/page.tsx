@@ -113,7 +113,7 @@ export default async function SeriesDetailPage({
         <div className='mt-3 flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
           <span className='flex items-center gap-1.5'>
             <Icon iconNode={LayersIcon} className='size-3.5' />
-            {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
+            {postCount} {postCount > 1 ? 'posts' : 'post'} nesta série
           </span>
 
           <span className='flex items-center gap-1.5'>

@@ -4,8 +4,8 @@ import { CheckIcon, CopyIcon } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 import clsx from 'clsx'
 
-import { Button } from '../ui/button'
-import { Icon } from '../icon'
+import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/icon'
 
 import type { ComponentProps } from 'react'
 

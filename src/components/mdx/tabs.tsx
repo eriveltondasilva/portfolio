@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 
 import type { ComponentProps } from 'react'
 
-interface TabsProps extends Omit<ComponentProps<'div'>, 'children'> {
+interface Props extends Omit<ComponentProps<'div'>, 'children'> {
   items: string[]
   defaultIndex?: number
   children: React.ReactNode[]
@@ -22,7 +22,7 @@ export function Tabs({
   defaultIndex = 0,
   children,
   ...props
-}: TabsProps) {
+}: Props) {
   return (
     <TabsRoot
       // @ts-expect-error TODO: fix

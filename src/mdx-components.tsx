@@ -6,7 +6,7 @@ import { ImageGrid } from './components/mdx/image-grid'
 import { Callout } from './components/mdx/callout'
 import { CodeBlock } from './components/mdx/code-block'
 import { Tweet } from './components/mdx/tweet'
-import { Steps, Step } from './components/mdx/steps'
+import { Steps } from './components/mdx/steps'
 import { Tabs } from './components/mdx/tabs'
 import { Accordion } from './components/mdx/accordion'
 import { FileTree } from './components/mdx/file-tree'
@@ -30,7 +30,6 @@ const components = {
   Youtube,
   Tabs,
   Steps,
-  Step,
   Tweet,
 } satisfies MDXComponents
 

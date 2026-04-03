@@ -1,34 +1,32 @@
 'use client'
 
 import {
-  BookMarkedIcon,
-  BookOpenIcon,
+  FileTextIcon,
   FolderGit2,
+  FolderIcon,
   HashIcon,
   LayoutGridIcon,
-  type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 
-import { Icon } from './icon'
+import { Icon } from '@/components/icon'
 
 import type { Route } from 'next'
+import type { LucideIcon } from 'lucide-react'
 
-interface Tab {
+const tabs = [
+  { label: 'Overview', href: '/', icon: LayoutGridIcon },
+  { label: 'Blog', href: '/blog', icon: FileTextIcon },
+  { label: 'Séries', href: '/series', icon: FolderIcon },
+  { label: 'Projetos', href: '/projects', icon: FolderGit2 },
+  { label: 'Tags', href: '/tags', icon: HashIcon },
+] as const satisfies ReadonlyArray<{
   label: string
   href: Route
   icon: LucideIcon
-}
-
-const tabs: Tab[] = [
-  { label: 'Overview', href: '/', icon: LayoutGridIcon },
-  { label: 'Blog', href: '/blog', icon: BookOpenIcon },
-  { label: 'Séries', href: '/series', icon: BookMarkedIcon },
-  { label: 'Projetos', href: '/projects', icon: FolderGit2 },
-  { label: 'Tags', href: '/tags', icon: HashIcon },
-]
+}>
 
 export function TabsNav() {
   const pathname = usePathname()

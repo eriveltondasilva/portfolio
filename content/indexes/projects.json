@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "slug": "portfolio-v3",
+    "name": "Portfolio v3",
+    "description": "Meu portfólio pessoal com blog integrado, construído com Next.js, MDX e TailwindCSS. Suporte a séries, tags e autores.",
+    "repository": "https://github.com/eriveltondasilva/portfolio-v3",
+    "url": "https://erivelton.dev",
+    "tags": ["nextjs", "typescript", "tailwindcss", "mdx"],
+    "status": "active",
+    "featured": true
+  },
+  {
+    "slug": "saas-starter",
+    "name": "SaaS Starter Kit",
+    "description": "Boilerplate completo para aplicações SaaS com autenticação, billing via Stripe, multi-tenancy e painel administrativo.",
+    "repository": "https://github.com/eriveltondasilva/saas-starter",
+    "url": "https://saas-starter.erivelton.dev",
+    "tags": ["laravel", "react", "inertiajs", "postgresql"],
+    "status": "active",
+    "featured": true
+  },
+  {
+    "slug": "devlinks",
+    "name": "DevLinks",
+    "description": "Agregador de links no estilo Linktree focado em desenvolvedores, com suporte a temas e analytics de cliques.",
+    "repository": "https://github.com/eriveltondasilva/devlinks",
+    "tags": ["nextjs", "typescript", "tailwindcss"],
+    "status": "wip",
+    "featured": false
+  },
+  {
+    "slug": "codelog",
+    "name": "CodeLog",
+    "description": "CLI para registrar e consultar snippets de código com suporte a busca por linguagem e tags, direto no terminal.",
+    "repository": "https://github.com/eriveltondasilva/codelog",
+    "tags": ["typescript", "nodejs"],
+    "status": "archived",
+    "featured": false
+  }
+]
