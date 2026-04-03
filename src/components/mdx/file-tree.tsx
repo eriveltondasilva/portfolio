@@ -68,8 +68,18 @@ export function FileTreeFolder({
             open && 'rotate-90',
           )}
         />
-        {open && <Icon iconNode={FolderOpenIcon} className='size-3.5 shrink-0 text-blue-400' />}
-        {!open && <Icon iconNode={FolderIcon} className='size-3.5 shrink-0 text-blue-400' />}
+        {open && (
+          <Icon
+            iconNode={FolderOpenIcon}
+            className='size-3.5 shrink-0 text-blue-400'
+          />
+        )}
+        {!open && (
+          <Icon
+            iconNode={FolderIcon}
+            className='size-3.5 shrink-0 text-blue-400'
+          />
+        )}
         <span className='font-medium'>{name}</span>
       </button>
 
