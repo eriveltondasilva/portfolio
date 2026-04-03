@@ -50,10 +50,15 @@ export function Callout({
   ...props
 }: Props) {
   const Icon = iconMap[variant ?? 'info']
+  const hasTitle = !!title
 
   return (
     <div className={cn(calloutVariants({ variant }), className)} {...props}>
-      <Icon className='mt-0.5 size-4 shrink-0' aria-hidden />
+      <Icon
+        className='mt-0.5 size-4 shrink-0'
+        aria-hidden={hasTitle}
+        aria-label={!hasTitle ? (variant ?? 'info') : undefined}
+      />
       <div className='flex flex-col gap-1'>
         {title && <p className='font-semibold'>{title}</p>}
         <div className='[&_p]:leading-relaxed'>{children}</div>

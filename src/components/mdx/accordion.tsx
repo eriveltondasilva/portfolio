@@ -1,34 +1,43 @@
 import {
   Accordion as AccordionRoot,
+  AccordionItem as AccordionItemRoot,
   AccordionContent,
-  AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { cn } from '@/lib/utils'
 
-interface AccordionItemData {
-  title: string
-  content: React.ReactNode
+import type { ComponentProps } from 'react'
+
+type AccordionItemProps = ComponentProps<typeof AccordionItemRoot>
+
+export function AccordionItem({
+  title,
+  value,
+  children,
+  ...props
+}: AccordionItemProps) {
+  return (
+    <AccordionItemRoot value={value ?? title} {...props}>
+      <AccordionTrigger>{title}</AccordionTrigger>
+      <AccordionContent>{children}</AccordionContent>
+    </AccordionItemRoot>
+  )
 }
 
-interface Props {
-  items: AccordionItemData[]
-  type?: 'single' | 'multiple'
-  className?: string
-}
+type AccordionProps = ComponentProps<typeof AccordionRoot>
 
-export function Accordion({ items, type = 'single', className }: Props) {
+export function Accordion({
+  type = 'single',
+  className,
+  children,
+}: AccordionProps) {
   return (
     <AccordionRoot
-      type={type as 'multiple'}
+      type={type}
+      collapsible={type === 'single'}
       className={cn('not-prose', className)}
     >
-      {items.map((item, index) => (
-        <AccordionItem key={index} value={String(index)}>
-          <AccordionTrigger>{item.title}</AccordionTrigger>
-          <AccordionContent>{item.content}</AccordionContent>
-        </AccordionItem>
-      ))}
+      {children}
     </AccordionRoot>
   )
 }

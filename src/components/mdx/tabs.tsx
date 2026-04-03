@@ -10,39 +10,39 @@ import { cn } from '@/lib/utils'
 
 import type { ComponentProps } from 'react'
 
-interface Props extends Omit<ComponentProps<'div'>, 'children'> {
-  items: string[]
-  defaultIndex?: number
-  children: React.ReactNode[]
+export function Tab({
+  children,
+  ...props
+}: ComponentProps<typeof TabsContent>) {
+  return <TabsContent {...props}>{children}</TabsContent>
+}
+
+interface TabsProps extends ComponentProps<typeof TabsRoot> {
+  tabs: string[]
 }
 
 export function Tabs({
-  items,
+  tabs,
   className,
-  defaultIndex = 0,
+  defaultValue,
   children,
   ...props
-}: Props) {
+}: TabsProps) {
   return (
     <TabsRoot
-      // @ts-expect-error TODO: fix
-      defaultValue={String(defaultIndex)}
       className={cn('not-prose', className)}
+      defaultValue={defaultValue || tabs[0]}
       {...props}
     >
       <TabsList>
-        {items.map((item, index) => (
-          <TabsTrigger key={item} value={String(index)}>
-            {item}
+        {tabs.map((tab) => (
+          <TabsTrigger key={tab} value={tab}>
+            {tab}
           </TabsTrigger>
         ))}
       </TabsList>
 
-      {children.map((child, index) => (
-        <TabsContent key={index} value={String(index)}>
-          {child}
-        </TabsContent>
-      ))}
+      {children}
     </TabsRoot>
   )
 }

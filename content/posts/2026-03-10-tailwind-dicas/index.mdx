@@ -110,7 +110,7 @@ export function Button({
 
 <Callout variant='tip' title='Dica'>
   Use `??` em vez de `||` para checar `null` e `undefined` com precisão — `||`
-  também descarta `0` e `""`.
+  também descarta `000` e `""`.
 </Callout>
 
 <Callout variant='warning' title='Atenção'>
@@ -128,19 +128,36 @@ export function Button({
 
 Todas as variantes de cor:
 
-<Badge>default</Badge> <Badge variant='primary'>primary</Badge> <Badge variant='success'>success</Badge> <Badge variant='warning'>warning</Badge> <Badge variant='danger'>danger</Badge> <Badge variant='info'>info</Badge>
+<Badge>default</Badge>
+<Badge variant='primary'>primary</Badge>
+<Badge variant='success'>success</Badge>
+<Badge variant='warning'>warning</Badge>
+<Badge variant='danger'>danger</Badge>
+<Badge variant='info'>info</Badge>
 
 Tamanhos disponíveis:
 
-<Badge size='sm'>small</Badge> <Badge size='md'>medium</Badge> <Badge size='lg'>large</Badge>
+<Badge size='sm'>small</Badge>
+<Badge size='md'>medium</Badge>
+<Badge size='lg'>large</Badge>
 
 Com borda pontilhada (`dashed`):
 
-<Badge dashed>default</Badge> <Badge variant='primary' dashed>primary</Badge> <Badge variant='success' dashed>success</Badge> <Badge variant='warning' dashed>warning</Badge> <Badge variant='danger' dashed>danger</Badge> <Badge variant='info' dashed>info</Badge>
+<Badge dashed>default</Badge>
+<Badge variant='primary' dashed>primary</Badge>
+<Badge variant='success' dashed>success</Badge>
+<Badge variant='warning' dashed>warning</Badge>
+<Badge variant='danger' dashed>danger</Badge>
+<Badge variant='info' dashed>info</Badge>
 
 Sem borda (`borderless`):
 
-<Badge borderless>default</Badge> <Badge variant='primary' borderless>primary</Badge> <Badge variant='success' borderless>success</Badge> <Badge variant='warning' borderless>warning</Badge> <Badge variant='danger' borderless>danger</Badge> <Badge variant='info' borderless>info</Badge>
+<Badge borderless>default</Badge>
+<Badge variant='primary' borderless>primary</Badge>
+<Badge variant='success' borderless>success</Badge>
+<Badge variant='warning' borderless>warning</Badge>
+<Badge variant='danger' borderless>danger</Badge>
+<Badge variant='info' borderless>info</Badge>
 
 ---
 
@@ -160,46 +177,46 @@ No terminal, use <Kbd>Ctrl</Kbd> + <Kbd>C</Kbd> para interromper um processo e <
 
 Ideal para mostrar o mesmo conteúdo em múltiplas variações:
 
-<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
-  <>
+<Tabs tabs={['npm', 'Yarn', 'pnpm', 'Bun']}>
+  <Tab value='npm'>
     ```bash
     npm install tailwindcss @tailwindcss/postcss
     ```
-  </>
-  <>
+  </Tab>
+  <Tab value='Yarn'>
     ```bash
     yarn add tailwindcss @tailwindcss/postcss
     ```
-  </>
-  <>
+  </Tab>
+  <Tab value='pnpm'>
     ```bash
     pnpm add tailwindcss @tailwindcss/postcss
     ```
-  </>
-  <>
+  </Tab>
+  <Tab value='Bun'>
     ```bash
     bun add tailwindcss @tailwindcss/postcss
     ```
-  </>
+  </Tab>
 </Tabs>
 
 Também útil para mostrar código em diferentes linguagens:
 
-<Tabs items={['TypeScript', 'JavaScript']}>
-  <>
+<Tabs tabs={['TypeScript', 'JavaScript']}>
+  <Tab value='TypeScript'>
     ```ts
     function greet(name: string): string {
       return `Hello, ${name}!`
     }
     ```
-  </>
-  <>
+  </Tab>
+  <Tab value='JavaScript'>
     ```js
     function greet(name) {
       return `Hello, ${name}!`
     }
     ```
-  </>
+  </Tab>
 </Tabs>
 
 ---
@@ -213,7 +230,6 @@ Também útil para mostrar código em diferentes linguagens:
     ```bash
     bun add tailwindcss @tailwindcss/postcss
     ```
-
   </Step>
 
   <Step title='Configure o PostCSS'>
@@ -226,7 +242,6 @@ Também útil para mostrar código em diferentes linguagens:
       },
     }
     ```
-
   </Step>
 
   <Step title='Importe no CSS global'>
@@ -235,7 +250,6 @@ Também útil para mostrar código em diferentes linguagens:
     ```css title="globals.css"
     @import 'tailwindcss';
     ```
-
   </Step>
 
   <Step title='Use no projeto'>
@@ -250,7 +264,6 @@ Também útil para mostrar código em diferentes linguagens:
       )
     }
     ```
-
   </Step>
 </Steps>
 
@@ -258,30 +271,30 @@ Também útil para mostrar código em diferentes linguagens:
 
 ## Accordion
 
-<Accordion
-  items={[
-    {
-      title: 'O que é o Tailwind CSS?',
-      content:
-        'É um framework CSS utilitário que fornece classes de baixo nível para construir designs customizados diretamente no HTML, sem a necessidade de escrever CSS personalizado.',
-    },
-    {
-      title: 'Tailwind vs CSS Modules',
-      content:
-        'CSS Modules isola estilos por componente usando classes geradas. Tailwind usa classes utilitárias compartilhadas. A principal diferença está na colocação: com Tailwind, o estilo vive junto do markup, eliminando a troca de contexto.',
-    },
-    {
-      title: 'Como funciona o purge/treeshaking?',
-      content:
-        'O Tailwind analisa os arquivos configurados no campo `content` do tailwind.config e remove todas as classes não utilizadas no build de produção, resultando em um CSS final extremamente pequeno.',
-    },
-    {
-      title: 'Vale a pena usar em projetos grandes?',
-      content:
-        'Sim. Em projetos grandes o Tailwind escala bem porque o tamanho do CSS não cresce com o projeto — ele permanece constante já que as classes são reutilizadas. O maior desafio é manter consistência nas classes, o que pode ser resolvido com componentes reutilizáveis.',
-    },
-  ]}
-/>
+<Accordion>
+  <AccordionItem title='O que é o Tailwind CSS?'>
+    É um framework CSS utilitário que fornece classes de baixo nível para construir designs
+    customizados diretamente no HTML, sem a necessidade de escrever CSS personalizado.
+  </AccordionItem>
+
+  <AccordionItem title='Tailwind vs CSS Modules'>
+    CSS Modules isola estilos por componente usando classes geradas. Tailwind usa
+    classes utilitárias compartilhadas. A principal diferença está na colocação:
+    com Tailwind, o estilo vive junto do markup, eliminando a troca de contexto.
+  </AccordionItem>
+
+  <AccordionItem title='Como funciona o purge/treeshaking?'>
+    O Tailwind analisa os arquivos configurados no campo `content` do
+    tailwind.config e remove todas as classes não utilizadas no build de produção,
+    resultando em um CSS final extremamente pequeno.
+  </AccordionItem>
+
+  <AccordionItem title='Vale a pena usar em projetos grandes?'>
+    Sim. Em projetos grandes o Tailwind escala bem porque o tamanho do CSS não cresce com o
+    projeto — ele permanece constante já que as classes são reutilizadas. O maior desafio é
+    manter consistência nas classes, o que pode ser resolvido com componentes reutilizáveis.
+  </AccordionItem>
+</Accordion>
 
 ---
 
@@ -315,9 +328,24 @@ Grade de imagens com 3 colunas:
 <ImageGrid
   columns={3}
   images={[
-    { src: BlogImage, title: 'Imagem 1', alt: 'Imagem 1', caption: 'Legenda 1' },
-    { src: BlogImage, title: 'Imagem 2', alt: 'Imagem 2', caption: 'Legenda 2' },
-    { src: BlogImage, title: 'Imagem 3', alt: 'Imagem 3', caption: 'Legenda 3' },
+    {
+      src: BlogImage,
+      title: 'Imagem 1',
+      alt: 'Imagem 1',
+      caption: 'Legenda 1',
+    },
+    {
+      src: BlogImage,
+      title: 'Imagem 2',
+      alt: 'Imagem 2',
+      caption: 'Legenda 2',
+    },
+    {
+      src: BlogImage,
+      title: 'Imagem 3',
+      alt: 'Imagem 3',
+      caption: 'Legenda 3',
+    },
   ]}
 />
 

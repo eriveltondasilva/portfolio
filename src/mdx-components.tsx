@@ -7,8 +7,8 @@ import { Callout } from './components/mdx/callout'
 import { CodeBlock } from './components/mdx/code-block'
 import { Tweet } from './components/mdx/tweet'
 import { Steps, Step } from './components/mdx/steps'
-import { Tabs } from './components/mdx/tabs'
-import { Accordion } from './components/mdx/accordion'
+import { Tabs, Tab } from './components/mdx/tabs'
+import { Accordion, AccordionItem } from './components/mdx/accordion'
 import { Kbd } from './components/mdx/kbd'
 import { Badge } from './components/mdx/badge'
 
@@ -19,16 +19,18 @@ const components = {
   img: Image,
   pre: CodeBlock,
   Accordion,
+  AccordionItem,
   Image,
-  Callout,
-  Kbd,
-  Badge,
-  RatioImage,
   ImageGrid,
-  Youtube,
+  RatioImage,
+  Callout,
+  Badge,
+  Kbd,
   Tabs,
+  Tab,
   Steps,
   Step,
+  Youtube,
   Tweet,
 } satisfies MDXComponents
 

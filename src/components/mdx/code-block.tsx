@@ -1,7 +1,7 @@
 'use client'
 
 import { CheckIcon, CopyIcon } from 'lucide-react'
-import { useCallback, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import clsx from 'clsx'
 
 import { Button } from '@/components/ui/button'
@@ -13,15 +13,16 @@ export function CodeBlock({ children, ...props }: ComponentProps<'pre'>) {
   const preRef = useRef<HTMLPreElement>(null)
   const [copied, setCopied] = useState(false)
 
-  const handleCopy = useCallback(async () => {
+  const handleCopy = async () => {
     const text = preRef.current?.querySelector('code')?.textContent
 
-    if (!text) return null
+    if (!text) return
 
     await navigator.clipboard.writeText(text)
+
     setCopied(true)
-    setTimeout(() => setCopied(false), 2_000)
-  }, [])
+    setTimeout(() => setCopied(false), 3_000)
+  }
 
   const icon = copied ? CheckIcon : CopyIcon
 

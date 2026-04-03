@@ -16,7 +16,11 @@ export function Link({
   if (!href) return <>{children}</>
 
   if (href.startsWith('/')) {
-    return <LinkNext href={href as Route}>{children}</LinkNext>
+    return (
+      <LinkNext href={href as Route} {...props}>
+        {children}
+      </LinkNext>
+    )
   }
 
   if (EXTERNAL_PROTOCOLS.some((protocol) => href.startsWith(protocol))) {
