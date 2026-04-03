@@ -12,7 +12,7 @@ authors:
   - maria
 ---
 
-import BlogImage from '../../../public/blog.jpg'
+import BlogImage from './cover.jpg'
 
 O Tailwind permite estilizar componentes sem sair do arquivo HTML/JSX. A produtividade é incomparável quando combinado com um design system bem estruturado — classes utilitárias eliminam a alternância entre arquivos CSS e componentes, mantendo o contexto visual sempre próximo do código.
 
@@ -282,43 +282,6 @@ Também útil para mostrar código em diferentes linguagens:
     },
   ]}
 />
-
----
-
-## FileTree
-
-Estrutura de um projeto Next.js com App Router:
-
-<FileTree>
-  <FileTree.Folder name='src' open>
-    <FileTree.Folder name='app' open>
-      <FileTree.File name='layout.tsx' highlighted />
-      <FileTree.File name='page.tsx' />
-      <FileTree.Folder name='blog' open>
-        <FileTree.File name='page.tsx' />
-        <FileTree.Folder name='[slug]'>
-          <FileTree.File name='page.tsx' />
-        </FileTree.Folder>
-      </FileTree.Folder>
-    </FileTree.Folder>
-    <FileTree.Folder name='components'>
-      <FileTree.Folder name='ui'>
-        <FileTree.File name='button.tsx' />
-        <FileTree.File name='card.tsx' />
-      </FileTree.Folder>
-      <FileTree.Folder name='mdx'>
-        <FileTree.File name='callout.tsx' />
-        <FileTree.File name='code-block.tsx' />
-      </FileTree.Folder>
-    </FileTree.Folder>
-    <FileTree.Folder name='lib'>
-      <FileTree.File name='utils.ts' />
-    </FileTree.Folder>
-  </FileTree.Folder>
-  <FileTree.File name='next.config.ts' highlighted />
-  <FileTree.File name='tailwind.config.ts' />
-  <FileTree.File name='package.json' />
-</FileTree>
 
 ---
 

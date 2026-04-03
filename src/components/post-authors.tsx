@@ -158,7 +158,7 @@ export function PostAuthors({ authors }: { authors: Author[] }) {
 
   return (
     <span className='flex flex-wrap items-baseline gap-x-1 text-sm text-zinc-500 dark:text-zinc-500'>
-      <span className='mr-1'>criado por</span>
+      <span>criado por</span>
       {authorNames}.
     </span>
   )

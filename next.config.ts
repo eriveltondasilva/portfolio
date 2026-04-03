@@ -22,6 +22,7 @@ const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
 const prettyCodeOptions: PrettyCodeOptions = {
   theme: 'github-dark-default',
   defaultLang: 'plaintext',
+  bypassInlineCode: true,
 }
 
 // ###

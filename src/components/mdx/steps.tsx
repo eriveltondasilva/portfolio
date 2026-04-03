@@ -6,7 +6,7 @@ interface StepProps extends ComponentProps<'div'> {
   title: string
 }
 
-function Step({ title, className, children, ...props }: StepProps) {
+export function Step({ title, className, children, ...props }: StepProps) {
   return (
     <div className={cn('step', className)} {...props}>
       <p className='step-title'>{title}</p>
@@ -42,5 +42,3 @@ export function Steps({
     </div>
   )
 }
-
-Steps.Step = Step

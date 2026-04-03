@@ -6,10 +6,9 @@ import { ImageGrid } from './components/mdx/image-grid'
 import { Callout } from './components/mdx/callout'
 import { CodeBlock } from './components/mdx/code-block'
 import { Tweet } from './components/mdx/tweet'
-import { Steps } from './components/mdx/steps'
+import { Steps, Step } from './components/mdx/steps'
 import { Tabs } from './components/mdx/tabs'
 import { Accordion } from './components/mdx/accordion'
-import { FileTree } from './components/mdx/file-tree'
 import { Kbd } from './components/mdx/kbd'
 import { Badge } from './components/mdx/badge'
 
@@ -22,7 +21,6 @@ const components = {
   Accordion,
   Image,
   Callout,
-  FileTree,
   Kbd,
   Badge,
   RatioImage,
@@ -30,6 +28,7 @@ const components = {
   Youtube,
   Tabs,
   Steps,
+  Step,
   Tweet,
 } satisfies MDXComponents
 
