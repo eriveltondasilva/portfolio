@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "mdx-reference",
+    "title": "Referência de Componentes MDX",
+    "description": "Manual completo de todos os componentes e recursos disponíveis para escrever posts neste blog.",
+    "tags": ["meta", "mdx"],
+    "publishedAt": "2026-04-03",
+    "status": "published",
+    "authors": ["erivelton"],
+    "hasCover": false,
+    "readingTime": 9,
+    "filePath": "content/posts/2026-04-03-mdx-reference/index.mdx"
+  }
+]

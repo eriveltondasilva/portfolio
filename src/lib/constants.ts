@@ -42,13 +42,15 @@ export const URL_BASE =
 // ###
 
 export const CONTENT_DIR = join(process.cwd(), 'content')
+export const GENERATED_DIR = join(process.cwd(), 'generated')
 
 // # Directories
 export const AUTHORS_DIR = join(CONTENT_DIR, 'authors')
 export const POSTS_DIR = join(CONTENT_DIR, 'posts')
 export const SERIES_DIR = join(CONTENT_DIR, 'series')
-export const SCHEMAS_DIR = join(CONTENT_DIR, 'schemas')
-export const INDEXES_DIR = join(CONTENT_DIR, 'indexes')
+
+export const SCHEMAS_DIR = join(GENERATED_DIR, 'schemas')
+export const INDEXES_DIR = join(GENERATED_DIR, 'indexes')
 
 // # Files
 export const AUTHORS_SOURCE_FILE = join(AUTHORS_DIR, 'index.json')

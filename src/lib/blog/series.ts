@@ -1,4 +1,4 @@
-import seriesIndex from '@/content/indexes/series.json'
+import seriesIndex from '@/generated/indexes/series.json'
 import { SeriesStatus } from '@/lib/constants'
 
 import type { SeriesIndex } from '@/types'

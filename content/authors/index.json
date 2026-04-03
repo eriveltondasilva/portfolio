@@ -9,16 +9,5 @@
       "linkedin": "https://www.linkedin.com/in/eriveltondasilva",
       "twitter": "https://x.com/erivelton_silv4"
     }
-  },
-  {
-    "slug": "maria",
-    "name": "Maria Niță",
-    "bio": "Desenvolvedor Frontend apaixonado por criar experiências digitais incríveis.",
-    "skills": ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-    "socials": {
-      "github": "https://github.com/maria",
-      "linkedin": "https://www.linkedin.com/in/eriveltondasilva",
-      "twitter": "https://x.com/erivelton_silv4"
-    }
   }
 ]

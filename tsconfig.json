@@ -27,7 +27,8 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
-      "@/content/*": ["./content/*"]
+      "@/content/*": ["./content/*"],
+      "@/generated/*": ["./generated/*"]
     }
   },
   "include": [

@@ -1,4 +1,4 @@
-import projectsIndex from '@/content/indexes/projects.json'
+import projectsIndex from '@/generated/indexes/projects.json'
 
 import type { Project } from '@/types'
 

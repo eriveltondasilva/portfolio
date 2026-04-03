@@ -2,16 +2,13 @@
   "json.schemas": [
     {
       "fileMatch": ["/content/series/index.json"],
-      "url": "./content/schemas/series.json"
+      "url": "./generated/schemas/series.json"
     },
     {
       "fileMatch": ["/content/authors/index.json"],
-      "url": "./content/schemas/authors.json"
+      "url": "./generated/schemas/authors.json"
     }
   ],
-  "yaml.schemas": {
-    "./content/schemas/posts.json": "content/posts/**/index.mdx"
-  },
   "favorites.resources": [
     {
       "filePath": "src\\app",

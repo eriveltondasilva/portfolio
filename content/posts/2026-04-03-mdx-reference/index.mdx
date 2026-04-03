@@ -1,0 +1,514 @@
+---
+slug: 'mdx-reference'
+title: 'Referência de Componentes MDX'
+description: 'Manual completo de todos os componentes e recursos disponíveis para escrever posts neste blog.'
+publishedAt: '2026-04-03'
+tags: ['meta', 'mdx']
+status: 'published'
+authors:
+  - erivelton
+---
+
+Este post é um manual de referência rápida. Aqui estão todos os componentes e recursos disponíveis ao escrever um novo post. Mantenha-o aberto como guia enquanto escreve.
+
+---
+
+## Markdown nativo
+
+O Markdown padrão funciona normalmente. Todos os elementos abaixo não precisam de componentes extras.
+
+### Tipografia
+
+**Negrito**, _itálico_, ~~tachado~~ e `código inline` funcionam nativamente.
+
+> Blockquote para destacar citações ou trechos importantes de outras fontes.
+
+### Links
+
+Links internos e externos são tratados automaticamente pelo componente `Link`:
+
+- `[texto](/rota)` → link interno com Next.js, sem reload de página
+- `[texto](https://...)` → abre em nova aba com ícone de link externo
+- `www.exemplo.com` → também detectado como externo e prefixado com `https://`
+
+### Listas
+
+Lista não ordenada:
+
+- Item simples
+- Item com `código inline`
+- Item com **negrito** ou _itálico_
+
+Lista ordenada:
+
+1. Primeiro passo
+2. Segundo passo
+3. Terceiro passo
+
+Lista de tarefas (via remark-gfm):
+
+- [x] Tarefa concluída
+- [ ] Tarefa pendente
+
+### Tabelas
+
+Suporte nativo via `remark-gfm`:
+
+| Prop        |    Tipo     | Padrão   | Descrição                   |
+| ----------- | :---------: | -------- | --------------------------- |
+| `variant`   |  `string`   | `'info'` | Estilo visual do componente |
+| `title`     |  `string`   | —        | Título opcional             |
+| `className` |  `string`   | —        | Classes CSS adicionais      |
+| `children`  | `ReactNode` | —        | Conteúdo interno            |
+
+---
+
+## Código
+
+O `rehype-pretty-code` processa os blocos de código com syntax highlight automático. O componente `CodeBlock` adiciona o botão de copiar.
+
+Bloco simples:
+
+```ts
+function greet(name: string): string {
+  return `Hello, ${name}!`
+}
+```
+
+Com `title` e `caption`:
+
+```ts title="utils/greet.ts" caption="Função utilitária de saudação."
+function greet(name: string): string {
+  return `Hello, ${name}!`
+}
+```
+
+Com `showLineNumbers`:
+
+```tsx title="components/button.tsx" showLineNumbers
+interface ButtonProps extends React.ComponentProps<'button'> {
+  variant?: 'default' | 'outline' | 'ghost'
+}
+
+export function Button({ variant = 'default', className, ...props }: ButtonProps) {
+  return (
+    <button className={cn(buttonVariants({ variant }), className)} {...props} />
+  )
+}
+```
+
+Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
+
+---
+
+## Callout
+
+Caixas de destaque para informações importantes. Variantes: `info` (padrão), `tip`, `warning`, `danger`.
+
+<Callout>Mensagem informativa simples, sem título.</Callout>
+
+<Callout variant='info' title='Informação'>
+  Use para contexto adicional que complementa o conteúdo principal mas não é
+  crítico para o entendimento.
+</Callout>
+
+<Callout variant='tip' title='Dica'>
+  Use para boas práticas, atalhos ou formas mais eficientes de fazer algo.
+</Callout>
+
+<Callout variant='warning' title='Atenção'>
+  Use para alertar sobre comportamentos inesperados, deprecações ou armadilhas
+  comuns.
+</Callout>
+
+<Callout variant='danger' title='Cuidado'>
+  Use para avisos críticos — dados que podem ser perdidos, falhas de segurança
+  ou erros irreversíveis.
+</Callout>
+
+**Sintaxe:**
+
+```mdx
+<Callout variant='tip' title='Título opcional'>
+  Conteúdo do callout. Suporta `código inline` e **negrito**.
+</Callout>
+```
+
+| Prop      | Valores                         | Padrão |
+| --------- | ------------------------------- | ------ |
+| `variant` | `info` `tip` `warning` `danger` | `info` |
+| `title`   | `string`                        | —      |
+
+---
+
+## Badge
+
+Etiquetas inline para categorizar ou destacar termos.
+
+**Variantes:**
+
+<Badge>default</Badge> <Badge variant='primary'>primary</Badge> <Badge variant='success'>success</Badge> <Badge variant='warning'>warning</Badge> <Badge variant='danger'>danger</Badge> <Badge variant='info'>info</Badge>
+
+**Tamanhos:**
+
+<Badge size='sm'>sm</Badge> <Badge size='md'>md</Badge> <Badge size='lg'>lg</Badge>
+
+**Modificadores:**
+
+<Badge dashed>dashed</Badge> <Badge variant='primary' dashed>primary dashed</Badge> <Badge borderless>borderless</Badge> <Badge variant='success' borderless>success borderless</Badge>
+
+**Sintaxe:**
+
+```mdx
+<Badge variant='primary' size='md' dashed>texto</Badge>
+```
+
+| Prop         | Valores                                                    | Padrão    |
+| ------------ | ---------------------------------------------------------- | --------- |
+| `variant`    | `default` `primary` `success` `warning` `danger` `info`   | `default` |
+| `size`       | `sm` `md` `lg`                                             | `md`      |
+| `dashed`     | `boolean`                                                  | `false`   |
+| `borderless` | `boolean`                                                  | `false`   |
+
+---
+
+## Kbd
+
+Representa teclas e atalhos de teclado inline no texto.
+
+Salve com <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS ou <Kbd>Ctrl</Kbd> + <Kbd>S</Kbd> no Windows. Abra o terminal com <Kbd>⌘</Kbd> + <Kbd>J</Kbd> no VS Code.
+
+**Sintaxe:**
+
+```mdx
+<Kbd>⌘</Kbd> + <Kbd>K</Kbd>
+```
+
+---
+
+## Tabs
+
+Conteúdo alternado em abas. Ideal para mostrar o mesmo conteúdo em múltiplas variações — gerenciadores de pacotes, linguagens, frameworks.
+
+A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve corresponder a um item do array `tabs`.
+
+<Tabs tabs={['npm', 'Yarn', 'pnpm', 'Bun']}>
+  <Tab value='npm'>
+    ```bash
+    npm install react react-dom
+    ```
+  </Tab>
+  <Tab value='Yarn'>
+    ```bash
+    yarn add react react-dom
+    ```
+  </Tab>
+  <Tab value='pnpm'>
+    ```bash
+    pnpm add react react-dom
+    ```
+  </Tab>
+  <Tab value='Bun'>
+    ```bash
+    bun add react react-dom
+    ```
+  </Tab>
+</Tabs>
+
+Use `defaultValue` para definir qual aba abre por padrão (padrão: primeira aba):
+
+```mdx
+<Tabs tabs={['TypeScript', 'JavaScript']} defaultValue='JavaScript'>
+  <Tab value='TypeScript'>...</Tab>
+  <Tab value='JavaScript'>...</Tab>
+</Tabs>
+```
+
+**Sintaxe completa:**
+
+```mdx
+<Tabs tabs={['Aba 1', 'Aba 2']}>
+  <Tab value='Aba 1'>Conteúdo da aba 1</Tab>
+  <Tab value='Aba 2'>Conteúdo da aba 2</Tab>
+</Tabs>
+```
+
+---
+
+## Steps
+
+Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instalação.
+
+<Steps>
+  <Step title='Instale as dependências'>
+    Execute o comando no terminal na raiz do projeto:
+
+    ```bash
+    bun add react react-dom
+    ```
+  </Step>
+
+  <Step title='Configure o arquivo principal'>
+    Crie o arquivo de configuração com o conteúdo abaixo:
+
+    ```ts title="app.config.ts"
+    export default {
+      port: 3000,
+      host: 'localhost',
+    }
+    ```
+  </Step>
+
+  <Step title='Inicie o servidor'>
+    Com tudo configurado, suba o servidor de desenvolvimento:
+
+    ```bash
+    bun dev
+    ```
+  </Step>
+</Steps>
+
+**Sintaxe:**
+
+```mdx
+<Steps>
+  <Step title='Título do passo'>
+    Descrição e conteúdo do passo. Suporta markdown e blocos de código.
+  </Step>
+</Steps>
+```
+
+---
+
+## Accordion
+
+Conteúdo expansível em seções. Útil para FAQs, glossários e informações complementares.
+
+Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='multiple'`, vários itens podem ficar abertos simultaneamente.
+
+<Accordion>
+  <AccordionItem title='Quando usar Accordion?'>
+    Use quando tiver conteúdo que nem todos os leitores precisarão consultar —
+    perguntas frequentes, detalhes avançados, ou explicações alternativas que
+    interromperiam o fluxo do texto principal.
+  </AccordionItem>
+
+  <AccordionItem title='Posso colocar código dentro?'>
+    Sim. O `AccordionContent` aceita qualquer conteúdo MDX, incluindo blocos de
+    código, listas e outros componentes.
+  </AccordionItem>
+
+  <AccordionItem title='Qual a diferença entre type single e multiple?'>
+    Com `single` (padrão), abrir um item fecha os demais. Com `multiple`, vários
+    itens podem estar abertos ao mesmo tempo.
+  </AccordionItem>
+</Accordion>
+
+**Sintaxe:**
+
+```mdx
+<Accordion type='single'>
+  <AccordionItem title='Pergunta ou título'>
+    Resposta ou conteúdo expandido.
+  </AccordionItem>
+</Accordion>
+```
+
+| Prop    | Valores             | Padrão   |
+| ------- | ------------------- | -------- |
+| `type`  | `single` `multiple` | `single` |
+
+A prop `value` do `AccordionItem` é opcional — por padrão usa o próprio `title` como identificador.
+
+---
+
+## FileTree
+
+Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expansíveis interativamente.
+
+<FileTree>
+  <FileTreeFolder name='src' defaultOpen>
+    <FileTreeFolder name='app' defaultOpen>
+      <FileTreeFile name='layout.tsx' />
+      <FileTreeFile name='page.tsx' highlight />
+    </FileTreeFolder>
+    <FileTreeFolder name='components'>
+      <FileTreeFolder name='ui'>
+        <FileTreeFile name='button.tsx' />
+        <FileTreeFile name='input.tsx' />
+      </FileTreeFolder>
+      <FileTreeFile name='header.tsx' />
+    </FileTreeFolder>
+    <FileTreeFolder name='lib'>
+      <FileTreeFile name='utils.ts' />
+    </FileTreeFolder>
+  </FileTreeFolder>
+  <FileTreeFile name='next.config.ts' />
+  <FileTreeFile name='tailwind.config.ts' />
+  <FileTreeFile name='package.json' />
+</FileTree>
+
+**Sintaxe:**
+
+```mdx
+<FileTree>
+  <FileTreeFolder name='src' defaultOpen>
+    <FileTreeFolder name='components'>
+      <FileTreeFile name='button.tsx' />
+    </FileTreeFolder>
+    <FileTreeFile name='app.tsx' highlight />
+  </FileTreeFolder>
+  <FileTreeFile name='package.json' />
+</FileTree>
+```
+
+| Prop          | Componente       | Descrição                                           |
+| ------------- | ---------------- | --------------------------------------------------- |
+| `name`        | Folder e File    | Nome exibido                                        |
+| `defaultOpen` | `FileTreeFolder` | Pasta aberta por padrão                             |
+| `highlight`   | `FileTreeFile`   | Destaca o arquivo — útil para "edite este arquivo"  |
+
+---
+
+## Imagens
+
+### Imagem inline (Markdown)
+
+```mdx
+![Descrição da imagem](./nome-do-arquivo.jpg 'Título tooltip')
+```
+
+### Componente Image
+
+Para imagens com legenda ou controle fino:
+
+```mdx
+import MinhaImagem from './cover.jpg'
+
+<Image
+  src={MinhaImagem}
+  alt='Descrição acessível obrigatória'
+  caption='Legenda exibida abaixo da imagem.'
+/>
+```
+
+### RatioImage
+
+Imagem com proporção fixa usando `object-cover`. Útil para evitar layout shift com imagens de tamanhos variados:
+
+```mdx
+<RatioImage
+  src={MinhaImagem}
+  alt='Descrição acessível'
+  ratio={16 / 9}
+  caption='Legenda opcional.'
+/>
+```
+
+Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
+
+### ImageGrid
+
+Grade de imagens com número de colunas configurável:
+
+```mdx
+<ImageGrid
+  columns={3}
+  images={[
+    { src: Img1, alt: 'Descrição 1', caption: 'Legenda 1' },
+    { src: Img2, alt: 'Descrição 2', caption: 'Legenda 2' },
+    { src: Img3, alt: 'Descrição 3' },
+  ]}
+/>
+```
+
+| Prop      | Valores                  | Padrão |
+| --------- | ------------------------ | ------ |
+| `columns` | `2` `3` `4` `5` `6`     | `3`    |
+
+---
+
+## YouTube
+
+```mdx
+<Youtube id='dQw4w9WgXcQ' />
+```
+
+O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o id é `dQw4w9WgXcQ`.
+
+---
+
+## Tweet
+
+Embed de um tweet pelo ID. O ID está na URL: `x.com/user/status/123456789` → id é `123456789`.
+
+```mdx
+<Tweet id='123456789' />
+```
+
+---
+
+## Emojis
+
+O `remark-gemoji` converte shortcodes no emoji correspondente:
+
+`:rocket:` → 🚀 | `:tada:` → 🎉 | `:warning:` → ⚠️ | `:bulb:` → 💡 | `:white_check_mark:` → ✅
+
+Referência completa: [github.com/ikatyang/emoji-cheat-sheet](https://github.com/ikatyang/emoji-cheat-sheet)
+
+---
+
+## Autolink
+
+O `remark-gfm` detecta automaticamente URLs e e-mails no texto sem formatação de link explícita:
+
+- `www.exemplo.com` → vira link externo
+- `https://exemplo.com` → vira link externo
+- `contato@exemplo.com` → vira link de e-mail
+
+---
+
+## Frontmatter
+
+Todo post precisa de um frontmatter válido no topo do arquivo `.mdx`:
+
+```mdx
+---
+slug: 'meu-post'
+title: 'Título do Post'
+description: 'Descrição curta exibida no card e no SEO.'
+publishedAt: '2026-01-15'
+tags: ['tag1', 'tag2']
+status: 'published'
+authors:
+  - erivelton
+---
+```
+
+Para rascunhos, use `status: 'draft'` — o post não aparecerá na listagem pública.
+
+Campos opcionais para posts de série:
+
+```mdx
+---
+series: 'slug-da-serie'
+order: 1
+---
+```
+
+---
+
+## Importando assets locais
+
+Imagens e outros arquivos da mesma pasta podem ser importados diretamente no MDX:
+
+```mdx
+import Cover from './cover.jpg'
+import Diagrama from './diagrama.png'
+
+<Image src={Cover} alt='Capa do post' />
+<Image src={Diagrama} alt='Diagrama de arquitetura' caption='Figura 1.' />
+```
+
+O `rehype-mdx-import-media` permite também referenciar imagens diretamente no Markdown sem import explícito — o plugin resolve o caminho automaticamente.
+

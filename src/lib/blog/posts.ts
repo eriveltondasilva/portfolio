@@ -1,6 +1,6 @@
 import { dirname, basename } from 'node:path'
 
-import postsIndex from '@/content/indexes/posts.json'
+import postsIndex from '@/generated/indexes/posts.json'
 
 import type { AdjacentPosts, PostIndex, PostWithContent } from '@/types'
 
