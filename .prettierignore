@@ -1,3 +1,3 @@
 src/components/ui/*
-content/posts/**/*.mdx
+content/posts/*
 generated/*

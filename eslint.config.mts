@@ -50,6 +50,7 @@ const eslintConfig = defineConfig([
     'next-env.d.ts',
     // Custom ignores:
     'src/components/ui/**',
+    'generated/**',
   ]),
 ])
 
