@@ -1,6 +1,6 @@
-import { BuildError } from './utils'
+import { BuildError } from './utils';
 
-import type { PostIndex } from '@/types'
+import type { PostIndex } from '@/types';
 
 type SeriesPost = PostIndex & { series: string; order: number }
 
@@ -88,31 +88,46 @@ export function assertAuthorsExist(
       `\n Authors available: ${[...knownAuthors].map((author) => `"${author}"`).join(', ')}`
     : '\n No authors found.'
 
-  throw new BuildError('posts', [
-    `Non-existent authors referenced:\n${detail}${available}`,
-  ])
+  const message = `Non-existent authors referenced:\n${detail}${available}`
+  throw new BuildError('posts', [message])
+}
+
+interface Entry {
+  slug: string
+  source: string
 }
 
 export function assertUniqueSlugs(
   context: string,
-  entries: { slug: string; source: string }[],
+  entries: readonly Entry[],
 ): void {
-  const grouped = Object.groupBy(entries, ({ slug }) => slug)
+  const seen = new Map<string, string[]>()
+  let hasDuplicates = false
 
-  const duplicates = Object.entries(grouped).filter(
-    ([, group]) => (group?.length ?? 0) > 1,
-  )
+  for (const { slug, source } of entries) {
+    const sources = seen.get(slug)
 
-  if (duplicates.length === 0) return
+    if (sources) {
+      sources.push(source)
+      hasDuplicates = true
+    } else {
+      seen.set(slug, [source])
+    }
+  }
 
-  const detail = duplicates
-    .map(([slug, group]) => {
-      const files = (group ?? [])
-        .map(({ source }) => `\n    - ${source}`)
-        .join('')
-      return `  "${slug}" found in:${files}`
-    })
-    .join('\n')
+  if (!hasDuplicates) return
 
-  throw new BuildError(context, [`Duplicate slugs found:\n${detail}`])
+  const detail: string[] = []
+
+  for (const [slug, sources] of seen) {
+    if (sources.length <= 1) continue
+
+    const files = [...new Set(sources)]
+      .map((source) => `\n    - ${source}`)
+      .join('')
+    detail.push(`  "${slug}" found in:${files}`)
+  }
+
+  const message = `Duplicate slugs found:\n\n${detail.join('\n')}`
+  throw new BuildError(context, [message])
 }

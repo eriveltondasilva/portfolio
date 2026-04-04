@@ -19,7 +19,7 @@ import {
   BuildError,
   readJson,
   getErrMessage,
-  log,
+  Logger,
   sortByDateDesc,
 } from './utils'
 import {
@@ -43,19 +43,23 @@ interface PostsData {
   }
 }
 
+const log = new Logger()
+
 // # Readers
 
 async function readAuthors(): Promise<Set<string>> {
-  const parsed = await readJson(AUTHORS_SOURCE_FILE)
-  const result = authorSchema.array().safeParse(parsed)
+  const data = await readJson(AUTHORS_SOURCE_FILE)
+  const result = authorSchema.array().safeParse(data)
 
   if (!result.success) {
-    throw new BuildError('authors', [
+    const errorMessages = [
       AUTHORS_SOURCE_FILE + '\n',
       ...result.error.issues.map(
-        ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
+        ({ path, message }) => `    - ${path.join('.')}: ${message}`,
       ),
-    ])
+    ]
+
+    throw new BuildError('authors', errorMessages)
   }
 
   assertUniqueSlugs(
@@ -70,16 +74,18 @@ async function readAuthors(): Promise<Set<string>> {
 }
 
 async function readSeries(): Promise<Map<string, Series>> {
-  const parsed = await readJson(SERIES_SOURCE_FILE)
-  const result = seriesSchema.array().safeParse(parsed)
+  const data = await readJson(SERIES_SOURCE_FILE)
+  const result = seriesSchema.array().safeParse(data)
 
   if (!result.success) {
-    throw new BuildError('series', [
+    const errorMessages = [
       SERIES_SOURCE_FILE + '\n',
       ...result.error.issues.map(
         ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
       ),
-    ])
+    ]
+
+    throw new BuildError('series', errorMessages)
   }
 
   assertUniqueSlugs(
@@ -108,6 +114,7 @@ async function readPosts(): Promise<PostsData> {
         const issues = error.issues
           .map(({ path, message }) => `\t- ${path.join('.')}: ${message}`)
           .join('\n')
+
         throw new Error(`${file}\n\n${issues}`)
       }
 
@@ -163,21 +170,19 @@ async function readPosts(): Promise<PostsData> {
 // # Builders
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
-  const sorted = sortByDateDesc(posts)
-  await writeJson(POSTS_INDEX_OUTPUT, sorted)
+  const sortedPosts = sortByDateDesc(posts)
+  await writeJson(POSTS_INDEX_OUTPUT, sortedPosts)
 }
 
 async function buildSeriesIndex(
   seriesMap: Map<string, Series>,
   posts: PostIndex[],
 ): Promise<SeriesIndex[]> {
-  const postsBySeries = Object.groupBy(
-    posts.filter(
-      (post): post is SeriesPost =>
-        post.series !== undefined && post.order !== undefined,
-    ),
-    (post) => post.series,
+  const filteredPosts = posts.filter(
+    (post): post is SeriesPost =>
+      post.series !== undefined && post.order !== undefined,
   )
+  const postsBySeries = Object.groupBy(filteredPosts, (post) => post.series)
 
   const seriesWithPosts: SeriesIndex[] = sortByDateDesc(
     Array.from(seriesMap.values()),
@@ -198,7 +203,9 @@ async function buildSeriesIndex(
 
 async function main(): Promise<void> {
   const startedAt = performance.now()
-  console.info('\n⏳ Generating blog indices...')
+
+  log.divider()
+  console.info('⏳ Generating blog indices...')
 
   // -- Read -------------------------------------------------------------------
 
@@ -217,17 +224,18 @@ async function main(): Promise<void> {
     .map(({ reason }) => getErrMessage(reason))
 
   if (errors.length > 0) {
-    throw new Error(
-      `errors during data read.\n\n---\n\n${errors.join('\n\n---\n\n')}\n\n---\n`,
-    )
+    const errorMessage = `# Errors during data read.\n\n---\n\n${errors.join('\n\n---\n\n')}\n\n---\n`
+    throw new Error(errorMessage)
   }
 
-  const authors = (authorsResult as PromiseFulfilledResult<Set<string>>).value
-  const seriesMap = (
-    seriesResult as PromiseFulfilledResult<Map<string, Series>>
-  ).value
-  const { posts, stats } = (postsResult as PromiseFulfilledResult<PostsData>)
-    .value
+  const getValue = <T>(result: PromiseSettledResult<T>) => {
+    if (result.status === 'rejected') throw result.reason
+    return result.value
+  }
+
+  const authors = getValue(authorsResult)
+  const seriesMap = getValue(seriesResult)
+  const { posts, stats } = getValue(postsResult)
 
   log.ok('authors', `${authors.size} loaded`)
   log.ok('series', `${seriesMap.size} loaded`)
@@ -245,13 +253,12 @@ async function main(): Promise<void> {
   log.section('Validating:')
 
   assertSeriesExist(posts, new Set(seriesMap.keys()))
-  log.ok('authors', `${authors.size} loaded`)
-
   assertUniqueSeriesOrder(posts)
-  log.ok('series', `${seriesMap.size} loaded`)
-
   assertAuthorsExist(posts, authors)
-  log.ok('authors', `${authors.size} loaded`)
+
+  log.ok('series exist', `${seriesMap.size} known`)
+  log.ok('unique order', 'no conflicts')
+  log.ok('authors exist', `${authors.size} known`)
 
   const seriesPosts = posts.filter((post) => post.series !== undefined)
 
@@ -280,7 +287,7 @@ async function main(): Promise<void> {
   // -- Done -------------------------------------------------------------------
 
   const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`\n✔ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${elapsed}ms`)
 }
 
 main().catch((error) => {

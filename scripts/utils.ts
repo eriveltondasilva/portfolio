@@ -1,5 +1,7 @@
 import { styleText } from 'node:util'
 
+type FormatStyle = Parameters<typeof styleText>[0]
+
 export function sortByDateDesc<T extends { publishedAt: string }>(
   items: T[],
 ): T[] {
@@ -11,49 +13,56 @@ export function sortByDateDesc<T extends { publishedAt: string }>(
 
 // # Logger
 
-export const log = {
-  section: function (label: string) {
-    console.info(styleText(['bold', 'cyan'], `\n  ${label}`))
-  },
-  //
-  ok: function (label: string, detail = '') {
-    console.info(
-      styleText('green', '  ✔') +
-        '  ' +
-        label +
-        (detail ? '  ' + styleText('dim', detail) : ''),
-    )
-  },
-  //
-  skip: function (label: string, detail = '') {
-    console.info(
-      styleText('yellow', '  –') +
-        '  ' +
-        label +
-        (detail ? '  ' + styleText('dim', detail) : ''),
-    )
-  },
-  //
-  detail: function (text: string) {
-    console.info(styleText('gray', `     ${text}`))
-  },
-  //
-  success: function (text: string) {
-    console.info(styleText('green', text))
-  },
-  //
-  failure: function (err: unknown) {
-    const divider = styleText('red', `  ${'─'.repeat(60)}`)
-    const error = getErrMessage(err)
+export class Logger {
+  section(label: string) {
+    console.info(styleText(['bold', 'cyan'], `\n  ${label}\n`))
+  }
 
-    console.error(styleText(['bold', 'red'], '\n❌ Build failed\n'))
-    console.error(divider)
-    console.error(`\n${error}\n`)
-    console.error(divider)
-    console.error(
-      styleText('yellow', '\n  Fix the errors above and try again.\n'),
+  ok(label: string, detail = '') {
+    console.info(
+      [
+        styleText('green', '  ✔'),
+        '  ',
+        label,
+        detail ? ' = ' + styleText('gray', detail) : '',
+      ].join(''),
     )
-  },
+  }
+
+  skip(label: string, detail = '') {
+    console.info(
+      [
+        styleText('yellow', '  –'),
+        '  ',
+        label,
+        detail ? ' = ' + styleText('gray', detail) : '',
+      ].join(''),
+    )
+  }
+
+  detail(text: string) {
+    console.info(styleText('gray', `     ${text}`))
+  }
+
+  success(text: string) {
+    console.info(styleText('green', `\n${text}\n`))
+  }
+
+  divider(format: FormatStyle = 'gray') {
+    console.info(styleText(format, `\n${'—'.repeat(60)}\n`))
+  }
+
+  failure(err: unknown) {
+    console.error(styleText(['bold', 'red'], '\n❌ Build failed'))
+
+    this.divider('red')
+    console.error(`\n${getErrMessage(err)}\n`)
+    this.divider('red')
+
+    console.error(
+      styleText('yellow', '🟡 Fix the errors above and try again.\n'),
+    )
+  }
 }
 
 // # Errors

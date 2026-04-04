@@ -7,11 +7,15 @@ import {
 } from '@/lib/constants'
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 
-import { log, writeJson } from './utils'
+import { Logger, writeJson } from './utils'
+
+const log = new Logger()
 
 async function main(): Promise<void> {
   const startedAt = performance.now()
-  console.info('\n⏳ Generating JSON Schemas...')
+
+  log.divider()
+  console.info('⏳ Generating JSON Schemas...')
 
   // -- Generate ---------------------------------------------------------------
 
@@ -42,7 +46,7 @@ async function main(): Promise<void> {
   // -- Done -------------------------------------------------------------------
 
   const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`\n✔ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${elapsed}ms`)
 }
 
 main().catch((error) => {

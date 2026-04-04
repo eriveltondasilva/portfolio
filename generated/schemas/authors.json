@@ -53,12 +53,20 @@
             "format": "uri"
           }
         },
-        "required": ["github"],
+        "required": [
+          "github"
+        ],
         "additionalProperties": false,
         "description": "Social media profiles of the author."
       }
     },
-    "required": ["slug", "name", "bio", "skills", "socials"],
+    "required": [
+      "slug",
+      "name",
+      "bio",
+      "skills",
+      "socials"
+    ],
     "additionalProperties": false,
     "title": "Author Metadata",
     "description": "Schema for validating metadata of a blog author."

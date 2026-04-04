@@ -9,9 +9,11 @@ import {
   getProjectTags,
 } from '@/lib'
 
-import { log, writeJson } from './utils'
+import { Logger, writeJson } from './utils'
 
 import type { Project } from '@/types'
+
+const log = new Logger()
 
 // # Fetchers
 
@@ -82,7 +84,9 @@ async function buildProjectsIndex(projects: Project[]): Promise<void> {
 
 async function main(): Promise<void> {
   const startedAt = performance.now()
-  console.info('\n⏳ Generating projects index...')
+
+  log.divider()
+  console.info('⏳ Generating projects index...')
 
   // -- Fetch ------------------------------------------------------------------
 
@@ -99,7 +103,7 @@ async function main(): Promise<void> {
   // -- Done  ------------------------------------------------------------------
 
   const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`\n✔ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${elapsed}ms`)
 }
 
 main().catch((error) => {
