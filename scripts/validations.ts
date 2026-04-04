@@ -1,40 +1,49 @@
-import { BuildError } from './utils';
+import { BuildError } from './utils'
 
-import type { PostIndex } from '@/types';
+import type { PostIndex } from '@/types'
 
-type SeriesPost = PostIndex & { series: string; order: number }
+export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
+  const index = new Map<string, Map<number, string[]>>()
 
-export function assertUniqueSeriesOrder(posts: PostIndex[]): void {
-  const seriesPosts = posts.filter(
-    (p): p is SeriesPost => p.series !== undefined && p.order !== undefined,
-  )
+  for (const { series, order, filePath } of posts) {
+    if (series === undefined || order === undefined) continue
 
-  const bySeries = Object.groupBy(seriesPosts, ({ series }) => series)
+    let orderMap = index.get(series)
+    if (!orderMap) {
+      orderMap = new Map()
+      index.set(series, orderMap)
+    }
 
-  const conflicts = Object.entries(bySeries).flatMap(([seriesSlug, group]) => {
-    const byOrder = Object.groupBy(group!, ({ order }) => order)
-
-    const duplicateOrders = Object.entries(byOrder).filter(
-      ([, items]) => (items?.length ?? 0) > 1,
-    )
-
-    if (duplicateOrders.length === 0) return []
-
-    const detail = duplicateOrders
-      .map(([order, items]) => {
-        const files = items!
-          .map(({ filePath }) => `\n    - ${filePath}`)
-          .join('')
-        return `  order ${order}:${files}`
-      })
-      .join('\n')
-
-    return [`Series "${seriesSlug}" has duplicate "order" values:\n${detail}`]
-  })
-
-  if (conflicts.length > 0) {
-    throw new BuildError('posts', conflicts)
+    const files = orderMap.get(order)
+    if (files) {
+      files.push(filePath)
+    } else {
+      orderMap.set(order, [filePath])
+    }
   }
+
+  const conflicts: string[] = []
+
+  for (const [seriesSlug, orderMap] of index) {
+    const lines: string[] = []
+
+    for (const [order, files] of orderMap) {
+      if (files.length <= 1) continue
+
+      const detail = files.map((f) => `\n    - ${f}`).join('')
+      lines.push(`  order ${order}:${detail}`)
+    }
+
+    if (lines.length > 0) {
+      conflicts.push(
+        `Series "${seriesSlug}" has duplicate "order" values:\n${lines.join('\n')}`,
+      )
+    }
+  }
+
+  if (conflicts.length === 0) return
+
+  throw new BuildError('posts', conflicts)
 }
 
 export function assertSeriesExist(
@@ -50,7 +59,7 @@ export function assertSeriesExist(
   const detail = invalid
     .map(
       (post) =>
-        `  - "${post.slug}" → série "${post.series}"\n    ${post.filePath}`,
+        `  - "${post.slug}" -> série "${post.series}"\n    ${post.filePath}`,
     )
     .join('\n')
 
@@ -59,13 +68,12 @@ export function assertSeriesExist(
       `\n  Series available: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
     : '\n  No series found.'
 
-  throw new BuildError('posts', [
-    `Non-existent series referenced:\n${detail}${available}`,
-  ])
+  const message = `Non-existent series referenced:\n${detail}${available}`
+  throw new BuildError('posts', [message])
 }
 
 export function assertAuthorsExist(
-  posts: PostIndex[],
+  posts: readonly PostIndex[],
   knownAuthors: Set<string>,
 ): void {
   const missing = posts.flatMap((post) =>

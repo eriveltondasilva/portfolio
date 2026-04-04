@@ -19,7 +19,7 @@ async function main(): Promise<void> {
 
   // -- Generate ---------------------------------------------------------------
 
-  log.section('Generating schemas:')
+  log.section('Generating schemas')
 
   const seriesJsonSchema = z.toJSONSchema(seriesSchema.array())
   const authorsJsonSchema = z.toJSONSchema(authorSchema.array())
@@ -31,7 +31,7 @@ async function main(): Promise<void> {
 
   // -- Write ------------------------------------------------------------------
 
-  log.section('Writing files:')
+  log.section('Writing files')
 
   await Promise.all([
     writeJson(SERIES_SCHEMA_OUTPUT, seriesJsonSchema),
@@ -45,8 +45,8 @@ async function main(): Promise<void> {
 
   // -- Done -------------------------------------------------------------------
 
-  const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`✅ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`)
+  log.divider()
 }
 
 main().catch((error) => {

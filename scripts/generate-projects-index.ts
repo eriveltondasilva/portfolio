@@ -37,17 +37,24 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     sort: 'full_name',
   })
 
+  const privateCount = repos.filter((repo) => repo.private).length
   const portfolioRepos = repos.filter(
     (repo) => !repo.private && repo.topics?.includes(Topics.INCLUDE),
   )
 
-  // Log results
   log.ok(
-    'repos fetched',
-    `${repos.length} total · ${portfolioRepos.length} with topic "${Topics.INCLUDE}"`,
+    'repos fetched:',
+    `${repos.length} total - ${portfolioRepos.length} included`,
   )
+  if (privateCount > 0) log.skip('private:', `${privateCount} excluded`)
 
-  // Count status categories
+  const withoutTopic = repos.length - privateCount - portfolioRepos.length
+  if (withoutTopic > 0)
+    log.skip(
+      'no topic:\t',
+      `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`,
+    )
+
   const featuredCount = portfolioRepos.filter((repo) =>
     repo.topics?.includes(Topics.FEATURED),
   ).length
@@ -56,7 +63,6 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
   ).length
   const archivedCount = portfolioRepos.filter((repo) => repo.archived).length
 
-  // Log status counts
   if (featuredCount > 0) log.detail(`${featuredCount} featured`)
   if (wipCount > 0) log.detail(`${wipCount} wip`)
   if (archivedCount > 0)
@@ -90,20 +96,20 @@ async function main(): Promise<void> {
 
   // -- Fetch ------------------------------------------------------------------
 
-  log.section('Fetching from GitHub:')
+  log.section('Fetching from GitHub')
   const projects = await fetchPortfolioProjects()
 
   // -- Write  -----------------------------------------------------------------
 
-  log.section('Writing index:')
+  log.section('Writing index')
 
   await buildProjectsIndex(projects)
-  log.ok(PROJECTS_INDEX_OUTPUT, `${projects.length} project(s)`)
+  log.ok('projects index:', PROJECTS_INDEX_OUTPUT)
 
   // -- Done  ------------------------------------------------------------------
 
-  const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`✅ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`)
+  log.divider()
 }
 
 main().catch((error) => {

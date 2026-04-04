@@ -2,12 +2,9 @@ import { styleText } from 'node:util'
 
 type FormatStyle = Parameters<typeof styleText>[0]
 
-export function sortByDateDesc<T extends { publishedAt: string }>(
-  items: T[],
-): T[] {
+export function sortByDateDesc<T extends { publishedAt: string }>(items: T[]): T[] {
   return items.toSorted(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
   )
 }
 
@@ -15,17 +12,14 @@ export function sortByDateDesc<T extends { publishedAt: string }>(
 
 export class Logger {
   section(label: string) {
-    console.info(styleText(['bold', 'cyan'], `\n  ${label}\n`))
+    console.info(styleText(['bold', 'blue'], `\n  ${label.toUpperCase()}\n`))
   }
 
   ok(label: string, detail = '') {
     console.info(
-      [
-        styleText('green', '  ✔'),
-        '  ',
-        label,
-        detail ? ' = ' + styleText('gray', detail) : '',
-      ].join(''),
+      [styleText('green', '  ✔'), '  ', label, detail ? '\t' + styleText('gray', detail) : ''].join(
+        '',
+      ),
     )
   }
 
@@ -35,7 +29,7 @@ export class Logger {
         styleText('yellow', '  –'),
         '  ',
         label,
-        detail ? ' = ' + styleText('gray', detail) : '',
+        detail ? '\t' + styleText('gray', detail) : '',
       ].join(''),
     )
   }
@@ -45,7 +39,7 @@ export class Logger {
   }
 
   success(text: string) {
-    console.info(styleText('green', `\n${text}\n`))
+    console.info(styleText('green', `\n${text}`))
   }
 
   divider(format: FormatStyle = 'gray') {
@@ -53,15 +47,12 @@ export class Logger {
   }
 
   failure(err: unknown) {
-    console.error(styleText(['bold', 'red'], '\n❌ Build failed'))
-
     this.divider('red')
-    console.error(`\n${getErrMessage(err)}\n`)
+    console.error(styleText(['bold', 'red'], '❌ BUILD FAILED\n'))
+    console.error(getErrMessage(err))
     this.divider('red')
 
-    console.error(
-      styleText('yellow', '🟡 Fix the errors above and try again.\n'),
-    )
+    console.error(styleText('yellow', '🟡 Fix the errors above and try again.\n'))
   }
 }
 
@@ -72,9 +63,7 @@ export class BuildError extends Error {
     readonly context: string,
     messages: string[],
   ) {
-    super(
-      `[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n')}`,
-    )
+    super(`[${context}] ${messages.length} error(s) found:\n\n${messages.join('\n')}`)
     this.name = 'BuildError'
   }
 }
@@ -93,10 +82,7 @@ export async function readJson(filePath: string): Promise<unknown> {
   }
 }
 
-export async function writeJson(
-  filePath: string,
-  data: unknown,
-): Promise<void> {
+export async function writeJson(filePath: string, data: unknown): Promise<void> {
   try {
     await Bun.write(filePath, JSON.stringify(data, null, 2))
   } catch (cause) {

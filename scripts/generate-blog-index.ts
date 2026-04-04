@@ -14,14 +14,7 @@ import {
   SERIES_INDEX_OUTPUT,
 } from '@/lib/constants'
 
-import {
-  writeJson,
-  BuildError,
-  readJson,
-  getErrMessage,
-  Logger,
-  sortByDateDesc,
-} from './utils'
+import { writeJson, BuildError, readJson, getErrMessage, Logger, sortByDateDesc } from './utils'
 import {
   assertAuthorsExist,
   assertSeriesExist,
@@ -52,14 +45,12 @@ async function readAuthors(): Promise<Set<string>> {
   const result = authorSchema.array().safeParse(data)
 
   if (!result.success) {
-    const errorMessages = [
-      AUTHORS_SOURCE_FILE + '\n',
-      ...result.error.issues.map(
-        ({ path, message }) => `    - ${path.join('.')}: ${message}`,
-      ),
-    ]
+    const issues = result.error.issues
+      .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
+      .join('\n')
+    const errorMessage = `${AUTHORS_SOURCE_FILE}\n\n${issues}`
 
-    throw new BuildError('authors', errorMessages)
+    throw new BuildError('authors', [errorMessage])
   }
 
   assertUniqueSlugs(
@@ -78,14 +69,12 @@ async function readSeries(): Promise<Map<string, Series>> {
   const result = seriesSchema.array().safeParse(data)
 
   if (!result.success) {
-    const errorMessages = [
-      SERIES_SOURCE_FILE + '\n',
-      ...result.error.issues.map(
-        ({ path, message }) => `\t- ${path.join('.')}: ${message}`,
-      ),
-    ]
+    const issues = result.error.issues
+      .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
+      .join('\n')
+    const errorMessage = `${SERIES_SOURCE_FILE}\n\n${issues}`
 
-    throw new BuildError('series', errorMessages)
+    throw new BuildError('series', [errorMessage])
   }
 
   assertUniqueSlugs(
@@ -112,10 +101,11 @@ async function readPosts(): Promise<PostsData> {
 
       if (!success) {
         const issues = error.issues
-          .map(({ path, message }) => `\t- ${path.join('.')}: ${message}`)
+          .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
           .join('\n')
+        const errorMessage = `${file}\n\n${issues}\n`
 
-        throw new Error(`${file}\n\n${issues}`)
+        throw new Error(errorMessage)
       }
 
       if (data.status !== PostStatus.PUBLISHED) return null
@@ -134,9 +124,7 @@ async function readPosts(): Promise<PostsData> {
   )
 
   const errors = results
-    .filter(
-      (result): result is PromiseRejectedResult => result.status === 'rejected',
-    )
+    .filter((result): result is PromiseRejectedResult => result.status === 'rejected')
     .map(({ reason }) => getErrMessage(reason))
 
   if (errors.length > 0) throw new BuildError('posts', errors)
@@ -179,20 +167,19 @@ async function buildSeriesIndex(
   posts: PostIndex[],
 ): Promise<SeriesIndex[]> {
   const filteredPosts = posts.filter(
-    (post): post is SeriesPost =>
-      post.series !== undefined && post.order !== undefined,
+    (post): post is SeriesPost => post.series !== undefined && post.order !== undefined,
   )
   const postsBySeries = Object.groupBy(filteredPosts, (post) => post.series)
 
-  const seriesWithPosts: SeriesIndex[] = sortByDateDesc(
-    Array.from(seriesMap.values()),
-  ).map((series) => {
-    const relatedPosts: SeriesPostRef[] = (postsBySeries[series.slug] ?? [])
-      .toSorted((a, b) => a.order - b.order)
-      .map(({ slug, title, order }) => ({ slug, title, order }))
+  const seriesWithPosts: SeriesIndex[] = sortByDateDesc(Array.from(seriesMap.values())).map(
+    (series) => {
+      const relatedPosts: SeriesPostRef[] = (postsBySeries[series.slug] ?? [])
+        .toSorted((a, b) => a.order - b.order)
+        .map(({ slug, title, order }) => ({ slug, title, order }))
 
-    return { ...series, posts: relatedPosts }
-  })
+      return { ...series, posts: relatedPosts }
+    },
+  )
 
   await writeJson(SERIES_INDEX_OUTPUT, seriesWithPosts)
 
@@ -209,85 +196,62 @@ async function main(): Promise<void> {
 
   // -- Read -------------------------------------------------------------------
 
-  log.section('Reading content:')
+  log.section('Reading content')
 
-  const [authorsResult, seriesResult, postsResult] = await Promise.allSettled([
-    readAuthors(),
-    readSeries(),
-    readPosts(),
-  ])
+  const [authors, series, postsData] = await Promise.all([readAuthors(), readSeries(), readPosts()])
 
-  const errors = [authorsResult, seriesResult, postsResult]
-    .filter(
-      (result): result is PromiseRejectedResult => result.status === 'rejected',
+  const { posts, stats } = postsData
+  log.ok('authors:', `${authors.size} loaded`)
+  log.ok('series:', `${series.size} loaded`)
+  log.ok('posts:', `${stats.published} published of ${stats.scanned} scanned`)
+
+  if (stats.drafts > 0) log.skip('drafts:', `${stats.drafts} skipped`)
+  if (stats.withCover < stats.published) {
+    log.skip(
+      'cover:',
+      `${stats.published - stats.withCover} of ${stats.published} published post(s) without cover`,
     )
-    .map(({ reason }) => getErrMessage(reason))
-
-  if (errors.length > 0) {
-    const errorMessage = `# Errors during data read.\n\n---\n\n${errors.join('\n\n---\n\n')}\n\n---\n`
-    throw new Error(errorMessage)
-  }
-
-  const getValue = <T>(result: PromiseSettledResult<T>) => {
-    if (result.status === 'rejected') throw result.reason
-    return result.value
-  }
-
-  const authors = getValue(authorsResult)
-  const seriesMap = getValue(seriesResult)
-  const { posts, stats } = getValue(postsResult)
-
-  log.ok('authors', `${authors.size} loaded`)
-  log.ok('series', `${seriesMap.size} loaded`)
-  log.ok(
-    'posts',
-    `${stats.published} published · ${stats.withCover} with cover`,
-  )
-
-  if (stats.drafts > 0) {
-    log.skip('drafts', `${stats.drafts} skipped`)
   }
 
   // -- Validate ---------------------------------------------------------------
 
-  log.section('Validating:')
+  log.section('Validating')
 
-  assertSeriesExist(posts, new Set(seriesMap.keys()))
+  assertSeriesExist(posts, new Set(series.keys()))
   assertUniqueSeriesOrder(posts)
   assertAuthorsExist(posts, authors)
 
-  log.ok('series exist', `${seriesMap.size} known`)
-  log.ok('unique order', 'no conflicts')
-  log.ok('authors exist', `${authors.size} known`)
+  if (series.size > 0) log.ok('series exist:', 'all referenced series are defined')
+  if (series.size > 0) log.ok('series order:', 'all posts have unique order')
+  if (authors.size > 0) log.ok('authors exist:', 'all referenced authors are defined')
 
   const seriesPosts = posts.filter((post) => post.series !== undefined)
 
   if (seriesPosts.length > 0) {
-    log.detail(`${seriesPosts.length} post(s) assigned to series`)
+    log.detail(`${seriesPosts.length} of ${stats.published} post(s) linked to series`)
   }
 
   // -- Write ------------------------------------------------------------------
 
-  log.section('Writing indexes:')
+  log.section('Writing indices')
 
   const [seriesWithPosts] = await Promise.all([
-    buildSeriesIndex(seriesMap, posts),
+    buildSeriesIndex(series, posts),
     buildPostsIndex(posts),
   ])
 
-  log.ok(POSTS_INDEX_OUTPUT, `${stats.published} post(s)`)
-  log.ok(SERIES_INDEX_OUTPUT, `${seriesWithPosts.length} series`)
+  log.ok('posts index:', POSTS_INDEX_OUTPUT)
+  log.ok('series index:', SERIES_INDEX_OUTPUT)
 
-  for (const series of seriesWithPosts) {
-    if (series.posts.length > 0) {
-      log.detail(`${series.slug}  (${series.posts.length} posts)`)
-    }
+  for (const seriesData of seriesWithPosts) {
+    if (seriesData.posts.length === 0) return
+    log.detail(`${seriesData.slug}  (${seriesData.posts.length} posts)`)
   }
 
   // -- Done -------------------------------------------------------------------
 
-  const elapsed = (performance.now() - startedAt).toFixed(0)
-  log.success(`✅ Done in ${elapsed}ms`)
+  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`)
+  log.divider()
 }
 
 main().catch((error) => {
