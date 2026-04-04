@@ -66,10 +66,7 @@ export function ProjectCard({ project, ...props }: Props) {
             {project.name}
           </a>
           {project.featured && (
-            <Icon
-              iconNode={StarIcon}
-              className='size-3.5 fill-amber-400 text-amber-400'
-            />
+            <Icon iconNode={StarIcon} className='size-3.5 fill-amber-400 text-amber-400' />
           )}
         </div>
 

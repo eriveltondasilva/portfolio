@@ -1,10 +1,4 @@
-import {
-  ArrowLeftIcon,
-  CalendarIcon,
-  CalendarSyncIcon,
-  ClockIcon,
-  FilePenIcon,
-} from 'lucide-react'
+import { ArrowLeftIcon, CalendarIcon, CalendarSyncIcon, ClockIcon, FilePenIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -16,16 +10,17 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/separator'
 import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
-import { GITHUB_REPO, URL_BASE } from '@/lib/constants'
+import { GITHUB_REPO, PostStatus, URL_BASE } from '@/lib/constants'
 import { getAuthorsBySlugs } from '@/lib/blog/authors'
 import { RelatedPosts } from '@/components/related-posts'
 import { ReadingProgress } from '@/components/reading-progress'
 import { ShareButton } from '@/components/share-button'
 import { BackToTop } from '@/components/back-to-top'
 import { PostSeriesBanner } from '@/components/post-series-banner'
+import { ArchivedBanner } from '@/components/archived-banner'
 import {
   getAdjacentPosts,
-  getAllPosts,
+  getAllPostSlugs,
   getPostBySlug,
   getPostWithContent,
 } from '@/lib/blog/posts'
@@ -34,9 +29,7 @@ import type { Metadata } from 'next'
 
 export const dynamicParams = false
 
-export async function generateMetadata({
-  params,
-}: PageProps<'/blog/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const { slug } = await params
   const post = getPostBySlug(slug)
 
@@ -64,8 +57,7 @@ export async function generateMetadata({
 }
 
 export function generateStaticParams() {
-  const posts = getAllPosts()
-  return posts.map(({ slug }) => ({ slug }))
+  return getAllPostSlugs()
 }
 
 export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
@@ -78,6 +70,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { prevPost, nextPost } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prevPost !== null || nextPost !== null
+  const isArchived = meta.status === PostStatus.ARCHIVED
 
   const authors = getAuthorsBySlugs(meta.authors)
 
@@ -98,6 +91,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         Voltar ao blog
       </Link>
 
+      {/* Archived banner */}
+      {isArchived && <ArchivedBanner />}
+
       {/* Post header */}
       <header>
         {/* Title + share button */}
@@ -109,17 +105,13 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         </div>
 
         {/* Cover image */}
-        {meta.hasCover && (
-          <PostCover filePath={meta.filePath} title={meta.title} />
-        )}
+        {meta.hasCover && <PostCover filePath={meta.filePath} title={meta.title} />}
 
         {/* Meta info */}
         <div className='mt-6 space-y-2'>
           <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
             <span className='flex items-center gap-1.5'>
-              <Icon
-                iconNode={meta.updatedAt ? CalendarSyncIcon : CalendarIcon}
-              />
+              <Icon iconNode={meta.updatedAt ? CalendarSyncIcon : CalendarIcon} />
               <time dateTime={meta.updatedAt ?? meta.publishedAt}>
                 {formatDate(meta.updatedAt ?? meta.publishedAt, {
                   dateStyle: 'long',
@@ -177,20 +169,19 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <PostSeriesBanner slug={meta.series} order={meta.order} />
 
       {/* Related posts */}
-      <RelatedPosts slug={slug} />
-
-      <Separator />
+      {!isArchived && <RelatedPosts slug={slug} />}
 
       {/* Prev / Next navigation */}
-      {hasAdjacentPosts && (
-        <nav
-          aria-label='Navegação entre posts'
-          className='flex flex-col gap-3 sm:flex-row'
-        >
-          {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
-          {!prevPost && <div className='flex-1' />}
-          {nextPost && <AdjacentPostCard post={nextPost} direction='next' />}
-        </nav>
+      {!isArchived && hasAdjacentPosts && (
+        <>
+          <Separator />
+
+          <nav aria-label='Navegação entre posts' className='flex flex-col gap-3 sm:flex-row'>
+            {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
+            {!prevPost && <div className='flex-1' />}
+            {nextPost && <AdjacentPostCard post={nextPost} direction='next' />}
+          </nav>
+        </>
       )}
     </div>
   )

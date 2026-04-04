@@ -20,15 +20,11 @@ export function RatioImage({
   sizes,
   ...props
 }: Props) {
-  const effectivePlaceholder =
-    placeholder ?? (props.blurDataURL ? 'blur' : 'empty')
+  const effectivePlaceholder = placeholder ?? (props.blurDataURL ? 'blur' : 'empty')
 
   return (
     <figure className='not-prose'>
-      <AspectRatio
-        ratio={ratio}
-        className='overflow-hidden rounded-lg bg-muted'
-      >
+      <AspectRatio ratio={ratio} className='overflow-hidden rounded-lg bg-muted'>
         <ImageNext
           className={cn('rounded-lg object-cover', className)}
           sizes={sizes ?? DEFAULT_SIZES}

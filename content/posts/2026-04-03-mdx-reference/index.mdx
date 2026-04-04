@@ -1,5 +1,5 @@
 ---
-slug: 'mdx-referenceA'
+slug: 'mdx-reference'
 title: 'Referência de Componentes MDX'
 description: 'Manual completo de todos os componentes e recursos disponíveis para escrever posts neste blog.'
 publishedAt: '2026-04-03'
@@ -73,6 +73,9 @@ Bloco simples:
 function greet(name: string): string {
   return `Hello, ${name}!`
 }
+
+console.log('hewwo') // [!code --]
+console.log('hello') // [!code ++]
 ```
 
 Com `title` e `caption`:
@@ -94,6 +97,38 @@ export function Button({ variant = 'default', className, ...props }: ButtonProps
   return (
     <button className={cn(buttonVariants({ variant }), className)} {...props} />
   )
+}
+```
+
+### Notações especiais
+
+#### Diff
+
+Marca linhas como adicionadas ou removidas usando `// [!code ++]` e `// [!code --]`:
+```ts
+function greet(name: string): string {
+  return `Hello, ${name}!`  // [!code --]
+  return `Olá, ${name}!`    // [!code ++]
+}
+```
+
+#### Focus
+
+Destaca linhas específicas e desfoca as demais. Útil para chamar atenção em um trecho sem remover o contexto ao redor. Passe o cursor sobre o bloco para ver todas as linhas novamente:
+```ts
+function createUser(data: UserInput) {
+  validateInput(data)
+  const hashed = hashPassword(data.password)  // [!code focus]
+  return db.users.create({ ...data, password: hashed })
+}
+```
+
+Combine com `showLineNumbers` quando o número de linha ajudar a referenciar o código no texto:
+```ts showLineNumbers
+function createUser(data: UserInput) {
+  validateInput(data)
+  const hashed = hashPassword(data.password)  // [!code focus]
+  return db.users.create({ ...data, password: hashed })
 }
 ```
 
@@ -253,7 +288,7 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
 
     ```ts title="app.config.ts"
     export default {
-      port: 3000,
+      port: 3_000,
       host: 'localhost',
     }
     ```
@@ -372,6 +407,23 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
 
 ## Imagens
 
+### Imagem de capa
+
+Cada post pode ter uma imagem de capa. Basta nomear o arquivo `cover.jpg` e colocá-lo na mesma pasta do `index.mdx` — nenhuma configuração adicional é necessária.
+
+```
+content/posts/2026-01-15-meu-post/
+├── index.mdx
+└── cover.jpg   ← detectado automaticamente
+```
+
+A capa aparece no topo do post, logo abaixo do título, e também é usada na OG image gerada para redes sociais.
+
+<Callout variant='warning' title='Atenção'>
+  O arquivo deve se chamar exatamente `cover.jpg`. Outros nomes ou extensões
+  (`.png`, `.webp`) não são detectados automaticamente.
+</Callout>
+
 ### Imagem inline (Markdown)
 
 ```mdx
@@ -485,16 +537,100 @@ authors:
 ---
 ```
 
-Para rascunhos, use `status: 'draft'` — o post não aparecerá na listagem pública.
+### Campo `status`
 
-Campos opcionais para posts de série:
+Controla a visibilidade do post na listagem pública:
 
-```mdx
+| Valor       | Comportamento                                               |
+| ----------- | ----------------------------------------------------------- |
+| `draft`     | Nunca foi publicado — não aparece na listagem               |
+| `published` | Visível publicamente                                        |
+| `archived`  | Foi publicado, mas foi removido da listagem                 |
+
+### Campo `updatedAt`
+
+Quando informado, substitui o `publishedAt` em todas as exibições de data e troca o ícone de calendário pelo ícone de "atualizado" nos cards e no cabeçalho do post:
+
+```yml
+---
+publishedAt: '2026-01-15'
+updatedAt: '2026-04-03'   # opcional — use ao fazer atualizações significativas
+---
+```
+
+### Campos para posts de série
+
+Quando o post faz parte de uma série, informe o slug da série e a posição do post dentro dela. Ambos os campos são obrigatórios em conjunto — um não funciona sem o outro:
+
+```yml
 ---
 series: 'slug-da-serie'
 order: 1
 ---
 ```
+
+O banner da série é exibido automaticamente no rodapé do post com a lista de todos os posts da série e a posição atual destacada.
+
+---
+
+## Séries
+
+Séries são coleções de posts organizados por tema. Elas são definidas no arquivo `content/series/index.json`:
+
+```json
+[
+  {
+    "slug": "minha-serie",
+    "title": "Minha Série",
+    "description": "Descrição curta da série.",
+    "publishedAt": "2026-01-15",
+    "status": "in-progress"
+  }
+]
+```
+
+| Campo         | Tipo     | Valores                              | Obrigatório |
+| ------------- | -------- | ------------------------------------ | ----------- |
+| `slug`        | `string` | kebab-case                           | ✅          |
+| `title`       | `string` | —                                    | ✅          |
+| `description` | `string` | máx. 300 caracteres                  | ✅          |
+| `publishedAt` | `string` | ISO date (`YYYY-MM-DD`)              | ✅          |
+| `status`      | `string` | `planned` `in-progress` `complete`   | ✅          |
+
+Após editar o arquivo, regenere o índice:
+
+```bash
+bun run build:blog
+```
+
+Séries com status `in-progress` aparecem automaticamente na seção **Séries em andamento** da home.
+
+---
+
+## Projetos
+
+Projetos são gerados automaticamente a partir dos repositórios públicos do GitHub via API (`@octokit/rest`). O controle de quais repositórios aparecem e como é feito pelos **topics** de cada repositório, diretamente na interface do GitHub.
+
+| Topic       | Efeito                                                          |
+| ----------- | --------------------------------------------------------------- |
+| `portfolio` | Inclui o repositório na listagem de projetos                    |
+| `featured`  | Marca como destaque — aparece na seção "Em destaque"            |
+| `wip`       | Define o status como **Em progresso**                           |
+
+Repositórios arquivados no GitHub recebem automaticamente o status **Arquivado**. Os demais aparecem como **Ativo**.
+
+As tags exibidas no card são os topics do repositório, excluindo os três de controle acima (`portfolio`, `featured`, `wip`).
+
+Para regenerar a listagem após alterar os topics no GitHub:
+
+```bash
+bun run build:projects
+```
+
+<Callout variant='info' title='Variáveis de ambiente'>
+  O script de geração de projetos requer um token do GitHub configurado. Certifique-se
+  de que `GITHUB_TOKEN` está definido no `.env.local` antes de rodar o comando.
+</Callout>
 
 ---
 

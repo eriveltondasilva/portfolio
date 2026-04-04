@@ -30,7 +30,7 @@
     "build:blog": "bun run scripts/generate-blog-index.ts",
     "build:projects": "bun run scripts/generate-projects-index.ts",
     "build:schemas": "bun run scripts/generate-zod-schemas.ts",
-    "build:indexes": "bun run build:blog && bun run build:projects"
+    "build:indexes": "bun run build:blog && bun run build:projects && bun run build:schemas"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
@@ -64,6 +64,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@shikijs/transformers": "^4.0.2",
     "@tailwindcss/postcss": "^4.2.2",
     "@tailwindcss/typography": "^0.5.19",
     "@tsconfig/bun": "^1.0.10",

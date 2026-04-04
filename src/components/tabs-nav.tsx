@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  FileTextIcon,
-  FolderGit2,
-  FolderIcon,
-  HashIcon,
-  LayoutGridIcon,
-} from 'lucide-react'
+import { FileTextIcon, FolderGit2, FolderIcon, HashIcon, LayoutGridIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
@@ -38,8 +32,7 @@ export function TabsNav() {
     >
       <div className='-mb-px flex overflow-x-auto'>
         {tabs.map(({ label, href, icon }) => {
-          const isActive =
-            href === '/' ? pathname === '/' : pathname.startsWith(href)
+          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
 
           return (
             <Link

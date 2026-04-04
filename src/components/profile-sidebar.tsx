@@ -58,9 +58,7 @@ export function ProfileSidebar({ author }: { author: Author }) {
       </div>
 
       {/* Bio */}
-      <p className='mt-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300'>
-        {author.bio}
-      </p>
+      <p className='mt-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300'>{author.bio}</p>
 
       {/* Skills */}
       <div className='mt-4 flex flex-wrap gap-1.5'>
@@ -95,13 +93,7 @@ export function ProfileSidebar({ author }: { author: Author }) {
               rel='noopener noreferrer'
               className='flex items-center gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
             >
-              <Image
-                src={icon}
-                alt={label}
-                width={16}
-                height={16}
-                unoptimized
-              />
+              <Image src={icon} alt={label} width={16} height={16} unoptimized />
               <span className='truncate'>{label}</span>
             </a>
           )

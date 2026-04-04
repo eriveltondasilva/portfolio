@@ -50,15 +50,8 @@ export function ShareButton({ title, url }: Props) {
       aria-label={copied ? 'Link copiado!' : 'Compartilhar post'}
       className='shrink-0 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200'
     >
-      {copied && (
-        <Icon iconNode={CheckIcon} className='size-5 text-green-500' />
-      )}
-      {!copied && (
-        <Icon
-          iconNode={hasNativeShare ? ShareIcon : Link2Icon}
-          className='size-5'
-        />
-      )}
+      {copied && <Icon iconNode={CheckIcon} className='size-5 text-green-500' />}
+      {!copied && <Icon iconNode={hasNativeShare ? ShareIcon : Link2Icon} className='size-5' />}
     </Button>
   )
 }

@@ -11,9 +11,7 @@ export async function PostCover({ title, filePath }: Props) {
   let cover = null
 
   try {
-    cover = await import(
-      `@/content/posts/${basename(dirname(filePath))}/cover.jpg`
-    )
+    cover = await import(`@/content/posts/${basename(dirname(filePath))}/cover.jpg`)
   } catch {
     return null
   }

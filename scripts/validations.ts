@@ -35,9 +35,7 @@ export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
     }
 
     if (lines.length > 0) {
-      conflicts.push(
-        `Series "${seriesSlug}" has duplicate "order" values:\n${lines.join('\n')}`,
-      )
+      conflicts.push(`Series "${seriesSlug}" has duplicate "order" values:\n${lines.join('\n')}`)
     }
   }
 
@@ -46,21 +44,13 @@ export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
   throw new BuildError('posts', conflicts)
 }
 
-export function assertSeriesExist(
-  posts: PostIndex[],
-  knownSeries: Set<string>,
-): void {
-  const invalid = posts.filter(
-    (p) => p.series !== undefined && !knownSeries.has(p.series),
-  )
+export function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
+  const invalid = posts.filter((p) => p.series !== undefined && !knownSeries.has(p.series))
 
   if (invalid.length === 0) return
 
   const detail = invalid
-    .map(
-      (post) =>
-        `  - "${post.slug}" -> série "${post.series}"\n    ${post.filePath}`,
-    )
+    .map((post) => `  - "${post.slug}" -> série "${post.series}"\n    ${post.filePath}`)
     .join('\n')
 
   const available =
@@ -72,23 +62,15 @@ export function assertSeriesExist(
   throw new BuildError('posts', [message])
 }
 
-export function assertAuthorsExist(
-  posts: readonly PostIndex[],
-  knownAuthors: Set<string>,
-): void {
+export function assertAuthorsExist(posts: readonly PostIndex[], knownAuthors: Set<string>): void {
   const missing = posts.flatMap((post) =>
-    post.authors
-      .filter((author) => !knownAuthors.has(author))
-      .map((author) => ({ author, post })),
+    post.authors.filter((author) => !knownAuthors.has(author)).map((author) => ({ author, post })),
   )
 
   if (missing.length === 0) return
 
   const detail = missing
-    .map(
-      ({ author, post }) =>
-        `  - author "${author}" in "${post.slug}"\n    ${post.filePath}`,
-    )
+    .map(({ author, post }) => `  - author "${author}" in "${post.slug}"\n    ${post.filePath}`)
     .join('\n')
 
   const available =
@@ -105,10 +87,7 @@ interface Entry {
   source: string
 }
 
-export function assertUniqueSlugs(
-  context: string,
-  entries: readonly Entry[],
-): void {
+export function assertUniqueSlugs(context: string, entries: readonly Entry[]): void {
   const seen = new Map<string, string[]>()
   let hasDuplicates = false
 
@@ -130,9 +109,7 @@ export function assertUniqueSlugs(
   for (const [slug, sources] of seen) {
     if (sources.length <= 1) continue
 
-    const files = [...new Set(sources)]
-      .map((source) => `\n    - ${source}`)
-      .join('')
+    const files = [...new Set(sources)].map((source) => `\n    - ${source}`).join('')
     detail.push(`  "${slug}" found in:${files}`)
   }
 

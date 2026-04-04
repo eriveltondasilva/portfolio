@@ -43,10 +43,7 @@ export function getGithubAvatar(author: Author, size = 40): string {
   return `${author.socials.github}.png?size=${size}`
 }
 
-export function formatDate(
-  date: string,
-  options?: Intl.DateTimeFormatOptions,
-): string {
+export function formatDate(date: string, options?: Intl.DateTimeFormatOptions): string {
   try {
     return new Intl.DateTimeFormat(LOCALES, {
       dateStyle: 'medium',

@@ -36,47 +36,35 @@ interface Props extends Omit<ImageProps, 'fill' | 'sizes'> {
   caption?: string
 }
 
-interface ImageGridProps
-  extends ComponentProps<'div'>, VariantProps<typeof imageGridVariants> {
+interface ImageGridProps extends ComponentProps<'div'>, VariantProps<typeof imageGridVariants> {
   images: Props[]
   classNameImages?: string
 }
 
-export function ImageGrid({
-  images,
-  columns = 3,
-  className,
-  classNameImages,
-}: ImageGridProps) {
+export function ImageGrid({ images, columns = 3, className, classNameImages }: ImageGridProps) {
   const sizes = sizesMap[columns as keyof typeof sizesMap]
 
   return (
     <div className={imageGridVariants({ columns, className })}>
-      {images.map(
-        ({ className: classNameImage, caption, alt, ...props }, i) => {
-          const effectivePlaceholder = props.blurDataURL ? 'blur' : 'empty'
+      {images.map(({ className: classNameImage, caption, alt, ...props }, i) => {
+        const effectivePlaceholder = props.blurDataURL ? 'blur' : 'empty'
 
-          return (
-            <figure key={i} className='not-prose'>
-              <div className='relative aspect-square overflow-hidden rounded-lg bg-muted'>
-                <Image
-                  className={cn(
-                    'object-cover',
-                    classNameImages,
-                    classNameImage,
-                  )}
-                  sizes={sizes}
-                  alt={alt}
-                  placeholder={effectivePlaceholder}
-                  fill
-                  {...props}
-                />
-              </div>
-              {caption && <Figcaption>{caption}</Figcaption>}
-            </figure>
-          )
-        },
-      )}
+        return (
+          <figure key={i} className='not-prose'>
+            <div className='relative aspect-square overflow-hidden rounded-lg bg-muted'>
+              <Image
+                className={cn('object-cover', classNameImages, classNameImage)}
+                sizes={sizes}
+                alt={alt}
+                placeholder={effectivePlaceholder}
+                fill
+                {...props}
+              />
+            </div>
+            {caption && <Figcaption>{caption}</Figcaption>}
+          </figure>
+        )
+      })}
     </div>
   )
 }

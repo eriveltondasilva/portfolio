@@ -1,15 +1,24 @@
 import { dirname, basename } from 'node:path'
 
 import postsIndex from '@/generated/indexes/posts.json'
+import { PostStatus } from '@/lib/constants'
 
 import type { AdjacentPosts, PostIndex, PostWithContent } from '@/types'
 
-export function getAllPosts(): PostIndex[] {
+function getAllPostsFromIndex(): PostIndex[] {
   return postsIndex as PostIndex[]
 }
 
+export function getAllPosts(): PostIndex[] {
+  return getAllPostsFromIndex().filter((post) => post.status === PostStatus.PUBLISHED)
+}
+
+export function getAllPostSlugs(): Array<{ slug: string }> {
+  return getAllPostsFromIndex().map(({ slug }) => ({ slug }))
+}
+
 export function getPostBySlug(slug: string): PostIndex | null {
-  return getAllPosts().find((post) => post.slug === slug) ?? null
+  return getAllPostsFromIndex().find((post) => post.slug === slug) ?? null
 }
 
 export function getRecentPosts(limit = 4): PostIndex[] {
@@ -37,8 +46,7 @@ export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
 
   return getAllPosts()
     .filter(
-      (post) =>
-        post.slug !== slug && post.tags.some((tag) => postTags.has(tag)),
+      (p) => p.slug !== slug && p.tags.some((tag) => postTags.has(tag)),
     )
     .toSorted((a, b) => {
       const scoreA = a.tags.filter((tag) => postTags.has(tag)).length

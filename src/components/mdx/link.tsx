@@ -8,11 +8,7 @@ import type { Route } from 'next'
 
 const EXTERNAL_PROTOCOLS = ['http://', 'https://', 'www.']
 
-export function Link({
-  href = '',
-  children,
-  ...props
-}: ComponentPropsWithoutRef<'a'>) {
+export function Link({ href = '', children, ...props }: ComponentPropsWithoutRef<'a'>) {
   if (!href) return <>{children}</>
 
   if (href.startsWith('/')) {

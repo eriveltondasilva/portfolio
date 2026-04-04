@@ -11,11 +11,7 @@ import { Tabs, Tab } from './components/mdx/tabs'
 import { Accordion, AccordionItem } from './components/mdx/accordion'
 import { Kbd } from './components/mdx/kbd'
 import { Badge } from './components/mdx/badge'
-import {
-  FileTree,
-  FileTreeFolder,
-  FileTreeFile,
-} from './components/mdx/file-tree'
+import { FileTree, FileTreeFolder, FileTreeFile } from './components/mdx/file-tree'
 
 import type { MDXComponents } from 'mdx/types'
 

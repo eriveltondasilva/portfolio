@@ -8,20 +8,12 @@ import { cn } from '@/lib/utils'
 
 import type { ComponentProps } from 'react'
 
-interface AccordionItemProps extends Omit<
-  ComponentProps<typeof AccordionItemRoot>,
-  'value'
-> {
+interface AccordionItemProps extends Omit<ComponentProps<typeof AccordionItemRoot>, 'value'> {
   title: string
   value?: string
 }
 
-export function AccordionItem({
-  title,
-  value,
-  children,
-  ...props
-}: AccordionItemProps) {
+export function AccordionItem({ title, value, children, ...props }: AccordionItemProps) {
   return (
     <AccordionItemRoot value={value ?? title} {...props}>
       <AccordionTrigger>{title}</AccordionTrigger>
@@ -39,11 +31,7 @@ type AccordionProps =
   | (AccordionBaseProps & { type?: 'single' })
   | (AccordionBaseProps & { type: 'multiple' })
 
-export function Accordion({
-  type = 'single',
-  className,
-  children,
-}: AccordionProps) {
+export function Accordion({ type = 'single', className, children }: AccordionProps) {
   const sharedProps = { className: cn('not-prose', className) }
 
   if (type === 'multiple') {

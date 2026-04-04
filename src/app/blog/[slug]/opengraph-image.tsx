@@ -1,7 +1,7 @@
 // src/app/blog/[slug]/opengraph-image.tsx
 import { ImageResponse } from 'next/og'
 
-import { getAllPosts, getPostBySlug } from '@/lib/blog/posts'
+import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts'
 import { getAuthorsBySlugs } from '@/lib/blog/authors'
 import { formatDate, getInitials } from '@/lib'
 
@@ -9,8 +9,8 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export function generateStaticParams() {
-  const posts = getAllPosts()
-  return posts.map(({ slug }) => ({ slug }))
+  // Includes archived posts to generate their OG images as well.
+  return getAllPostSlugs()
 }
 
 export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {

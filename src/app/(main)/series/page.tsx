@@ -2,13 +2,7 @@ import { FolderXIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { SeriesCard } from '@/components/series-card'
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { getAllSeries } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'

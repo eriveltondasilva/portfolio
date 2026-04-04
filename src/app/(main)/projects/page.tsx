@@ -2,13 +2,7 @@ import { FolderOpenIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { ProjectCard } from '@/components/project-card'
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { getAllProjects } from '@/lib/blog/projects'
 
 import type { Metadata } from 'next'

@@ -15,11 +15,7 @@ export function Step({ title, className, children, ...props }: StepProps) {
   )
 }
 
-export function Steps({
-  className,
-  children,
-  ...props
-}: ComponentProps<'div'>) {
+export function Steps({ className, children, ...props }: ComponentProps<'div'>) {
   return (
     <div
       className={cn(

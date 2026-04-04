@@ -20,10 +20,7 @@ const statusLabel: Record<SeriesStatus, string> = {
   [SeriesStatus.COMPLETE]: 'Completa',
 }
 
-const statusStyle: Record<
-  SeriesStatus,
-  { color: string; border: string; bg: string }
-> = {
+const statusStyle: Record<SeriesStatus, { color: string; border: string; bg: string }> = {
   [SeriesStatus.PLANNED]: {
     bg: '#f9fafb',
     border: '#e5e7eb',
@@ -93,9 +90,7 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>
-            erivelton.dev
-          </span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>erivelton.dev</span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>series</span>
           <span style={{ color: '#d1d5db' }}>/</span>

@@ -1,11 +1,6 @@
 import { z } from 'zod'
 
-import {
-  authorSchema,
-  postSchema,
-  projectSchema,
-  seriesSchema,
-} from '@/lib/schemas'
+import { authorSchema, postSchema, projectSchema, seriesSchema } from '@/lib/schemas'
 
 import type { Octokit } from '@octokit/rest'
 import type { MDXContent } from 'mdx/types'
@@ -46,6 +41,4 @@ export interface PostWithContent {
   meta: PostIndex
 }
 
-export type GithubRepo = Awaited<
-  ReturnType<Octokit['repos']['listForUser']>
->['data'][number]
+export type GithubRepo = Awaited<ReturnType<Octokit['repos']['listForUser']>>['data'][number]

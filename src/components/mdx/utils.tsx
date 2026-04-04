@@ -5,8 +5,6 @@ export const DEFAULT_SIZES =
 
 export function Figcaption({ children }: ComponentProps<'figcaption'>) {
   return (
-    <figcaption className='mt-2 text-center text-sm text-muted-foreground'>
-      {children}
-    </figcaption>
+    <figcaption className='mt-2 text-center text-sm text-muted-foreground'>{children}</figcaption>
   )
 }

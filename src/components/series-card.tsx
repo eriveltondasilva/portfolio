@@ -42,11 +42,7 @@ const statusConfig: Record<SeriesStatus, BadgeProps> = {
   },
 }
 
-export function SeriesCard({
-  series,
-  showStatusBadge = false,
-  ...props
-}: SeriesCardProps) {
+export function SeriesCard({ series, showStatusBadge = false, ...props }: SeriesCardProps) {
   const status = statusConfig[series.status]
   const postCount = series.posts.length
 
@@ -94,9 +90,7 @@ export function SeriesCard({
 
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={CalendarIcon} className='size-3.5' />
-          <time dateTime={series.publishedAt}>
-            {formatDate(series.publishedAt)}
-          </time>
+          <time dateTime={series.publishedAt}>{formatDate(series.publishedAt)}</time>
         </span>
       </div>
 
@@ -105,9 +99,7 @@ export function SeriesCard({
         <ol className='mt-3 space-y-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {series.posts.slice(0, 3).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
-              <span className='min-w-5 text-center text-xs text-zinc-400'>
-                {post.order}.
-              </span>
+              <span className='min-w-5 text-center text-xs text-zinc-400'>{post.order}.</span>
               <Link
                 href={`/blog/${post.slug}`}
                 className='truncate text-sm text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400'
@@ -116,11 +108,7 @@ export function SeriesCard({
               </Link>
             </li>
           ))}
-          {postCount > 3 && (
-            <li className='pl-6 text-xs text-zinc-400'>
-              +{postCount - 3} mais
-            </li>
-          )}
+          {postCount > 3 && <li className='pl-6 text-xs text-zinc-400'>+{postCount - 3} mais</li>}
         </ol>
       )}
     </article>

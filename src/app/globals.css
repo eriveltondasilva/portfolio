@@ -120,7 +120,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply no-scrollbar border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
@@ -130,15 +130,17 @@
   }
 }
 
-* {
-  scrollbar-width: none; /* Firefox */
-}
-
-*::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge */
-}
-
 /* ================================== */
+
+/* Reading Progress  */
+@keyframes reading-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
 
 /* Headings posts */
 .prose {
@@ -155,24 +157,34 @@
   }
 }
 
-/* Code Block Styles */
+/* ================================== */
+
+/* Code Block */
 figure[data-rehype-pretty-code-figure] {
   @apply relative my-6;
 
+  /* Title bar */
   & > [data-rehype-pretty-code-title] {
-    /* @apply rounded-t-lg  px-4 py-1.5 text-sm text-white; */
-
-    & + pre {
-      /* @apply mt-0 rounded-t-none; */
-    }
+    @apply rounded-t-lg border border-b-0 border-white/10 bg-zinc-900 px-4 py-2 font-mono text-xs text-zinc-400;
   }
 
+  /* Caption */
+  & > [data-rehype-pretty-code-caption] {
+    @apply mt-2 text-center text-xs text-muted-foreground;
+  }
+
+  /* Pre block */
   & > pre {
     @apply overflow-x-auto rounded-lg px-0 py-4;
 
     & [data-line] {
       @apply px-4 py-0;
     }
+  }
+
+  /* Remove top rounding when a title is present */
+  &:has([data-rehype-pretty-code-title]) > pre {
+    @apply rounded-t-none;
   }
 }
 
@@ -188,9 +200,7 @@ code[data-line-numbers] {
   & > [data-line]::before {
     counter-increment: line;
     content: counter(line);
-
-    /* Other styling */
-    @apply mr-4 inline-block w-3 text-right text-muted-foreground/90;
+    @apply mr-4 inline-block w-3 text-right text-muted-foreground/50;
   }
 
   &[data-line-numbers-max-digits='2'] > [data-line]::before {
@@ -206,24 +216,67 @@ code[data-line-numbers] {
   }
 }
 
-/* Highlighted Elements */
+/* Code decorations — highlighted lines, chars, diff, focus */
 code {
+  /* rehype-pretty-code: line highlight via {N} syntax */
   & [data-highlighted-line] {
-    @apply border-l-4 border-blue-500 bg-muted/10;
-    margin-left: -0.25rem;
+    @apply -ml-1 border-l-4 border-blue-500 bg-blue-500/10;
   }
 
+  /* rehype-pretty-code: word/char highlight */
   & [data-highlighted-chars] {
     @apply rounded-sm border border-blue-700/30 bg-blue-800/20 px-1;
   }
+
+  /* transformerNotationDiff */
+  & [data-line].diff {
+    @apply -ml-1 border-l-4;
+
+    &.add {
+      @apply border-green-500 bg-green-500/10;
+
+      &::before {
+        content: '+';
+        @apply mr-3 text-green-400;
+      }
+    }
+
+    &.remove {
+      @apply border-red-500 bg-red-500/10 opacity-60;
+
+      &::before {
+        content: '-';
+        @apply mr-3 text-red-400;
+      }
+    }
+  }
 }
 
-/* Reading Progress  */
-@keyframes reading-progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
+/*
+  Diff + line numbers: ::before can only render one thing.
+  Keep the line number but colorize it to preserve the diff hint.
+*/
+/* code[data-line-numbers] > [data-line].diff.add::before {
+  content: counter(line);
+  @apply text-green-400;
 }
+
+code[data-line-numbers] > [data-line].diff.remove::before {
+  content: counter(line);
+  @apply text-red-400;
+} */
+
+/* transformerNotationFocus */
+/* code:has([data-line].focused) {
+  & [data-line] {
+    @apply opacity-30 transition-opacity duration-200;
+  }
+
+  & [data-line].focused {
+    @apply opacity-100;
+  }
+
+  &:hover [data-line] {
+    @apply opacity-100;
+  }
+} */

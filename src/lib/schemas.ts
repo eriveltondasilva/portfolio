@@ -78,26 +78,16 @@ export const postSchema = z
       .describe('Short summary of the post.'),
     //
     tags: z
-      .array(
-        z.string().min(1).apply(setRegexChecks).describe('Tag identifier.'),
-      )
+      .array(z.string().min(1).apply(setRegexChecks).describe('Tag identifier.'))
       .min(1, 'At least one tag is required.')
       .max(10)
       .describe('List of tags used to categorize the post.'),
     //
-    publishedAt: z.iso
-      .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).'),
+    publishedAt: z.iso.date().describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
-    updatedAt: z.iso
-      .date()
-      .optional()
-      .describe('Date of the last significant update to the post.'),
+    updatedAt: z.iso.date().optional().describe('Date of the last significant update to the post.'),
     //
-    status: z
-      .enum(PostStatus)
-      .default(PostStatus.DRAFT)
-      .describe('Visibility state of the post.'),
+    status: z.enum(PostStatus).default(PostStatus.DRAFT).describe('Visibility state of the post.'),
     //
     authors: z
       .array(z.string().apply(setRegexChecks).describe('Author slug.'))
@@ -127,8 +117,7 @@ export const postSchema = z
     if (hasSeries && !hasOrder) {
       ctx.addIssue({
         code: 'custom',
-        message:
-          'The "order" field is required when the post belongs to a series.',
+        message: 'The "order" field is required when the post belongs to a series.',
         path: ['order'],
       })
     }
@@ -155,9 +144,7 @@ export const seriesSchema = z
       .min(1, 'Series slug is required.')
       .max(80, 'Slug must not exceed 80 characters.')
       .apply(setRegexChecks)
-      .describe(
-        'Unique identifier of the series in kebab-case (e.g. nextjs-pro).',
-      ),
+      .describe('Unique identifier of the series in kebab-case (e.g. nextjs-pro).'),
     //
     title: z
       .string()
@@ -171,9 +158,7 @@ export const seriesSchema = z
       .max(300, 'Description must not exceed 300 characters.')
       .describe('Short summary describing the series content.'),
     //
-    publishedAt: z.iso
-      .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).'),
+    publishedAt: z.iso.date().describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
     status: z
       .enum(SeriesStatus)
@@ -198,11 +183,7 @@ export const projectSchema = z
     //
     name: z.string().min(1).max(100).describe('Display name of the project.'),
     //
-    description: z
-      .string()
-      .min(10)
-      .max(300)
-      .describe('Short summary of the project.'),
+    description: z.string().min(10).max(300).describe('Short summary of the project.'),
     //
     repository: z
       .url({
@@ -224,10 +205,7 @@ export const projectSchema = z
       .default(ProjectStatus.ACTIVE)
       .describe('Current state of the project.'),
     //
-    featured: z
-      .boolean()
-      .default(false)
-      .describe('Whether the project should be highlighted.'),
+    featured: z.boolean().default(false).describe('Whether the project should be highlighted.'),
   })
   .strict()
   .meta({

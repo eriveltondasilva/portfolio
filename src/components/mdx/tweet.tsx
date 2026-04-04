@@ -9,10 +9,7 @@ interface Props {
 
 export function Tweet({ id, className }: Props) {
   return (
-    <div
-      data-theme='dark'
-      className={cn('not-prose [&_.react-tweet-theme]:m-0!', className)}
-    >
+    <div data-theme='dark' className={cn('not-prose [&_.react-tweet-theme]:m-0!', className)}>
       <ReactTweet id={id} />
     </div>
   )

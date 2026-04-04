@@ -38,10 +38,9 @@ export default function HomePage() {
           </h2>
 
           <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
-            Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
-            <Code>React</Code> e <Code>Next.js</Code>. Aqui compartilho o que
-            aprendo sobre desenvolvimento web, boas práticas e tecnologias que
-            uso no dia a dia.
+            Desenvolvedor Frontend focado em criar interfaces modernas com <Code>React</Code> e{' '}
+            <Code>Next.js</Code>. Aqui compartilho o que aprendo sobre desenvolvimento web, boas
+            práticas e tecnologias que uso no dia a dia.
           </p>
 
           <div className='flex items-center gap-1 font-mono text-xs text-zinc-500 dark:text-zinc-500'>

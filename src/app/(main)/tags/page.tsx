@@ -2,13 +2,7 @@ import { HashIcon, LayersIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from '@/components/icon'
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { getTagsWithCount } from '@/lib/blog/tags'
 
 import type { Metadata } from 'next'

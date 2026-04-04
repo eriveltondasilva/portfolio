@@ -34,10 +34,7 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2 text-blue-500 dark:text-blue-400'>
           <Icon iconNode={FileTextIcon} />
-          <Link
-            href={`/blog/${post.slug}`}
-            className='font-semibold text-balance hover:underline'
-          >
+          <Link href={`/blog/${post.slug}`} className='font-semibold text-balance hover:underline'>
             {post.title}
           </Link>
         </div>
@@ -75,10 +72,7 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
       {/* Meta */}
       <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
         <span className='flex items-center gap-1.5'>
-          <Icon
-            iconNode={post.updatedAt ? CalendarSyncIcon : CalendarIcon}
-            className='size-3.5'
-          />
+          <Icon iconNode={post.updatedAt ? CalendarSyncIcon : CalendarIcon} className='size-3.5' />
           <time dateTime={post.updatedAt ?? post.publishedAt}>
             {formatDate(post.updatedAt ?? post.publishedAt)}
           </time>

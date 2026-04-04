@@ -2,13 +2,7 @@ import { FileXIcon, LayersIcon } from 'lucide-react'
 
 import { Icon } from '@/components/icon'
 import { PostCard } from '@/components/post-card'
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { getAllPosts } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'

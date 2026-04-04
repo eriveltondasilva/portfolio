@@ -4,17 +4,8 @@ import Image from 'next/image'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card'
-import {
-  formatList,
-  getGithubAvatar,
-  getGitHubUsername,
-  getInitials,
-} from '@/lib'
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+import { formatList, getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
 import TwitterX from '@/assets/twitter-x.svg'
 import Linkedin from '@/assets/linkedin.svg'
 import Github from '@/assets/github.svg'
@@ -56,12 +47,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         </span>
       </HoverCardTrigger>
 
-      <HoverCardContent
-        side='top'
-        align='start'
-        className='w-72 p-4'
-        sideOffset={6}
-      >
+      <HoverCardContent side='top' align='start' className='w-72 p-4' sideOffset={6}>
         {/* Header */}
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
@@ -75,9 +61,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
             <p className='text-sm leading-tight font-semibold text-zinc-900 dark:text-zinc-50'>
               {author.name}
             </p>
-            <p className='text-xs text-zinc-500 dark:text-zinc-400'>
-              @{getGitHubUsername(author)}
-            </p>
+            <p className='text-xs text-zinc-500 dark:text-zinc-400'>@{getGitHubUsername(author)}</p>
           </div>
         </div>
 
@@ -124,14 +108,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 rel='noopener noreferrer'
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
-                <Image
-                  src={icon}
-                  alt={label}
-                  title={label}
-                  width={16}
-                  height={16}
-                  unoptimized
-                />
+                <Image src={icon} alt={label} title={label} width={16} height={16} unoptimized />
               </a>
             )
           })}

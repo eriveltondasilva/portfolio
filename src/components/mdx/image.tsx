@@ -10,15 +10,8 @@ interface Props extends ImageProps {
   caption?: string
 }
 
-export function Image({
-  className,
-  caption,
-  sizes,
-  placeholder,
-  ...props
-}: Props) {
-  const effectivePlaceholder =
-    placeholder ?? (props.blurDataURL ? 'blur' : 'empty')
+export function Image({ className, caption, sizes, placeholder, ...props }: Props) {
+  const effectivePlaceholder = placeholder ?? (props.blurDataURL ? 'blur' : 'empty')
 
   return (
     <figure className='my-4'>

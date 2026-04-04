@@ -2,12 +2,7 @@ import { Octokit } from '@octokit/rest'
 
 import { PROJECTS_INDEX_OUTPUT, Topics } from '@/lib/constants'
 import { getPrimaryAuthor } from '@/lib/blog/authors'
-import {
-  getGitHubUsername,
-  getProjectName,
-  getProjectStatus,
-  getProjectTags,
-} from '@/lib'
+import { getGitHubUsername, getProjectName, getProjectStatus, getProjectTags } from '@/lib'
 
 import { Logger, writeJson } from './utils'
 
@@ -42,31 +37,22 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
     (repo) => !repo.private && repo.topics?.includes(Topics.INCLUDE),
   )
 
-  log.ok(
-    'repos fetched:',
-    `${repos.length} total - ${portfolioRepos.length} included`,
-  )
+  log.ok('repos fetched:', `${repos.length} total - ${portfolioRepos.length} included`)
   if (privateCount > 0) log.skip('private:', `${privateCount} excluded`)
 
   const withoutTopic = repos.length - privateCount - portfolioRepos.length
   if (withoutTopic > 0)
-    log.skip(
-      'no topic:\t',
-      `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`,
-    )
+    log.skip('no topic:\t', `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`)
 
   const featuredCount = portfolioRepos.filter((repo) =>
     repo.topics?.includes(Topics.FEATURED),
   ).length
-  const wipCount = portfolioRepos.filter((repo) =>
-    repo.topics?.includes(Topics.WIP),
-  ).length
+  const wipCount = portfolioRepos.filter((repo) => repo.topics?.includes(Topics.WIP)).length
   const archivedCount = portfolioRepos.filter((repo) => repo.archived).length
 
   if (featuredCount > 0) log.detail(`${featuredCount} featured`)
   if (wipCount > 0) log.detail(`${wipCount} wip`)
-  if (archivedCount > 0)
-    log.skip('archived', `${archivedCount} excluded from active`)
+  if (archivedCount > 0) log.skip('archived', `${archivedCount} excluded from active`)
 
   return portfolioRepos.map((repo) => ({
     slug: repo.name,

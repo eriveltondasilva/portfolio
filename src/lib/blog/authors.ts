@@ -22,7 +22,5 @@ export function getPrimaryAuthor(): Author {
 }
 
 export function getAuthorsBySlugs(slugs: string[]): Author[] {
-  return slugs
-    .map(getAuthorBySlug)
-    .filter((author): author is Author => author !== null)
+  return slugs.map(getAuthorBySlug).filter((author): author is Author => author !== null)
 }

@@ -31,6 +31,7 @@ interface PostsData {
   stats: {
     scanned: number
     published: number
+    archived: number
     drafts: number
     withCover: number
   }
@@ -108,7 +109,7 @@ async function readPosts(): Promise<PostsData> {
         throw new Error(errorMessage)
       }
 
-      if (data.status !== PostStatus.PUBLISHED) return null
+      if (data.status === PostStatus.DRAFT) return null
 
       const hasCover = await Bun.file(join(file, '..', COVER_NAME)).exists()
       const readingTime = Math.ceil(getReadingTime(content).minutes)
@@ -129,28 +130,33 @@ async function readPosts(): Promise<PostsData> {
 
   if (errors.length > 0) throw new BuildError('posts', errors)
 
-  const publishedResults = results.filter(
+  const fulfilledResults = results.filter(
     (result): result is PromiseFulfilledResult<PostIndex> =>
       result.status === 'fulfilled' && result.value !== null,
   )
 
   assertUniqueSlugs(
     'posts',
-    publishedResults.map(({ value: post }) => ({
+    fulfilledResults.map(({ value: post }) => ({
       slug: post.slug,
       source: post.filePath,
     })),
   )
 
-  const posts = publishedResults.map(({ value }) => value)
+  const posts = fulfilledResults.map(({ value }) => value)
+
+  const publishedCount = posts.filter((p) => p.status === PostStatus.PUBLISHED).length
+  const archivedCount = posts.filter((p) => p.status === PostStatus.ARCHIVED).length
 
   return {
     posts,
     stats: {
       scanned: files.length,
-      published: posts.length,
-      drafts: files.length - publishedResults.length,
-      withCover: posts.filter((post) => post.hasCover).length,
+      published: publishedCount,
+      archived: archivedCount,
+      drafts: files.length - fulfilledResults.length,
+      withCover: posts.filter((post) => post.hasCover && post.status === PostStatus.PUBLISHED)
+        .length,
     },
   }
 }
@@ -194,7 +200,7 @@ async function main(): Promise<void> {
   log.divider()
   console.info('⏳ Generating blog indices...')
 
-  // -- Read -------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
 
   log.section('Reading content')
 
@@ -205,6 +211,7 @@ async function main(): Promise<void> {
   log.ok('series:', `${series.size} loaded`)
   log.ok('posts:', `${stats.published} published of ${stats.scanned} scanned`)
 
+  if (stats.archived > 0) log.skip('archived:', `${stats.archived} archived`)
   if (stats.drafts > 0) log.skip('drafts:', `${stats.drafts} skipped`)
   if (stats.withCover < stats.published) {
     log.skip(
@@ -213,7 +220,7 @@ async function main(): Promise<void> {
     )
   }
 
-  // -- Validate ---------------------------------------------------------------
+  // ---------------------------------------------------------------------------
 
   log.section('Validating')
 
@@ -231,7 +238,7 @@ async function main(): Promise<void> {
     log.detail(`${seriesPosts.length} of ${stats.published} post(s) linked to series`)
   }
 
-  // -- Write ------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
 
   log.section('Writing indices')
 
@@ -248,7 +255,7 @@ async function main(): Promise<void> {
     log.detail(`${seriesData.slug}  (${seriesData.posts.length} posts)`)
   }
 
-  // -- Done -------------------------------------------------------------------
+  // ---------------------------------------------------------------------------
 
   log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`)
   log.divider()

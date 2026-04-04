@@ -1,12 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  ChevronRightIcon,
-  FileIcon,
-  FolderIcon,
-  FolderOpenIcon,
-} from 'lucide-react'
+import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from 'lucide-react'
 import clsx from 'clsx'
 
 import { cn } from '@/lib/utils'
@@ -20,11 +15,7 @@ interface FileTreeFileProps {
   className?: string
 }
 
-export function FileTreeFile({
-  name,
-  highlight,
-  className,
-}: FileTreeFileProps) {
+export function FileTreeFile({ name, highlight, className }: FileTreeFileProps) {
   return (
     <li
       className={cn(
@@ -68,24 +59,12 @@ export function FileTreeFolder({
             open && 'rotate-90',
           )}
         />
-        {open && (
-          <Icon
-            iconNode={FolderOpenIcon}
-            className='size-3.5 shrink-0 text-blue-400'
-          />
-        )}
-        {!open && (
-          <Icon
-            iconNode={FolderIcon}
-            className='size-3.5 shrink-0 text-blue-400'
-          />
-        )}
+        {open && <Icon iconNode={FolderOpenIcon} className='size-3.5 shrink-0 text-blue-400' />}
+        {!open && <Icon iconNode={FolderIcon} className='size-3.5 shrink-0 text-blue-400' />}
         <span className='font-medium'>{name}</span>
       </button>
 
-      {open && children && (
-        <ul className='ml-1.5 border-l border-border/50 pl-3'>{children}</ul>
-      )}
+      {open && children && <ul className='ml-1.5 border-l border-border/50 pl-3'>{children}</ul>}
     </li>
   )
 }

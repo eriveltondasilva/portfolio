@@ -51,11 +51,7 @@
         "default": "draft",
         "description": "Visibility state of the post.",
         "type": "string",
-        "enum": [
-          "draft",
-          "published",
-          "archived"
-        ]
+        "enum": ["draft", "published", "archived"]
       },
       "authors": {
         "minItems": 1,
@@ -74,25 +70,13 @@
       },
       "order": {
         "description": "Position of the post inside the series.",
-        "examples": [
-          1,
-          2,
-          3
-        ],
+        "examples": [1, 2, 3],
         "type": "integer",
         "exclusiveMinimum": 0,
         "maximum": 9007199254740991
       }
     },
-    "required": [
-      "slug",
-      "title",
-      "description",
-      "tags",
-      "publishedAt",
-      "status",
-      "authors"
-    ],
+    "required": ["slug", "title", "description", "tags", "publishedAt", "status", "authors"],
     "additionalProperties": false,
     "title": "Post Frontmatter",
     "description": "Schema for validating frontmatter metadata of a blog post."

@@ -1,4 +1,5 @@
 import createMDX from '@next/mdx'
+// import { transformerNotationDiff, transformerNotationFocus } from '@shikijs/transformers'
 
 import type { NextConfig } from 'next'
 import type { Options as PrettyCodeOptions } from 'rehype-pretty-code'
@@ -23,6 +24,10 @@ const prettyCodeOptions: PrettyCodeOptions = {
   theme: 'github-dark-default',
   defaultLang: 'plaintext',
   bypassInlineCode: true,
+  // transformers: [
+  //   transformerNotationDiff(),
+  //   transformerNotationFocus(),
+  // ],
 }
 
 // ###
@@ -44,11 +49,7 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [
-      'remark-frontmatter',
-      ['remark-gfm', remarkGFMOptions],
-      'remark-gemoji',
-    ],
+    remarkPlugins: ['remark-frontmatter', ['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
     rehypePlugins: [
       'rehype-slug',
       'rehype-unwrap-images',

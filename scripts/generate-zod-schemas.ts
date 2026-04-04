@@ -1,10 +1,6 @@
 import { z } from 'zod'
 
-import {
-  AUTHORS_SCHEMA_OUTPUT,
-  POSTS_SCHEMA_OUTPUT,
-  SERIES_SCHEMA_OUTPUT,
-} from '@/lib/constants'
+import { AUTHORS_SCHEMA_OUTPUT, POSTS_SCHEMA_OUTPUT, SERIES_SCHEMA_OUTPUT } from '@/lib/constants'
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 
 import { Logger, writeJson } from './utils'

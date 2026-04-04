@@ -31,9 +31,7 @@ export default function GlobalError({ error, reset }: Props) {
             <AlertTriangle />
           </EmptyMedia>
           <EmptyTitle>Algo deu errado</EmptyTitle>
-          <EmptyDescription>
-            Ocorreu um erro inesperado. Tente novamente.
-          </EmptyDescription>
+          <EmptyDescription>Ocorreu um erro inesperado. Tente novamente.</EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button variant='outline' size='sm' onClick={reset}>

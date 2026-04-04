@@ -24,10 +24,7 @@ export function RelatedPosts({ slug }: Props) {
       <ul className='divide-y divide-zinc-100 dark:divide-zinc-800'>
         {posts.map((post) => (
           <li key={post.slug} className='group py-3'>
-            <Link
-              href={`/blog/${post.slug}`}
-              className='flex items-start justify-between gap-4'
-            >
+            <Link href={`/blog/${post.slug}`} className='flex items-start justify-between gap-4'>
               <div className='min-w-0 space-y-1.5'>
                 <p className='truncate text-sm font-medium text-zinc-700 transition-colors group-hover:text-blue-600 dark:text-zinc-300 dark:group-hover:text-blue-400'>
                   {post.title}
@@ -38,9 +35,7 @@ export function RelatedPosts({ slug }: Props) {
                     {formatDate(post.updatedAt ?? post.publishedAt)}
                   </time>
                   <Icon iconNode={DotIcon} className='size-5' />
-                  <span className='flex items-center gap-1'>
-                    {post.readingTime} min de leitura
-                  </span>
+                  <span className='flex items-center gap-1'>{post.readingTime} min de leitura</span>
                 </div>
               </div>
 
