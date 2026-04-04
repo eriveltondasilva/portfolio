@@ -41,8 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # content
-content/series-index.json
-content/posts-index.json
+generated/*
 
 #
 .eslintcache
