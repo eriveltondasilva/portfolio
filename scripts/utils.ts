@@ -16,22 +16,15 @@ export class Logger {
   }
 
   ok(label: string, detail = '') {
-    console.info(
-      [styleText('green', '  ✔'), '  ', label, detail ? '\t' + styleText('gray', detail) : ''].join(
-        '',
-      ),
-    )
+    const prefix = styleText('green', '  ✔')
+    const labelWithSpace = label.padEnd(20, ' ')
+    console.info(`${prefix}  ${labelWithSpace} ${styleText('gray', detail)}`)
   }
 
   skip(label: string, detail = '') {
-    console.info(
-      [
-        styleText('yellow', '  –'),
-        '  ',
-        label,
-        detail ? '\t' + styleText('gray', detail) : '',
-      ].join(''),
-    )
+    const prefix = styleText('yellow', '  –')
+    const labelWithSpace = label.padEnd(20, ' ')
+    console.info(`${prefix}  ${labelWithSpace} ${styleText('gray', detail)}`)
   }
 
   detail(text: string) {

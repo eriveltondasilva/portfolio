@@ -65,9 +65,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>
-            erivelton.dev
-          </span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>erivelton.dev</span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>blog</span>
           <span style={{ color: '#d1d5db' }}>/</span>
@@ -141,10 +139,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
           {/* Authors */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {authors.map((author) => (
-              <div
-                key={author.slug}
-                style={{ display: 'flex', alignItems: 'center', gap: 10 }}
-              >
+              <div key={author.slug} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div
                   style={{
                     display: 'flex',
@@ -161,9 +156,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
                 >
                   {getInitials(author.name)}
                 </div>
-                <span
-                  style={{ color: '#374151', fontSize: 15, fontWeight: 600 }}
-                >
+                <span style={{ color: '#374151', fontSize: 15, fontWeight: 600 }}>
                   {author.name}
                 </span>
               </div>

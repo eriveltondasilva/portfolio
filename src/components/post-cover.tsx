@@ -8,7 +8,7 @@ interface Props {
 }
 
 export async function PostCover({ title, filePath }: Props) {
-  let cover = null
+  let cover
 
   try {
     cover = await import(`@/content/posts/${basename(dirname(filePath))}/cover.jpg`)

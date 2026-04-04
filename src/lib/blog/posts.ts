@@ -45,9 +45,7 @@ export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
   const postTags = new Set(post.tags)
 
   return getAllPosts()
-    .filter(
-      (p) => p.slug !== slug && p.tags.some((tag) => postTags.has(tag)),
-    )
+    .filter((p) => p.slug !== slug && p.tags.some((tag) => postTags.has(tag)))
     .toSorted((a, b) => {
       const scoreA = a.tags.filter((tag) => postTags.has(tag)).length
       const scoreB = b.tags.filter((tag) => postTags.has(tag)).length
@@ -68,16 +66,17 @@ export function getAdjacentPosts(slug: string): AdjacentPosts {
   }
 }
 
-export async function getPostWithContent(
-  slug: string,
-): Promise<PostWithContent | null> {
+export async function getPostWithContent(slug: string): Promise<PostWithContent | null> {
   const post = getPostBySlug(slug)
-
   if (!post) return null
 
-  const { default: Content } = await import(
-    `@/content/posts/${basename(dirname(post.filePath))}/index.mdx`
-  )
-
-  return { Content, meta: post }
+  try {
+    const { default: Content } = await import(
+      `@/content/posts/${basename(dirname(post.filePath))}/index.mdx`
+    )
+    return { Content, meta: post }
+  } catch (error) {
+    console.error(`Failed to import post: ${slug}`, error)
+    return null
+  }
 }
