@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/separator'
 import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
-import { GITHUB_REPO, PostStatus, URL_BASE } from '@/lib/constants'
+import { GITHUB_REPO, PostStatus, BASE_URL } from '@/lib/constants'
 import { getAuthorsBySlugs } from '@/lib/blog/authors'
 import { RelatedPosts } from '@/components/related-posts'
 import { ReadingProgress } from '@/components/reading-progress'
@@ -74,7 +74,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const authors = getAuthorsBySlugs(meta.authors)
 
-  const postUrl = `${URL_BASE}/blog/${slug}`
+  const postUrl = `${BASE_URL}/blog/${slug}`
   const editUrl = `${GITHUB_REPO}/edit/main/${meta.filePath}`
 
   return (

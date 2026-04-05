@@ -5,9 +5,12 @@ import Image from 'next/image'
 interface Props {
   filePath: string
   title: string
+  hasCover?: boolean
 }
 
-export async function PostCover({ title, filePath }: Props) {
+export async function PostCover({ title, filePath, hasCover = false }: Props) {
+  if (!hasCover) return
+
   let cover
 
   try {

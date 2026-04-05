@@ -1,7 +1,8 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
 import clsx from 'clsx'
 
-import { URL_BASE } from '@/lib/constants'
+import { Footer } from '@/components/footer'
+import { BASE_URL } from '@/lib/constants'
 
 import './globals.css'
 
@@ -26,7 +27,7 @@ const meta = {
 }
 
 export const metadata: Metadata = {
-  metadataBase: new URL(URL_BASE),
+  metadataBase: new URL(BASE_URL),
   title: {
     default: meta.title,
     template: '%s — Erivelton Silva',
@@ -35,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: meta.title,
     description: meta.description,
-    url: URL_BASE,
+    url: BASE_URL,
     siteName: 'Erivelton Silva',
     locale: 'pt_BR',
     type: 'website',
@@ -59,6 +60,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         {/* Top border accent */}
         <div className='h-0.5 w-full bg-linear-to-r from-orange-500 via-amber-400 to-orange-600' />
         {children}
+
+      <Footer />
+
       </body>
     </html>
   )

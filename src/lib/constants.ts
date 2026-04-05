@@ -24,20 +24,18 @@ export enum Topics {
   WIP = 'wip',
 }
 
-export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
-
-export const PRIMARY_AUTHOR_SLUG = 'erivelton'
-
 /**
  *  Cover image convention: always named
  * `cover.jpg` inside the post folder.
  */
 export const COVER_NAME = 'cover.jpg'
-
+export const PRIMARY_AUTHOR_SLUG = 'erivelton'
 export const LOCALES = 'pt-BR'
 
-export const URL_BASE =
+export const BASE_URL =
   process.env['VERCEL_URL'] ? `https://${process.env['VERCEL_URL']}` : `http://localhost:3000`
+
+export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
 // ###
 
