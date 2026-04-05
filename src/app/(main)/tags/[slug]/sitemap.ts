@@ -1,20 +1,15 @@
+import { getAllTags } from '@/lib/blog/tags'
 import { BASE_URL } from '@/lib/constants'
 
 import type { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteMap = [
-    `${BASE_URL}/`,
-    `${BASE_URL}/blog`,
-    `${BASE_URL}/projects`,
-    `${BASE_URL}/series`,
-    `${BASE_URL}/tags`,
-  ] as const
+  const tags = getAllTags()
   const lastModified = new Date()
 
-  return siteMap.map((url) => ({
-    url,
-    lastModified,
+  return tags.map((tag) => ({
+    url: `${BASE_URL}/tags/${tag}`,
     changeFrequency: 'yearly',
+    lastModified,
   }))
 }
