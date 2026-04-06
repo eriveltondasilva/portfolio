@@ -25,13 +25,24 @@ O Markdown padrão funciona normalmente. Todos os elementos abaixo não precisam
 
 > Blockquote para destacar citações ou trechos importantes de outras fontes.
 
+### Âncoras em headings
+
+Todos os headings (`##`, `###`, etc.) recebem automaticamente um `id` gerado a partir do texto (via `rehype-slug`) e um link âncora `#` clicável ao passar o mouse (via `rehype-autolink-headings`).
+
+O `id` é gerado em kebab-case. Use para linkar diretamente para uma seção:
+
+```md
+[Ir para seção](#nome-da-secao)
+```
+
 ### Links
 
 Links internos e externos são tratados automaticamente pelo componente `Link`:
 
-- `[texto](/rota)` → link interno com Next.js, sem reload de página:
+- `[texto](/rota)` → link interno com Next.js, sem reload de página
 - `[texto](https://...)` → abre em nova aba com ícone de link externo
-- `www.exemplo.com` → também detectado como externo e prefixado com `https://`
+- `www.exemplo.com` → detectado como externo e prefixado com `https://`
+- `contato@exemplo.com` → vira link de e-mail
 
 Exemplos:
 - https://google.com
@@ -171,12 +182,12 @@ Etiquetas inline para categorizar ou destacar termos.
 <Badge variant='primary' size='md' dashed>texto</Badge>
 ```
 
-| Prop         | Valores                                                    | Padrão    |
-| ------------ | ---------------------------------------------------------- | --------- |
-| `variant`    | `default` `primary` `success` `warning` `danger` `info`   | `default` |
-| `size`       | `sm` `md` `lg`                                             | `md`      |
-| `dashed`     | `boolean`                                                  | `false`   |
-| `borderless` | `boolean`                                                  | `false`   |
+| Prop         | Valores                                                  | Padrão    |
+| ------------ | -------------------------------------------------------- | --------- |
+| `variant`    | `default` `primary` `success` `warning` `danger` `info` | `default` |
+| `size`       | `sm` `md` `lg`                                           | `md`      |
+| `dashed`     | `boolean`                                                | `false`   |
+| `borderless` | `boolean`                                                | `false`   |
 
 ---
 
@@ -323,9 +334,9 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
 </Accordion>
 ```
 
-| Prop    | Valores             | Padrão   |
-| ------- | ------------------- | -------- |
-| `type`  | `single` `multiple` | `single` |
+| Prop   | Valores             | Padrão   |
+| ------ | ------------------- | -------- |
+| `type` | `single` `multiple` | `single` |
 
 A prop `value` do `AccordionItem` é opcional — por padrão usa o próprio `title` como identificador.
 
@@ -371,11 +382,11 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
 </FileTree>
 ```
 
-| Prop          | Componente       | Descrição                                           |
-| ------------- | ---------------- | --------------------------------------------------- |
-| `name`        | Folder e File    | Nome exibido                                        |
-| `defaultOpen` | `FileTreeFolder` | Pasta aberta por padrão                             |
-| `highlight`   | `FileTreeFile`   | Destaca o arquivo — útil para "edite este arquivo"  |
+| Prop          | Componente       | Descrição                                          |
+| ------------- | ---------------- | -------------------------------------------------- |
+| `name`        | Folder e File    | Nome exibido                                       |
+| `defaultOpen` | `FileTreeFolder` | Pasta aberta por padrão                            |
+| `highlight`   | `FileTreeFile`   | Destaca o arquivo — útil para "edite este arquivo" |
 
 ---
 
@@ -400,7 +411,7 @@ A capa aparece no topo do post, logo abaixo do título, e também é usada na OG
 
 ### Imagem inline (Markdown)
 
-Imagens podem ser inseridas diretamente no Markdown usando o sintaxe abaixo. O caminho é relativo ao arquivo MDX, então `./nome-da-imagem.jpg` se refere a um arquivo na mesma pasta do `index.mdx`.
+Imagens inseridas diretamente no Markdown. O caminho é relativo ao `index.mdx`.
 
 **Sintaxe:**
 
@@ -414,7 +425,7 @@ Imagens podem ser inseridas diretamente no Markdown usando o sintaxe abaixo. O c
 
 ### Componente Image
 
-Para imagens com legenda ou controle fino de propriedades, use o componente `Image` do `next/image`.
+Para imagens com legenda ou controle fino de propriedades, use o componente `Image`.
 
 **Sintaxe:**
 
@@ -440,7 +451,7 @@ import MinhaImagem from './cover.jpg'
 
 ### RatioImage
 
-Imagem com proporção fixa usando `object-cover`. Útil para evitar layout shift com imagens de tamanhos variados.
+Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagens de tamanhos variados.
 
 **Sintaxe:**
 
@@ -461,22 +472,31 @@ Imagem com proporção fixa usando `object-cover`. Útil para evitar layout shif
   alt='Exemplo de imagem com proporção fixa usando RatioImage.'
   ratio={16 / 9}
   title='Título da imagem. Opcional.'
-  caption='Figura 2. Imagem com proporção fixa (16:9). Opcional.'
+  caption='Figura 2. Imagem com proporção fixa (16:9).'
 />
 
 Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
 ### ImageGrid
 
-Grade de imagens com número de colunas configurável.
+Grade de imagens com número de colunas configurável. O `columns` definido no `ImageGrid` é propagado automaticamente via context para todos os `GridImage` filhos — não é necessário repetir a prop em cada um.
 
 **Sintaxe:**
 
 ```mdx
 <ImageGrid columns={3}>
-  <GridImage src={Imagem1} alt='...' title='Título da imagem. Opcional.' />
-  <GridImage src={Imagem2} alt='...' title='Título da imagem. Opcional.' />
-  <GridImage src={Imagem3} alt='...' title='Título da imagem. Opcional.' />
+  <GridImage src={Imagem1} alt='...' caption='Legenda 1' />
+  <GridImage src={Imagem2} alt='...' caption='Legenda 2' />
+  <GridImage src={Imagem3} alt='...' caption='Legenda 3' />
+</ImageGrid>
+```
+
+Para sobrescrever o número de colunas em um item específico, passe `columns` diretamente no `GridImage`:
+
+```mdx
+<ImageGrid columns={3}>
+  <GridImage src={Imagem1} alt='...' />
+  <GridImage src={Imagem2} alt='...' columns={2} />  {/* sobrescreve o contexto */}
 </ImageGrid>
 ```
 
@@ -488,9 +508,10 @@ Grade de imagens com número de colunas configurável.
   <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' />
 </ImageGrid>
 
-| Prop      | Valores                  | Padrão |
-| --------- | ------------------------ | ------ |
-| `columns` | `2` `3` `4` `5` `6`      | `3`    |
+| Prop      | Componente  | Valores         | Padrão |
+| --------- | ----------- | --------------- | ------ |
+| `columns` | `ImageGrid` | `2` `3` `4` `5` `6` | `3`    |
+| `columns` | `GridImage` | `2` `3` `4` `5` `6` | contexto |
 
 ---
 
@@ -528,7 +549,7 @@ Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` 
 
 ## Emojis
 
-O `remark-gemoji` converte shortcodes no emoji correspondente. Use para adicionar ícones inline sem precisar importar imagens ou componentes.
+O `remark-gemoji` converte shortcodes no emoji correspondente.
 
 **Sintaxe:**
 
@@ -542,13 +563,19 @@ Referência completa: [github.com/ikatyang/emoji-cheat-sheet](https://github.com
 
 ---
 
-## Autolink
+## Importando assets locais
 
-O `remark-gfm` detecta automaticamente URLs e e-mails no texto sem formatação de link explícita:
+Imagens e outros arquivos da mesma pasta podem ser importados diretamente no MDX:
 
-- `www.exemplo.com` → vira link externo
-- `https://exemplo.com` → vira link externo
-- `contato@exemplo.com` → vira link de e-mail
+```mdx
+import Cover from './cover.jpg'
+import Diagrama from './diagrama.png'
+
+<Image src={Cover} alt='Capa do post' />
+<Image src={Diagrama} alt='Diagrama de arquitetura' caption='Figura 1.' />
+```
+
+O `rehype-mdx-import-media` permite referenciar imagens diretamente no Markdown sem import explícito — o plugin resolve o caminho automaticamente.
 
 ---
 
@@ -571,13 +598,11 @@ authors:
 
 ### Campo `status`
 
-Controla a visibilidade do post na listagem pública:
-
-| Valor       | Comportamento                                                                 |
-| ----------- | ----------------------------------------------------------------------------- |
-| `draft`     | Nunca foi publicado — não aparece na listagem e não tem rota gerada           |
-| `published` | Visível publicamente                                                          |
-| `archived`  | Removido da listagem, mas a URL continua acessível com um banner de aviso     |
+| Valor       | Comportamento                                                             |
+| ----------- | ------------------------------------------------------------------------- |
+| `draft`     | Nunca foi publicado — não aparece na listagem e não tem rota gerada       |
+| `published` | Visível publicamente                                                      |
+| `archived`  | Removido da listagem, mas a URL continua acessível com um banner de aviso |
 
 ### Campo `updatedAt`
 
@@ -592,7 +617,7 @@ updatedAt: '2026-04-03'   # opcional — use ao fazer atualizações significati
 
 ### Campos para posts de série
 
-Quando o post faz parte de uma série, informe o slug da série e a posição do post dentro dela. Ambos os campos são obrigatórios em conjunto — um não funciona sem o outro:
+Quando o post faz parte de uma série, informe o slug da série e a posição. Ambos os campos são obrigatórios em conjunto:
 
 ```yml
 ---
@@ -607,7 +632,7 @@ O banner da série é exibido automaticamente no rodapé do post com a lista de 
 
 ## Séries
 
-Séries são coleções de posts organizados por tema. Elas são definidas no arquivo `content/series/index.json`:
+Séries são definidas no arquivo `content/series/index.json`:
 
 ```json
 [
@@ -621,13 +646,13 @@ Séries são coleções de posts organizados por tema. Elas são definidas no ar
 ]
 ```
 
-| Campo         | Tipo     | Valores                              | Obrigatório |
-| ------------- | -------- | ------------------------------------ | ----------- |
-| `slug`        | `string` | kebab-case                           | ✅          |
-| `title`       | `string` | —                                    | ✅          |
-| `description` | `string` | máx. 300 caracteres                  | ✅          |
-| `publishedAt` | `string` | ISO date (`YYYY-MM-DD`)              | ✅          |
-| `status`      | `string` | `planned` `in-progress` `complete`   | ✅          |
+| Campo         | Tipo     | Valores                            | Obrigatório |
+| ------------- | -------- | ---------------------------------- | ----------- |
+| `slug`        | `string` | kebab-case                         | ✅          |
+| `title`       | `string` | —                                  | ✅          |
+| `description` | `string` | máx. 300 caracteres                | ✅          |
+| `publishedAt` | `string` | ISO date (`YYYY-MM-DD`)            | ✅          |
+| `status`      | `string` | `planned` `in-progress` `complete` | ✅          |
 
 Após editar o arquivo, regenere o índice:
 
@@ -641,17 +666,17 @@ Séries com status `in-progress` aparecem automaticamente na seção **Séries e
 
 ## Projetos
 
-Projetos são gerados automaticamente a partir dos repositórios públicos do GitHub via API (`@octokit/rest`). O controle de quais repositórios aparecem e como é feito pelos **topics** de cada repositório, diretamente na interface do GitHub.
+Projetos são gerados automaticamente a partir dos repositórios públicos do GitHub via API (`@octokit/rest`). O controle de quais repositórios aparecem é feito pelos **topics** de cada repositório na interface do GitHub.
 
-| Topic       | Efeito                                                          |
-| ----------- | --------------------------------------------------------------- |
-| `portfolio` | Inclui o repositório na listagem de projetos                    |
-| `featured`  | Marca como destaque — aparece na seção "Em destaque"            |
-| `wip`       | Define o status como **Em progresso**                           |
+| Topic       | Efeito                                               |
+| ----------- | ---------------------------------------------------- |
+| `portfolio` | Inclui o repositório na listagem de projetos         |
+| `featured`  | Marca como destaque — aparece na seção "Em destaque" |
+| `wip`       | Define o status como **Em progresso**                |
 
 Repositórios arquivados no GitHub recebem automaticamente o status **Arquivado**. Os demais aparecem como **Ativo**.
 
-As tags exibidas no card são os topics do repositório, excluindo os três de controle acima (`portfolio`, `featured`, `wip`).
+As tags exibidas no card são os topics do repositório, excluindo os três de controle acima.
 
 Para regenerar a listagem após alterar os topics no GitHub:
 
@@ -663,19 +688,3 @@ bun run build:projects
   O script de geração de projetos requer um token do GitHub configurado. Certifique-se
   de que `GITHUB_TOKEN` está definido no `.env.local` antes de rodar o comando.
 </Callout>
-
----
-
-## Importando assets locais
-
-Imagens e outros arquivos da mesma pasta podem ser importados diretamente no MDX:
-
-```mdx
-import Cover from './cover.jpg'
-import Diagrama from './diagrama.png'
-
-<Image src={Cover} alt='Capa do post' />
-<Image src={Diagrama} alt='Diagrama de arquitetura' caption='Figura 1.' />
-```
-
-O `rehype-mdx-import-media` permite também referenciar imagens diretamente no Markdown sem import explícito — o plugin resolve o caminho automaticamente.

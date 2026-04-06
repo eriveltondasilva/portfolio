@@ -21,8 +21,8 @@ export interface SeriesPostRef {
 
 export interface PostIndex extends Post {
   readingTime: number
-  filePath: string
-  hasCover: boolean
+  folder: string
+  coverFile: string | null
 }
 
 export interface SeriesIndex extends Series {

@@ -9,7 +9,6 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export function generateStaticParams() {
-  // Includes archived posts to generate their OG images as well.
   return getAllPostSlugs()
 }
 
@@ -143,8 +142,8 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
                 <div
                   style={{
                     display: 'flex',
-                    width: 40,
-                    height: 40,
+                    width: 50,
+                    height: 50,
                     borderRadius: '50%',
                     background: 'linear-gradient(135deg, #f97316, #ea580c)',
                     alignItems: 'center',

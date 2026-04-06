@@ -1,3 +1,7 @@
+import { join } from 'node:path'
+
+import { POSTS_DIR } from '@/lib/constants'
+
 import { BuildError } from './utils'
 
 import type { PostIndex } from '@/types'
@@ -5,8 +9,10 @@ import type { PostIndex } from '@/types'
 export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
   const index = new Map<string, Map<number, string[]>>()
 
-  for (const { series, order, filePath } of posts) {
+  for (const { series, order, folder } of posts) {
     if (series === undefined || order === undefined) continue
+
+    const filePath = join(POSTS_DIR, folder, 'index.mdx')
 
     let orderMap = index.get(series)
     if (!orderMap) {
@@ -45,12 +51,15 @@ export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
 }
 
 export function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
-  const invalid = posts.filter((p) => p.series !== undefined && !knownSeries.has(p.series))
+  const invalidPosts = posts.filter((p) => p.series !== undefined && !knownSeries.has(p.series))
 
-  if (invalid.length === 0) return
+  if (invalidPosts.length === 0) return
 
-  const detail = invalid
-    .map((post) => `  - "${post.slug}" -> série "${post.series}"\n    ${post.filePath}`)
+  const detail = invalidPosts
+    .map(
+      (post) =>
+        `  - "${post.slug}" -> série "${post.series}"\n    ${join(POSTS_DIR, post.folder, 'index.mdx')}`,
+    )
     .join('\n')
 
   const available =
@@ -70,7 +79,10 @@ export function assertAuthorsExist(posts: readonly PostIndex[], knownAuthors: Se
   if (missing.length === 0) return
 
   const detail = missing
-    .map(({ author, post }) => `  - author "${author}" in "${post.slug}"\n    ${post.filePath}`)
+    .map(
+      ({ author, post }) =>
+        `  - author "${author}" in "${post.slug}"\n    ${join(POSTS_DIR, post.folder, 'index.mdx')}`,
+    )
     .join('\n')
 
   const available =

@@ -24,11 +24,8 @@ export enum Topics {
   WIP = 'wip',
 }
 
-/**
- *  Cover image convention: always named
- * `cover.jpg` inside the post folder.
- */
-export const COVER_NAME = 'cover.jpg'
+// -------------------------------------
+
 export const PRIMARY_AUTHOR_SLUG = 'erivelton'
 export const LOCALES = 'pt-BR'
 
@@ -37,7 +34,7 @@ export const BASE_URL =
 
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio-v3'
 
-// ###
+// -------------------------------------
 
 export const CONTENT_DIR = join(process.cwd(), 'content')
 export const GENERATED_DIR = join(process.cwd(), 'generated')

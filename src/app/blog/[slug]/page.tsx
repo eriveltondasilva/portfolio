@@ -75,7 +75,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   const authors = getAuthorsBySlugs(meta.authors)
 
   const postUrl = `${BASE_URL}/blog/${slug}`
-  const editUrl = `${GITHUB_REPO}/edit/main/${meta.filePath}`
+  const editUrl = `${GITHUB_REPO}/edit/main/content/posts/${meta.folder}/index.mdx`
 
   return (
     <div>
@@ -105,7 +105,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         </div>
 
         {/* Cover image */}
-        {meta.hasCover && <PostCover filePath={meta.filePath} title={meta.title} />}
+        {meta.coverFile && (
+          <PostCover folder={meta.folder} coverFile={meta.coverFile} title={meta.title} />
+        )}
 
         {/* Meta info */}
         <div className='mt-6 space-y-2'>

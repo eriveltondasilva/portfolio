@@ -1,4 +1,4 @@
-import { join, relative } from 'node:path'
+import { dirname, basename, join } from 'node:path'
 
 import matter from 'gray-matter'
 import getReadingTime from 'reading-time'
@@ -6,7 +6,6 @@ import getReadingTime from 'reading-time'
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas'
 import {
   AUTHORS_SOURCE_FILE,
-  COVER_NAME,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   PostStatus,
@@ -37,6 +36,7 @@ interface PostsData {
   }
 }
 
+const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}'
 const log = new Logger()
 
 // # Readers
@@ -49,17 +49,13 @@ async function readAuthors(): Promise<Set<string>> {
     const issues = result.error.issues
       .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
       .join('\n')
-    const errorMessage = `${AUTHORS_SOURCE_FILE}\n\n${issues}`
 
-    throw new BuildError('authors', [errorMessage])
+    throw new BuildError('authors', [`${AUTHORS_SOURCE_FILE}\n\n${issues}`])
   }
 
   assertUniqueSlugs(
     'authors',
-    result.data.map((author) => ({
-      slug: author.slug,
-      source: AUTHORS_SOURCE_FILE,
-    })),
+    result.data.map((author) => ({ slug: author.slug, source: AUTHORS_SOURCE_FILE })),
   )
 
   return new Set(result.data.map((author) => author.slug))
@@ -73,17 +69,13 @@ async function readSeries(): Promise<Map<string, Series>> {
     const issues = result.error.issues
       .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
       .join('\n')
-    const errorMessage = `${SERIES_SOURCE_FILE}\n\n${issues}`
 
-    throw new BuildError('series', [errorMessage])
+    throw new BuildError('series', [`${SERIES_SOURCE_FILE}\n\n${issues}`])
   }
 
   assertUniqueSlugs(
     'series',
-    result.data.map((series) => ({
-      slug: series.slug,
-      source: SERIES_SOURCE_FILE,
-    })),
+    result.data.map((series) => ({ slug: series.slug, source: SERIES_SOURCE_FILE })),
   )
 
   return new Map(result.data.map((series) => [series.slug, series]))
@@ -104,22 +96,25 @@ async function readPosts(): Promise<PostsData> {
         const issues = error.issues
           .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
           .join('\n')
-        const errorMessage = `${file}\n\n${issues}\n`
 
-        throw new Error(errorMessage)
+        throw new Error(`${file}\n\n${issues}\n`)
       }
 
-      if (data.status === PostStatus.DRAFT) return null
+      if (data.status === PostStatus.DRAFT) return
 
-      const hasCover = await Bun.file(join(file, '..', COVER_NAME)).exists()
+      const postFolder = dirname(file)
+      const folder = basename(postFolder)
+
+      const coverGlob = new Bun.Glob(COVER_GLOB)
+      const [coverFile = null] = coverGlob.scanSync({ cwd: postFolder })
+
       const readingTime = Math.ceil(getReadingTime(content).minutes)
-      const filePath = relative(process.cwd(), file).replaceAll('\\', '/')
 
       return {
         ...data,
-        hasCover,
+        folder,
+        coverFile,
         readingTime,
-        filePath,
       } satisfies PostIndex
     }),
   )
@@ -139,24 +134,23 @@ async function readPosts(): Promise<PostsData> {
     'posts',
     fulfilledResults.map(({ value: post }) => ({
       slug: post.slug,
-      source: post.filePath,
+      source: join(process.cwd(), 'content/posts', post.folder, 'index.mdx'),
     })),
   )
 
   const posts = fulfilledResults.map(({ value }) => value)
 
-  const publishedCount = posts.filter((p) => p.status === PostStatus.PUBLISHED).length
+  const publishedPosts = posts.filter((p) => p.status === PostStatus.PUBLISHED)
   const archivedCount = posts.filter((p) => p.status === PostStatus.ARCHIVED).length
 
   return {
     posts,
     stats: {
       scanned: files.length,
-      published: publishedCount,
+      published: publishedPosts.length,
       archived: archivedCount,
       drafts: files.length - fulfilledResults.length,
-      withCover: posts.filter((post) => post.hasCover && post.status === PostStatus.PUBLISHED)
-        .length,
+      withCover: publishedPosts.filter((p) => p.coverFile !== null).length,
     },
   }
 }
@@ -164,8 +158,7 @@ async function readPosts(): Promise<PostsData> {
 // # Builders
 
 async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
-  const sortedPosts = sortByDateDesc(posts)
-  await writeJson(POSTS_INDEX_OUTPUT, sortedPosts)
+  await writeJson(POSTS_INDEX_OUTPUT, sortByDateDesc(posts))
 }
 
 async function buildSeriesIndex(
@@ -251,7 +244,7 @@ async function main(): Promise<void> {
   log.ok('series index:', SERIES_INDEX_OUTPUT)
 
   for (const seriesData of seriesWithPosts) {
-    if (seriesData.posts.length === 0) return
+    if (seriesData.posts.length === 0) continue
     log.detail(`${seriesData.slug}  (${seriesData.posts.length} posts)`)
   }
 

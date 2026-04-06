@@ -1,5 +1,3 @@
-import { dirname, basename } from 'node:path'
-
 import postsIndex from '@/generated/indexes/posts.json'
 import { PostStatus } from '@/lib/constants'
 
@@ -71,9 +69,7 @@ export async function getPostWithContent(slug: string): Promise<PostWithContent 
   if (!post) return null
 
   try {
-    const { default: Content } = await import(
-      `@/content/posts/${basename(dirname(post.filePath))}/index.mdx`
-    )
+    const { default: Content } = await import(`@/content/posts/${post.folder}/index.mdx`)
     return { Content, meta: post }
   } catch (error) {
     console.error(`Failed to import post: ${slug}`, error)
