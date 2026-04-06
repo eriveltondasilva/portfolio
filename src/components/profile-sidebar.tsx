@@ -40,7 +40,7 @@ export function ProfileSidebar({ author }: { author: Author }) {
       {/* Avatar */}
       <div className='relative'>
         <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:h-full md:w-full md:rounded-full dark:border-zinc-700'>
-          <AvatarImage src={getGithubAvatar(author, 256)} alt={author.name} />
+          <AvatarImage src={getGithubAvatar(author, 300)} alt={author.name} />
           <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
             {getInitials(author.name)}
           </AvatarFallback>

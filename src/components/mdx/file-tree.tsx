@@ -9,6 +9,8 @@ import { Icon } from '@/components/icon'
 
 import type { ComponentProps } from 'react'
 
+// -------------------------------------
+
 interface FileTreeFileProps {
   name: string
   highlight?: boolean
@@ -31,6 +33,8 @@ export function FileTreeFile({ name, highlight, className }: FileTreeFileProps) 
     </li>
   )
 }
+
+// -------------------------------------
 
 interface FileTreeFolderProps extends ComponentProps<'li'> {
   name: string
@@ -68,6 +72,8 @@ export function FileTreeFolder({
     </li>
   )
 }
+
+// -------------------------------------
 
 export function FileTree({ className, children }: ComponentProps<'div'>) {
   return (

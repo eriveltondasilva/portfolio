@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return series.map((s) => ({
     url: `${BASE_URL}/series/${s.slug}`,
-    changeFrequency: 'yearly',
+    changeFrequency: 'monthly',
     lastModified,
   }))
 }

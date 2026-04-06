@@ -9,6 +9,8 @@ authors:
   - erivelton
 ---
 
+import CoverImage from './cover.jpg'
+
 Este post é um manual de referência rápida. Aqui estão todos os componentes e recursos disponíveis ao escrever um novo post. Mantenha-o aberto como guia enquanto escreve.
 
 ---
@@ -27,9 +29,15 @@ O Markdown padrão funciona normalmente. Todos os elementos abaixo não precisam
 
 Links internos e externos são tratados automaticamente pelo componente `Link`:
 
-- `[texto](/rota)` → link interno com Next.js, sem reload de página
+- `[texto](/rota)` → link interno com Next.js, sem reload de página:
 - `[texto](https://...)` → abre em nova aba com ícone de link externo
 - `www.exemplo.com` → também detectado como externo e prefixado com `https://`
+
+Exemplos:
+- https://google.com
+- www.google.com
+- [Link interno](/posts/2026-04-03-mdx-reference)
+- [Link externo](https://google.com)
 
 ### Listas
 
@@ -73,9 +81,6 @@ Bloco simples:
 function greet(name: string): string {
   return `Hello, ${name}!`
 }
-
-console.log('hewwo') // [!code --]
-console.log('hello') // [!code ++]
 ```
 
 Com `title` e `caption`:
@@ -97,38 +102,6 @@ export function Button({ variant = 'default', className, ...props }: ButtonProps
   return (
     <button className={cn(buttonVariants({ variant }), className)} {...props} />
   )
-}
-```
-
-### Notações especiais
-
-#### Diff
-
-Marca linhas como adicionadas ou removidas usando `// [!code ++]` e `// [!code --]`:
-```ts
-function greet(name: string): string {
-  return `Hello, ${name}!`  // [!code --]
-  return `Olá, ${name}!`    // [!code ++]
-}
-```
-
-#### Focus
-
-Destaca linhas específicas e desfoca as demais. Útil para chamar atenção em um trecho sem remover o contexto ao redor. Passe o cursor sobre o bloco para ver todas as linhas novamente:
-```ts
-function createUser(data: UserInput) {
-  validateInput(data)
-  const hashed = hashPassword(data.password)  // [!code focus]
-  return db.users.create({ ...data, password: hashed })
-}
-```
-
-Combine com `showLineNumbers` quando o número de linha ajudar a referenciar o código no texto:
-```ts showLineNumbers
-function createUser(data: UserInput) {
-  validateInput(data)
-  const hashed = hashPassword(data.password)  // [!code focus]
-  return db.users.create({ ...data, password: hashed })
 }
 ```
 
@@ -286,7 +259,8 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
   <Step title='Configure o arquivo principal'>
     Crie o arquivo de configuração com o conteúdo abaixo:
 
-    ```ts title="app.config.ts"
+    ```ts
+    // app.config.ts
     export default {
       port: 3_000,
       host: 'localhost',
@@ -426,13 +400,23 @@ A capa aparece no topo do post, logo abaixo do título, e também é usada na OG
 
 ### Imagem inline (Markdown)
 
+Imagens podem ser inseridas diretamente no Markdown usando o sintaxe abaixo. O caminho é relativo ao arquivo MDX, então `./nome-da-imagem.jpg` se refere a um arquivo na mesma pasta do `index.mdx`.
+
+**Sintaxe:**
+
 ```mdx
 ![Descrição da imagem](./nome-do-arquivo.jpg 'Título tooltip')
 ```
 
+**Exemplo:**
+
+![Imagem de exemplo](./cover.jpg 'Título da imagem. Opcional.')
+
 ### Componente Image
 
-Para imagens com legenda ou controle fino:
+Para imagens com legenda ou controle fino de propriedades, use o componente `Image` do `next/image`.
+
+**Sintaxe:**
 
 ```mdx
 import MinhaImagem from './cover.jpg'
@@ -440,71 +424,119 @@ import MinhaImagem from './cover.jpg'
 <Image
   src={MinhaImagem}
   alt='Descrição acessível obrigatória'
-  caption='Legenda exibida abaixo da imagem.'
+  title='Título da imagem. Opcional.'
+  caption='Legenda exibida abaixo da imagem. Opcional.'
 />
 ```
 
+**Exemplo:**
+
+<Image
+  src={CoverImage}
+  alt='Exemplo de imagem com legenda usando o componente Image.'
+  title='Título da imagem. Opcional.'
+  caption='Figura 1. Imagem de exemplo com legenda.'
+/>
+
 ### RatioImage
 
-Imagem com proporção fixa usando `object-cover`. Útil para evitar layout shift com imagens de tamanhos variados:
+Imagem com proporção fixa usando `object-cover`. Útil para evitar layout shift com imagens de tamanhos variados.
+
+**Sintaxe:**
 
 ```mdx
 <RatioImage
   src={MinhaImagem}
   alt='Descrição acessível'
   ratio={16 / 9}
+  title='Título da imagem. Opcional.'
   caption='Legenda opcional.'
 />
 ```
+
+**Exemplo:**
+
+<RatioImage
+  src={CoverImage}
+  alt='Exemplo de imagem com proporção fixa usando RatioImage.'
+  ratio={16 / 9}
+  title='Título da imagem. Opcional.'
+  caption='Figura 2. Imagem com proporção fixa (16:9). Opcional.'
+/>
 
 Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
 ### ImageGrid
 
-Grade de imagens com número de colunas configurável:
+Grade de imagens com número de colunas configurável.
+
+**Sintaxe:**
 
 ```mdx
-<ImageGrid
-  columns={3}
-  images={[
-    { src: Img1, alt: 'Descrição 1', caption: 'Legenda 1' },
-    { src: Img2, alt: 'Descrição 2', caption: 'Legenda 2' },
-    { src: Img3, alt: 'Descrição 3' },
-  ]}
-/>
+<ImageGrid columns={3}>
+  <GridImage src={Imagem1} alt='...' title='Título da imagem. Opcional.' />
+  <GridImage src={Imagem2} alt='...' title='Título da imagem. Opcional.' />
+  <GridImage src={Imagem3} alt='...' title='Título da imagem. Opcional.' />
+</ImageGrid>
 ```
+
+**Exemplo:**
+
+<ImageGrid columns={3}>
+  <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' />
+  <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' />
+  <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' />
+</ImageGrid>
 
 | Prop      | Valores                  | Padrão |
 | --------- | ------------------------ | ------ |
-| `columns` | `2` `3` `4` `5` `6`     | `3`    |
+| `columns` | `2` `3` `4` `5` `6`      | `3`    |
 
 ---
 
 ## YouTube
 
+O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o id é `dQw4w9WgXcQ`.
+
+**Sintaxe:**
+
 ```mdx
-<Youtube id='dQw4w9WgXcQ' />
+<Youtube id='m3DJmtLdqhU' />
 ```
 
-O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o id é `dQw4w9WgXcQ`.
+**Exemplo:**
+
+<Youtube id='m3DJmtLdqhU'/>
 
 ---
 
 ## Tweet
 
-Embed de um tweet pelo ID. O ID está na URL: `x.com/user/status/123456789` → id é `123456789`.
+Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` → id é `123456789`.
+
+**Sintaxe:**
 
 ```mdx
-<Tweet id='123456789' />
+<Tweet id='2026946487599697948' />
 ```
+
+**Exemplo:**
+
+<Tweet id='2026946487599697948' />
 
 ---
 
 ## Emojis
 
-O `remark-gemoji` converte shortcodes no emoji correspondente:
+O `remark-gemoji` converte shortcodes no emoji correspondente. Use para adicionar ícones inline sem precisar importar imagens ou componentes.
+
+**Sintaxe:**
 
 `:rocket:` → 🚀 | `:tada:` → 🎉 | `:warning:` → ⚠️ | `:bulb:` → 💡 | `:white_check_mark:` → ✅
+
+**Exemplo:**
+
+:rocket: :tada: :warning: :bulb: :white_check_mark:
 
 Referência completa: [github.com/ikatyang/emoji-cheat-sheet](https://github.com/ikatyang/emoji-cheat-sheet)
 
@@ -647,4 +679,3 @@ import Diagrama from './diagrama.png'
 ```
 
 O `rehype-mdx-import-media` permite também referenciar imagens diretamente no Markdown sem import explícito — o plugin resolve o caminho automaticamente.
-

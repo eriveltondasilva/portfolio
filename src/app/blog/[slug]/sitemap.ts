@@ -9,6 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return posts.map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
     lastModified: post.updatedAt ?? post.publishedAt,
-    changeFrequency: 'yearly',
+    changeFrequency: 'monthly',
   }))
 }

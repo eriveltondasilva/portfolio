@@ -1,8 +1,7 @@
 import { Link } from './components/mdx/link'
 import { Youtube } from './components/mdx/youtube'
-import { Image } from './components/mdx/image'
-import { RatioImage } from './components/mdx/ratio-image'
-import { ImageGrid } from './components/mdx/image-grid'
+import { Image, RatioImage } from './components/mdx/image'
+import { ImageGrid, GridImage } from './components/mdx/image-grid'
 import { Callout } from './components/mdx/callout'
 import { CodeBlock } from './components/mdx/code-block'
 import { Tweet } from './components/mdx/tweet'
@@ -19,21 +18,29 @@ const components = {
   a: Link,
   img: Image,
   pre: CodeBlock,
+  //
   Accordion,
   AccordionItem,
+  //
   Image,
-  ImageGrid,
   RatioImage,
-  Callout,
-  Badge,
-  Kbd,
+  //
+  ImageGrid,
+  GridImage,
+  //
   Tabs,
   Tab,
+  //
   Steps,
   Step,
+  //
   FileTree,
   FileTreeFolder,
   FileTreeFile,
+  //
+  Callout,
+  Badge,
+  Kbd,
   Youtube,
   Tweet,
 } satisfies MDXComponents

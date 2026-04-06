@@ -8,6 +8,8 @@ import { cn } from '@/lib/utils'
 
 import type { ComponentProps } from 'react'
 
+// -------------------------------------
+
 interface AccordionItemProps extends Omit<ComponentProps<typeof AccordionItemRoot>, 'value'> {
   title: string
   value?: string
@@ -21,6 +23,8 @@ export function AccordionItem({ title, value, children, ...props }: AccordionIte
     </AccordionItemRoot>
   )
 }
+
+// -------------------------------------
 
 interface AccordionBaseProps {
   className?: string

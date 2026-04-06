@@ -6,5 +6,9 @@ interface Props {
 }
 
 export function Youtube({ id, params = 'controls=0' }: Props) {
-  return <YouTubeEmbed videoid={id} params={params} />
+  return (
+    <div className='not-prose my-6'>
+      <YouTubeEmbed videoid={id} params={params} />
+    </div>
+  )
 }

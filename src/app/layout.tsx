@@ -49,6 +49,10 @@ export const metadata: Metadata = {
   },
 }
 
+function TopBorder() {
+  return <div className='h-0.5 w-full bg-linear-to-r from-orange-500 via-amber-400 to-orange-600' />
+}
+
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
@@ -56,13 +60,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={clsx(inter.variable, robotoMono.variable)}
       suppressHydrationWarning
     >
-      <body className='min-h-screen bg-white font-sans antialiased dark:bg-[#0d1117]'>
-        {/* Top border accent */}
-        <div className='h-0.5 w-full bg-linear-to-r from-orange-500 via-amber-400 to-orange-600' />
-        {children}
-
-      <Footer />
-
+      <body className='flex min-h-screen flex-col bg-white font-sans antialiased dark:bg-[#0d1117]'>
+        <TopBorder />
+        <div className='flex-1'>{children}</div>
+        <Footer />
       </body>
     </html>
   )

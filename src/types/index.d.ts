@@ -10,6 +10,9 @@ export type Post = z.infer<typeof postSchema>
 export type Author = z.infer<typeof authorSchema>
 export type Project = z.infer<typeof projectSchema>
 
+export type GridColumns = 2 | 3 | 4 | 5 | 6
+export type GithubRepo = Awaited<ReturnType<Octokit['repos']['listForUser']>>['data'][number]
+
 export interface SeriesPostRef {
   slug: string
   title: string
@@ -40,5 +43,3 @@ export interface PostWithContent {
   Content: MDXContent
   meta: PostIndex
 }
-
-export type GithubRepo = Awaited<ReturnType<Octokit['repos']['listForUser']>>['data'][number]

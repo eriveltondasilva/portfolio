@@ -6,7 +6,7 @@ import { Icon } from '../icon'
 import type { ComponentPropsWithoutRef } from 'react'
 import type { Route } from 'next'
 
-const EXTERNAL_PROTOCOLS = ['http://', 'https://', 'www.']
+const isHttpUrl = (str: string) => /^https?:\/\//.test(str)
 
 export function Link({ href = '', children, ...props }: ComponentPropsWithoutRef<'a'>) {
   if (!href) return <>{children}</>
@@ -19,7 +19,7 @@ export function Link({ href = '', children, ...props }: ComponentPropsWithoutRef
     )
   }
 
-  if (EXTERNAL_PROTOCOLS.some((protocol) => href.startsWith(protocol))) {
+  if (isHttpUrl(href)) {
     return (
       <a
         href={href}
@@ -29,7 +29,7 @@ export function Link({ href = '', children, ...props }: ComponentPropsWithoutRef
         className='inline-flex items-center gap-1'
       >
         {children}
-        <Icon iconNode={ExternalLinkIcon} />
+        <Icon iconNode={ExternalLinkIcon} className='size-3.5' />
       </a>
     )
   }
