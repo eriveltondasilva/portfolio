@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, CalendarIcon, CalendarSyncIcon, ClockIcon, FilePenIcon } from 'lucide-react'
+import { ArrowLeftIcon, DotIcon, FilePenIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -95,7 +95,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       {isArchived && <ArchivedBanner />}
 
       {/* Post header */}
-      <header>
+      <header className='space-y-4'>
         {/* Title + share button */}
         <div className='flex items-start justify-between gap-3'>
           <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
@@ -110,10 +110,11 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         )}
 
         {/* Meta info */}
-        <div className='mt-6 space-y-2'>
-          <div className='flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
-            <span className='flex items-center gap-1.5'>
-              <Icon iconNode={meta.updatedAt ? CalendarSyncIcon : CalendarIcon} />
+        <div className='space-y-2'>
+          {/* Updated date + reading time */}
+          <div className='flex flex-wrap items-center text-sm text-zinc-500 dark:text-zinc-500'>
+            <span>
+              {meta.updatedAt ? 'Atualizado em ' : 'Publicado em '}
               <time dateTime={meta.updatedAt ?? meta.publishedAt}>
                 {formatDate(meta.updatedAt ?? meta.publishedAt, {
                   dateStyle: 'long',
@@ -121,10 +122,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
               </time>
             </span>
 
-            <span className='flex items-center gap-1.5'>
-              <Icon iconNode={ClockIcon} />
-              {meta.readingTime} min de leitura
-            </span>
+            <Icon iconNode={DotIcon} className='size-5' />
+
+            <span>{meta.readingTime} min de leitura</span>
           </div>
 
           {/* Authors */}
@@ -151,7 +151,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <Separator />
 
       {/* Article content */}
-      <article className='prose max-w-none prose-zinc dark:prose-invert'>
+      <article className='prose max-w-none prose-zinc dark:prose-invert prose-hr:my-10'>
         <Content />
       </article>
 
@@ -164,8 +164,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           </a>
         </Button>
       </div>
-
-      <Separator />
 
       {/* Series banner */}
       <PostSeriesBanner slug={meta.series} order={meta.order} />

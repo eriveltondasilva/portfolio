@@ -32,23 +32,27 @@ Todos os headings (`##`, `###`, etc.) recebem automaticamente um `id` gerado a p
 O `id` é gerado em kebab-case. Use para linkar diretamente para uma seção:
 
 ```md
-[Ir para seção](#nome-da-secao)
+[Ir para seção](#Âncoras-em-headings)
 ```
+
+[Ir para seção](#Âncoras-em-headings)
+
 
 ### Links
 
-Links internos e externos são tratados automaticamente pelo componente `Link`:
+Links internos e externos são tratados automaticamente pelo componente `Link` da pasta `components/mdx/link.tsx`:
 
-- `[texto](/rota)` → link interno com Next.js, sem reload de página
-- `[texto](https://...)` → abre em nova aba com ícone de link externo
+- `[texto](/rota)` → link interno com Next.js, sem reload de página usando `Link` do Next.js
+- `[texto](https://...)` ou `[texto](http://...)` → abre em nova aba com ícone de link externo e usa 'a' com `target="_blank"` e `rel="noopener noreferrer"`
 - `www.exemplo.com` → detectado como externo e prefixado com `https://`
 - `contato@exemplo.com` → vira link de e-mail
 
 Exemplos:
-- https://google.com
-- www.google.com
-- [Link interno](/posts/2026-04-03-mdx-reference)
+- [Link interno](/blog/2026-04-03-mdx-reference)
 - [Link externo](https://google.com)
+- https://google.com ou http://google.com
+- www.google.com
+- contato@exemplo.com
 
 ### Listas
 
@@ -394,7 +398,7 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
 
 ### Imagem de capa
 
-Cada post pode ter uma imagem de capa. Basta nomear o arquivo `cover.jpg` e colocá-lo na mesma pasta do `index.mdx` — nenhuma configuração adicional é necessária.
+Cada post pode ter uma imagem de capa. Basta nomear o arquivo `cover` e colocá-lo na mesma pasta do `index.mdx` — nenhuma configuração adicional é necessária.
 
 ```
 content/posts/2026-01-15-meu-post/
@@ -402,12 +406,7 @@ content/posts/2026-01-15-meu-post/
 └── cover.jpg   ← detectado automaticamente
 ```
 
-A capa aparece no topo do post, logo abaixo do título, e também é usada na OG image gerada para redes sociais.
-
-<Callout variant='warning' title='Atenção'>
-  O arquivo deve se chamar exatamente `cover.jpg`. Outros nomes ou extensões
-  (`.png`, `.webp`) não são detectados automaticamente.
-</Callout>
+A capa aparece no topo do post, logo abaixo do título, e também é usada na OG image gerada para redes sociais. Extensões suportadas: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`.
 
 ### Imagem inline (Markdown)
 
