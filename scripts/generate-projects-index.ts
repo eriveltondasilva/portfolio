@@ -42,7 +42,7 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
 
   const withoutTopic = repos.length - privateCount - portfolioRepos.length
   if (withoutTopic > 0)
-    log.skip('no topic:\t', `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`)
+    log.skip('no topic:', `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`)
 
   const featuredCount = portfolioRepos.filter((repo) =>
     repo.topics?.includes(Topics.FEATURED),

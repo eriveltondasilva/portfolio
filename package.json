@@ -16,10 +16,9 @@
     "portfolio"
   ],
   "scripts": {
-    "dev": "bun --bun next dev",
-    "build": "bun --bun next build",
-    "start": "bun --bun next start",
-    "x-predev": "bun run build:indexes",
+    "dev": "bun run --bun next dev",
+    "build": "bun run --bun next build",
+    "start": "bun run --bun next start",
     "prebuild": "bun run build:indexes",
     "lint": "bunx eslint .",
     "lint:fix": "bunx eslint . --fix --cache",
@@ -30,7 +29,7 @@
     "build:blog": "bun run scripts/generate-blog-index.ts",
     "build:projects": "bun run scripts/generate-projects-index.ts",
     "build:schemas": "bun run scripts/generate-zod-schemas.ts",
-    "build:indexes": "bun run build:blog && bun run build:projects && bun run build:schemas"
+    "build:indexes": "bun run build:blog && bun run build:projects"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
