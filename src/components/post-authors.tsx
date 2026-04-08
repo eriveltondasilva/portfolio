@@ -119,8 +119,6 @@ function AuthorHoverCard({ author }: { author: Author }) {
 }
 
 export function PostAuthors({ authors }: { authors: Author[] }) {
-  if (authors.length === 0) return null
-
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
   const parts = formatList().formatToParts(authors.map((author) => author.slug))
   const authorNames = parts.map(({ type, value }, index) => {
@@ -133,10 +131,5 @@ export function PostAuthors({ authors }: { authors: Author[] }) {
     return <span key={index}>{value}</span>
   })
 
-  return (
-    <span className='flex flex-wrap items-baseline gap-x-1 text-sm text-zinc-500 dark:text-zinc-500'>
-      <span>Criado por </span>
-      {authorNames}
-    </span>
-  )
+  return authorNames
 }

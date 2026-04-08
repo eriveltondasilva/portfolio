@@ -52,6 +52,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+
     },
   }
 }
@@ -98,7 +99,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <header className='space-y-4'>
         {/* Title + share button */}
         <div className='flex items-start justify-between gap-3'>
-          <h1 className='text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
+          <h1 className='text-3xl leading-tight font-bold font-mono tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
             {meta.title}
           </h1>
           <ShareButton title={meta.title} url={postUrl} />
@@ -111,6 +112,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
         {/* Meta info */}
         <div className='space-y-2'>
+          <div>{meta.description}</div>
           {/* Updated date + reading time */}
           <div className='flex flex-wrap items-center text-sm text-zinc-500 dark:text-zinc-500'>
             <span>
@@ -120,15 +122,14 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
                   dateStyle: 'long',
                 })}
               </time>
+              <span> por </span>
+              {authors.length > 0 && <PostAuthors authors={authors} />}
             </span>
 
             <Icon iconNode={DotIcon} className='size-5' />
 
             <span>{meta.readingTime} min de leitura</span>
           </div>
-
-          {/* Authors */}
-          <PostAuthors authors={authors} />
 
           {/* Tags */}
           {meta.tags.length > 0 && (
