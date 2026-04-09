@@ -52,8 +52,8 @@ const withMDX = createMDX({
     remarkPlugins: ['remark-frontmatter', ['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
     rehypePlugins: [
       'rehype-slug',
-      'rehype-unwrap-images',
       ['rehype-autolink-headings', autolinkHeadingsOptions],
+      'rehype-unwrap-images',
       'rehype-mdx-import-media',
       ['rehype-pretty-code', prettyCodeOptions],
     ],
