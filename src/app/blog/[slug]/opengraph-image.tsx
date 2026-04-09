@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og'
 
 import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts'
 import { getAuthorsBySlugs } from '@/lib/blog/authors'
-import { formatDate, getInitials } from '@/lib'
+import { formatDate, getNameInitials } from '@/lib'
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
@@ -153,7 +153,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
                     fontWeight: 700,
                   }}
                 >
-                  {getInitials(author.name)}
+                  {getNameInitials(author.name)}
                 </div>
                 <span style={{ color: '#374151', fontSize: 15, fontWeight: 600 }}>
                   {author.name}

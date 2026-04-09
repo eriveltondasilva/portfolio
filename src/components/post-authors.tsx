@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { formatList, getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
+import { createListFormatter, getGitHubAvatarUrl, getUrlPathname, getNameInitials } from '@/lib'
 import TwitterX from '@/assets/twitter-x.svg'
 import Linkedin from '@/assets/linkedin.svg'
 import Github from '@/assets/github.svg'
@@ -36,6 +36,8 @@ const SOCIAL_ICONS = [
 }>
 
 function AuthorHoverCard({ author }: { author: Author }) {
+  const githubUsername = getUrlPathname(author.socials.github)
+
   return (
     <HoverCard openDelay={300} closeDelay={100}>
       <HoverCardTrigger asChild>
@@ -51,9 +53,9 @@ function AuthorHoverCard({ author }: { author: Author }) {
         {/* Header */}
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
-            <AvatarImage src={getGithubAvatar(author)} alt={author.name} />
+            <AvatarImage src={getGitHubAvatarUrl(author)} alt={author.name} />
             <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
-              {getInitials(author.name)}
+              {getNameInitials(author.name)}
             </AvatarFallback>
           </Avatar>
 
@@ -61,7 +63,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
             <p className='text-sm leading-tight font-semibold text-zinc-900 dark:text-zinc-50'>
               {author.name}
             </p>
-            <p className='text-xs text-zinc-500 dark:text-zinc-400'>@{getGitHubUsername(author)}</p>
+            <p className='text-xs text-zinc-500 dark:text-zinc-400'>@{githubUsername}</p>
           </div>
         </div>
 
@@ -120,7 +122,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
 export function PostAuthors({ authors }: { authors: Author[] }) {
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
-  const parts = formatList().formatToParts(authors.map((author) => author.slug))
+  const parts = createListFormatter().formatToParts(authors.map((author) => author.slug))
   const authorNames = parts.map(({ type, value }, index) => {
     if (type === 'element') {
       const author = authorsBySlug.get(value)

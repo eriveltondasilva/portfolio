@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest'
 
 import { PROJECTS_INDEX_OUTPUT, Topics } from '@/lib/constants'
 import { getPrimaryAuthor } from '@/lib/blog/authors'
-import { getGitHubUsername, getProjectName, getProjectStatus, getProjectTags } from '@/lib'
+import { getUrlPathname, formatProjectName, getProjectStatus, filterProjectTags } from '@/lib'
 
 import { Logger, writeJson } from './utils'
 
@@ -14,7 +14,8 @@ const log = new Logger()
 
 async function fetchPortfolioProjects(): Promise<Project[]> {
   const token = process.env['GITHUB_TOKEN']
-  const githubUsername = getGitHubUsername(getPrimaryAuthor())
+  const author = getPrimaryAuthor()
+  const githubUsername = getUrlPathname(author.socials.github)
 
   if (!token) {
     throw new Error(
@@ -56,11 +57,11 @@ async function fetchPortfolioProjects(): Promise<Project[]> {
 
   return portfolioRepos.map((repo) => ({
     slug: repo.name,
-    name: getProjectName(repo),
+    name: formatProjectName(repo),
     description: repo.description ?? 'Sem descrição.',
     repository: repo.html_url,
     url: repo.homepage ?? undefined,
-    tags: getProjectTags(repo),
+    tags: filterProjectTags(repo),
     status: getProjectStatus(repo),
     featured: repo.topics?.includes(Topics.FEATURED) ?? false,
   }))
