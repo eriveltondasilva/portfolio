@@ -1,4 +1,5 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/next'
 import clsx from 'clsx'
 
 import { Footer } from '@/components/footer'
@@ -40,7 +41,7 @@ export const metadata: Metadata = {
     title: meta.title,
     description: meta.description,
     url: BASE_URL,
-  }
+  },
 }
 
 function TopBorder() {
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <TopBorder />
         <div className='flex-1'>{children}</div>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
