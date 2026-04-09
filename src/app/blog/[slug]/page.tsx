@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
   const { slug } = await params
   const post = getPostBySlug(slug)
 
-  if (!post) return {}
+  if (!post) return notFound()
 
   return {
     title: post.title,

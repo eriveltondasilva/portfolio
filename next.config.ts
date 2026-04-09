@@ -24,10 +24,6 @@ const prettyCodeOptions: PrettyCodeOptions = {
   theme: 'github-dark-default',
   defaultLang: 'plaintext',
   bypassInlineCode: true,
-  // transformers: [
-  //   transformerNotationDiff(),
-  //   transformerNotationFocus(),
-  // ],
 }
 
 // ###
@@ -53,6 +49,7 @@ const withMDX = createMDX({
     rehypePlugins: [
       'rehype-slug',
       ['rehype-autolink-headings', autolinkHeadingsOptions],
+
       'rehype-unwrap-images',
       'rehype-mdx-import-media',
       ['rehype-pretty-code', prettyCodeOptions],

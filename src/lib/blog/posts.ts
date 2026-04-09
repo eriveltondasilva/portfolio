@@ -73,10 +73,8 @@ export async function getPostWithContent(slug: string): Promise<PostWithContent 
 
   if (!post) return null
 
-  const filePath = join(POSTS_DIR, post.folder, 'index.mdx')
-  const raw = readFileSync(filePath, 'utf-8')
-
   const { default: Content } = await import(`@/content/posts/${post.folder}/index.mdx`)
+  const raw = readFileSync(join(POSTS_DIR, post.folder, 'index.mdx'), 'utf-8')
 
   return { Content, meta: post, headings: extractHeadings(raw) }
 }

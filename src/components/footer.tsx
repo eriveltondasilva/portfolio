@@ -21,7 +21,7 @@ export function Footer() {
     <footer className='px-4 pb-8 md:px-8 lg:px-12'>
       <div className='mt-6 flex flex-col gap-1 border-t border-zinc-100 pt-5 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800'>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
-          &copy; {year} {author.name.split(' ')[0]}. Todos os direitos reservados.
+          &copy; {year} <Link href={author.socials.github} >{author.name.split(' ').at(0)}</Link>. Todos os direitos reservados.
         </p>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
           Feito com <Link href='https://nextjs.org'>Next.js</Link>,{' '}
