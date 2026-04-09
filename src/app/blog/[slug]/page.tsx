@@ -106,7 +106,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         className='mb-6 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
       >
         <Icon iconNode={ArrowLeftIcon} />
-        Voltar ao blog{BASE_URL}
+        Voltar ao blog
       </Link>
 
       {/* Archived banner */}
