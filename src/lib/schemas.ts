@@ -8,6 +8,33 @@ function setRegexChecks(schema: z.ZodString) {
   return schema.regex(slugRegex, 'Slug must be in kebab-case.')
 }
 
+const socialsSchema = z
+  .object({
+    github: z
+      .url({
+        protocol: /^https$/,
+        hostname: /^github\.com$/,
+      })
+      .describe('GitHub profile URL. Exemple: https://github.com/username'),
+    //
+    linkedin: z
+      .url({
+        protocol: /^https$/,
+        hostname: /linkedin\.com$/,
+      })
+      .optional()
+      .describe('LinkedIn profile URL. Exemple: https://linkedin.com/in/username'),
+    //
+    twitter: z
+      .url({
+        protocol: /^https$/,
+        hostname: /^(x|twitter)\.com$/,
+      })
+      .optional()
+      .describe('Twitter profile URL. Exemple: https://twitter.com/username'),
+  })
+  .describe('Social media profiles of the author.')
+
 export const authorSchema = z
   .object({
     //
@@ -36,18 +63,7 @@ export const authorSchema = z
       .max(20)
       .describe('List of skills or technologies the author is proficient in.'),
     //
-    socials: z
-      .object({
-        github: z
-          .url({
-            protocol: /^https$/,
-            hostname: /^github\.com$/,
-          })
-          .describe('GitHub profile URL.'),
-        linkedin: z.url().optional().describe('LinkedIn profile URL.'),
-        twitter: z.url().optional().describe('Twitter profile URL.'),
-      })
-      .describe('Social media profiles of the author.'),
+    socials: socialsSchema,
   })
   .strict()
   .meta({

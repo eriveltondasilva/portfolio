@@ -5,6 +5,7 @@ import { getGithubAvatar, getGitHubUsername, getInitials } from '@/lib'
 import TwitterX from '@/assets/twitter-x.svg'
 import Linkedin from '@/assets/linkedin.svg'
 import Github from '@/assets/github.svg'
+import { getPrimaryAuthor } from '@/lib/blog/authors'
 
 import { Icon } from './icon'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -34,7 +35,9 @@ const socialMap = [
   icon: string
 }>
 
-export function ProfileSidebar({ author }: { author: Author }) {
+export function ProfileSidebar() {
+  const author = getPrimaryAuthor()
+
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}

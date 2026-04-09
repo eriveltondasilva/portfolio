@@ -52,7 +52,6 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-
     },
   }
 }
@@ -99,7 +98,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <header className='space-y-4'>
         {/* Title + share button */}
         <div className='flex items-start justify-between gap-3'>
-          <h1 className='text-3xl leading-tight font-bold font-mono tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
+          <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 dark:text-zinc-50'>
             {meta.title}
           </h1>
           <ShareButton title={meta.title} url={postUrl} />
