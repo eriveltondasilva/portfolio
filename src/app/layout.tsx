@@ -21,7 +21,7 @@ const robotoMono = Roboto_Mono({
 })
 
 const meta = {
-  title: 'Erivelton Silva — Dev Blog',
+  title: 'Erivelton Silva — Blog',
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
 }
@@ -33,20 +33,14 @@ export const metadata: Metadata = {
     template: '%s — Erivelton Silva',
   },
   description: meta.description,
+  generator: 'Next.js',
   openGraph: {
+    type: 'website',
+    locale: 'pt_BR',
     title: meta.title,
     description: meta.description,
     url: BASE_URL,
-    siteName: 'Erivelton Silva',
-    locale: 'pt_BR',
-    type: 'website',
-  },
-  twitter: {
-    title: meta.title,
-    description: meta.description,
-    card: 'summary_large_image',
-    creator: '@erivelton_silv4',
-  },
+  }
 }
 
 function TopBorder() {

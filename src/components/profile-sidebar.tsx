@@ -91,7 +91,7 @@ export function ProfileSidebar() {
               href={href}
               target='_blank'
               rel='noopener noreferrer'
-              className='flex items-center px-0.5 gap-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+              className='flex items-center gap-2 px-0.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
             >
               <Image src={icon} alt={key} width={14} height={14} unoptimized />
               <span className='truncate'>{getUrlPathname(href)}</span>
