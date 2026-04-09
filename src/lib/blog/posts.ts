@@ -1,5 +1,9 @@
+import { join } from 'node:path'
+import { readFileSync } from 'node:fs'
+
 import postsIndex from '@/generated/indexes/posts.json'
-import { PostStatus } from '@/lib/constants'
+import { extractHeadings } from '@/lib'
+import { POSTS_DIR, PostStatus } from '@/lib/constants'
 
 import type { AdjacentPosts, PostIndex, PostWithContent } from '@/types'
 
@@ -66,13 +70,13 @@ export function getAdjacentPosts(slug: string): AdjacentPosts {
 
 export async function getPostWithContent(slug: string): Promise<PostWithContent | null> {
   const post = getPostBySlug(slug)
+
   if (!post) return null
 
-  try {
-    const { default: Content } = await import(`@/content/posts/${post.folder}/index.mdx`)
-    return { Content, meta: post }
-  } catch (error) {
-    console.error(`Failed to import post: ${slug}`, error)
-    return null
-  }
+  const filePath = join(POSTS_DIR, post.folder, 'index.mdx')
+  const raw = readFileSync(filePath, 'utf-8')
+
+  const { default: Content } = await import(`@/content/posts/${post.folder}/index.mdx`)
+
+  return { Content, meta: post, headings: extractHeadings(raw) }
 }

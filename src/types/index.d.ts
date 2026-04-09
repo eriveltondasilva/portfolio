@@ -39,7 +39,14 @@ export interface AdjacentPosts {
   nextPost: PostIndex | null
 }
 
+export interface Heading {
+  id: string
+  text: string
+  level: number
+}
+
 export interface PostWithContent {
   Content: MDXContent
   meta: PostIndex
+  headings: Heading[]
 }

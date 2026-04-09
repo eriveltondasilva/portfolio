@@ -66,7 +66,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   if (!post) return notFound()
 
-  const { meta, Content } = post
+  const { meta, headings, Content } = post
 
   const { prevPost, nextPost } = getAdjacentPosts(slug)
   const hasAdjacentPosts = prevPost !== null || nextPost !== null
