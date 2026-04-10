@@ -1,12 +1,10 @@
-import { ArrowLeftIcon, DotIcon, FilePenIcon } from 'lucide-react'
+import { ArrowLeftIcon, DotIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-import { AdjacentPostCard } from '@/components/adjacent-post-card'
 import { Icon } from '@/components/icon'
 import { PostAuthors } from '@/components/post-authors'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/separator'
 import { PostCover } from '@/components/post-cover'
 import { formatDate } from '@/lib'
@@ -18,6 +16,8 @@ import { ShareButton } from '@/components/share-button'
 import { BackToTop } from '@/components/back-to-top'
 import { PostSeriesBanner } from '@/components/post-series-banner'
 import { ArchivedBanner } from '@/components/archived-banner'
+import { PostFooterActions } from '@/components/post-footer-actions'
+import { PostNavigation } from '@/components/post-navigation'
 import {
   getAdjacentPosts,
   getAllPostSlugs,
@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
     openGraph: {
       type: 'article',
       locale: 'pt_BR',
-      url: `blog/${slug}`,
+      url: `${BASE_URL}/blog/${slug}`,
       title: post.title,
       description: post.description,
       publishedTime: post.publishedAt,
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: [ogImageUrl + '?w=1200&h=630'],
+      images: [ogImageUrl],
     },
   }
 }
@@ -87,9 +87,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   // console.log(headings)
 
   const { prevPost, nextPost } = getAdjacentPosts(slug)
-  const hasAdjacentPosts = prevPost !== null || nextPost !== null
   const isArchived = meta.status === PostStatus.ARCHIVED
-
   const authors = getAuthorsBySlugs(meta.authors)
 
   const postUrl = `${BASE_URL}/blog/${slug}`
@@ -100,7 +98,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <ReadingProgress />
       <BackToTop />
 
-      {/* Back link */}
       <Link
         href='/blog'
         className='mb-6 inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
@@ -109,7 +106,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         Voltar ao blog
       </Link>
 
-      {/* Archived banner */}
       {isArchived && <ArchivedBanner />}
 
       {/* Post header */}
@@ -139,12 +135,12 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         </div>
 
         {/* Description — lead text */}
-        <p className='mt-3 text-base leading-relaxed text-zinc-600 dark:text-zinc-400'>
+        <p className='mt-2 text-base leading-relaxed text-zinc-600 dark:text-zinc-400'>
           {meta.description}
         </p>
 
         {/* Meta info */}
-        <div className='mt-4 flex flex-wrap items-center gap-y-1.5 text-sm text-zinc-400 dark:text-zinc-500'>
+        <div className='mt-2 flex flex-wrap items-center gap-y-1.5 text-sm text-zinc-400 dark:text-zinc-500'>
           <span>
             {meta.updatedAt ? 'Atualizado em ' : 'Publicado em '}
             <time dateTime={meta.updatedAt ?? meta.publishedAt}>
@@ -164,15 +160,14 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           <span>{meta.readingTime} min de leitura</span>
         </div>
 
-        <Separator className='my-8' />
+        <Separator className='my-6' />
 
-        {/* Cover image — hero após os metadados */}
         {meta.coverFile && (
           <PostCover
+            className='mb-10'
             folder={meta.folder}
             coverFile={meta.coverFile}
             title={meta.title}
-            className='mb-8'
           />
         )}
       </header>
@@ -182,32 +177,16 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <Content />
       </article>
 
-      {/* Footer actions */}
-      <div className='mt-4 flex justify-end'>
-        <Button variant='link' asChild>
-          <a href={editUrl} target='_blank' rel='noopener noreferrer'>
-            <Icon iconNode={FilePenIcon} />
-            Sugerir alterações
-          </a>
-        </Button>
-      </div>
+      <Separator />
 
-      {/* Series banner */}
+      <PostFooterActions slug={slug} editUrl={editUrl} />
+
       <PostSeriesBanner slug={meta.series} order={meta.order} />
 
-      {/* Related posts */}
-      {!isArchived && <RelatedPosts slug={slug} />}
-
-      {/* Prev / Next navigation */}
-      {!isArchived && hasAdjacentPosts && (
+      {!isArchived && (
         <>
-          <Separator />
-
-          <nav aria-label='Navegação entre posts' className='flex flex-col gap-3 sm:flex-row'>
-            {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
-            {!prevPost && <div className='flex-1' />}
-            {nextPost && <AdjacentPostCard post={nextPost} direction='next' />}
-          </nav>
+          <RelatedPosts slug={slug} />
+          <PostNavigation prevPost={prevPost} nextPost={nextPost} />
         </>
       )}
     </div>
