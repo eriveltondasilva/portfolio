@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Icon } from '@/components/icon'
 import { formatDate } from '@/lib'
 import { getRelatedPosts } from '@/lib/blog/posts'
+import { Separator } from '@/components/separator'
 
 interface Props {
   slug: string
@@ -16,6 +17,8 @@ export function RelatedPosts({ slug }: Props) {
 
   return (
     <section aria-label='Posts relacionados'>
+      <Separator />
+
       <h2 className='flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
         <Icon iconNode={FileTextIcon} className='text-blue-500' />
         Posts relacionados
