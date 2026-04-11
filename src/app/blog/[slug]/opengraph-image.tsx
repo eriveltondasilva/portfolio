@@ -66,7 +66,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>{BASE_URL}</span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>{new URL(BASE_URL).hostname}</span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>blog</span>
           <span style={{ color: '#d1d5db' }}>/</span>

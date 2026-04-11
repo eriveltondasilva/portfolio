@@ -3,7 +3,7 @@ import { ImageResponse } from 'next/og'
 
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series'
 import { getPostsBySeries } from '@/lib/blog/posts'
-import { SeriesStatus } from '@/lib/constants'
+import { BASE_URL, SeriesStatus } from '@/lib/constants'
 import { formatDate } from '@/lib'
 
 export const size = { width: 1200, height: 630 }
@@ -11,7 +11,7 @@ export const contentType = 'image/png'
 export const alt = 'Erivelton Silva — Séries'
 
 export function generateStaticParams() {
-  return  getAllSeries().map(({ slug }) => ({ slug }))
+  return getAllSeries().map(({ slug }) => ({ slug }))
 }
 
 const statusLabel: Record<SeriesStatus, string> = {
@@ -90,7 +90,7 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>erivelton.dev</span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>{new URL(BASE_URL).hostname}</span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>series</span>
           <span style={{ color: '#d1d5db' }}>/</span>
