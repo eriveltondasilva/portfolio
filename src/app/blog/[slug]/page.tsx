@@ -36,6 +36,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
   if (!post) return notFound()
 
   const authors = getAuthorsBySlugs(post.authors)
+  const siteName = "Erivelton's Portfolio"
 
   return {
     title: post.title,
@@ -46,7 +47,7 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
     openGraph: {
       type: 'article',
       locale: 'pt_BR',
-      siteName: 'Erivelton Silva',
+      siteName: siteName,
       url: `/blog/${slug}`,
       title: post.title,
       description: post.description,
@@ -59,6 +60,8 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
+      site: siteName,
+      creator: '@erivelton_silv4',
     },
   }
 }

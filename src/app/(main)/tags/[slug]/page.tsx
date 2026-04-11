@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): P
   const meta = {
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
+    siteName: "Erivelton's Portfolio",
   }
 
   return {
@@ -28,12 +29,14 @@ export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): P
       url: `/tags/${slug}`,
       title: meta.title,
       description: meta.description,
-      siteName: 'Erivelton Silva',
+      siteName: meta.siteName,
     },
     twitter: {
       card: 'summary',
       title: meta.title,
       description: meta.description,
+      site: meta.siteName,
+      creator: '@erivelton_silv4',
     },
   }
 }

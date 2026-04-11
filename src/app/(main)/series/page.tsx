@@ -10,6 +10,7 @@ import type { Metadata } from 'next'
 const meta = {
   title: 'Séries',
   description: 'Coleções de posts organizados por tema.',
+  siteName: "Erivelton's Portfolio",
 }
 
 export const metadata: Metadata = {
@@ -21,12 +22,14 @@ export const metadata: Metadata = {
     url: '/series',
     title: meta.title,
     description: meta.description,
-    siteName: 'Erivelton Silva',
+    siteName: meta.siteName,
   },
   twitter: {
     card: 'summary',
     title: meta.title,
     description: meta.description,
+    site: meta.siteName,
+    creator: '@erivelton_silv4',
   },
 }
 

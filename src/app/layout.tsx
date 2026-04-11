@@ -22,18 +22,17 @@ const robotoMono = Roboto_Mono({
 })
 
 const meta = {
-  title: 'Erivelton Silva — Portfólio',
+  title: 'Erivelton Silva — Portfolio',
+  siteName: "Erivelton's Portfolio",
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
 }
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: {
-    default: meta.title,
-    template: '%s — Erivelton Silva',
-  },
+  title: { default: meta.title, template: `%s — ${meta.siteName}` },
   description: meta.description,
+  alternates: { canonical: BASE_URL },
   generator: 'Next.js',
   keywords: ['frontend', 'react', 'nextjs', 'typescript', 'blog'],
   authors: [{ name: 'Erivelton Silva', url: BASE_URL }],
@@ -43,13 +42,14 @@ export const metadata: Metadata = {
     locale: 'pt_BR',
     title: meta.title,
     description: meta.description,
+    siteName: meta.siteName,
     url: BASE_URL,
-    siteName: 'Erivelton Silva',
   },
   twitter: {
     card: 'summary_large_image',
     title: meta.title,
     description: meta.description,
+    site: meta.siteName,
     creator: '@erivelton_silv4',
   },
 }

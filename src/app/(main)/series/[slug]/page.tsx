@@ -35,7 +35,9 @@ export async function generateMetadata({ params }: PageProps<'/series/[slug]'>):
   const { slug } = await params
   const series = getSeriesBySlug(slug)
 
-  if (!series) return {}
+  if (!series) return notFound()
+
+  const siteName = "Erivelton's Portfolio"
 
   return {
     title: series.title,
@@ -46,12 +48,14 @@ export async function generateMetadata({ params }: PageProps<'/series/[slug]'>):
       url: `/series/${slug}`,
       title: series.title,
       description: series.description,
-      siteName: 'Erivelton Silva',
+      siteName: siteName,
     },
     twitter: {
       card: 'summary',
       title: series.title,
       description: series.description,
+      site: siteName,
+      creator: '@erivelton_silv4',
     },
   }
 }

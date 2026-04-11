@@ -176,7 +176,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             }}
           >
             <span>{displayDate}</span>
-            <span style={{ color: '#d1d5db', fontSize: 18 }}>·</span>
+            <span style={{ color: '#d1d5db', fontSize: 20 }}>•</span>
             <span>{post.readingTime} min de leitura</span>
           </div>
         </div>
