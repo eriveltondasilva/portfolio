@@ -4,10 +4,11 @@ import { ImageResponse } from 'next/og'
 import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts'
 import { getAuthorsBySlugs } from '@/lib/blog/authors'
 import { formatDate, getNameInitials } from '@/lib'
+import { BASE_URL } from '@/lib/constants'
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
-export const alt =  'OG Image'
+export const alt = 'Erivelton Silva — Blog'
 
 export function generateStaticParams() {
   return getAllPostSlugs()
@@ -65,7 +66,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>erivelton.dev</span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>{BASE_URL}</span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>blog</span>
           <span style={{ color: '#d1d5db' }}>/</span>
@@ -175,7 +176,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             }}
           >
             <span>{displayDate}</span>
-            <span style={{ color: '#d1d5db' }}>·</span>
+            <span style={{ color: '#d1d5db', fontSize: 18 }}>·</span>
             <span>{post.readingTime} min de leitura</span>
           </div>
         </div>

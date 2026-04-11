@@ -8,6 +8,7 @@ import { formatDate } from '@/lib'
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+export const alt = 'Erivelton Silva — Séries'
 
 export function generateStaticParams() {
   return  getAllSeries().map(({ slug }) => ({ slug }))
