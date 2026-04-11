@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, DotIcon } from 'lucide-react'
+import { ArrowLeftIcon, DotIcon, HashIcon } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -112,6 +112,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
                   variant='secondary'
                   className='rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 hover:bg-blue-50 hover:text-blue-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300'
                 >
+                  <Icon iconNode={HashIcon} />
                   {tag}
                 </Badge>
               </Link>

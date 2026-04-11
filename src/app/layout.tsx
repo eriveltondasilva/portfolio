@@ -2,6 +2,7 @@ import { Inter, Roboto_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import clsx from 'clsx'
 
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { Footer } from '@/components/footer'
 import { BASE_URL } from '@/lib/constants'
 
@@ -72,7 +73,9 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     >
       <body className='flex min-h-screen flex-col bg-white font-sans antialiased dark:bg-[#0d1117]'>
         <TopBorder />
-        <div className='flex-1'>{children}</div>
+        <div className='flex-1'>
+          <TooltipProvider>{children}</TooltipProvider>
+        </div>
         <Footer />
         <Analytics />
       </body>

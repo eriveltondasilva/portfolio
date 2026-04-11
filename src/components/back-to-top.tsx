@@ -36,7 +36,7 @@ export function BackToTop() {
         onClick={scrollToTop}
         aria-label='Voltar ao topo'
         className={clsx(
-          'fixed right-6 bottom-6 z-50 flex size-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition-all duration-200 hover:border-zinc-300 hover:text-zinc-900 dark:border-zinc-700/60 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-100',
+          'fixed right-8 bottom-6 z-50 flex size-8 items-center justify-center rounded-full border border-zinc-200 bg-transparent text-zinc-500 shadow-sm transition-all duration-200 hover:size-10 hover:border-zinc-300 hover:bg-white hover:text-zinc-900 dark:border-zinc-700/60 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-100',
           visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
         )}
       >

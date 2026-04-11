@@ -6,6 +6,7 @@ import { DotIcon } from 'lucide-react'
 
 import { REACTION_CONFIG, REACTION_TYPES } from '@/lib/reactions'
 import { Icon } from '@/components/icon'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 import type { ReactionCounts, ReactionType } from '@/lib/reactions'
 
@@ -69,20 +70,25 @@ export function PostReactions({ slug }: Props) {
 
         return (
           <span key={type} className='flex items-center'>
-            <button
-              onClick={() => handleReaction(type)}
-              disabled={hasReacted || isPending}
-              title={label}
-              className={clsx(
-                'flex cursor-pointer items-center gap-1.5 rounded-md px-1.5 py-1 text-xs transition-colors disabled:cursor-not-allowed',
-                hasReacted ?
-                  'text-zinc-700 dark:text-zinc-200'
-                : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300',
-              )}
-            >
-              <span className='text-sm leading-none'>{emoji}</span>
-              <span className='font-mono tabular-nums'>{counts[type]}</span>
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => handleReaction(type)}
+                  disabled={hasReacted || isPending}
+                  className={clsx(
+                    'flex cursor-pointer items-center gap-1.5 rounded-md px-1.5 py-1 text-xs transition-colors disabled:cursor-not-allowed',
+                    hasReacted ?
+                      'font-extrabold text-zinc-700 dark:text-zinc-200'
+                    : 'text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300',
+                  )}
+                >
+                  <span className='text-sm leading-none'>{emoji}</span>
+                  <span className='font-mono tabular-nums'>{counts[type]}</span>
+                </button>
+              </TooltipTrigger>
+
+              <TooltipContent>{label}</TooltipContent>
+            </Tooltip>
 
             {index < REACTION_TYPES.length - 1 && (
               <Icon iconNode={DotIcon} className='text-zinc-400 dark:text-zinc-500' />
