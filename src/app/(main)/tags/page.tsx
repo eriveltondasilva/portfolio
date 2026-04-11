@@ -7,9 +7,27 @@ import { getTagsWithCount } from '@/lib/blog/tags'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
+const meta = {
   title: 'Tags',
   description: 'Navegue pelos posts por tema.',
+}
+
+export const metadata: Metadata = {
+  title: meta.title,
+  description: meta.description,
+  alternates: { canonical: '/tags' },
+  openGraph: {
+    type: 'website',
+    url: '/tags',
+    title: meta.title,
+    description: meta.description,
+    siteName: 'Erivelton Silva',
+  },
+  twitter: {
+    card: 'summary',
+    title: meta.title,
+    description: meta.description,
+  },
 }
 
 export default function TagsPage() {

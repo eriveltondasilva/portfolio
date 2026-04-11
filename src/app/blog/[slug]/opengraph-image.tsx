@@ -7,6 +7,7 @@ import { formatDate, getNameInitials } from '@/lib'
 
 export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
+export const alt =  'OG Image'
 
 export function generateStaticParams() {
   return getAllPostSlugs()

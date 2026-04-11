@@ -14,9 +14,27 @@ export const dynamicParams = false
 export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): Promise<Metadata> {
   const { slug } = await params
 
-  return {
+  const meta = {
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
+  }
+
+  return {
+    title: meta.title,
+    description: meta.description,
+    alternates: { canonical: `/tags/${slug}` },
+    openGraph: {
+      type: 'website',
+      url: `/tags/${slug}`,
+      title: meta.title,
+      description: meta.description,
+      siteName: 'Erivelton Silva',
+    },
+    twitter: {
+      card: 'summary',
+      title: meta.title,
+      description: meta.description,
+    },
   }
 }
 

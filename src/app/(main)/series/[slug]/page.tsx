@@ -40,9 +40,16 @@ export async function generateMetadata({ params }: PageProps<'/series/[slug]'>):
   return {
     title: series.title,
     description: series.description,
+    alternates: { canonical: `/series/${slug}` },
     openGraph: {
       type: 'website',
       url: `/series/${slug}`,
+      title: series.title,
+      description: series.description,
+      siteName: 'Erivelton Silva',
+    },
+    twitter: {
+      card: 'summary',
       title: series.title,
       description: series.description,
     },

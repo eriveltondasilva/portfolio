@@ -7,9 +7,27 @@ import { getAllSeries } from '@/lib/blog/series'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
+const meta = {
   title: 'Séries',
   description: 'Coleções de posts organizados por tema.',
+}
+
+export const metadata: Metadata = {
+  title: meta.title,
+  description: meta.description,
+  alternates: { canonical: '/series' },
+  openGraph: {
+    type: 'website',
+    url: '/series',
+    title: meta.title,
+    description: meta.description,
+    siteName: 'Erivelton Silva',
+  },
+  twitter: {
+    card: 'summary',
+    title: meta.title,
+    description: meta.description,
+  },
 }
 
 export default function SeriesPage() {

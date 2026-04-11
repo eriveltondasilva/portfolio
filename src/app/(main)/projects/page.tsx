@@ -7,9 +7,27 @@ import { getAllProjects } from '@/lib/blog/projects'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
+const meta = {
   title: 'Projetos',
   description: 'Projetos open source e experimentos que desenvolvi.',
+}
+
+export const metadata: Metadata = {
+  title: meta.title,
+  description: meta.description,
+  alternates: { canonical: '/projects' },
+  openGraph: {
+    type: 'website',
+    url: '/projects',
+    title: meta.title,
+    description: meta.description,
+    siteName: 'Erivelton Silva',
+  },
+  twitter: {
+    card: 'summary',
+    title: meta.title,
+    description: meta.description,
+  },
 }
 
 export default function ProjectsPage() {

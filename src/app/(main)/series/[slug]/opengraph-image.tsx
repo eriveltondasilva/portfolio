@@ -10,8 +10,7 @@ export const size = { width: 1200, height: 630 }
 export const contentType = 'image/png'
 
 export function generateStaticParams() {
-  const series = getAllSeries()
-  return series.map(({ slug }) => ({ slug }))
+  return  getAllSeries().map(({ slug }) => ({ slug }))
 }
 
 const statusLabel: Record<SeriesStatus, string> = {

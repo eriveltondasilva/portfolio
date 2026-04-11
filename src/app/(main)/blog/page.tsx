@@ -7,9 +7,27 @@ import { getAllPosts } from '@/lib/blog/posts'
 
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
+const meta = {
   title: 'Blog',
   description: 'Todos os artigos sobre desenvolvimento frontend.',
+}
+
+export const metadata: Metadata = {
+  title: meta.title,
+  description: meta.description,
+  alternates: { canonical: '/blog' },
+  openGraph: {
+    type: 'website',
+    url: '/blog',
+    title: meta.title,
+    description: meta.description,
+    siteName: 'Erivelton Silva',
+  },
+  twitter: {
+    card: 'summary',
+    title: meta.title,
+    description: meta.description,
+  },
 }
 
 export default function BlogPage() {

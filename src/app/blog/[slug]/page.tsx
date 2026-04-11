@@ -36,39 +36,29 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
   if (!post) return notFound()
 
   const authors = getAuthorsBySlugs(post.authors)
-  const ogImageUrl = `${BASE_URL}/blog/${slug}/opengraph-image`
 
   return {
     title: post.title,
     description: post.description,
-    authors: authors.map((author) => ({
-      name: author.name,
-      url: author.socials.github,
-    })),
+    keywords: post.tags,
+    authors: authors.map((author) => ({ name: author.name, url: author.socials.github })),
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       type: 'article',
       locale: 'pt_BR',
-      url: `${BASE_URL}/blog/${slug}`,
+      siteName: 'Erivelton Silva',
+      url: `/blog/${slug}`,
       title: post.title,
       description: post.description,
       publishedTime: post.publishedAt,
       modifiedTime: post.updatedAt,
       tags: post.tags,
       authors: authors.map((author) => author.name),
-      images: [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: post.title,
-        },
-      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: [ogImageUrl],
     },
   }
 }
