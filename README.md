@@ -1,5 +1,5 @@
-# Portfolio/Blog
+# Erivelton's Portfolio/Blog
 
-Uma aplicação de um portfólio pessoal com blog desenvolvida com Next.js e MDX.
+A personal portfolio and blog application built with Next.js and MDX.
 
-[Manual de Referência](./content/posts/2026-04-03-mdx-reference/index.mdx)
+[Reference Manual](./content/posts/2026-04-03-mdx-reference/index.mdx)
