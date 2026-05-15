@@ -1,4 +1,4 @@
-import { ExternalLinkIcon, StarIcon } from 'lucide-react'
+import { ExternalLinkIcon, FolderGit2Icon, StarIcon } from 'lucide-react'
 import Image from 'next/image'
 
 import { Badge } from '@/components/ui/badge'
@@ -56,7 +56,9 @@ export function ProjectCard({ project, ...props }: Props) {
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2'>
-          <Image src={GithubIcon} alt='Github' width={16} height={16} />
+          <div>
+            <Icon iconNode={FolderGit2Icon} />
+          </div>
           <a
             href={project.repository}
             target='_blank'
