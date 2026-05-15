@@ -23,7 +23,7 @@ const robotoMono = Roboto_Mono({
 })
 
 const meta = {
-  title: 'Erivelton Silva — Portfolio',
+  title: 'Erivelton Silva - Portfolio',
   siteName: "Erivelton's Portfolio",
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
@@ -31,7 +31,7 @@ const meta = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: { default: meta.title, template: `%s — ${meta.siteName}` },
+  title: { default: meta.title, template: `%s - ${meta.siteName}` },
   description: meta.description,
   alternates: { canonical: BASE_URL },
   generator: 'Next.js',
