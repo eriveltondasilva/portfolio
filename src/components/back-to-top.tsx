@@ -2,9 +2,8 @@
 
 import { ArrowUpIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import clsx from 'clsx'
-
 import { Icon } from './icon'
+import { clsx } from "cn";
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false)

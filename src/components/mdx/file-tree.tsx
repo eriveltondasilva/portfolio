@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from 'lucide-react'
-import clsx from 'clsx'
-
 import { cn } from '@/lib/utils'
 import { Icon } from '@/components/icon'
 
 import type { ComponentProps } from 'react'
+import { clsx } from "cn";
 
 // -------------------------------------
 

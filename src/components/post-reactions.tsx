@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useTransition } from 'react'
-import clsx from 'clsx'
 import { DotIcon } from 'lucide-react'
 
 import { REACTION_CONFIG, REACTION_TYPES } from '@/lib/reactions'
@@ -9,6 +8,7 @@ import { Icon } from '@/components/icon'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 import type { ReactionCounts, ReactionType } from '@/lib/reactions'
+import { clsx } from "cn";
 
 interface Props {
   slug: string

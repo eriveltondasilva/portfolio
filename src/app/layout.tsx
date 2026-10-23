@@ -1,7 +1,5 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
-import clsx from 'clsx'
-
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Footer } from '@/components/footer'
 import { BASE_URL } from '@/lib/constants'
@@ -9,6 +7,7 @@ import { BASE_URL } from '@/lib/constants'
 import './globals.css'
 
 import type { Metadata } from 'next'
+import { clsx } from "cn";
 
 const inter = Inter({
   variable: '--font-inter',

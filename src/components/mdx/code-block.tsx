@@ -2,12 +2,11 @@
 
 import { CheckIcon, CopyIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
-import clsx from 'clsx'
-
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 
 import type { ComponentProps } from 'react'
+import { clsx } from "cn";
 
 export function CodeBlock({ children, ...props }: ComponentProps<'pre'>) {
   const preRef = useRef<HTMLPreElement>(null)

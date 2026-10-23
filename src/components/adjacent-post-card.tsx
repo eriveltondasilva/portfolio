@@ -1,10 +1,10 @@
-import clsx from 'clsx'
 import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
 
 import { Icon } from './icon'
 
 import type { PostIndex } from '@/types'
+import { clsx } from "cn";
 
 interface Props {
   post: PostIndex

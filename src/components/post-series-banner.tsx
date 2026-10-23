@@ -1,9 +1,8 @@
 import { LayersIcon } from 'lucide-react'
 import Link from 'next/link'
-import clsx from 'clsx'
-
 import { getSeriesBySlug } from '@/lib/blog/series'
 import { Icon } from '@/components/icon'
+import { clsx } from "cn";
 
 interface Props {
   slug?: string
