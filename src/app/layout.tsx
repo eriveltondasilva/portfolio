@@ -1,5 +1,4 @@
 import { Inter, Roboto_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { Footer } from '@/components/footer'
 import { BASE_URL } from '@/lib/constants'
@@ -76,7 +75,6 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           <TooltipProvider>{children}</TooltipProvider>
         </div>
         <Footer />
-        <Analytics />
       </body>
     </html>
   )
