@@ -77,7 +77,7 @@ export async function readJson(filePath: string): Promise<unknown> {
 
 export async function writeJson(filePath: string, data: unknown): Promise<void> {
   try {
-    await Bun.write(filePath, JSON.stringify(data, null, 2))
+    await Bun.write(filePath, JSON.stringify(data))
   } catch (cause) {
     throw new Error(`Failed to write file: ${filePath}`, { cause })
   }
