@@ -1,12 +1,13 @@
-import { Inter, Roboto_Mono } from 'next/font/google'
-import { TooltipProvider } from '@/components/ui/tooltip'
 import { Footer } from '@/components/footer'
+import { TopBorder } from "@/components/top-border"
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { BASE_URL } from '@/lib/constants'
+import { Inter, Roboto_Mono } from 'next/font/google'
 
 import './globals.css'
 
+import { clsx } from "cn"
 import type { Metadata } from 'next'
-import { clsx } from "cn";
 
 const inter = Inter({
   variable: '--font-inter',
@@ -51,15 +52,6 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
-
-function TopBorder() {
-  return (
-    <div
-      aria-hidden='true'
-      className='h-0.5 w-full bg-linear-to-r from-orange-500 via-amber-400 to-orange-600'
-    />
-  )
 }
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
