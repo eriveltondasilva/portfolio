@@ -30,7 +30,7 @@ export const PRIMARY_AUTHOR_SLUG = 'erivelton';
 export const LOCALES = 'pt-BR';
 
 export const BASE_URL =
-  process.env['NEXT_PUBLIC_SITE_URL'] ?? `http://localhost:3000`;
+  process.env['NEXT_PUBLIC_SITE_URL'] || `http://localhost:3000`;
 
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio';
 
