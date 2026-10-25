@@ -1,18 +1,18 @@
-import { NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
+import { NextResponse } from 'next/server';
+import { Redis } from '@upstash/redis';
 
 // Prevents Next.js from caching the response, so every cron call really hits Redis
-export const dynamic = "force-dynamic";
+export const dynamic = 'force-dynamic';
 
-const KEEPALIVE_KEY = "keepalive:last_run";
+const KEEPALIVE_KEY = 'keepalive:last_run';
 
 export async function GET(request: Request) {
-  const cronSecret = process.env["CRON_SECRET"];
-  const authorizationHeader = request.headers.get("authorization");
+  const cronSecret = process.env['CRON_SECRET'];
+  const authorizationHeader = request.headers.get('authorization');
 
   // Fail closed: if the secret is missing, "Bearer undefined" must never authorize anyone
   if (!cronSecret || authorizationHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
@@ -27,9 +27,9 @@ export async function GET(request: Request) {
     return NextResponse.json({ key: KEEPALIVE_KEY, value: storedValue });
   } catch (error) {
     // Details stay in the Vercel logs; the client only gets a generic message
-    console.error("Keepalive failed:", error);
+    console.error('Keepalive failed:', error);
     return NextResponse.json(
-      { error: "Keepalive failed. Check the server logs." },
+      { error: 'Keepalive failed. Check the server logs.' },
       { status: 500 },
     );
   }

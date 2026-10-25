@@ -1,32 +1,32 @@
-import { Footer } from '@/components/footer'
-import { TopBorder } from "@/components/top-border"
-import { TooltipProvider } from '@/components/ui/tooltip'
-import { BASE_URL } from '@/lib/constants'
-import { Inter, Roboto_Mono } from 'next/font/google'
+import { Footer } from '@/components/footer';
+import { TopBorder } from '@/components/top-border';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { BASE_URL } from '@/lib/constants';
+import { Inter, Roboto_Mono } from 'next/font/google';
 
-import './globals.css'
+import './globals.css';
 
-import { clsx } from "cn"
-import type { Metadata } from 'next'
+import { clsx } from 'cn';
+import type { Metadata } from 'next';
 
 const inter = Inter({
   variable: '--font-inter',
   subsets: ['latin'],
   display: 'swap',
-})
+});
 
 const robotoMono = Roboto_Mono({
   variable: '--font-roboto-mono',
   subsets: ['latin'],
   display: 'swap',
-})
+});
 
 const meta = {
   title: 'Erivelton Silva - Portfolio',
   siteName: "Erivelton's Portfolio",
   description:
     'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
-}
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
+};
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
@@ -69,5 +69,5 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
         <Footer />
       </body>
     </html>
-  )
+  );
 }

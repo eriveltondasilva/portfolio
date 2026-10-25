@@ -1,17 +1,23 @@
-import { HashIcon, LayersIcon } from 'lucide-react'
-import Link from 'next/link'
+import { HashIcon, LayersIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { Icon } from '@/components/icon'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { getTagsWithCount } from '@/lib/blog/tags'
+import { Icon } from '@/components/icon';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { getTagsWithCount } from '@/lib/blog/tags';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 const meta = {
   title: 'Tags',
   description: 'Navegue pelos posts por tema.',
   siteName: "Erivelton's Portfolio",
-}
+};
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -31,12 +37,12 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
+};
 
 export default function TagsPage() {
-  const tagsWithCount = getTagsWithCount()
-  const hasTags = tagsWithCount.length > 0
-  const tagCount = tagsWithCount.length
+  const tagsWithCount = getTagsWithCount();
+  const hasTags = tagsWithCount.length > 0;
+  const tagCount = tagsWithCount.length;
 
   return (
     <div className='space-y-6'>
@@ -82,5 +88,5 @@ export default function TagsPage() {
         </Empty>
       )}
     </div>
-  )
+  );
 }

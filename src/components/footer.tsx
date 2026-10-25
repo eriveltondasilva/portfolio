@@ -1,6 +1,6 @@
-import { getPrimaryAuthor } from '@/lib/blog/authors'
+import { getPrimaryAuthor } from '@/lib/blog/authors';
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
 
 function Link(props: ComponentProps<'a'>) {
   return (
@@ -10,19 +10,22 @@ function Link(props: ComponentProps<'a'>) {
       className='transition-colors hover:text-zinc-700 dark:hover:text-zinc-300'
       {...props}
     />
-  )
+  );
 }
 
 export function Footer() {
-  const author = getPrimaryAuthor()
-  const year = new Date().getFullYear()
+  const author = getPrimaryAuthor();
+  const year = new Date().getFullYear();
 
   return (
     <footer className='px-4 pb-8 md:px-8 lg:px-12'>
       <div className='mt-6 flex flex-col gap-1 border-t border-zinc-100 pt-5 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800'>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
-          &copy; {year} <Link href={author.socials.github}>{author.name.split(' ').at(0)}</Link>.
-          Todos os direitos reservados.
+          &copy; {year}{' '}
+          <Link href={author.socials.github}>
+            {author.name.split(' ').at(0)}
+          </Link>
+          . Todos os direitos reservados.
         </p>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
           Feito com <Link href='https://nextjs.org'>Next.js</Link>,{' '}
@@ -30,5 +33,5 @@ export function Footer() {
         </p>
       </div>
     </footer>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-import projectsIndex from '@/generated/indexes/projects.json'
+import projectsIndex from '@/generated/indexes/projects.json';
 
-import type { Project } from '@/types'
+import type { Project } from '@/types';
 
 export function getAllProjects(): Project[] {
-  return projectsIndex as Project[]
+  return projectsIndex as Project[];
 }
 
 export function getFeaturedProjects(): Project[] {
-  return getAllProjects().filter((project) => project.featured)
+  return getAllProjects().filter((project) => project.featured);
 }

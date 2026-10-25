@@ -1,25 +1,25 @@
-import { CalendarIcon, FolderIcon, LayersIcon } from 'lucide-react'
-import Link from 'next/link'
+import { CalendarIcon, FolderIcon, LayersIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { formatDate } from '@/lib'
-import { cn } from '@/lib/utils'
-import { SeriesStatus } from '@/lib/constants'
+import { formatDate } from '@/lib';
+import { cn } from '@/lib/utils';
+import { SeriesStatus } from '@/lib/constants';
 
-import { Icon } from './icon'
-import { Badge } from './ui/badge'
+import { Icon } from './icon';
+import { Badge } from './ui/badge';
 
-import type { SeriesIndex } from '@/types'
-import type { ComponentPropsWithoutRef } from 'react'
+import type { SeriesIndex } from '@/types';
+import type { ComponentPropsWithoutRef } from 'react';
 
 interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
-  series: SeriesIndex
-  showStatusBadge?: boolean
+  series: SeriesIndex;
+  showStatusBadge?: boolean;
 }
 
 interface BadgeProps {
-  label: string
-  className: string
-  dot: string
+  label: string;
+  className: string;
+  dot: string;
 }
 
 const statusConfig: Record<SeriesStatus, BadgeProps> = {
@@ -40,11 +40,15 @@ const statusConfig: Record<SeriesStatus, BadgeProps> = {
     className:
       'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
   },
-}
+};
 
-export function SeriesCard({ series, showStatusBadge = false, ...props }: SeriesCardProps) {
-  const status = statusConfig[series.status]
-  const postCount = series.posts.length
+export function SeriesCard({
+  series,
+  showStatusBadge = false,
+  ...props
+}: SeriesCardProps) {
+  const status = statusConfig[series.status];
+  const postCount = series.posts.length;
 
   return (
     <article
@@ -90,7 +94,9 @@ export function SeriesCard({ series, showStatusBadge = false, ...props }: Series
 
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={CalendarIcon} className='size-3.5' />
-          <time dateTime={series.publishedAt}>{formatDate(series.publishedAt)}</time>
+          <time dateTime={series.publishedAt}>
+            {formatDate(series.publishedAt)}
+          </time>
         </span>
       </div>
 
@@ -99,7 +105,9 @@ export function SeriesCard({ series, showStatusBadge = false, ...props }: Series
         <ol className='mt-3 space-y-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {series.posts.slice(0, 3).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
-              <span className='min-w-5 text-center text-xs text-zinc-400'>{post.order}.</span>
+              <span className='min-w-5 text-center text-xs text-zinc-400'>
+                {post.order}.
+              </span>
               <Link
                 href={`/blog/${post.slug}`}
                 className='truncate text-sm text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400'
@@ -108,9 +116,13 @@ export function SeriesCard({ series, showStatusBadge = false, ...props }: Series
               </Link>
             </li>
           ))}
-          {postCount > 3 && <li className='pl-6 text-xs text-zinc-400'>+{postCount - 3} mais</li>}
+          {postCount > 3 && (
+            <li className='pl-6 text-xs text-zinc-400'>
+              +{postCount - 3} mais
+            </li>
+          )}
         </ol>
       )}
     </article>
-  )
+  );
 }

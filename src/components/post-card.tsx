@@ -1,18 +1,18 @@
-import { ArrowRightIcon, DotIcon, FileTextIcon, HashIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowRightIcon, DotIcon, FileTextIcon, HashIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { formatDate } from '@/lib'
-import { cn } from '@/lib/utils'
+import { formatDate } from '@/lib';
+import { cn } from '@/lib/utils';
 
-import { Icon } from './icon'
-import { Badge } from './ui/badge'
+import { Icon } from './icon';
+import { Badge } from './ui/badge';
 
-import type { PostIndex } from '@/types'
-import type { ComponentPropsWithoutRef } from 'react'
+import type { PostIndex } from '@/types';
+import type { ComponentPropsWithoutRef } from 'react';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
-  post: PostIndex
-  showSeriesBadge?: boolean
+  post: PostIndex;
+  showSeriesBadge?: boolean;
 }
 
 export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
@@ -45,7 +45,10 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2 text-blue-500 dark:text-blue-400'>
           <Icon iconNode={FileTextIcon} />
-          <Link href={`/blog/${post.slug}`} className='font-semibold text-balance hover:underline'>
+          <Link
+            href={`/blog/${post.slug}`}
+            className='font-semibold text-balance hover:underline'
+          >
             {post.title}
           </Link>
         </div>
@@ -78,5 +81,5 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
         <span>{post.readingTime} min de leitura</span>
       </div>
     </article>
-  )
+  );
 }

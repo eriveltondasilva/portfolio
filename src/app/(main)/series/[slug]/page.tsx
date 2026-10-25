@@ -1,20 +1,31 @@
-import { ArrowLeftIcon, CalendarIcon, FolderXIcon, LayersIcon } from 'lucide-react'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import {
+  ArrowLeftIcon,
+  CalendarIcon,
+  FolderXIcon,
+  LayersIcon,
+} from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Icon } from '@/components/icon'
-import { PostCard } from '@/components/post-card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/separator'
-import { getPostsBySeries } from '@/lib/blog/posts'
-import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series'
-import { SeriesStatus } from '@/lib/constants'
-import { formatDate } from '@/lib'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { Icon } from '@/components/icon';
+import { PostCard } from '@/components/post-card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/separator';
+import { getPostsBySeries } from '@/lib/blog/posts';
+import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
+import { SeriesStatus } from '@/lib/constants';
+import { formatDate } from '@/lib';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-export const dynamicParams = false
+export const dynamicParams = false;
 
 const statusMap = {
   [SeriesStatus.PLANNED]: {
@@ -23,21 +34,25 @@ const statusMap = {
   },
   [SeriesStatus.IN_PROGRESS]: {
     label: 'Em andamento',
-    color: 'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    color:
+      'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   },
   [SeriesStatus.COMPLETE]: {
     label: 'Completa',
-    color: 'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+    color:
+      'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
   },
-}
+};
 
-export async function generateMetadata({ params }: PageProps<'/series/[slug]'>): Promise<Metadata> {
-  const { slug } = await params
-  const series = getSeriesBySlug(slug)
+export async function generateMetadata({
+  params,
+}: PageProps<'/series/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
+  const series = getSeriesBySlug(slug);
 
-  if (!series) return notFound()
+  if (!series) return notFound();
 
-  const siteName = "Erivelton's Portfolio"
+  const siteName = "Erivelton's Portfolio";
 
   return {
     title: series.title,
@@ -57,25 +72,27 @@ export async function generateMetadata({ params }: PageProps<'/series/[slug]'>):
       site: siteName,
       creator: '@erivelton_silv4',
     },
-  }
+  };
 }
 
 export function generateStaticParams() {
-  const series = getAllSeries()
-  return series.map(({ slug }) => ({ slug }))
+  const series = getAllSeries();
+  return series.map(({ slug }) => ({ slug }));
 }
 
-export default async function SeriesDetailPage({ params }: PageProps<'/series/[slug]'>) {
-  const { slug } = await params
-  const series = getSeriesBySlug(slug)
+export default async function SeriesDetailPage({
+  params,
+}: PageProps<'/series/[slug]'>) {
+  const { slug } = await params;
+  const series = getSeriesBySlug(slug);
 
-  if (!series) return notFound()
+  if (!series) return notFound();
 
-  const posts = getPostsBySeries(slug)
-  const hasPosts = posts.length > 0
-  const postCount = posts.length
+  const posts = getPostsBySeries(slug);
+  const hasPosts = posts.length > 0;
+  const postCount = posts.length;
 
-  const status = statusMap[series.status]
+  const status = statusMap[series.status];
 
   return (
     <div className='space-y-6'>
@@ -94,7 +111,10 @@ export default async function SeriesDetailPage({ params }: PageProps<'/series/[s
           <h1 className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
             {series.title}
           </h1>
-          <Badge variant='secondary' className={`shrink-0 rounded-full text-xs ${status.color}`}>
+          <Badge
+            variant='secondary'
+            className={`shrink-0 rounded-full text-xs ${status.color}`}
+          >
             {status.label}
           </Badge>
         </div>
@@ -141,5 +161,5 @@ export default async function SeriesDetailPage({ params }: PageProps<'/series/[s
         </Empty>
       )}
     </div>
-  )
+  );
 }

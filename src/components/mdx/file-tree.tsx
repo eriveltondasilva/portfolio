@@ -1,22 +1,31 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { Icon } from '@/components/icon'
+import { useState } from 'react';
+import {
+  ChevronRightIcon,
+  FileIcon,
+  FolderIcon,
+  FolderOpenIcon,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Icon } from '@/components/icon';
 
-import type { ComponentProps } from 'react'
-import { clsx } from "cn";
+import type { ComponentProps } from 'react';
+import { clsx } from 'cn';
 
 // -------------------------------------
 
 interface FileTreeFileProps {
-  name: string
-  highlight?: boolean
-  className?: string
+  name: string;
+  highlight?: boolean;
+  className?: string;
 }
 
-export function FileTreeFile({ name, highlight, className }: FileTreeFileProps) {
+export function FileTreeFile({
+  name,
+  highlight,
+  className,
+}: FileTreeFileProps) {
   return (
     <li
       className={cn(
@@ -30,14 +39,14 @@ export function FileTreeFile({ name, highlight, className }: FileTreeFileProps) 
       <Icon iconNode={FileIcon} className='size-3.5 shrink-0' />
       <span>{name}</span>
     </li>
-  )
+  );
 }
 
 // -------------------------------------
 
 interface FileTreeFolderProps extends ComponentProps<'li'> {
-  name: string
-  defaultOpen?: boolean
+  name: string;
+  defaultOpen?: boolean;
 }
 
 export function FileTreeFolder({
@@ -46,7 +55,7 @@ export function FileTreeFolder({
   children,
   className,
 }: FileTreeFolderProps) {
-  const [open, setOpen] = useState(defaultOpen)
+  const [open, setOpen] = useState(defaultOpen);
 
   return (
     <li className={className}>
@@ -62,14 +71,26 @@ export function FileTreeFolder({
             open && 'rotate-90',
           )}
         />
-        {open && <Icon iconNode={FolderOpenIcon} className='size-3.5 shrink-0 text-blue-400' />}
-        {!open && <Icon iconNode={FolderIcon} className='size-3.5 shrink-0 text-blue-400' />}
+        {open && (
+          <Icon
+            iconNode={FolderOpenIcon}
+            className='size-3.5 shrink-0 text-blue-400'
+          />
+        )}
+        {!open && (
+          <Icon
+            iconNode={FolderIcon}
+            className='size-3.5 shrink-0 text-blue-400'
+          />
+        )}
         <span className='font-medium'>{name}</span>
       </button>
 
-      {open && children && <ul className='ml-1.5 border-l border-border/50 pl-3'>{children}</ul>}
+      {open && children && (
+        <ul className='ml-1.5 border-l border-border/50 pl-3'>{children}</ul>
+      )}
     </li>
-  )
+  );
 }
 
 // -------------------------------------
@@ -84,5 +105,5 @@ export function FileTree({ className, children }: ComponentProps<'div'>) {
     >
       <ul className='flex flex-col'>{children}</ul>
     </div>
-  )
+  );
 }

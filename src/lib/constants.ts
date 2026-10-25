@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join } from 'node:path';
 
 export enum PostStatus {
   DRAFT = 'draft',
@@ -26,36 +26,37 @@ export enum Topics {
 
 // -------------------------------------
 
-export const PRIMARY_AUTHOR_SLUG = 'erivelton'
-export const LOCALES = 'pt-BR'
+export const PRIMARY_AUTHOR_SLUG = 'erivelton';
+export const LOCALES = 'pt-BR';
 
-export const BASE_URL = process.env['NEXT_PUBLIC_SITE_URL'] ?? `http://localhost:3000`
+export const BASE_URL =
+  process.env['NEXT_PUBLIC_SITE_URL'] ?? `http://localhost:3000`;
 
-export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio'
+export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio';
 
 // -------------------------------------
 
-export const CONTENT_DIR = join(process.cwd(), 'content')
-export const GENERATED_DIR = join(process.cwd(), 'generated')
+export const CONTENT_DIR = join(process.cwd(), 'content');
+export const GENERATED_DIR = join(process.cwd(), 'generated');
 
 // # Directories
-export const AUTHORS_DIR = join(CONTENT_DIR, 'authors')
-export const POSTS_DIR = join(CONTENT_DIR, 'posts')
-export const SERIES_DIR = join(CONTENT_DIR, 'series')
+export const AUTHORS_DIR = join(CONTENT_DIR, 'authors');
+export const POSTS_DIR = join(CONTENT_DIR, 'posts');
+export const SERIES_DIR = join(CONTENT_DIR, 'series');
 
-export const SCHEMAS_DIR = join(GENERATED_DIR, 'schemas')
-export const INDEXES_DIR = join(GENERATED_DIR, 'indexes')
+export const SCHEMAS_DIR = join(GENERATED_DIR, 'schemas');
+export const INDEXES_DIR = join(GENERATED_DIR, 'indexes');
 
 // # Files
-export const AUTHORS_SOURCE_FILE = join(AUTHORS_DIR, 'index.json')
-export const SERIES_SOURCE_FILE = join(SERIES_DIR, 'index.json')
+export const AUTHORS_SOURCE_FILE = join(AUTHORS_DIR, 'index.json');
+export const SERIES_SOURCE_FILE = join(SERIES_DIR, 'index.json');
 
 // # Schemas
-export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json')
-export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json')
-export const POSTS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'posts.json')
+export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json');
+export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json');
+export const POSTS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'posts.json');
 
 // # Indexes
-export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json')
-export const PROJECTS_INDEX_OUTPUT = join(INDEXES_DIR, 'projects.json')
-export const SERIES_INDEX_OUTPUT = join(INDEXES_DIR, 'series.json')
+export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json');
+export const PROJECTS_INDEX_OUTPUT = join(INDEXES_DIR, 'projects.json');
+export const SERIES_INDEX_OUTPUT = join(INDEXES_DIR, 'series.json');

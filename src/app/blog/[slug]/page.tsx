@@ -1,48 +1,53 @@
-import { ArrowLeftIcon, DotIcon, HashIcon } from 'lucide-react'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { ArrowLeftIcon, DotIcon, HashIcon } from 'lucide-react';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-import { Icon } from '@/components/icon'
-import { PostAuthors } from '@/components/post-authors'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/separator'
-import { PostCover } from '@/components/post-cover'
-import { formatDate } from '@/lib'
-import { GITHUB_REPO, PostStatus, BASE_URL } from '@/lib/constants'
-import { getAuthorsBySlugs } from '@/lib/blog/authors'
-import { RelatedPosts } from '@/components/related-posts'
-import { ReadingProgress } from '@/components/reading-progress'
-import { ShareButton } from '@/components/share-button'
-import { BackToTop } from '@/components/back-to-top'
-import { PostSeriesBanner } from '@/components/post-series-banner'
-import { ArchivedBanner } from '@/components/archived-banner'
-import { PostFooterActions } from '@/components/post-footer-actions'
-import { PostNavigation } from '@/components/post-navigation'
+import { Icon } from '@/components/icon';
+import { PostAuthors } from '@/components/post-authors';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/separator';
+import { PostCover } from '@/components/post-cover';
+import { formatDate } from '@/lib';
+import { GITHUB_REPO, PostStatus, BASE_URL } from '@/lib/constants';
+import { getAuthorsBySlugs } from '@/lib/blog/authors';
+import { RelatedPosts } from '@/components/related-posts';
+import { ReadingProgress } from '@/components/reading-progress';
+import { ShareButton } from '@/components/share-button';
+import { BackToTop } from '@/components/back-to-top';
+import { PostSeriesBanner } from '@/components/post-series-banner';
+import { ArchivedBanner } from '@/components/archived-banner';
+import { PostFooterActions } from '@/components/post-footer-actions';
+import { PostNavigation } from '@/components/post-navigation';
 import {
   getAdjacentPosts,
   getAllPostSlugs,
   getPostBySlug,
   getPostWithContent,
-} from '@/lib/blog/posts'
+} from '@/lib/blog/posts';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-export const dynamicParams = false
+export const dynamicParams = false;
 
-export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+export async function generateMetadata({
+  params,
+}: PageProps<'/blog/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
-  if (!post) return notFound()
+  if (!post) return notFound();
 
-  const authors = getAuthorsBySlugs(post.authors)
-  const siteName = "Erivelton's Portfolio"
+  const authors = getAuthorsBySlugs(post.authors);
+  const siteName = "Erivelton's Portfolio";
 
   return {
     title: post.title,
     description: post.description,
     keywords: post.tags,
-    authors: authors.map((author) => ({ name: author.name, url: author.socials.github })),
+    authors: authors.map((author) => ({
+      name: author.name,
+      url: author.socials.github,
+    })),
     alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       type: 'article',
@@ -63,28 +68,28 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
       site: siteName,
       creator: '@erivelton_silv4',
     },
-  }
+  };
 }
 
 export function generateStaticParams() {
-  return getAllPostSlugs()
+  return getAllPostSlugs();
 }
 
 export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
-  const { slug } = await params
-  const post = await getPostWithContent(slug)
+  const { slug } = await params;
+  const post = await getPostWithContent(slug);
 
-  if (!post) return notFound()
+  if (!post) return notFound();
 
-  const { meta, Content } = post
+  const { meta, Content } = post;
   // console.log(headings)
 
-  const { prevPost, nextPost } = getAdjacentPosts(slug)
-  const isArchived = meta.status === PostStatus.ARCHIVED
-  const authors = getAuthorsBySlugs(meta.authors)
+  const { prevPost, nextPost } = getAdjacentPosts(slug);
+  const isArchived = meta.status === PostStatus.ARCHIVED;
+  const authors = getAuthorsBySlugs(meta.authors);
 
-  const postUrl = `${BASE_URL}/blog/${slug}`
-  const editUrl = `${GITHUB_REPO}/edit/main/content/posts/${meta.folder}/index.mdx`
+  const postUrl = `${BASE_URL}/blog/${slug}`;
+  const editUrl = `${GITHUB_REPO}/edit/main/content/posts/${meta.folder}/index.mdx`;
 
   return (
     <div>
@@ -138,7 +143,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           <span>
             {meta.updatedAt ? 'Atualizado em ' : 'Publicado em '}
             <time dateTime={meta.updatedAt ?? meta.publishedAt}>
-              {formatDate(meta.updatedAt ?? meta.publishedAt, { dateStyle: 'long' })}
+              {formatDate(meta.updatedAt ?? meta.publishedAt, {
+                dateStyle: 'long',
+              })}
             </time>
 
             {authors.length > 0 && (
@@ -184,5 +191,5 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         </>
       )}
     </div>
-  )
+  );
 }

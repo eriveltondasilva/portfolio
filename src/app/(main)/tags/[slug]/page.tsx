@@ -1,24 +1,32 @@
-import { ArrowLeftIcon, HashIcon, LayersIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowLeftIcon, HashIcon, LayersIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { Icon } from '@/components/icon'
-import { PostCard } from '@/components/post-card'
-import { getPostsByTag } from '@/lib/blog/posts'
-import { getAllTags } from '@/lib/blog/tags'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { Icon } from '@/components/icon';
+import { PostCard } from '@/components/post-card';
+import { getPostsByTag } from '@/lib/blog/posts';
+import { getAllTags } from '@/lib/blog/tags';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
-export const dynamicParams = false
+export const dynamicParams = false;
 
-export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): Promise<Metadata> {
-  const { slug } = await params
+export async function generateMetadata({
+  params,
+}: PageProps<'/tags/[slug]'>): Promise<Metadata> {
+  const { slug } = await params;
 
   const meta = {
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
     siteName: "Erivelton's Portfolio",
-  }
+  };
 
   return {
     title: meta.title,
@@ -38,19 +46,19 @@ export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): P
       site: meta.siteName,
       creator: '@erivelton_silv4',
     },
-  }
+  };
 }
 
 export function generateStaticParams() {
-  const tags = getAllTags()
-  return tags.map((tag) => ({ slug: tag }))
+  const tags = getAllTags();
+  return tags.map((tag) => ({ slug: tag }));
 }
 
 export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
-  const { slug } = await params
-  const posts = getPostsByTag(slug)
-  const hasPosts = posts.length > 0
-  const tagCount = posts.length
+  const { slug } = await params;
+  const posts = getPostsByTag(slug);
+  const hasPosts = posts.length > 0;
+  const tagCount = posts.length;
 
   return (
     <div className='space-y-6'>
@@ -92,11 +100,12 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
             </EmptyMedia>
             <EmptyTitle>Nenhum post com esta tag</EmptyTitle>
             <EmptyDescription>
-              Nenhum post foi publicado com a tag <strong>#{slug}</strong> ainda.
+              Nenhum post foi publicado com a tag <strong>#{slug}</strong>{' '}
+              ainda.
             </EmptyDescription>
           </EmptyHeader>
         </Empty>
       )}
     </div>
-  )
+  );
 }

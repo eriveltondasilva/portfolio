@@ -1,30 +1,30 @@
 // src/app/blog/[slug]/opengraph-image.tsx
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from 'next/og';
 
-import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts'
-import { getAuthorsBySlugs } from '@/lib/blog/authors'
-import { formatDate, getNameInitials } from '@/lib'
-import { BASE_URL } from '@/lib/constants'
+import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts';
+import { getAuthorsBySlugs } from '@/lib/blog/authors';
+import { formatDate, getNameInitials } from '@/lib';
+import { BASE_URL } from '@/lib/constants';
 
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
-export const alt = 'Erivelton Silva — Blog'
+export const size = { width: 1200, height: 630 };
+export const contentType = 'image/png';
+export const alt = 'Erivelton Silva — Blog';
 
 export function generateStaticParams() {
-  return getAllPostSlugs()
+  return getAllPostSlugs();
 }
 
 export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
-  const { slug } = await params
-  const post = getPostBySlug(slug)
+  const { slug } = await params;
+  const post = getPostBySlug(slug);
 
-  if (!post) return new ImageResponse(<div>Not found</div>, size)
+  if (!post) return new ImageResponse(<div>Not found</div>, size);
 
-  const authors = getAuthorsBySlugs(post.authors)
-  const tags = post.tags.slice(0, 4)
+  const authors = getAuthorsBySlugs(post.authors);
+  const tags = post.tags.slice(0, 4);
   const displayDate = formatDate(post.updatedAt ?? post.publishedAt, {
     dateStyle: 'long',
-  })
+  });
 
   return new ImageResponse(
     <div
@@ -66,7 +66,9 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>{new URL(BASE_URL).hostname}</span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>
+            {new URL(BASE_URL).hostname}
+          </span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>blog</span>
           <span style={{ color: '#d1d5db' }}>/</span>
@@ -140,7 +142,10 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
           {/* Authors */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             {authors.map((author) => (
-              <div key={author.slug} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                key={author.slug}
+                style={{ display: 'flex', alignItems: 'center', gap: 10 }}
+              >
                 <div
                   style={{
                     display: 'flex',
@@ -157,7 +162,9 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
                 >
                   {getNameInitials(author.name)}
                 </div>
-                <span style={{ color: '#374151', fontSize: 15, fontWeight: 600 }}>
+                <span
+                  style={{ color: '#374151', fontSize: 15, fontWeight: 600 }}
+                >
                   {author.name}
                 </span>
               </div>
@@ -183,5 +190,5 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
       </div>
     </div>,
     size,
-  )
+  );
 }

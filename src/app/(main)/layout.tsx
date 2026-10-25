@@ -1,5 +1,5 @@
-import { ProfileSidebar } from '@/components/profile-sidebar'
-import { TabsNav } from '@/components/tabs-nav'
+import { ProfileSidebar } from '@/components/profile-sidebar';
+import { TabsNav } from '@/components/tabs-nav';
 
 export default function MainLayout({ children }: LayoutProps<'/'>) {
   return (
@@ -13,5 +13,5 @@ export default function MainLayout({ children }: LayoutProps<'/'>) {
         </main>
       </div>
     </div>
-  )
+  );
 }

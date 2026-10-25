@@ -1,19 +1,33 @@
-import { Tabs as TabsRoot, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { cn } from '@/lib/utils'
+import {
+  Tabs as TabsRoot,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
+import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
 
-export function Tab({ children, ...props }: ComponentProps<typeof TabsContent>) {
-  return <TabsContent {...props}>{children}</TabsContent>
+export function Tab({
+  children,
+  ...props
+}: ComponentProps<typeof TabsContent>) {
+  return <TabsContent {...props}>{children}</TabsContent>;
 }
 
 // -------------------------------------
 
 interface TabsProps extends ComponentProps<typeof TabsRoot> {
-  tabs: string[]
+  tabs: string[];
 }
 
-export function Tabs({ tabs, className, defaultValue, children, ...props }: TabsProps) {
+export function Tabs({
+  tabs,
+  className,
+  defaultValue,
+  children,
+  ...props
+}: TabsProps) {
   return (
     <TabsRoot
       className={cn('not-prose', className)}
@@ -30,5 +44,5 @@ export function Tabs({ tabs, className, defaultValue, children, ...props }: Tabs
 
       {children}
     </TabsRoot>
-  )
+  );
 }

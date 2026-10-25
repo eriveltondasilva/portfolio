@@ -1,5 +1,5 @@
-import { Separator } from '@/components/separator'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Separator } from '@/components/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function PostLoading() {
   return (
@@ -83,5 +83,5 @@ export default function PostLoading() {
         <Skeleton className='h-16 flex-1 rounded-md' />
       </div>
     </div>
-  )
+  );
 }

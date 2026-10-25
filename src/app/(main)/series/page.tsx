@@ -1,17 +1,23 @@
-import { FolderXIcon, LayersIcon } from 'lucide-react'
+import { FolderXIcon, LayersIcon } from 'lucide-react';
 
-import { Icon } from '@/components/icon'
-import { SeriesCard } from '@/components/series-card'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { getAllSeries } from '@/lib/blog/series'
+import { Icon } from '@/components/icon';
+import { SeriesCard } from '@/components/series-card';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { getAllSeries } from '@/lib/blog/series';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 const meta = {
   title: 'Séries',
   description: 'Coleções de posts organizados por tema.',
   siteName: "Erivelton's Portfolio",
-}
+};
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -31,12 +37,12 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
+};
 
 export default function SeriesPage() {
-  const series = getAllSeries()
-  const hasSeries = series.length > 0
-  const seriesCount = series.length
+  const series = getAllSeries();
+  const hasSeries = series.length > 0;
+  const seriesCount = series.length;
 
   return (
     <div className='space-y-6'>
@@ -70,5 +76,5 @@ export default function SeriesPage() {
         </Empty>
       )}
     </div>
-  )
+  );
 }

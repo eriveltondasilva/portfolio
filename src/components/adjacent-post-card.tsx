@@ -1,18 +1,18 @@
-import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowLeftIcon, ArrowRightIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { Icon } from './icon'
+import { Icon } from './icon';
 
-import type { PostIndex } from '@/types'
-import { clsx } from "cn";
+import type { PostIndex } from '@/types';
+import { clsx } from 'cn';
 
 interface Props {
-  post: PostIndex
-  direction: 'prev' | 'next'
+  post: PostIndex;
+  direction: 'prev' | 'next';
 }
 
 export function AdjacentPostCard({ post, direction }: Props) {
-  const isPrev = direction === 'prev'
+  const isPrev = direction === 'prev';
 
   return (
     <Link
@@ -41,5 +41,5 @@ export function AdjacentPostCard({ post, direction }: Props) {
         {post.title}
       </span>
     </Link>
-  )
+  );
 }

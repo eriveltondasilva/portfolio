@@ -1,9 +1,9 @@
 {
   "experimentalTernaries": true,
   "jsxSingleQuote": true,
-  "semi": false,
   "singleQuote": true,
-  "printWidth": 100,
+  "semi": true,
+  "printWidth": 80,
   "plugins": ["prettier-plugin-tailwindcss"],
   "tailwindStylesheet": "./src/app/globals.css",
   "tailwindFunctions": ["clsx", "cn", "twMerge", "twJoin"]

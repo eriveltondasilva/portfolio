@@ -1,22 +1,22 @@
-import { LayersIcon } from 'lucide-react'
-import Link from 'next/link'
-import { getSeriesBySlug } from '@/lib/blog/series'
-import { Icon } from '@/components/icon'
-import { clsx } from "cn";
+import { LayersIcon } from 'lucide-react';
+import Link from 'next/link';
+import { getSeriesBySlug } from '@/lib/blog/series';
+import { Icon } from '@/components/icon';
+import { clsx } from 'cn';
 
 interface Props {
-  slug?: string
-  order?: number
+  slug?: string;
+  order?: number;
 }
 
 export function PostSeriesBanner({ slug, order }: Props) {
-  if (!slug || !order) return null
+  if (!slug || !order) return null;
 
-  const series = getSeriesBySlug(slug)
+  const series = getSeriesBySlug(slug);
 
-  if (!series) return null
+  if (!series) return null;
 
-  const total = series.posts.length
+  const total = series.posts.length;
 
   return (
     <section aria-label='Nesta série' className='mb-6'>
@@ -43,7 +43,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
         {/* Posts list */}
         <ol className='mt-2.5 space-y-1'>
           {series.posts.map((post) => {
-            const isCurrent = post.order === order
+            const isCurrent = post.order === order;
 
             return (
               <li key={post.slug} className='flex items-baseline gap-2'>
@@ -72,10 +72,10 @@ export function PostSeriesBanner({ slug, order }: Props) {
                   </Link>
                 )}
               </li>
-            )
+            );
           })}
         </ol>
       </div>
     </section>
-  )
+  );
 }

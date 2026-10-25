@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { AlertTriangle } from 'lucide-react'
-import { useEffect } from 'react'
+import { AlertTriangle } from 'lucide-react';
+import { useEffect } from 'react';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyContent,
@@ -11,17 +11,17 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '@/components/ui/empty';
 
 interface Props {
-  error: Error & { digest?: string }
-  reset: () => void
+  error: Error & { digest?: string };
+  reset: () => void;
 }
 
 export default function GlobalError({ error, reset }: Props) {
   useEffect(() => {
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <div className='flex min-h-[60vh] items-center justify-center'>
@@ -31,7 +31,9 @@ export default function GlobalError({ error, reset }: Props) {
             <AlertTriangle />
           </EmptyMedia>
           <EmptyTitle>Algo deu errado</EmptyTitle>
-          <EmptyDescription>Ocorreu um erro inesperado. Tente novamente.</EmptyDescription>
+          <EmptyDescription>
+            Ocorreu um erro inesperado. Tente novamente.
+          </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button variant='outline' size='sm' onClick={reset}>
@@ -40,5 +42,5 @@ export default function GlobalError({ error, reset }: Props) {
         </EmptyContent>
       </Empty>
     </div>
-  )
+  );
 }

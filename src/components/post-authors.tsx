@@ -1,17 +1,26 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
+import Image from 'next/image';
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
-import { createListFormatter, getGitHubAvatarUrl, getUrlPathname, getNameInitials } from '@/lib'
-import TwitterX from '@/assets/twitter-x.svg'
-import Linkedin from '@/assets/linkedin.svg'
-import Github from '@/assets/github.svg'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card';
+import {
+  createListFormatter,
+  getGitHubAvatarUrl,
+  getUrlPathname,
+  getNameInitials,
+} from '@/lib';
+import TwitterX from '@/assets/twitter-x.svg';
+import Linkedin from '@/assets/linkedin.svg';
+import Github from '@/assets/github.svg';
 
-import type { Author } from '@/types'
-import type { LucideIcon } from 'lucide-react'
+import type { Author } from '@/types';
+import type { LucideIcon } from 'lucide-react';
 
 const SOCIAL_ICONS = [
   {
@@ -30,13 +39,13 @@ const SOCIAL_ICONS = [
     icon: TwitterX,
   },
 ] as const satisfies ReadonlyArray<{
-  key: keyof Author['socials']
-  label: string
-  icon: LucideIcon
-}>
+  key: keyof Author['socials'];
+  label: string;
+  icon: LucideIcon;
+}>;
 
 function AuthorHoverCard({ author }: { author: Author }) {
-  const githubUsername = getUrlPathname(author.socials.github)
+  const githubUsername = getUrlPathname(author.socials.github);
 
   return (
     <HoverCard openDelay={300} closeDelay={100}>
@@ -49,7 +58,12 @@ function AuthorHoverCard({ author }: { author: Author }) {
         </span>
       </HoverCardTrigger>
 
-      <HoverCardContent side='top' align='start' className='w-72 p-4' sideOffset={6}>
+      <HoverCardContent
+        side='top'
+        align='start'
+        className='w-72 p-4'
+        sideOffset={6}
+      >
         {/* Header */}
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
@@ -63,7 +77,9 @@ function AuthorHoverCard({ author }: { author: Author }) {
             <p className='text-sm leading-tight font-semibold text-zinc-900 dark:text-zinc-50'>
               {author.name}
             </p>
-            <p className='text-xs text-zinc-500 dark:text-zinc-400'>@{githubUsername}</p>
+            <p className='text-xs text-zinc-500 dark:text-zinc-400'>
+              @{githubUsername}
+            </p>
           </div>
         </div>
 
@@ -98,9 +114,9 @@ function AuthorHoverCard({ author }: { author: Author }) {
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {SOCIAL_ICONS.map(({ key, label, icon }) => {
-            const href = author.socials[key]
+            const href = author.socials[key];
 
-            if (!href) return null
+            if (!href) return null;
 
             return (
               <a
@@ -110,28 +126,37 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 rel='noopener noreferrer'
                 className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
               >
-                <Image src={icon} alt={label} title={label} width={16} height={16} unoptimized />
+                <Image
+                  src={icon}
+                  alt={label}
+                  title={label}
+                  width={16}
+                  height={16}
+                  unoptimized
+                />
               </a>
-            )
+            );
           })}
         </div>
       </HoverCardContent>
     </HoverCard>
-  )
+  );
 }
 
 export function PostAuthors({ authors }: { authors: Author[] }) {
-  const authorsBySlug = new Map(authors.map((author) => [author.slug, author]))
-  const parts = createListFormatter().formatToParts(authors.map((author) => author.slug))
+  const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
+  const parts = createListFormatter().formatToParts(
+    authors.map((author) => author.slug),
+  );
   const authorNames = parts.map(({ type, value }, index) => {
     if (type === 'element') {
-      const author = authorsBySlug.get(value)
-      if (!author) return null
-      return <AuthorHoverCard key={index} author={author} />
+      const author = authorsBySlug.get(value);
+      if (!author) return null;
+      return <AuthorHoverCard key={index} author={author} />;
     }
 
-    return <span key={index}>{value}</span>
-  })
+    return <span key={index}>{value}</span>;
+  });
 
-  return authorNames
+  return authorNames;
 }

@@ -1,26 +1,29 @@
 // src/app/(main)/series/[slug]/opengraph-image.tsx
-import { ImageResponse } from 'next/og'
+import { ImageResponse } from 'next/og';
 
-import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series'
-import { getPostsBySeries } from '@/lib/blog/posts'
-import { BASE_URL, SeriesStatus } from '@/lib/constants'
-import { formatDate } from '@/lib'
+import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
+import { getPostsBySeries } from '@/lib/blog/posts';
+import { BASE_URL, SeriesStatus } from '@/lib/constants';
+import { formatDate } from '@/lib';
 
-export const size = { width: 1200, height: 630 }
-export const contentType = 'image/png'
-export const alt = 'Erivelton Silva — Séries'
+export const size = { width: 1200, height: 630 };
+export const contentType = 'image/png';
+export const alt = 'Erivelton Silva — Séries';
 
 export function generateStaticParams() {
-  return getAllSeries().map(({ slug }) => ({ slug }))
+  return getAllSeries().map(({ slug }) => ({ slug }));
 }
 
 const statusLabel: Record<SeriesStatus, string> = {
   [SeriesStatus.PLANNED]: 'Planejada',
   [SeriesStatus.IN_PROGRESS]: 'Em andamento',
   [SeriesStatus.COMPLETE]: 'Completa',
-}
+};
 
-const statusStyle: Record<SeriesStatus, { color: string; border: string; bg: string }> = {
+const statusStyle: Record<
+  SeriesStatus,
+  { color: string; border: string; bg: string }
+> = {
   [SeriesStatus.PLANNED]: {
     bg: '#f9fafb',
     border: '#e5e7eb',
@@ -36,19 +39,19 @@ const statusStyle: Record<SeriesStatus, { color: string; border: string; bg: str
     border: '#bbf7d0',
     color: '#16a34a',
   },
-}
+};
 
 export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
-  const { slug } = await params
-  const series = getSeriesBySlug(slug)
+  const { slug } = await params;
+  const series = getSeriesBySlug(slug);
 
-  if (!series) return new ImageResponse(<div>Not found</div>, size)
+  if (!series) return new ImageResponse(<div>Not found</div>, size);
 
-  const posts = getPostsBySeries(slug)
-  const postCount = posts.length
-  const style = statusStyle[series.status]
-  const label = statusLabel[series.status]
-  const displayDate = formatDate(series.publishedAt, { dateStyle: 'long' })
+  const posts = getPostsBySeries(slug);
+  const postCount = posts.length;
+  const style = statusStyle[series.status];
+  const label = statusLabel[series.status];
+  const displayDate = formatDate(series.publishedAt, { dateStyle: 'long' });
 
   return new ImageResponse(
     <div
@@ -90,7 +93,9 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
             fontFamily: 'monospace',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>{new URL(BASE_URL).hostname}</span>
+          <span style={{ color: '#f97316', fontWeight: 600 }}>
+            {new URL(BASE_URL).hostname}
+          </span>
           <span style={{ color: '#d1d5db' }}>/</span>
           <span style={{ color: '#9ca3af' }}>series</span>
           <span style={{ color: '#d1d5db' }}>/</span>
@@ -223,5 +228,5 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
       </div>
     </div>,
     size,
-  )
+  );
 }

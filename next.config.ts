@@ -1,16 +1,16 @@
-import createMDX from '@next/mdx'
+import createMDX from '@next/mdx';
 // import { transformerNotationDiff, transformerNotationFocus } from '@shikijs/transformers'
 
-import type { NextConfig } from 'next'
-import type { Options as PrettyCodeOptions } from 'rehype-pretty-code'
-import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings'
-import type { Options as RemarkGfmOptions } from 'remark-gfm'
+import type { NextConfig } from 'next';
+import type { Options as PrettyCodeOptions } from 'rehype-pretty-code';
+import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings';
+import type { Options as RemarkGfmOptions } from 'remark-gfm';
 
 // ###
 
 const remarkGFMOptions: RemarkGfmOptions = {
   singleTilde: false,
-}
+};
 
 const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
   behavior: 'prepend',
@@ -18,13 +18,13 @@ const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
     type: 'text',
     value: '#',
   },
-}
+};
 
 const prettyCodeOptions: PrettyCodeOptions = {
   theme: 'github-dark-default',
   defaultLang: 'plaintext',
   bypassInlineCode: true,
-}
+};
 
 // ###
 
@@ -41,11 +41,15 @@ const nextConfig: NextConfig = {
     qualities: [50, 75, 90],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 dias
   },
-}
+};
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: ['remark-frontmatter', ['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
+    remarkPlugins: [
+      'remark-frontmatter',
+      ['remark-gfm', remarkGFMOptions],
+      'remark-gemoji',
+    ],
     rehypePlugins: [
       'rehype-slug',
       ['rehype-autolink-headings', autolinkHeadingsOptions],
@@ -55,6 +59,6 @@ const withMDX = createMDX({
       ['rehype-pretty-code', prettyCodeOptions],
     ],
   },
-})
+});
 
-export default withMDX(nextConfig)
+export default withMDX(nextConfig);

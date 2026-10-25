@@ -1,17 +1,23 @@
-import { FolderOpenIcon, LayersIcon } from 'lucide-react'
+import { FolderOpenIcon, LayersIcon } from 'lucide-react';
 
-import { Icon } from '@/components/icon'
-import { ProjectCard } from '@/components/project-card'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { getAllProjects } from '@/lib/blog/projects'
+import { Icon } from '@/components/icon';
+import { ProjectCard } from '@/components/project-card';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { getAllProjects } from '@/lib/blog/projects';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 const meta = {
   title: 'Projetos',
   description: 'Projetos open source e experimentos que desenvolvi.',
   siteName: "Erivelton's Portfolio",
-}
+};
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -31,15 +37,15 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
+};
 
 export default function ProjectsPage() {
-  const projects = getAllProjects()
-  const hasProjects = projects.length > 0
-  const projectCount = projects.length
+  const projects = getAllProjects();
+  const hasProjects = projects.length > 0;
+  const projectCount = projects.length;
 
-  const featuredProjects = projects.filter((project) => project.featured)
-  const othersProjects = projects.filter((project) => !project.featured)
+  const featuredProjects = projects.filter((project) => project.featured);
+  const othersProjects = projects.filter((project) => !project.featured);
 
   return (
     <div className='space-y-6'>
@@ -93,5 +99,5 @@ export default function ProjectsPage() {
         </Empty>
       )}
     </div>
-  )
+  );
 }

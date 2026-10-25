@@ -1,72 +1,79 @@
-'use client'
+'use client';
 
-import { useEffect, useState, useTransition } from 'react'
-import { DotIcon } from 'lucide-react'
+import { useEffect, useState, useTransition } from 'react';
+import { DotIcon } from 'lucide-react';
 
-import { REACTION_CONFIG, REACTION_TYPES } from '@/lib/reactions'
-import { Icon } from '@/components/icon'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { REACTION_CONFIG, REACTION_TYPES } from '@/lib/reactions';
+import { Icon } from '@/components/icon';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
-import type { ReactionCounts, ReactionType } from '@/lib/reactions'
-import { clsx } from "cn";
+import type { ReactionCounts, ReactionType } from '@/lib/reactions';
+import { clsx } from 'cn';
 
 interface Props {
-  slug: string
+  slug: string;
 }
 
 const defaultCounts = (): ReactionCounts =>
-  Object.fromEntries(REACTION_TYPES.map((type) => [type, 0])) as ReactionCounts
+  Object.fromEntries(REACTION_TYPES.map((type) => [type, 0])) as ReactionCounts;
 
 export function PostReactions({ slug }: Props) {
-  const [counts, setCounts] = useState<ReactionCounts>(defaultCounts())
-  const [reacted, setReacted] = useState<Set<ReactionType>>(new Set())
-  const [isPending, startTransition] = useTransition()
+  const [counts, setCounts] = useState<ReactionCounts>(defaultCounts());
+  const [reacted, setReacted] = useState<Set<ReactionType>>(new Set());
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     fetch(`/api/reactions/${slug}`)
       .then((res) => res.json())
       .then((data: ReactionCounts) => setCounts(data))
-      .catch(console.error)
-  }, [slug])
+      .catch(console.error);
+  }, [slug]);
 
   function handleReaction(type: ReactionType) {
-    if (reacted.has(type) || isPending) return
+    if (reacted.has(type) || isPending) return;
 
     startTransition(async () => {
-      setCounts((prev) => ({ ...prev, [type]: prev[type] + 1 }))
-      setReacted((prev) => new Set(prev).add(type))
+      setCounts((prev) => ({ ...prev, [type]: prev[type] + 1 }));
+      setReacted((prev) => new Set(prev).add(type));
 
       try {
         const res = await fetch(`/api/reactions/${slug}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ type }),
-        })
+        });
 
         if (!res.ok) {
-          setCounts((prev) => ({ ...prev, [type]: Math.max(0, prev[type] - 1) }))
+          setCounts((prev) => ({
+            ...prev,
+            [type]: Math.max(0, prev[type] - 1),
+          }));
           setReacted((prev) => {
-            const next = new Set(prev)
-            next.delete(type)
-            return next
-          })
+            const next = new Set(prev);
+            next.delete(type);
+            return next;
+          });
         }
       } catch {
-        setCounts((prev) => ({ ...prev, [type]: Math.max(0, prev[type] - 1) }))
+        setCounts((prev) => ({ ...prev, [type]: Math.max(0, prev[type] - 1) }));
         setReacted((prev) => {
-          const next = new Set(prev)
-          next.delete(type)
-          return next
-        })
+          const next = new Set(prev);
+          next.delete(type);
+          return next;
+        });
       }
-    })
+    });
   }
 
   return (
     <div className='flex items-center gap-1'>
       {REACTION_TYPES.map((type, index) => {
-        const { emoji, label } = REACTION_CONFIG[type]
-        const hasReacted = reacted.has(type)
+        const { emoji, label } = REACTION_CONFIG[type];
+        const hasReacted = reacted.has(type);
 
         return (
           <span key={type} className='flex items-center'>
@@ -91,11 +98,14 @@ export function PostReactions({ slug }: Props) {
             </Tooltip>
 
             {index < REACTION_TYPES.length - 1 && (
-              <Icon iconNode={DotIcon} className='text-zinc-400 dark:text-zinc-500' />
+              <Icon
+                iconNode={DotIcon}
+                className='text-zinc-400 dark:text-zinc-500'
+              />
             )}
           </span>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

@@ -1,22 +1,28 @@
-import ImageNext from 'next/image'
+import ImageNext from 'next/image';
 
-import { cn } from '@/lib/utils'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
+import { cn } from '@/lib/utils';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
-import { Figure } from './figure'
+import { Figure } from './figure';
 
 const DEFAULT_SIZES =
-  '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 4rem), 704px'
+  '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 4rem), 704px';
 
-import type { ImageProps as NextImageProps } from 'next/image'
+import type { ImageProps as NextImageProps } from 'next/image';
 
 // -------------------------------------
 
 interface ImageProps extends NextImageProps {
-  caption?: string
+  caption?: string;
 }
 
-export function Image({ src, className, caption, sizes, ...props }: ImageProps) {
+export function Image({
+  src,
+  className,
+  caption,
+  sizes,
+  ...props
+}: ImageProps) {
   return (
     <Figure caption={caption}>
       <ImageNext
@@ -27,14 +33,14 @@ export function Image({ src, className, caption, sizes, ...props }: ImageProps) 
         {...props}
       />
     </Figure>
-  )
+  );
 }
 
 // -------------------------------------
 
 interface RatioImageProps extends Omit<NextImageProps, 'fill'> {
-  ratio?: number
-  caption?: string
+  ratio?: number;
+  caption?: string;
 }
 
 export function RatioImage({
@@ -47,7 +53,10 @@ export function RatioImage({
 }: RatioImageProps) {
   return (
     <Figure caption={caption}>
-      <AspectRatio ratio={ratio} className='overflow-hidden rounded-md bg-muted'>
+      <AspectRatio
+        ratio={ratio}
+        className='overflow-hidden rounded-md bg-muted'
+      >
         <ImageNext
           src={src}
           className={cn('object-cover', className)}
@@ -58,5 +67,5 @@ export function RatioImage({
         />
       </AspectRatio>
     </Figure>
-  )
+  );
 }

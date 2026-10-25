@@ -1,10 +1,10 @@
-import { cva } from 'class-variance-authority'
-import { Slot } from 'radix-ui'
+import { cva } from 'class-variance-authority';
+import { Slot } from 'radix-ui';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react'
-import type { VariantProps } from 'class-variance-authority'
+import type { ComponentProps } from 'react';
+import type { VariantProps } from 'class-variance-authority';
 
 const badgeVariants = cva(
   'inline-flex items-center rounded-lg border font-mono font-medium transition-colors',
@@ -13,9 +13,12 @@ const badgeVariants = cva(
       variant: {
         default: 'border-border bg-muted text-muted-foreground',
         primary: 'border-primary/50 bg-primary/10 text-primary',
-        success: 'border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400',
-        warning: 'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400',
-        danger: 'border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400',
+        success:
+          'border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400',
+        warning:
+          'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400',
+        danger:
+          'border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400',
         info: 'border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400',
       },
       size: {
@@ -39,10 +42,11 @@ const badgeVariants = cva(
       borderless: false,
     },
   },
-)
+);
 
-interface Props extends ComponentProps<'span'>, VariantProps<typeof badgeVariants> {
-  asChild?: boolean
+interface Props
+  extends ComponentProps<'span'>, VariantProps<typeof badgeVariants> {
+  asChild?: boolean;
 }
 
 export function Badge({
@@ -55,14 +59,17 @@ export function Badge({
   asChild = false,
   ...props
 }: Props) {
-  const Comp = asChild ? Slot.Root : 'span'
+  const Comp = asChild ? Slot.Root : 'span';
 
   return (
     <Comp
-      className={cn(badgeVariants({ variant, size, dashed, borderless }), className)}
+      className={cn(
+        badgeVariants({ variant, size, dashed, borderless }),
+        className,
+      )}
       {...props}
     >
       {children}
     </Comp>
-  )
+  );
 }

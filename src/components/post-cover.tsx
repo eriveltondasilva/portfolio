@@ -1,17 +1,24 @@
-import Image from 'next/image'
+import Image from 'next/image';
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
 
 interface Props extends ComponentProps<'div'> {
-  title: string
-  folder: string
-  coverFile: string
+  title: string;
+  folder: string;
+  coverFile: string;
 }
 
-export async function PostCover({ title, folder, coverFile, className }: Props) {
-  const { default: image } = await import(`@/content/posts/${folder}/${coverFile}`)
+export async function PostCover({
+  title,
+  folder,
+  coverFile,
+  className,
+}: Props) {
+  const { default: image } = await import(
+    `@/content/posts/${folder}/${coverFile}`
+  );
 
   return (
     <div
@@ -29,5 +36,5 @@ export async function PostCover({ title, folder, coverFile, className }: Props) 
         fill
       />
     </div>
-  )
+  );
 }

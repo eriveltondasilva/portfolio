@@ -1,6 +1,6 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
 
 export function Kbd({ className, children, ...props }: ComponentProps<'kbd'>) {
   return (
@@ -14,5 +14,5 @@ export function Kbd({ className, children, ...props }: ComponentProps<'kbd'>) {
     >
       {children}
     </kbd>
-  )
+  );
 }

@@ -1,25 +1,25 @@
-import { ExternalLinkIcon, FolderGit2Icon, StarIcon } from 'lucide-react'
-import Image from 'next/image'
+import { ExternalLinkIcon, FolderGit2Icon, StarIcon } from 'lucide-react';
+import Image from 'next/image';
 
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { ProjectStatus } from '@/lib/constants'
-import GithubIcon from '@/assets/github.svg'
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { ProjectStatus } from '@/lib/constants';
+import GithubIcon from '@/assets/github.svg';
 
-import { Icon } from './icon'
+import { Icon } from './icon';
 
-import type { Project } from '@/types'
-import type { ComponentPropsWithoutRef } from 'react'
+import type { Project } from '@/types';
+import type { ComponentPropsWithoutRef } from 'react';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
-  project: Project
-  className?: string
+  project: Project;
+  className?: string;
 }
 
 interface BadgeProps {
-  label: string
-  className: string
-  dot: string
+  label: string;
+  className: string;
+  dot: string;
 }
 
 const statusConfig: Record<ProjectStatus, BadgeProps> = {
@@ -40,10 +40,10 @@ const statusConfig: Record<ProjectStatus, BadgeProps> = {
     className:
       'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
   },
-}
+};
 
 export function ProjectCard({ project, ...props }: Props) {
-  const status = statusConfig[project.status]
+  const status = statusConfig[project.status];
 
   return (
     <article
@@ -68,7 +68,10 @@ export function ProjectCard({ project, ...props }: Props) {
             {project.name}
           </a>
           {project.featured && (
-            <Icon iconNode={StarIcon} className='size-3.5 fill-amber-400 text-amber-400' />
+            <Icon
+              iconNode={StarIcon}
+              className='size-3.5 fill-amber-400 text-amber-400'
+            />
           )}
         </div>
 
@@ -123,5 +126,5 @@ export function ProjectCard({ project, ...props }: Props) {
         )}
       </div>
     </article>
-  )
+  );
 }

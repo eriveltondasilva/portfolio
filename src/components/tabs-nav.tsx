@@ -1,13 +1,19 @@
-'use client'
+'use client';
 
-import { FileTextIcon, FolderGit2, FolderIcon, HashIcon, LayoutGridIcon } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Icon } from '@/components/icon'
+import {
+  FileTextIcon,
+  FolderGit2,
+  FolderIcon,
+  HashIcon,
+  LayoutGridIcon,
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Icon } from '@/components/icon';
 
-import type { Route } from 'next'
-import type { LucideIcon } from 'lucide-react'
-import { clsx } from "cn";
+import type { Route } from 'next';
+import type { LucideIcon } from 'lucide-react';
+import { clsx } from 'cn';
 
 const tabs = [
   { label: 'Overview', href: '/', icon: LayoutGridIcon },
@@ -16,13 +22,13 @@ const tabs = [
   { label: 'Projetos', href: '/projects', icon: FolderGit2 },
   { label: 'Tags', href: '/tags', icon: HashIcon },
 ] as const satisfies ReadonlyArray<{
-  label: string
-  href: Route
-  icon: LucideIcon
-}>
+  label: string;
+  href: Route;
+  icon: LucideIcon;
+}>;
 
 export function TabsNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <nav
@@ -31,7 +37,8 @@ export function TabsNav() {
     >
       <div className='-mb-px flex overflow-x-auto'>
         {tabs.map(({ label, href, icon }) => {
-          const isActive = href === '/' ? pathname === '/' : pathname.startsWith(href)
+          const isActive =
+            href === '/' ? pathname === '/' : pathname.startsWith(href);
 
           return (
             <Link
@@ -47,9 +54,9 @@ export function TabsNav() {
               <Icon iconNode={icon} />
               {label}
             </Link>
-          )
+          );
         })}
       </div>
     </nav>
-  )
+  );
 }

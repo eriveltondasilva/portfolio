@@ -11,5 +11,5 @@ export function ReadingProgress() {
       role='progressbar'
       aria-label='Progresso de leitura'
     />
-  )
+  );
 }

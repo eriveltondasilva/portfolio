@@ -1,18 +1,22 @@
-import { Link } from './components/mdx/link'
-import { Youtube } from './components/mdx/youtube'
-import { Image, RatioImage } from './components/mdx/image'
-import { ImageGrid, GridImage } from './components/mdx/image-grid'
-import { Callout } from './components/mdx/callout'
-import { CodeBlock } from './components/mdx/code-block'
-import { Tweet } from './components/mdx/tweet'
-import { Steps, Step } from './components/mdx/steps'
-import { Tabs, Tab } from './components/mdx/tabs'
-import { Accordion, AccordionItem } from './components/mdx/accordion'
-import { Kbd } from './components/mdx/kbd'
-import { Badge } from './components/mdx/badge'
-import { FileTree, FileTreeFolder, FileTreeFile } from './components/mdx/file-tree'
+import { Link } from './components/mdx/link';
+import { Youtube } from './components/mdx/youtube';
+import { Image, RatioImage } from './components/mdx/image';
+import { ImageGrid, GridImage } from './components/mdx/image-grid';
+import { Callout } from './components/mdx/callout';
+import { CodeBlock } from './components/mdx/code-block';
+import { Tweet } from './components/mdx/tweet';
+import { Steps, Step } from './components/mdx/steps';
+import { Tabs, Tab } from './components/mdx/tabs';
+import { Accordion, AccordionItem } from './components/mdx/accordion';
+import { Kbd } from './components/mdx/kbd';
+import { Badge } from './components/mdx/badge';
+import {
+  FileTree,
+  FileTreeFolder,
+  FileTreeFile,
+} from './components/mdx/file-tree';
 
-import type { MDXComponents } from 'mdx/types'
+import type { MDXComponents } from 'mdx/types';
 
 const components = {
   a: Link,
@@ -43,8 +47,8 @@ const components = {
   Kbd,
   Youtube,
   Tweet,
-} satisfies MDXComponents
+} satisfies MDXComponents;
 
 export function useMDXComponents(inherited?: MDXComponents): MDXComponents {
-  return { ...inherited, ...components }
+  return { ...inherited, ...components };
 }

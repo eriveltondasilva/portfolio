@@ -1,130 +1,147 @@
-import { join } from 'node:path'
+import { join } from 'node:path';
 
-import { POSTS_DIR } from '@/lib/constants'
+import { POSTS_DIR } from '@/lib/constants';
 
-import { BuildError } from './utils'
+import { BuildError } from './utils';
 
-import type { PostIndex } from '@/types'
+import type { PostIndex } from '@/types';
 
 export function assertUniqueSeriesOrder(posts: readonly PostIndex[]): void {
-  const index = new Map<string, Map<number, string[]>>()
+  const index = new Map<string, Map<number, string[]>>();
 
   for (const { series, order, folder } of posts) {
-    if (series === undefined || order === undefined) continue
+    if (series === undefined || order === undefined) continue;
 
-    const filePath = join(POSTS_DIR, folder, 'index.mdx')
+    const filePath = join(POSTS_DIR, folder, 'index.mdx');
 
-    let orderMap = index.get(series)
+    let orderMap = index.get(series);
     if (!orderMap) {
-      orderMap = new Map()
-      index.set(series, orderMap)
+      orderMap = new Map();
+      index.set(series, orderMap);
     }
 
-    const files = orderMap.get(order)
+    const files = orderMap.get(order);
     if (files) {
-      files.push(filePath)
+      files.push(filePath);
     } else {
-      orderMap.set(order, [filePath])
+      orderMap.set(order, [filePath]);
     }
   }
 
-  const conflicts: string[] = []
+  const conflicts: string[] = [];
 
   for (const [seriesSlug, orderMap] of index) {
-    const lines: string[] = []
+    const lines: string[] = [];
 
     for (const [order, files] of orderMap) {
-      if (files.length <= 1) continue
+      if (files.length <= 1) continue;
 
-      const detail = files.map((f) => `\n    - ${f}`).join('')
-      lines.push(`  order ${order}:${detail}`)
+      const detail = files.map((f) => `\n    - ${f}`).join('');
+      lines.push(`  order ${order}:${detail}`);
     }
 
     if (lines.length > 0) {
-      conflicts.push(`Series "${seriesSlug}" has duplicate "order" values:\n${lines.join('\n')}`)
+      conflicts.push(
+        `Series "${seriesSlug}" has duplicate "order" values:\n${lines.join('\n')}`,
+      );
     }
   }
 
-  if (conflicts.length === 0) return
+  if (conflicts.length === 0) return;
 
-  throw new BuildError('posts', conflicts)
+  throw new BuildError('posts', conflicts);
 }
 
-export function assertSeriesExist(posts: PostIndex[], knownSeries: Set<string>): void {
-  const invalidPosts = posts.filter((p) => p.series !== undefined && !knownSeries.has(p.series))
+export function assertSeriesExist(
+  posts: PostIndex[],
+  knownSeries: Set<string>,
+): void {
+  const invalidPosts = posts.filter(
+    (p) => p.series !== undefined && !knownSeries.has(p.series),
+  );
 
-  if (invalidPosts.length === 0) return
+  if (invalidPosts.length === 0) return;
 
   const detail = invalidPosts
     .map(
       (post) =>
         `  - "${post.slug}" -> série "${post.series}"\n    ${join(POSTS_DIR, post.folder, 'index.mdx')}`,
     )
-    .join('\n')
+    .join('\n');
 
   const available =
     knownSeries.size > 0 ?
       `\n  Series available: ${[...knownSeries].map((s) => `"${s}"`).join(', ')}`
-    : '\n  No series found.'
+    : '\n  No series found.';
 
-  const message = `Non-existent series referenced:\n${detail}${available}`
-  throw new BuildError('posts', [message])
+  const message = `Non-existent series referenced:\n${detail}${available}`;
+  throw new BuildError('posts', [message]);
 }
 
-export function assertAuthorsExist(posts: readonly PostIndex[], knownAuthors: Set<string>): void {
+export function assertAuthorsExist(
+  posts: readonly PostIndex[],
+  knownAuthors: Set<string>,
+): void {
   const missing = posts.flatMap((post) =>
-    post.authors.filter((author) => !knownAuthors.has(author)).map((author) => ({ author, post })),
-  )
+    post.authors
+      .filter((author) => !knownAuthors.has(author))
+      .map((author) => ({ author, post })),
+  );
 
-  if (missing.length === 0) return
+  if (missing.length === 0) return;
 
   const detail = missing
     .map(
       ({ author, post }) =>
         `  - author "${author}" in "${post.slug}"\n    ${join(POSTS_DIR, post.folder, 'index.mdx')}`,
     )
-    .join('\n')
+    .join('\n');
 
   const available =
     knownAuthors.size > 0 ?
       `\n Authors available: ${[...knownAuthors].map((author) => `"${author}"`).join(', ')}`
-    : '\n No authors found.'
+    : '\n No authors found.';
 
-  const message = `Non-existent authors referenced:\n${detail}${available}`
-  throw new BuildError('posts', [message])
+  const message = `Non-existent authors referenced:\n${detail}${available}`;
+  throw new BuildError('posts', [message]);
 }
 
 interface Entry {
-  slug: string
-  source: string
+  slug: string;
+  source: string;
 }
 
-export function assertUniqueSlugs(context: string, entries: readonly Entry[]): void {
-  const seen = new Map<string, string[]>()
-  let hasDuplicates = false
+export function assertUniqueSlugs(
+  context: string,
+  entries: readonly Entry[],
+): void {
+  const seen = new Map<string, string[]>();
+  let hasDuplicates = false;
 
   for (const { slug, source } of entries) {
-    const sources = seen.get(slug)
+    const sources = seen.get(slug);
 
     if (sources) {
-      sources.push(source)
-      hasDuplicates = true
+      sources.push(source);
+      hasDuplicates = true;
     } else {
-      seen.set(slug, [source])
+      seen.set(slug, [source]);
     }
   }
 
-  if (!hasDuplicates) return
+  if (!hasDuplicates) return;
 
-  const detail: string[] = []
+  const detail: string[] = [];
 
   for (const [slug, sources] of seen) {
-    if (sources.length <= 1) continue
+    if (sources.length <= 1) continue;
 
-    const files = [...new Set(sources)].map((source) => `\n    - ${source}`).join('')
-    detail.push(`  "${slug}" found in:${files}`)
+    const files = [...new Set(sources)]
+      .map((source) => `\n    - ${source}`)
+      .join('');
+    detail.push(`  "${slug}" found in:${files}`);
   }
 
-  const message = `Duplicate slugs found:\n\n${detail.join('\n')}`
-  throw new BuildError(context, [message])
+  const message = `Duplicate slugs found:\n\n${detail.join('\n')}`;
+  throw new BuildError(context, [message]);
 }

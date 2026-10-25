@@ -1,23 +1,23 @@
-import { ArrowRightIcon, CheckIcon, SparklesIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ArrowRightIcon, CheckIcon, SparklesIcon } from 'lucide-react';
+import Link from 'next/link';
 
-import { Icon } from '@/components/icon'
-import { PostCard } from '@/components/post-card'
-import { SeriesCard } from '@/components/series-card'
-import { getRecentPosts } from '@/lib/blog/posts'
-import { getInProgressSeries } from '@/lib/blog/series'
+import { Icon } from '@/components/icon';
+import { PostCard } from '@/components/post-card';
+import { SeriesCard } from '@/components/series-card';
+import { getRecentPosts } from '@/lib/blog/posts';
+import { getInProgressSeries } from '@/lib/blog/series';
 
 function Code({ children }: { children: React.ReactNode }) {
   return (
     <code className='rounded bg-zinc-200 px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200'>
       {children}
     </code>
-  )
+  );
 }
 
 export default function HomePage() {
-  const recentPosts = getRecentPosts()
-  const inProgressSeries = getInProgressSeries()
+  const recentPosts = getRecentPosts();
+  const inProgressSeries = getInProgressSeries();
 
   return (
     <div className='space-y-10'>
@@ -38,9 +38,10 @@ export default function HomePage() {
           </h2>
 
           <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
-            Desenvolvedor Frontend focado em criar interfaces modernas com <Code>React</Code> e{' '}
-            <Code>Next.js</Code>. Aqui compartilho o que aprendo sobre desenvolvimento web, boas
-            práticas e tecnologias que uso no dia a dia.
+            Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
+            <Code>React</Code> e <Code>Next.js</Code>. Aqui compartilho o que
+            aprendo sobre desenvolvimento web, boas práticas e tecnologias que
+            uso no dia a dia.
           </p>
 
           <div className='flex items-center gap-1 font-mono text-xs text-zinc-500 dark:text-zinc-500'>
@@ -98,5 +99,5 @@ export default function HomePage() {
         </section>
       )}
     </div>
-  )
+  );
 }

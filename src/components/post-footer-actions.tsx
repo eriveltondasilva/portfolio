@@ -1,12 +1,12 @@
-import { FilePenIcon } from 'lucide-react'
+import { FilePenIcon } from 'lucide-react';
 
-import { Button } from '@/components/ui/button'
-import { Icon } from '@/components/icon'
-import { PostReactions } from '@/components/post-reactions'
+import { Button } from '@/components/ui/button';
+import { Icon } from '@/components/icon';
+import { PostReactions } from '@/components/post-reactions';
 
 interface Props {
-  slug: string
-  editUrl: string
+  slug: string;
+  editUrl: string;
 }
 
 export function PostFooterActions({ slug, editUrl }: Props) {
@@ -21,5 +21,5 @@ export function PostFooterActions({ slug, editUrl }: Props) {
         </a>
       </Button>
     </footer>
-  )
+  );
 }

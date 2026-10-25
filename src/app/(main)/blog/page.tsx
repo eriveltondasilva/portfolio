@@ -1,17 +1,23 @@
-import { FileXIcon, LayersIcon } from 'lucide-react'
+import { FileXIcon, LayersIcon } from 'lucide-react';
 
-import { Icon } from '@/components/icon'
-import { PostCard } from '@/components/post-card'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { getAllPosts } from '@/lib/blog/posts'
+import { Icon } from '@/components/icon';
+import { PostCard } from '@/components/post-card';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
+import { getAllPosts } from '@/lib/blog/posts';
 
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
 
 const meta = {
   title: 'Blog',
   description: 'Todos os artigos sobre desenvolvimento frontend.',
   siteName: "Erivelton's Portfolio",
-}
+};
 
 export const metadata: Metadata = {
   title: meta.title,
@@ -31,12 +37,12 @@ export const metadata: Metadata = {
     site: meta.siteName,
     creator: '@erivelton_silv4',
   },
-}
+};
 
 export default function BlogPage() {
-  const posts = getAllPosts()
-  const hasPosts = posts.length > 0
-  const postCount = posts.length
+  const posts = getAllPosts();
+  const hasPosts = posts.length > 0;
+  const postCount = posts.length;
 
   return (
     <div className='space-y-6'>
@@ -71,5 +77,5 @@ export default function BlogPage() {
         </Empty>
       )}
     </div>
-  )
+  );
 }

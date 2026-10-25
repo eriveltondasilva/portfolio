@@ -1,9 +1,9 @@
-import { cn } from '@/lib/utils'
+import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps } from 'react';
 
 interface StepProps extends ComponentProps<'div'> {
-  title: string
+  title: string;
 }
 
 export function Step({ title, className, children, ...props }: StepProps) {
@@ -12,12 +12,16 @@ export function Step({ title, className, children, ...props }: StepProps) {
       <p className='step-title'>{title}</p>
       <div>{children}</div>
     </div>
-  )
+  );
 }
 
 // -------------------------------------
 
-export function Steps({ className, children, ...props }: ComponentProps<'div'>) {
+export function Steps({
+  className,
+  children,
+  ...props
+}: ComponentProps<'div'>) {
   return (
     <div
       className={cn(
@@ -38,5 +42,5 @@ export function Steps({ className, children, ...props }: ComponentProps<'div'>) 
     >
       {children}
     </div>
-  )
+  );
 }

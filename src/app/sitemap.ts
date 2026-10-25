@@ -1,6 +1,6 @@
-import { BASE_URL } from '@/lib/constants'
+import { BASE_URL } from '@/lib/constants';
 
-import type { MetadataRoute } from 'next'
+import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const siteMap = [
@@ -9,12 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     `${BASE_URL}/projects`,
     `${BASE_URL}/series`,
     `${BASE_URL}/tags`,
-  ] as const
-  const lastModified = new Date()
+  ] as const;
+  const lastModified = new Date();
 
   return siteMap.map((url) => ({
     url,
     lastModified,
     changeFrequency: 'yearly',
-  }))
+  }));
 }
