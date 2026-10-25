@@ -1,16 +1,24 @@
 ---
 slug: 'mdx-reference'
 title: 'Referência de Componentes MDX'
-description: 'Manual completo de todos os componentes e recursos disponíveis para escrever posts neste blog.'
+description: 'Manual de todos os componentes e recursos de escrita disponíveis nos posts deste blog: Markdown, código, callouts, tabs, imagens e embeds.'
 publishedAt: '2026-04-03'
+updatedAt: '2026-10-25'
 tags: ['meta', 'mdx']
 status: 'published'
 authors: ['erivelton']
+series: 'manual-do-blog'
+order: 1
 ---
 
 import CoverImage from './cover.jpg'
 
-Este post é um manual de referência rápida. Aqui estão todos os componentes e recursos disponíveis ao escrever um novo post. Mantenha-o aberto como guia enquanto escreve.
+Este é o primeiro post da série **Manual do Blog** e cobre tudo o que você pode usar **dentro do texto** de um post: Markdown, blocos de código e componentes MDX. Mantenha-o aberto como guia enquanto escreve.
+
+Os recursos que ficam _em volta_ do texto estão nos próximos posts da série:
+
+- [Como o blog funciona](/blog/como-o-blog-funciona): frontmatter, status, capa, séries e autores.
+- [Projetos e integração com o GitHub](/blog/projetos-e-integracao-github): como a listagem de projetos é gerada.
 
 ---
 
@@ -47,7 +55,7 @@ Links internos e externos são tratados automaticamente pelo componente `Link` d
 - `contato@exemplo.com` → vira link de e-mail
 
 Exemplos:
-- [Link interno](/blog/2026-04-03-mdx-reference)
+- [Link interno](/blog/mdx-reference)
 - [Link externo](https://google.com)
 - https://google.com
 - www.google.com
@@ -395,17 +403,10 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
 
 ## Imagens
 
-### Imagem de capa
-
-Cada post pode ter uma imagem de capa. Basta nomear o arquivo `cover` e colocá-lo na mesma pasta do `index.mdx` — nenhuma configuração adicional é necessária.
-
-```
-content/posts/2026-01-15-meu-post/
-├── index.mdx
-└── cover.jpg   ← detectado automaticamente
-```
-
-A capa aparece no topo do post, logo abaixo do título, e também é usada na OG image gerada para redes sociais. Extensões suportadas: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`.
+<Callout variant='tip' title='Imagem de capa'>
+  A capa do post não usa componente: basta nomear o arquivo `cover` na pasta do post. Veja os
+  detalhes em [Como o blog funciona](/blog/como-o-blog-funciona#imagem-de-capa).
+</Callout>
 
 ### Imagem inline (Markdown)
 
@@ -577,112 +578,6 @@ O `rehype-mdx-import-media` permite referenciar imagens diretamente no Markdown 
 
 ---
 
-## Frontmatter
+## Próximo passo
 
-Todo post precisa de um frontmatter válido no topo do arquivo `.mdx`:
-
-```yml
----
-slug: 'meu-post'
-title: 'Título do Post'
-description: 'Descrição curta exibida no card e no SEO.'
-publishedAt: '2026-01-15'
-tags: ['tag1', 'tag2']
-status: 'published'
-authors:
-  - erivelton
----
-```
-
-### Campo `status`
-
-| Valor       | Comportamento                                                             |
-| ----------- | ------------------------------------------------------------------------- |
-| `draft`     | Nunca foi publicado — não aparece na listagem e não tem rota gerada       |
-| `published` | Visível publicamente                                                      |
-| `archived`  | Removido da listagem, mas a URL continua acessível com um banner de aviso |
-
-### Campo `updatedAt`
-
-Quando informado, substitui o `publishedAt` em todas as exibições de data e troca o ícone de calendário pelo ícone de "atualizado" nos cards e no cabeçalho do post:
-
-```yml
----
-publishedAt: '2026-01-15'
-updatedAt: '2026-04-03'   # opcional — use ao fazer atualizações significativas
----
-```
-
-### Campos para posts de série
-
-Quando o post faz parte de uma série, informe o slug da série e a posição. Ambos os campos são obrigatórios em conjunto:
-
-```yml
----
-series: 'slug-da-serie'
-order: 1
----
-```
-
-O banner da série é exibido automaticamente no rodapé do post com a lista de todos os posts da série e a posição atual destacada.
-
----
-
-## Séries
-
-Séries são definidas no arquivo `content/series/index.json`:
-
-```json
-[
-  {
-    "slug": "minha-serie",
-    "title": "Minha Série",
-    "description": "Descrição curta da série.",
-    "publishedAt": "2026-01-15",
-    "status": "in-progress"
-  }
-]
-```
-
-| Campo         | Tipo     | Valores                            | Obrigatório |
-| ------------- | -------- | ---------------------------------- | ----------- |
-| `slug`        | `string` | kebab-case                         | ✅          |
-| `title`       | `string` | —                                  | ✅          |
-| `description` | `string` | máx. 300 caracteres                | ✅          |
-| `publishedAt` | `string` | ISO date (`YYYY-MM-DD`)            | ✅          |
-| `status`      | `string` | `planned` `in-progress` `complete` | ✅          |
-
-Após editar o arquivo, regenere o índice:
-
-```bash
-bun run build:blog
-```
-
-Séries com status `in-progress` aparecem automaticamente na seção **Séries em andamento** da home.
-
----
-
-## Projetos
-
-Projetos são gerados automaticamente a partir dos repositórios públicos do GitHub via API (`@octokit/rest`). O controle de quais repositórios aparecem é feito pelos **topics** de cada repositório na interface do GitHub.
-
-| Topic       | Efeito                                               |
-| ----------- | ---------------------------------------------------- |
-| `portfolio` | Inclui o repositório na listagem de projetos         |
-| `featured`  | Marca como destaque — aparece na seção "Em destaque" |
-| `wip`       | Define o status como **Em progresso**                |
-
-Repositórios arquivados no GitHub recebem automaticamente o status **Arquivado**. Os demais aparecem como **Ativo**.
-
-As tags exibidas no card são os topics do repositório, excluindo os três de controle acima.
-
-Para regenerar a listagem após alterar os topics no GitHub:
-
-```bash
-bun run build:projects
-```
-
-<Callout variant='info' title='Variáveis de ambiente'>
-  O script de geração de projetos requer um token do GitHub configurado. Certifique-se
-  de que `GITHUB_TOKEN` está definido no `.env.local` antes de rodar o comando.
-</Callout>
+Agora que você conhece os componentes, continue em [Como o blog funciona](/blog/como-o-blog-funciona) para entender frontmatter, status de publicação e séries.

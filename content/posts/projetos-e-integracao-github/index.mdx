@@ -1,0 +1,156 @@
+---
+slug: 'projetos-e-integracao-github'
+title: 'Projetos e Integração com o GitHub'
+description: 'Como a listagem de projetos é gerada a partir dos repositórios do GitHub: topics de controle, status, token de acesso e regeneração do índice.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'github']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 3
+---
+
+Este é o último post da série **Manual do Blog**. Ao contrário dos posts, os projetos não têm arquivos em `content`: a fonte é o próprio GitHub. Aqui está como cada repositório vira (ou não) um projeto no site.
+
+---
+
+## Visão geral
+
+<Steps>
+  <Step title='Busca'>
+    O script `build:projects` consulta a API do GitHub (via `@octokit/rest`) e lista os repositórios do autor principal.
+  </Step>
+
+  <Step title='Filtro'>
+    Ficam apenas os repositórios **públicos** que tenham o topic `portfolio`.
+  </Step>
+
+  <Step title='Transformação'>
+    Cada repositório é convertido em um projeto: nome formatado, descrição, links, tags e status.
+  </Step>
+
+  <Step title='Saída'>
+    O resultado é gravado em `generated/indexes/projects.json`, que o site importa para montar a página de projetos e a seção de destaques.
+  </Step>
+</Steps>
+
+O usuário consultado vem do campo `socials.github` do autor principal, definido em `content/authors/index.json` (veja [Como o blog funciona](/blog/como-o-blog-funciona#autores)).
+
+---
+
+## Controle por topics
+
+Você decide o que aparece pela interface do GitHub, na engrenagem ao lado de **About** na página do repositório, campo **Topics**.
+
+| Topic       | Efeito                                               |
+| ----------- | ---------------------------------------------------- |
+| `portfolio` | Inclui o repositório na listagem de projetos         |
+| `featured`  | Marca como destaque, aparece na seção "Em destaque"  |
+| `wip`       | Define o status como **Em progresso**                |
+
+Repositórios privados nunca entram, mesmo com o topic `portfolio`.
+
+As tags exibidas no card são os demais topics do repositório, excluindo os três de controle acima.
+
+---
+
+## De onde vem cada campo
+
+| Campo do projeto | Origem                                                                         |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `slug`           | Nome do repositório                                                            |
+| `name`           | Nome do repositório formatado: `meu-projeto-legal` vira **Meu Projeto Legal**  |
+| `description`    | Descrição do repositório; sem ela, aparece "Sem descrição."                    |
+| `repository`     | URL do repositório                                                             |
+| `url`            | Campo **Website** do repositório, quando preenchido                            |
+| `tags`           | Topics do repositório, menos os de controle                                    |
+| `status`         | Veja a seção abaixo                                                            |
+| `featured`       | `true` se o repositório tem o topic `featured`                                 |
+
+Na formatação do nome, apenas hífens separam palavras.
+
+---
+
+## Status do projeto
+
+| Condição no GitHub                | Status           |
+| --------------------------------- | ---------------- |
+| Repositório arquivado             | **Arquivado**    |
+| Topic `wip` (e não arquivado)     | **Em progresso** |
+| Qualquer outro caso               | **Ativo**        |
+
+O arquivamento tem prioridade: um repositório arquivado com o topic `wip` aparece como **Arquivado**.
+
+---
+
+## Token e variáveis de ambiente
+
+O script exige a variável `GITHUB_TOKEN` e falha com uma mensagem explicativa se ela não existir. Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens); para listar repositórios públicos não são necessárias permissões extras.
+
+<Tabs tabs={['Local', 'Deploy']}>
+  <Tab value='Local'>
+    Adicione a variável ao arquivo `.env.local`:
+
+    ```bash title=".env.local"
+    GITHUB_TOKEN=seu_token_aqui
+    ```
+  </Tab>
+  <Tab value='Deploy'>
+    Como o `build` executa o script automaticamente, cadastre `GITHUB_TOKEN` também nas variáveis de ambiente da plataforma de deploy.
+  </Tab>
+</Tabs>
+
+<Callout variant='danger' title='Cuidado'>
+  Nunca faça commit do token. O arquivo `.env.example` serve só como modelo, com os nomes das
+  variáveis e sem valores.
+</Callout>
+
+---
+
+## Regenerando a listagem
+
+```bash
+bun run build:projects
+```
+
+O comando também roda automaticamente antes de `dev` e `build`.
+
+<Callout variant='info' title='A lista é estática'>
+  Os projetos são buscados em tempo de build. Mudar topics, descrição ou arquivar um repositório no
+  GitHub só aparece no site depois de rodar `build:projects` localmente ou de publicar uma nova
+  versão.
+</Callout>
+
+<Callout variant='warning' title='Limite de 100 repositórios'>
+  O script busca uma única página com até 100 repositórios, ordenados por nome. Se a conta passar
+  disso, os demais ficam de fora até que o script ganhe paginação.
+</Callout>
+
+Durante a execução, o script informa quantos repositórios foram incluídos e por que outros ficaram de fora (privados ou sem o topic `portfolio`), além da contagem de destaques, em progresso e arquivados.
+
+---
+
+## Problemas comuns
+
+<Accordion>
+  <AccordionItem title='Meu repositório não aparece'>
+    Confira três pontos: o repositório é público, tem o topic `portfolio` e o índice foi
+    regenerado depois da alteração (`bun run build:projects`).
+  </AccordionItem>
+
+  <AccordionItem title='O projeto não mostra link de demonstração'>
+    O link vem do campo **Website** do repositório. Preencha-o na engrenagem ao lado de **About** e
+    regenere o índice.
+  </AccordionItem>
+
+  <AccordionItem title='O build falha com GITHUB_TOKEN is not set'>
+    A variável não está definida no ambiente em que o comando rodou. Defina-a no `.env.local` ou nas
+    variáveis da plataforma de deploy.
+  </AccordionItem>
+</Accordion>
+
+---
+
+## Fim da série
+
+Você chegou ao fim do **Manual do Blog**. Para voltar ao começo, veja [Referência de Componentes MDX](/blog/mdx-reference).

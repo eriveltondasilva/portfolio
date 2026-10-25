@@ -1,0 +1,238 @@
+---
+slug: 'como-o-blog-funciona'
+title: 'Como o Blog Funciona: Frontmatter, Status e Séries'
+description: 'Guia dos recursos do blog: estrutura de conteúdo, frontmatter, status de publicação, capa, séries, autores e validações executadas no build.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'blog']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 2
+---
+
+Este é o segundo post da série **Manual do Blog**. O [primeiro](/blog/mdx-reference) mostra o que usar dentro do texto; aqui está tudo o que acontece em volta dele: onde ficam os arquivos, o que o frontmatter aceita, como funcionam status e séries e o que o build valida antes de publicar.
+
+---
+
+## Estrutura de conteúdo
+
+Todo o conteúdo vive na pasta `content`. A pasta `generated` é produzida pelos scripts e **não deve ser editada à mão**.
+
+<FileTree>
+  <FileTreeFolder name='content' defaultOpen>
+    <FileTreeFolder name='authors' defaultOpen>
+      <FileTreeFile name='index.json' />
+    </FileTreeFolder>
+    <FileTreeFolder name='series' defaultOpen>
+      <FileTreeFile name='index.json' />
+    </FileTreeFolder>
+    <FileTreeFolder name='posts' defaultOpen>
+      <FileTreeFolder name='2026-01-15-meu-post' defaultOpen>
+        <FileTreeFile name='index.mdx' highlight />
+        <FileTreeFile name='cover.jpg' />
+      </FileTreeFolder>
+    </FileTreeFolder>
+  </FileTreeFolder>
+  <FileTreeFolder name='generated'>
+    <FileTreeFolder name='indexes'>
+      <FileTreeFile name='posts.json' />
+      <FileTreeFile name='series.json' />
+      <FileTreeFile name='projects.json' />
+    </FileTreeFolder>
+    <FileTreeFolder name='schemas'>
+      <FileTreeFile name='authors.json' />
+      <FileTreeFile name='series.json' />
+      <FileTreeFile name='posts.json' />
+    </FileTreeFolder>
+  </FileTreeFolder>
+</FileTree>
+
+O nome da pasta de um post é livre. A URL vem do campo `slug` do frontmatter; a pasta é usada apenas para localizar o arquivo, a capa e o link "Editar no GitHub".
+
+---
+
+## Do arquivo ao site
+
+O site não lê os arquivos de conteúdo diretamente para listar posts. Em vez disso, scripts leem o conteúdo, validam, e gravam índices em JSON que o Next.js importa.
+
+| Comando                  | O que faz                                               |
+| ------------------------ | ------------------------------------------------------- |
+| `bun run build:blog`     | Gera os índices de posts e séries                       |
+| `bun run build:projects` | Gera o índice de projetos a partir do GitHub            |
+| `bun run build:schemas`  | Gera JSON Schemas a partir dos schemas Zod              |
+| `bun run build:indexes`  | Executa `build:blog` e `build:projects`                 |
+
+Antes do `dev` rodam `build:indexes` e `build:schemas`; antes do `build`, apenas `build:indexes`.
+
+<Callout variant='tip' title='Editou o frontmatter com o servidor rodando?'>
+  O texto do post atualiza sozinho, mas o frontmatter, o tempo de leitura e as séries vêm dos
+  índices gerados. Rode `bun run build:blog` de novo para refletir essas mudanças.
+</Callout>
+
+---
+
+## Frontmatter
+
+Todo post começa com um frontmatter validado por um schema Zod:
+
+```yml
+---
+slug: 'meu-post'
+title: 'Título do Post'
+description: 'Descrição curta exibida no card e no SEO.'
+publishedAt: '2026-01-15'
+updatedAt: '2026-04-03' # opcional
+tags: ['tag1', 'tag2']
+status: 'published'
+authors:
+  - erivelton
+series: 'slug-da-serie' # opcional, exige order
+order: 1 # opcional, exige series
+---
+```
+
+| Campo         | Obrigatório | Regra                                                 |
+| ------------- | :---------: | ----------------------------------------------------- |
+| `slug`        |     ✅      | kebab-case, até 120 caracteres                        |
+| `title`       |     ✅      | até 160 caracteres                                    |
+| `description` |     ✅      | de 10 a 300 caracteres                                |
+| `tags`        |     ✅      | de 1 a 10 itens, cada um em kebab-case                |
+| `publishedAt` |     ✅      | data ISO (`YYYY-MM-DD`)                               |
+| `authors`     |     ✅      | ao menos um slug de autor existente                   |
+| `status`      |             | `draft`, `published` ou `archived` (padrão: `draft`)  |
+| `updatedAt`   |             | data ISO da última atualização significativa          |
+| `series`      |             | slug de uma série existente; exige `order`            |
+| `order`       |             | inteiro positivo; exige `series`                      |
+
+<Callout variant='warning' title='Atenção'>
+  O schema é estrito: campos desconhecidos geram erro de build. E, como o `status` padrão é
+  `draft`, esquecer esse campo faz o post não ser publicado.
+</Callout>
+
+### Campo `status`
+
+| Valor       | Comportamento                                                                                                  |
+| ----------- | -------------------------------------------------------------------------------------------------------------- |
+| `draft`     | Ignorado pelo índice: sem rota e fora das listagens                                                            |
+| `published` | Visível publicamente, presente nas listagens e no sitemap                                                      |
+| `archived`  | Fora das listagens e do sitemap, mas a URL continua acessível, com banner de aviso e sem posts relacionados ou navegação |
+
+### Campo `updatedAt`
+
+Quando informado, substitui o `publishedAt` nas datas exibidas e troca o rótulo para "Atualizado em" no cabeçalho do post:
+
+```yml
+---
+publishedAt: '2026-01-15'
+updatedAt: '2026-04-03' # use ao fazer atualizações significativas
+---
+```
+
+---
+
+## Imagem de capa
+
+Para ter uma capa, coloque na pasta do post um arquivo chamado `cover` com uma das extensões `.jpg`, `.jpeg`, `.png`, `.webp` ou `.avif`. Nenhuma configuração é necessária: o script de índice detecta o arquivo e a capa aparece no cabeçalho do post, antes do conteúdo.
+
+<Callout variant='info' title='Capa e imagem de compartilhamento'>
+  A imagem Open Graph (usada ao compartilhar o link em redes sociais) é gerada automaticamente com
+  título, descrição, tags, autores, data e tempo de leitura. Ela **não** usa o arquivo de capa.
+</Callout>
+
+---
+
+## O que é gerado automaticamente
+
+Sem nenhuma configuração extra, cada post recebe:
+
+- **Tempo de leitura**, calculado a partir do conteúdo e arredondado para cima.
+- **Metadados de SEO e Open Graph**, montados a partir do frontmatter e dos autores.
+- **Imagem Open Graph** própria, como descrito acima.
+- **Entrada no sitemap**, apenas para posts `published`.
+- **Link "Editar no GitHub"**, apontando para o `index.mdx` do post.
+- **Posts relacionados**, ordenados por quantidade de tags em comum.
+
+---
+
+## Séries
+
+Séries agrupam posts em uma sequência. Elas são definidas em `content/series/index.json`:
+
+```json
+[
+  {
+    "slug": "minha-serie",
+    "title": "Minha Série",
+    "description": "Descrição curta da série.",
+    "publishedAt": "2026-01-15",
+    "status": "in-progress"
+  }
+]
+```
+
+| Campo         | Tipo     | Valores                            | Obrigatório |
+| ------------- | -------- | ---------------------------------- | :---------: |
+| `slug`        | `string` | kebab-case, até 80 caracteres      |     ✅      |
+| `title`       | `string` | até 120 caracteres                 |     ✅      |
+| `description` | `string` | de 10 a 300 caracteres             |     ✅      |
+| `publishedAt` | `string` | data ISO (`YYYY-MM-DD`)            |     ✅      |
+| `status`      | `string` | `planned` `in-progress` `complete` |             |
+
+O `status` da série é `planned` por padrão. Séries `in-progress` aparecem automaticamente na seção **Séries em andamento** da home.
+
+Para incluir um post na série, informe `series` e `order` no frontmatter do post. O banner da série aparece no rodapé do post, com a lista de todos os posts e a posição atual destacada, e a ordem dos posts na lista segue o `order`.
+
+<Callout variant='info' title='Exemplo ao vivo'>
+  A série **Manual do Blog**, da qual este post faz parte, usa exatamente esse mecanismo. Role até o
+  fim da página para ver o banner.
+</Callout>
+
+---
+
+## Autores
+
+Autores ficam em `content/authors/index.json`:
+
+```json
+[
+  {
+    "slug": "erivelton",
+    "name": "Erivelton Silva",
+    "bio": "Desenvolvedor web.",
+    "skills": ["TypeScript", "Laravel"],
+    "socials": {
+      "github": "https://github.com/usuario"
+    }
+  }
+]
+```
+
+| Campo      | Obrigatório | Regra                                                          |
+| ---------- | :---------: | -------------------------------------------------------------- |
+| `slug`     |     ✅      | kebab-case, até 80 caracteres                                  |
+| `name`     |     ✅      | até 100 caracteres                                             |
+| `bio`      |     ✅      | de 10 a 300 caracteres                                         |
+| `skills`   |     ✅      | de 1 a 20 itens                                                |
+| `socials`  |     ✅      | `github` é obrigatório; `linkedin` e `twitter` são opcionais   |
+
+O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Dele sai, por exemplo, o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github).
+
+---
+
+## Validações no build
+
+Ao gerar os índices, o build confere o conteúdo e **para com uma mensagem detalhada** (caminho do arquivo e campo com problema) se algo estiver errado:
+
+| Verificação          | O build falha quando                                              |
+| -------------------- | ----------------------------------------------------------------- |
+| Schema               | Frontmatter, autores ou séries têm campos inválidos ou extras     |
+| Slugs únicos         | Dois posts, autores ou séries compartilham o mesmo `slug`         |
+| Série existente      | Um post referencia uma série que não está em `series/index.json`  |
+| Ordem única          | Dois posts da mesma série usam o mesmo `order`                    |
+| Autor existente      | Um post cita um autor que não está em `authors/index.json`        |
+
+---
+
+## Próximo passo
+
+O último post da série mostra como a página de projetos é montada: [Projetos e integração com o GitHub](/blog/projetos-e-integracao-github).
