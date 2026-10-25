@@ -1,0 +1,182 @@
+---
+slug: 'reacoes-e-redis'
+title: 'Reações e Redis'
+description: 'Como funcionam as reações dos posts: contadores no Redis (Upstash), limite por IP, a API de reações, o componente do front-end e o cron de keepalive.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'redis']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 5
+---
+
+Este é o quinto e último post da série **Manual do Blog**. Ele explica a única parte do blog que guarda dados de visitantes: as reações dos posts, que usam Redis (Upstash). As variáveis necessárias estão em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
+
+---
+
+## Visão geral
+
+Cada post tem três reações, definidas em `lib/reactions.ts`:
+
+| Tipo         | Emoji | Rótulo         |
+| ------------ | :---: | -------------- |
+| `like`       |  ❤️   | Curtir         |
+| `fire`       |  🔥   | Incrível       |
+| `mind_blown` |  🤯   | Surpreendente  |
+
+As peças envolvidas:
+
+- **`lib/reactions.ts`**: tipos, rótulos, tempo do limite e funções que montam as chaves do Redis.
+- **`lib/redis.ts`**: cliente do Upstash, configurado pelas variáveis de ambiente.
+- **`app/api/reactions/[slug]/route.ts`**: rota com `GET` (contagens) e `POST` (nova reação).
+- **`components/post-reactions.tsx`**: componente de cliente que exibe e envia as reações.
+
+---
+
+## Dados no Redis
+
+Cada reação usa duas chaves:
+
+| Chave                                         | Valor                  | Expira em |
+| --------------------------------------------- | ---------------------- | --------- |
+| `reactions::slug::tipo`                       | Contador da reação     | Nunca     |
+| `reactions::rate-limit::ip::slug::tipo`       | Marcador de "já reagiu" | 24 horas |
+
+O contador é um número incrementado a cada reação. O marcador existe só para impedir repetições: ele guarda a combinação IP, post e tipo de reação por 24 horas.
+
+---
+
+## A API
+
+### GET `/api/reactions/slug-do-post`
+
+Busca os três contadores de uma vez e responde com um objeto. Reações sem registro valem `0`:
+
+```json
+{ "like": 12, "fire": 3, "mind_blown": 0 }
+```
+
+### POST `/api/reactions/slug-do-post`
+
+Recebe o tipo da reação no corpo da requisição:
+
+```json
+{ "type": "fire" }
+```
+
+<Steps>
+  <Step title='Valida o tipo'>
+    Se o tipo não existir em `REACTION_CONFIG`, responde `400` com "Tipo de reação inválido."
+  </Step>
+
+  <Step title='Confere o limite'>
+    Se o marcador de rate limit já existe para aquele IP, post e tipo, responde `429` com "Você já reagiu com esse emoji recentemente."
+  </Step>
+
+  <Step title='Registra a reação'>
+    Incrementa o contador e grava o marcador com validade de 24 horas.
+  </Step>
+
+  <Step title='Responde com o total'>
+    Lê o contador atualizado e devolve o tipo e a nova contagem.
+  </Step>
+</Steps>
+
+O IP vem do primeiro valor do cabeçalho `x-forwarded-for` ou, na falta dele, de `x-real-ip`. Sem nenhum dos dois, todas as requisições são tratadas como o mesmo IP, `anonymous`.
+
+<Callout variant='tip' title='Testando localmente'>
+  Em desenvolvimento, todas as suas requisições partem do mesmo IP (localhost ou `anonymous`), então
+  a segunda reação do mesmo tipo recebe `429`. Para testar de novo, apague a chave
+  `reactions::rate-limit::ip::slug::tipo` correspondente no painel do Upstash.
+</Callout>
+
+---
+
+## O componente
+
+O `PostReactions` recebe o `slug` do post e funciona assim:
+
+- Ao montar, faz um `GET` para carregar as contagens.
+- Ao clicar, **atualiza a tela na hora** (atualização otimista) e só então envia o `POST`.
+- Se a resposta não for bem-sucedida, ou se a rede falhar, desfaz o incremento e libera o botão de novo.
+- Enquanto uma requisição está pendente, os botões ficam desabilitados.
+
+O estado "já reagi" do componente vale apenas enquanto a página está aberta. Ao recarregar, os botões voltam a ficar ativos, mas o servidor continua bloqueando a repetição por 24 horas, e a interface desfaz o incremento quando recebe o `429`.
+
+---
+
+## Adicionando um tipo de reação
+
+Edite `lib/reactions.ts`: acrescente o tipo em `REACTION_TYPES` e a configuração correspondente em `REACTION_CONFIG`.
+
+```ts title="lib/reactions.ts"
+export const REACTION_TYPES = ['like', 'fire', 'mind_blown', 'clap'] as const
+
+export const REACTION_CONFIG = {
+  like: { emoji: '❤️', label: 'Curtir' },
+  fire: { emoji: '🔥', label: 'Incrível' },
+  mind_blown: { emoji: '🤯', label: 'Surpreendente' },
+  clap: { emoji: '👏', label: 'Parabéns' },
+} as const satisfies ReactionConfig
+```
+
+O TypeScript acusa um erro se o tipo existir em uma lista e faltar na outra, e a API e o componente passam a usar o novo tipo automaticamente.
+
+---
+
+## Keepalive do Redis
+
+Bancos gratuitos de serviços como o Upstash podem ser pausados ou arquivados quando ficam sem uso. Para evitar isso, o projeto tem uma rota que escreve no Redis periodicamente, chamada por um cron da Vercel.
+
+O agendamento fica no `vercel.json`:
+
+```json title="vercel.json"
+{
+  "crons": [
+    {
+      "path": "/api/keepalive",
+      "schedule": "0 12 * * 1,4"
+    }
+  ]
+}
+```
+
+Isso significa **segundas e quintas, às 12:00 UTC**. Os crons da Vercel só rodam em deploys de produção.
+
+A rota `/api/keepalive`:
+
+- Exige o cabeçalho `Authorization: Bearer` com o valor de `CRON_SECRET`. Sem a variável configurada, **nenhuma** requisição é autorizada (a rota "falha fechada" e responde `401`).
+- Grava a data atual na chave `keepalive:last_run`, lê o valor de volta e o devolve, provando que a escrita foi persistida.
+- Em caso de erro, responde `500` com uma mensagem genérica; os detalhes ficam apenas nos logs.
+- Desativa o cache, para que cada chamada realmente alcance o Redis.
+
+Para testar manualmente em produção:
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" https://seu-dominio.com/api/keepalive
+```
+
+A resposta esperada é um JSON com a chave e a data gravada:
+
+```json
+{ "key": "keepalive:last_run", "value": "2026-10-25T12:00:00.000Z" }
+```
+
+---
+
+## Limitações conhecidas
+
+<Callout variant='warning' title='Não é à prova de abuso'>
+  O limite é por IP, então pessoas atrás do mesmo IP (empresa, rede móvel) compartilham a restrição,
+  e quem troca de IP pode reagir de novo. A checagem e o registro não são atômicos, de modo que
+  requisições simultâneas podem passar pelo limite. A API também não confere se o `slug` existe,
+  então é possível criar contadores para posts inexistentes.
+</Callout>
+
+Para um blog pessoal, esse nível de proteção costuma ser suficiente. Se virar um problema, os caminhos naturais são validar o `slug` contra a lista de posts e tornar a checagem atômica no Redis.
+
+---
+
+## Fim da série
+
+Você chegou ao fim do **Manual do Blog**. Para voltar ao começo, veja [Como o blog funciona](/blog/como-o-blog-funciona).

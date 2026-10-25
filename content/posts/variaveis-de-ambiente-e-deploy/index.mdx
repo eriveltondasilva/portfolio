@@ -1,0 +1,147 @@
+---
+slug: 'variaveis-de-ambiente-e-deploy'
+title: 'Variáveis de Ambiente e Deploy'
+description: 'Todas as variáveis de ambiente do projeto, quando cada uma é lida, como configurá-las localmente e na Vercel, e um checklist para publicar com segurança.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'deploy']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 4
+---
+
+Este é o quarto post da série **Manual do Blog**. Ele reúne em um só lugar as variáveis de ambiente que o projeto usa, explica quando cada uma é lida e traz um checklist de publicação.
+
+---
+
+## Variáveis do projeto
+
+O arquivo `.env.example` lista todas as variáveis, sem valores. Para começar, copie-o para `.env.local` e preencha:
+
+```bash title=".env.example"
+GITHUB_TOKEN=
+
+CRON_SECRET=
+
+NEXT_PUBLIC_SITE_URL=
+
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+| Variável                    | Usada por                                         | Lida em      | Sem ela                                    |
+| --------------------------- | ------------------------------------------------- | ------------ | ------------------------------------------ |
+| `GITHUB_TOKEN`              | Script `build:projects`                           | Build        | O script falha e o build não termina       |
+| `NEXT_PUBLIC_SITE_URL`      | Metadados, sitemap, OG image e botão de compartilhar | Build     | Usa `http://localhost:3000` como padrão    |
+| `UPSTASH_REDIS_REST_URL`    | Reações e keepalive                               | Execução     | Reações e keepalive deixam de funcionar    |
+| `UPSTASH_REDIS_REST_TOKEN`  | Reações e keepalive                               | Execução     | Reações e keepalive deixam de funcionar    |
+| `CRON_SECRET`               | Rota `/api/keepalive`                             | Execução     | A rota responde sempre `401`               |
+
+<Callout variant='warning' title='NEXT_PUBLIC_SITE_URL precisa de protocolo'>
+  O valor deve ser uma URL completa, como `https://meusite.com`. Sem o `https://`, o Next.js lança
+  `Invalid URL` ao montar os metadados. E, como variáveis com prefixo `NEXT_PUBLIC_` são embutidas no
+  código durante o build, alterar o valor exige um novo build.
+</Callout>
+
+---
+
+## Onde configurar
+
+<Tabs tabs={['Local', 'Vercel']}>
+  <Tab value='Local'>
+    Crie o arquivo `.env.local` na raiz do projeto com os valores. O Next.js só lê o arquivo na
+    inicialização, então reinicie o `bun dev` depois de qualquer alteração.
+
+    ```bash title=".env.local"
+    GITHUB_TOKEN=ghp_xxx
+    NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+    UPSTASH_REDIS_REST_TOKEN=xxx
+    CRON_SECRET=um-valor-longo-e-aleatorio
+    ```
+  </Tab>
+  <Tab value='Vercel'>
+    Cadastre as cinco variáveis em **Project Settings → Environment Variables** e faça um novo
+    deploy. Use a URL de produção em `NEXT_PUBLIC_SITE_URL`.
+
+    Quando `CRON_SECRET` existe no projeto, a Vercel envia automaticamente o cabeçalho
+    `Authorization: Bearer` com esse valor em cada chamada do cron.
+  </Tab>
+</Tabs>
+
+<Callout variant='danger' title='Cuidado'>
+  Arquivos `.env.local` não devem ir para o Git. Só o `.env.example`, sem valores, é versionado. Se
+  um token vazar, revogue-o no painel do provedor e gere outro.
+</Callout>
+
+---
+
+## O que roda no build
+
+O comando `bun run build` dispara o `prebuild` antes do `next build`. Isso significa que o build já faz, nesta ordem:
+
+<Steps>
+  <Step title='Valida e indexa o conteúdo'>
+    `build:blog` lê posts, autores e séries, aplica as [validações](/blog/como-o-blog-funciona#validações-no-build) e grava os índices.
+  </Step>
+
+  <Step title='Busca os projetos'>
+    `build:projects` consulta o GitHub com o `GITHUB_TOKEN` e grava o índice de projetos.
+  </Step>
+
+  <Step title='Compila o site'>
+    O `next build` gera as páginas estáticas, usando os índices recém-criados.
+  </Step>
+</Steps>
+
+Por isso, qualquer erro de conteúdo ou a falta do `GITHUB_TOKEN` interrompe o deploy antes de a versão nova ir ao ar. É um comportamento desejado: o site publicado nunca fica com conteúdo inválido.
+
+---
+
+## Checklist de publicação
+
+### Antes de publicar um post
+
+- [ ] Frontmatter completo e com `status: 'published'`
+- [ ] `description` com 10 a 300 caracteres e tags em kebab-case
+- [ ] Autor cadastrado em `authors/index.json` e série (se houver) em `series/index.json`
+- [ ] `bun run build:blog` roda sem erros
+- [ ] `bun run fix` não aponta problemas de tipos, lint ou formatação
+
+### Antes do primeiro deploy
+
+- [ ] As cinco variáveis cadastradas na plataforma de deploy
+- [ ] `NEXT_PUBLIC_SITE_URL` com `https://` e o domínio final
+- [ ] Banco do Upstash criado e as duas variáveis copiadas do painel
+- [ ] Cron registrado no `vercel.json` (veja [Reações e Redis](/blog/reacoes-e-redis#keepalive-do-redis))
+
+### Arquivando um post antigo
+
+Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O post sai das listagens e do sitemap, mas a URL continua funcionando com um banner de aviso.
+
+---
+
+## Problemas comuns
+
+<Accordion>
+  <AccordionItem title='Invalid URL em layout.tsx'>
+    `NEXT_PUBLIC_SITE_URL` está sem protocolo ou veio vazia. Defina-a como uma URL completa e
+    reinicie o servidor.
+  </AccordionItem>
+
+  <AccordionItem title='O build falha antes de compilar o site'>
+    Leia a mensagem do `prebuild`: ela indica o arquivo e o campo com problema (conteúdo inválido)
+    ou a ausência do `GITHUB_TOKEN`.
+  </AccordionItem>
+
+  <AccordionItem title='Mudei uma variável na Vercel e nada mudou'>
+    Variáveis só valem para deploys feitos depois da alteração. Gere um novo deploy, e lembre-se de
+    que as `NEXT_PUBLIC_` são embutidas durante o build.
+  </AccordionItem>
+</Accordion>
+
+---
+
+## Próximo passo
+
+O último post da série mostra como as reações dependem do Redis: [Reações e Redis](/blog/reacoes-e-redis).

@@ -2,7 +2,7 @@
   {
     "slug": "manual-do-blog",
     "title": "Manual do Blog",
-    "description": "Guia de referência para escrever, publicar e manter conteúdo neste blog: componentes MDX, frontmatter, séries e projetos.",
+    "description": "Guia de referência para escrever, publicar e manter este blog: estrutura de conteúdo, componentes MDX, projetos, deploy e reações.",
     "publishedAt": "2026-10-25",
     "status": "complete"
   }
