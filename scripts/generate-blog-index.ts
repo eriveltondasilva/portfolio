@@ -1,39 +1,48 @@
-import { dirname, basename, join } from 'node:path';
+import { readdir } from 'node:fs/promises';
+import { join } from 'node:path';
 
-import matter from 'gray-matter';
 import getReadingTime from 'reading-time';
 
-import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas';
+import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
 import {
-  AUTHORS_SOURCE_FILE,
+  AUTHORS_INDEX_OUTPUT,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
-  PostStatus,
-  SERIES_SOURCE_FILE,
   SERIES_INDEX_OUTPUT,
-} from '@/lib/constants';
+} from '@/lib/paths';
+import { postSchema } from '@/lib/schemas';
 
+import { runScript, sortByDateDesc } from './utils';
 import {
-  writeJson,
-  BuildError,
-  readJson,
+  formatZodError,
   getErrMessage,
-  Logger,
-  sortByDateDesc,
-} from './utils';
+  resolveAll,
+  throwIfErrors,
+} from './utils/errors';
+import { log } from './utils/logger';
+import { readAuthors, readSeries } from './utils/content';
+import { COVER_GLOB, inspectPostAssets } from './utils/post-assets';
 import {
-  assertAuthorsExist,
-  assertSeriesExist,
-  assertUniqueSeriesOrder,
-  assertUniqueSlugs,
-} from './validations';
+  checkAuthorsExist,
+  checkSeriesExist,
+  checkUniqueSeriesOrder,
+  checkUniqueSlugs,
+  getPostMetaPath,
+} from './utils/validations';
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types';
+import { readYaml, writeJson } from './utils/files';
 
 type SeriesPost = PostIndex & { series: string; order: number };
 
+interface ParsedPost {
+  post: PostIndex;
+  warnings: string[];
+}
+
 interface PostsData {
   posts: PostIndex[];
+  warnings: string[];
   stats: {
     scanned: number;
     published: number;
@@ -43,187 +52,158 @@ interface PostsData {
   };
 }
 
-const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}';
-const log = new Logger();
-
 // # Readers
 
-async function readAuthors(): Promise<Set<string>> {
-  const data = await readJson(AUTHORS_SOURCE_FILE);
-  const result = authorSchema.array().safeParse(data);
+async function listPostFolders(): Promise<string[]> {
+  const entries = await readdir(POSTS_DIR, { withFileTypes: true });
 
-  if (!result.success) {
-    const issues = result.error.issues
-      .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
-      .join('\n');
-
-    throw new BuildError('authors', [`${AUTHORS_SOURCE_FILE}\n\n${issues}`]);
-  }
-
-  assertUniqueSlugs(
-    'authors',
-    result.data.map((author) => ({
-      slug: author.slug,
-      source: AUTHORS_SOURCE_FILE,
-    })),
-  );
-
-  return new Set(result.data.map((author) => author.slug));
+  return entries
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
+    .map((entry) => entry.name)
+    .toSorted();
 }
 
-async function readSeries(): Promise<Map<string, Series>> {
-  const data = await readJson(SERIES_SOURCE_FILE);
-  const result = seriesSchema.array().safeParse(data);
+/** Returns `null` for drafts, which are intentionally left out of the index. */
+async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
+  const folderPath = join(POSTS_DIR, folder);
+  const metaPath = join(folderPath, POST_META_FILE);
+  const contentPath = join(folderPath, POST_CONTENT_FILE);
 
-  if (!result.success) {
-    const issues = result.error.issues
-      .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
-      .join('\n');
+  // A folder missing one of the files must fail loudly instead of silently vanishing from the site.
+  const files = [
+    { name: POST_META_FILE, path: metaPath },
+    { name: POST_CONTENT_FILE, path: contentPath },
+  ];
+  const exists = await Promise.all(
+    files.map(({ path }) => Bun.file(path).exists()),
+  );
+  const missing = files
+    .filter((_, index) => !exists[index])
+    .map(({ name }) => name);
 
-    throw new BuildError('series', [`${SERIES_SOURCE_FILE}\n\n${issues}`]);
+  if (missing.length > 0) {
+    throw new Error(
+      `${folderPath}\n\n  Missing file(s): ${missing.join(', ')}`,
+    );
   }
 
-  assertUniqueSlugs(
-    'series',
-    result.data.map((series) => ({
-      slug: series.slug,
-      source: SERIES_SOURCE_FILE,
-    })),
-  );
+  const [meta, content] = await Promise.all([
+    readYaml(metaPath),
+    Bun.file(contentPath).text(),
+  ]);
 
-  return new Map(result.data.map((series) => [series.slug, series]));
+  // Leftover from before the metadata moved out of the MDX; it would render as page content.
+  if (content.trimStart().startsWith('---')) {
+    throw new Error(
+      `${contentPath}\n\n  Frontmatter found in MDX. Move it to ${POST_META_FILE}.`,
+    );
+  }
+
+  const result = postSchema.safeParse(meta);
+
+  if (!result.success) throw new Error(formatZodError(metaPath, result.error));
+  if (result.data.status === PostStatus.DRAFT) return null;
+
+  const assets = await inspectPostAssets(folderPath, content);
+
+  if (assets.errors.length > 0) {
+    const lines = assets.errors.map((error) => `  - ${error}`).join('\n');
+    throw new Error(`${folderPath}\n\n${lines}`);
+  }
+
+  const [coverFile = null] = new Bun.Glob(COVER_GLOB).scanSync({
+    cwd: folderPath,
+  });
+
+  return {
+    post: {
+      ...result.data,
+      folder,
+      coverFile,
+      readingTime: Math.ceil(getReadingTime(content).minutes),
+    },
+    warnings: assets.warnings.map((warning) => `${folder}: ${warning}`),
+  };
 }
 
 async function readPosts(): Promise<PostsData> {
-  const glob = new Bun.Glob('*/index.mdx');
-  const files = Array.from(glob.scanSync({ cwd: POSTS_DIR, absolute: true }));
-
+  const folders = await listPostFolders();
   const results = await Promise.allSettled(
-    files.map(async (file) => {
-      const raw = await Bun.file(file).text();
-      const { data: frontmatter, content } = matter(raw);
-
-      const { success, data, error } = postSchema.safeParse(frontmatter);
-
-      if (!success) {
-        const issues = error.issues
-          .map(({ path, message }) => `  - ${path.join('.')}: ${message}`)
-          .join('\n');
-
-        throw new Error(`${file}\n\n${issues}\n`);
-      }
-
-      if (data.status === PostStatus.DRAFT) return;
-
-      const postFolder = dirname(file);
-      const folder = basename(postFolder);
-
-      const coverGlob = new Bun.Glob(COVER_GLOB);
-      const [coverFile = null] = coverGlob.scanSync({ cwd: postFolder });
-
-      const readingTime = Math.ceil(getReadingTime(content).minutes);
-
-      return {
-        ...data,
-        folder,
-        coverFile,
-        readingTime,
-      } satisfies PostIndex;
-    }),
+    folders.map((folder) => parsePostFolder(folder)),
   );
 
-  const errors = results
-    .filter(
-      (result): result is PromiseRejectedResult => result.status === 'rejected',
-    )
-    .map(({ reason }) => getErrMessage(reason));
-
-  if (errors.length > 0) throw new BuildError('posts', errors);
-
-  const fulfilledResults = results.filter(
-    (result): result is PromiseFulfilledResult<PostIndex> =>
-      result.status === 'fulfilled' && result.value !== null,
-  );
-
-  assertUniqueSlugs(
+  throwIfErrors(
     'posts',
-    fulfilledResults.map(({ value: post }) => ({
-      slug: post.slug,
-      source: join(process.cwd(), 'content/posts', post.folder, 'index.mdx'),
-    })),
+    results.flatMap((result) =>
+      result.status === 'rejected' ? [getErrMessage(result.reason)] : [],
+    ),
   );
 
-  const posts = fulfilledResults.map(({ value }) => value);
+  const parsed = results.flatMap((result) =>
+    result.status === 'fulfilled' && result.value ? [result.value] : [],
+  );
+  const posts = parsed.map(({ post }) => post);
 
-  const publishedPosts = posts.filter((p) => p.status === PostStatus.PUBLISHED);
-  const archivedCount = posts.filter(
-    (p) => p.status === PostStatus.ARCHIVED,
-  ).length;
+  throwIfErrors(
+    'posts',
+    checkUniqueSlugs(
+      posts.map((post) => ({ slug: post.slug, source: getPostMetaPath(post) })),
+    ),
+  );
+
+  const published = posts.filter(
+    (post) => post.status === PostStatus.PUBLISHED,
+  );
 
   return {
     posts,
+    warnings: parsed.flatMap(({ warnings }) => warnings),
     stats: {
-      scanned: files.length,
-      published: publishedPosts.length,
-      archived: archivedCount,
-      drafts: files.length - fulfilledResults.length,
-      withCover: publishedPosts.filter((p) => p.coverFile !== null).length,
+      scanned: folders.length,
+      published: published.length,
+      archived: posts.filter((post) => post.status === PostStatus.ARCHIVED)
+        .length,
+      drafts: folders.length - posts.length,
+      withCover: published.filter((post) => post.coverFile !== null).length,
     },
   };
 }
 
 // # Builders
 
-async function buildPostsIndex(posts: PostIndex[]): Promise<void> {
-  await writeJson(POSTS_INDEX_OUTPUT, sortByDateDesc(posts));
-}
-
-async function buildSeriesIndex(
-  seriesMap: Map<string, Series>,
-  posts: PostIndex[],
-): Promise<SeriesIndex[]> {
-  const filteredPosts = posts.filter(
+function buildSeriesIndex(
+  series: readonly Series[],
+  posts: readonly PostIndex[],
+): SeriesIndex[] {
+  const seriesPosts = posts.filter(
     (post): post is SeriesPost =>
       post.series !== undefined && post.order !== undefined,
   );
-  const postsBySeries = Object.groupBy(filteredPosts, (post) => post.series);
+  const postsBySeries = Object.groupBy(seriesPosts, (post) => post.series);
 
-  const seriesWithPosts: SeriesIndex[] = sortByDateDesc(
-    Array.from(seriesMap.values()),
-  ).map((series) => {
-    const relatedPosts: SeriesPostRef[] = (postsBySeries[series.slug] ?? [])
+  return sortByDateDesc(series).map((item) => ({
+    ...item,
+    posts: (postsBySeries[item.slug] ?? [])
       .toSorted((a, b) => a.order - b.order)
-      .map(({ slug, title, order }) => ({ slug, title, order }));
-
-    return { ...series, posts: relatedPosts };
-  });
-
-  await writeJson(SERIES_INDEX_OUTPUT, seriesWithPosts);
-
-  return seriesWithPosts;
+      .map(({ slug, title, order }): SeriesPostRef => ({ slug, title, order })),
+  }));
 }
 
 // # Main
 
 async function main(): Promise<void> {
-  const startedAt = performance.now();
-
-  log.divider();
-  console.info('⏳ Generating blog indices...');
-
   // ---------------------------------------------------------------------------
 
   log.section('Reading content');
 
-  const [authors, series, postsData] = await Promise.all([
+  const [authors, series, { posts, warnings, stats }] = await resolveAll(
     readAuthors(),
     readSeries(),
     readPosts(),
-  ]);
+  );
 
-  const { posts, stats } = postsData;
-  log.ok('authors:', `${authors.size} loaded`);
-  log.ok('series:', `${series.size} loaded`);
+  log.ok('authors:', `${authors.length} loaded`);
+  log.ok('series:', `${series.length} loaded`);
   log.ok('posts:', `${stats.published} published of ${stats.scanned} scanned`);
 
   if (stats.archived > 0) log.skip('archived:', `${stats.archived} archived`);
@@ -239,21 +219,28 @@ async function main(): Promise<void> {
 
   log.section('Validating');
 
-  assertSeriesExist(posts, new Set(series.keys()));
-  assertUniqueSeriesOrder(posts);
-  assertAuthorsExist(posts, authors);
+  throwIfErrors('posts', [
+    ...checkSeriesExist(posts, new Set(series.map(({ slug }) => slug))),
+    ...checkUniqueSeriesOrder(posts),
+    ...checkAuthorsExist(posts, new Set(authors.map(({ slug }) => slug))),
+  ]);
 
-  if (series.size > 0)
+  if (series.length > 0)
     log.ok('series exist:', 'all referenced series are defined');
-  if (series.size > 0) log.ok('series order:', 'all posts have unique order');
-  if (authors.size > 0)
+  if (series.length > 0) log.ok('series order:', 'all posts have unique order');
+  if (authors.length > 0)
     log.ok('authors exist:', 'all referenced authors are defined');
+  log.ok('assets:', 'folder structure, image names and references are valid');
 
-  const seriesPosts = posts.filter((post) => post.series !== undefined);
+  for (const warning of warnings) log.skip('warning:', warning);
 
-  if (seriesPosts.length > 0) {
+  const linkedToSeries = posts.filter(
+    (post) => post.series !== undefined,
+  ).length;
+
+  if (linkedToSeries > 0) {
     log.detail(
-      `${seriesPosts.length} of ${stats.published} post(s) linked to series`,
+      `${linkedToSeries} of ${stats.published} post(s) linked to series`,
     );
   }
 
@@ -261,26 +248,22 @@ async function main(): Promise<void> {
 
   log.section('Writing indices');
 
-  const [seriesWithPosts] = await Promise.all([
-    buildSeriesIndex(series, posts),
-    buildPostsIndex(posts),
+  const seriesIndex = buildSeriesIndex(series, posts);
+
+  await Promise.all([
+    writeJson(AUTHORS_INDEX_OUTPUT, authors),
+    writeJson(POSTS_INDEX_OUTPUT, sortByDateDesc(posts)),
+    writeJson(SERIES_INDEX_OUTPUT, seriesIndex),
   ]);
 
+  log.ok('authors index:', AUTHORS_INDEX_OUTPUT);
   log.ok('posts index:', POSTS_INDEX_OUTPUT);
   log.ok('series index:', SERIES_INDEX_OUTPUT);
 
-  for (const seriesData of seriesWithPosts) {
-    if (seriesData.posts.length === 0) continue;
-    log.detail(`${seriesData.slug}  (${seriesData.posts.length} posts)`);
+  for (const { slug, posts: seriesPostRefs } of seriesIndex) {
+    if (seriesPostRefs.length === 0) continue;
+    log.detail(`${slug}  (${seriesPostRefs.length} posts)`);
   }
-
-  // ---------------------------------------------------------------------------
-
-  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`);
-  log.divider();
 }
 
-main().catch((error) => {
-  log.failure(error);
-  process.exit(1);
-});
+await runScript('Generating blog indices', main);

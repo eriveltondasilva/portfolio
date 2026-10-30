@@ -1,119 +1,146 @@
 import { Octokit } from '@octokit/rest';
 
-import { PROJECTS_INDEX_OUTPUT, Topics } from '@/lib/constants';
-import { getPrimaryAuthor } from '@/lib/blog/authors';
+import { GithubTopic } from '@/lib/constants';
+import { getUrlPathname } from '@/lib/format';
+import { PROJECTS_INDEX_OUTPUT } from '@/lib/paths';
+import { projectSchema } from '@/lib/schemas';
+
+import { runScript } from './utils';
+import { readPrimaryAuthor } from './utils/content';
 import {
-  getUrlPathname,
+  filterProjectTags,
   formatProjectName,
   getProjectStatus,
-  filterProjectTags,
-} from '@/lib';
+  toProjectSlug,
+} from './utils/github';
+import { checkUniqueSlugs } from './utils/validations';
 
-import { Logger, writeJson } from './utils';
-
-import type { Project } from '@/types';
-
-const log = new Logger();
+import type { GithubRepo, Project } from '@/types';
+import { log } from './utils/logger';
+import { formatZodError, throwIfErrors } from './utils/errors';
+import { writeJson } from './utils/files';
 
 // # Fetchers
 
-async function fetchPortfolioProjects(): Promise<Project[]> {
+async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const token = process.env['GITHUB_TOKEN'];
-  const author = getPrimaryAuthor();
-  const githubUsername = getUrlPathname(author.socials.github);
 
-  if (!token) {
-    throw new Error(
-      'GITHUB_TOKEN is not set. Create a token at https://github.com/settings/tokens and add it to your .env.local',
+  // The token only raises the rate limit, so a missing one must not break local builds.
+  if (!token)
+    log.skip(
+      'token:',
+      'GITHUB_TOKEN not set, using the unauthenticated rate limit',
+    );
+
+  const octokit = new Octokit(token ? { auth: token } : {});
+  log.detail(`Fetching repos for @${username}...`);
+
+  // listForUser only returns public repos; paginate avoids silently stopping at 100.
+  return octokit.paginate(octokit.repos.listForUser, {
+    username,
+    per_page: 100,
+  });
+}
+
+// # Mappers
+
+function selectPortfolioRepos(repos: readonly GithubRepo[]): GithubRepo[] {
+  return repos.filter((repo) => repo.topics?.includes(GithubTopic.INCLUDE));
+}
+
+function toProject(repo: GithubRepo): Project {
+  return {
+    slug: toProjectSlug(repo.name),
+    name: formatProjectName(repo.name),
+    description: repo.description ?? 'Sem descrição.',
+    repository: repo.html_url,
+    // GitHub may return an empty string when the homepage was cleared.
+    url: repo.homepage || undefined,
+    tags: filterProjectTags(repo.topics),
+    status: getProjectStatus(repo),
+    featured: repo.topics?.includes(GithubTopic.FEATURED) ?? false,
+  };
+}
+
+function validateProjects(candidates: readonly Project[]): Project[] {
+  const errors: string[] = [];
+
+  const projects = candidates.flatMap((candidate) => {
+    const result = projectSchema.safeParse(candidate);
+
+    if (result.success) return [result.data];
+
+    errors.push(formatZodError(candidate.repository, result.error));
+    return [];
+  });
+
+  // Slugs are derived from repo names, so "My_App" and "my-app" would collide.
+  errors.push(
+    ...checkUniqueSlugs(
+      projects.map(({ slug, repository }) => ({ slug, source: repository })),
+    ),
+  );
+
+  throwIfErrors('projects', errors);
+
+  return projects;
+}
+
+// # Logging
+
+function logSelection(
+  repos: readonly GithubRepo[],
+  portfolioRepos: readonly GithubRepo[],
+): void {
+  log.ok(
+    'repos fetched:',
+    `${repos.length} public - ${portfolioRepos.length} included`,
+  );
+
+  const withoutTopic = repos.length - portfolioRepos.length;
+  if (withoutTopic > 0) {
+    log.skip(
+      'no topic:',
+      `${withoutTopic} excluded (missing "${GithubTopic.INCLUDE}")`,
     );
   }
 
-  const octokit = new Octokit({ auth: token });
-  log.detail(`Fetching repos for @${githubUsername}...`);
-
-  const { data: repos } = await octokit.repos.listForUser({
-    username: githubUsername as string,
-    type: 'owner',
-    per_page: 100,
-    sort: 'full_name',
-  });
-
-  const privateCount = repos.filter((repo) => repo.private).length;
-  const portfolioRepos = repos.filter(
-    (repo) => !repo.private && repo.topics?.includes(Topics.INCLUDE),
-  );
-
-  log.ok(
-    'repos fetched:',
-    `${repos.length} total - ${portfolioRepos.length} included`,
-  );
-  if (privateCount > 0) log.skip('private:', `${privateCount} excluded`);
-
-  const withoutTopic = repos.length - privateCount - portfolioRepos.length;
-  if (withoutTopic > 0)
-    log.skip(
-      'no topic:',
-      `${withoutTopic} excluded (missing "${Topics.INCLUDE}")`,
-    );
-
   const featuredCount = portfolioRepos.filter((repo) =>
-    repo.topics?.includes(Topics.FEATURED),
+    repo.topics?.includes(GithubTopic.FEATURED),
   ).length;
   const wipCount = portfolioRepos.filter((repo) =>
-    repo.topics?.includes(Topics.WIP),
+    repo.topics?.includes(GithubTopic.WIP),
   ).length;
   const archivedCount = portfolioRepos.filter((repo) => repo.archived).length;
 
   if (featuredCount > 0) log.detail(`${featuredCount} featured`);
   if (wipCount > 0) log.detail(`${wipCount} wip`);
   if (archivedCount > 0)
-    log.skip('archived', `${archivedCount} excluded from active`);
-
-  return portfolioRepos.map((repo) => ({
-    slug: repo.name,
-    name: formatProjectName(repo),
-    description: repo.description ?? 'Sem descrição.',
-    repository: repo.html_url,
-    url: repo.homepage ?? undefined,
-    tags: filterProjectTags(repo),
-    status: getProjectStatus(repo),
-    featured: repo.topics?.includes(Topics.FEATURED) ?? false,
-  }));
-}
-
-// # Builders
-
-async function buildProjectsIndex(projects: Project[]): Promise<void> {
-  await writeJson(PROJECTS_INDEX_OUTPUT, projects);
+    log.detail(`${archivedCount} archived (kept with archived status)`);
 }
 
 // # Main
 
 async function main(): Promise<void> {
-  const startedAt = performance.now();
-
-  log.divider();
-  console.info('⏳ Generating projects index...');
-
-  // -- Fetch ------------------------------------------------------------------
+  // Read from the YAML source: the generated authors index may not exist yet at this point.
+  const author = await readPrimaryAuthor();
+  const username = getUrlPathname(author.socials.github);
 
   log.section('Fetching from GitHub');
-  const projects = await fetchPortfolioProjects();
 
-  // -- Write  -----------------------------------------------------------------
+  const repos = await fetchPublicRepos(username);
+  const portfolioRepos = selectPortfolioRepos(repos);
+  logSelection(repos, portfolioRepos);
+
+  log.section('Validating');
+
+  const projects = validateProjects(portfolioRepos.map(toProject));
+  log.ok('projects:', `${projects.length} valid`);
 
   log.section('Writing index');
 
-  await buildProjectsIndex(projects);
+  await writeJson(PROJECTS_INDEX_OUTPUT, projects);
   log.ok('projects index:', PROJECTS_INDEX_OUTPUT);
-
-  // -- Done  ------------------------------------------------------------------
-
-  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`);
-  log.divider();
 }
 
-main().catch((error) => {
-  log.failure(error);
-  process.exit(1);
-});
+await runScript('Generating projects index', main);

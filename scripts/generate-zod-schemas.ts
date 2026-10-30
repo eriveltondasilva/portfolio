@@ -2,54 +2,47 @@ import { z } from 'zod';
 
 import {
   AUTHORS_SCHEMA_OUTPUT,
-  POSTS_SCHEMA_OUTPUT,
+  POST_SCHEMA_OUTPUT,
   SERIES_SCHEMA_OUTPUT,
-} from '@/lib/constants';
+} from '@/lib/paths';
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas';
 
-import { Logger, writeJson } from './utils';
+import { runScript } from './utils';
+import { log } from './utils/logger';
+import { writeJson } from './utils/files';
 
-const log = new Logger();
+const targets = [
+  {
+    name: 'series',
+    schema: seriesSchema.array(),
+    output: SERIES_SCHEMA_OUTPUT,
+  },
+  {
+    name: 'authors',
+    schema: authorSchema.array(),
+    output: AUTHORS_SCHEMA_OUTPUT,
+  },
+  { name: 'post', schema: postSchema, output: POST_SCHEMA_OUTPUT },
+] satisfies ReadonlyArray<{ name: string; schema: z.ZodType; output: string }>;
 
 async function main(): Promise<void> {
-  const startedAt = performance.now();
-
-  log.divider();
-  console.info('⏳ Generating JSON Schemas...');
-
-  // -- Generate ---------------------------------------------------------------
-
   log.section('Generating schemas');
 
-  const seriesJsonSchema = z.toJSONSchema(seriesSchema.array());
-  const authorsJsonSchema = z.toJSONSchema(authorSchema.array());
-  const postsJsonSchema = z.toJSONSchema(postSchema.array());
+  const jsonSchemas = targets.map(({ name, schema, output }) => {
+    // These schemas validate what authors write, so fields with `.default()` must stay optional.
+    const jsonSchema = z.toJSONSchema(schema, { io: 'input' });
+    log.ok(`${name} schema`);
 
-  log.ok('series schema');
-  log.ok('authors schema');
-  log.ok('posts schema');
-
-  // -- Write ------------------------------------------------------------------
+    return { output, jsonSchema };
+  });
 
   log.section('Writing files');
 
-  await Promise.all([
-    writeJson(SERIES_SCHEMA_OUTPUT, seriesJsonSchema),
-    writeJson(AUTHORS_SCHEMA_OUTPUT, authorsJsonSchema),
-    writeJson(POSTS_SCHEMA_OUTPUT, postsJsonSchema),
-  ]);
+  await Promise.all(
+    jsonSchemas.map(({ output, jsonSchema }) => writeJson(output, jsonSchema)),
+  );
 
-  log.ok(SERIES_SCHEMA_OUTPUT);
-  log.ok(AUTHORS_SCHEMA_OUTPUT);
-  log.ok(POSTS_SCHEMA_OUTPUT);
-
-  // -- Done -------------------------------------------------------------------
-
-  log.success(`✅ Done in ${(performance.now() - startedAt).toFixed(0)}ms`);
-  log.divider();
+  for (const { output } of jsonSchemas) log.ok(output);
 }
 
-main().catch((error) => {
-  log.failure(error);
-  process.exit(1);
-});
+await runScript('Generating JSON Schemas', main);
