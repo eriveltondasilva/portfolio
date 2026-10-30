@@ -2,7 +2,7 @@
 import { ImageResponse } from 'next/og';
 
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
-import { getPostsBySeries } from '@/lib/blog/posts';
+import { getSeriesPosts } from '@/lib/blog/posts';
 import { BASE_URL, SeriesStatus } from '@/lib/constants';
 import { formatDate } from '@/lib';
 
@@ -47,7 +47,7 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
 
   if (!series) return new ImageResponse(<div>Not found</div>, size);
 
-  const posts = getPostsBySeries(slug);
+  const posts = getSeriesPosts(slug);
   const postCount = posts.length;
   const style = statusStyle[series.status];
   const label = statusLabel[series.status];

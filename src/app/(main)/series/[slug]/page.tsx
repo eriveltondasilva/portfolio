@@ -11,7 +11,7 @@ import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/post-card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/separator';
-import { getPostsBySeries } from '@/lib/blog/posts';
+import { getSeriesPosts } from '@/lib/blog/posts';
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
 import { SeriesStatus } from '@/lib/constants';
 import { formatDate } from '@/lib';
@@ -88,7 +88,7 @@ export default async function SeriesDetailPage({
 
   if (!series) return notFound();
 
-  const posts = getPostsBySeries(slug);
+  const posts = getSeriesPosts(slug);
   const hasPosts = posts.length > 0;
   const postCount = posts.length;
 

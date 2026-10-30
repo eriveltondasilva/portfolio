@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { Redis } from '@upstash/redis';
+
+import { redis } from '@/lib/redis';
 
 // Prevents Next.js from caching the response, so every cron call really hits Redis
 export const dynamic = 'force-dynamic';
@@ -16,10 +17,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const redis = Redis.fromEnv();
-    const executedAt = new Date().toISOString();
-
-    await redis.set(KEEPALIVE_KEY, executedAt);
+    await redis.set(KEEPALIVE_KEY, new Date().toISOString());
 
     // Read back so the response proves the write was persisted, not just sent
     const storedValue = await redis.get<string>(KEEPALIVE_KEY);

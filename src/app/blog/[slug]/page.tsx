@@ -22,8 +22,8 @@ import {
   getAdjacentPosts,
   getAllPostSlugs,
   getPostBySlug,
-  getPostWithContent,
 } from '@/lib/blog/posts';
+import { getPostWithContent } from '@/lib/blog/post-content';
 
 import type { Metadata } from 'next';
 
