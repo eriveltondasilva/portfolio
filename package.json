@@ -36,7 +36,7 @@
     "5xxx": "",
     "typecheck": "tsc --noEmit",
     "typegen": "bun run --bun next typegen",
-    "fix": "bun run types && bun run lint:fix && bun run fmt:fix"
+    "fix": "bun run typecheck && bun run lint:fix && bun run fmt:fix"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
