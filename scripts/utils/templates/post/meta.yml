@@ -1,0 +1,8 @@
+slug: {{slug}}
+title: {{title}}
+description: {{description}}
+tags: {{tags}}
+authors: {{authors}}
+publishedAt: {{publishedAt}}
+status: draft
+{{series}}
