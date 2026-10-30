@@ -1,14 +1,13 @@
-import { z } from 'zod';
+import type { Octokit } from '@octokit/rest';
+import type { MDXContent } from 'mdx/types';
+import type { z } from 'zod';
 
-import {
+import type {
   authorSchema,
   postSchema,
   projectSchema,
   seriesSchema,
 } from '@/lib/schemas';
-
-import type { Octokit } from '@octokit/rest';
-import type { MDXContent } from 'mdx/types';
 
 export type Series = z.infer<typeof seriesSchema>;
 export type Post = z.infer<typeof postSchema>;
