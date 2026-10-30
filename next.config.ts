@@ -2,11 +2,11 @@ import createMDX from '@next/mdx';
 // import { transformerNotationDiff, transformerNotationFocus } from '@shikijs/transformers'
 
 import type { NextConfig } from 'next';
-import type { Options as PrettyCodeOptions } from 'rehype-pretty-code';
 import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings';
+import type { Options as PrettyCodeOptions } from 'rehype-pretty-code';
 import type { Options as RemarkGfmOptions } from 'remark-gfm';
 
-// ###
+// ── Options ──────────────────────────
 
 const remarkGFMOptions: RemarkGfmOptions = {
   singleTilde: false,
@@ -26,7 +26,7 @@ const prettyCodeOptions: PrettyCodeOptions = {
   bypassInlineCode: true,
 };
 
-// ###
+// ── Config ───────────────────────────
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -45,11 +45,7 @@ const nextConfig: NextConfig = {
 
 const withMDX = createMDX({
   options: {
-    remarkPlugins: [
-      'remark-frontmatter',
-      ['remark-gfm', remarkGFMOptions],
-      'remark-gemoji',
-    ],
+    remarkPlugins: [['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
     rehypePlugins: [
       'rehype-slug',
       ['rehype-autolink-headings', autolinkHeadingsOptions],
