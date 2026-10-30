@@ -1,0 +1,10 @@
+slug: 'mdx-reference'
+title: 'Referência de Componentes MDX'
+description: 'Manual de todos os componentes e recursos de escrita disponíveis nos posts deste blog: Markdown, código, callouts, tabs, imagens e embeds.'
+publishedAt: '2026-04-03'
+updatedAt: '2026-10-25'
+tags: ['meta', 'mdx']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 2

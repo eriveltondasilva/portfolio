@@ -1,0 +1,9 @@
+slug: 'reacoes-e-redis'
+title: 'Reações e Redis'
+description: 'Como funcionam as reações dos posts: contadores no Redis (Upstash), limite por IP, a API de reações, o componente do front-end e o cron de keepalive.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'redis']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 5

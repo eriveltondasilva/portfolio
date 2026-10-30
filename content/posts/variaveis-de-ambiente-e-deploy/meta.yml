@@ -1,0 +1,9 @@
+slug: 'variaveis-de-ambiente-e-deploy'
+title: 'Variáveis de Ambiente e Deploy'
+description: 'Todas as variáveis de ambiente do projeto, quando cada uma é lida, como configurá-las localmente e na Vercel, e um checklist para publicar com segurança.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'deploy']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 4

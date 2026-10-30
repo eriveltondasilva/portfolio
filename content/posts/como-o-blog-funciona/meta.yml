@@ -1,0 +1,9 @@
+slug: 'como-o-blog-funciona'
+title: 'Como o Blog Funciona: Frontmatter, Status e Séries'
+description: 'Guia dos recursos do blog: estrutura de conteúdo, frontmatter, status de publicação, capa, séries, autores e validações executadas no build.'
+publishedAt: '2026-10-25'
+tags: ['meta', 'blog']
+status: 'published'
+authors: ['erivelton']
+series: 'manual-do-blog'
+order: 1

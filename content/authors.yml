@@ -1,0 +1,26 @@
+# Authors: a list of authors for this blog, each author has a unique slug, name, bio, skills, social media links.
+---
+- slug: erivelton
+  name: Erivelton Silva
+  bio: Desenvolvedor Frontend apaixonado por criar experiências digitais incríveis.
+  skills:
+    - React
+    - Next.js
+    - TypeScript
+    - Laravel
+  socials:
+    github: https://github.com/eriveltondasilva
+    linkedin: https://www.linkedin.com/in/eriveltondasilva
+    twitter: https://x.com/erivelton_silv4
+
+- slug: maria
+  name: Maria Silva
+  bio: Desenvolvedora Frontend apaixonada por criar experiências digitais incríveis.
+  skills:
+    - React
+    - Next.js
+    - TypeScript
+  socials:
+    github: https://github.com/mariasilva
+    linkedin: https://www.linkedin.com/in/mariasilva
+    twitter: https://x.com/maria_silva

@@ -1,0 +1,7 @@
+# Series: A list of series for this blog, each series has a unique slug, title, description, published date, and status.
+---
+- slug: 'manual-do-blog'
+  title: 'Manual do Blog'
+  description: 'A guide to writing, publishing, and maintaining this blog: content structure, MDX components, projects, deployment, and reactions.'
+  publishedAt: '2026-10-25'
+  status: 'complete'
