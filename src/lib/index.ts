@@ -1,27 +1,8 @@
-import GithubSlugger from 'github-slugger';
-
 import { GithubTopic, LOCALE, ProjectStatus } from '@/lib/constants';
 
-import type { Author, GithubRepo, Heading } from '@/types';
+import type { Author, GithubRepo } from '@/types';
 
 const UTILITY_TOPICS = new Set(Object.values(GithubTopic));
-
-export function extractHeadings(rawContent: string): Heading[] {
-  const slugger = new GithubSlugger();
-  const headingRegex = /^(#{1,6})\s+(.+)$/gm;
-  const headings: Heading[] = [];
-
-  for (const [, hashes, rawText] of rawContent.matchAll(headingRegex)) {
-    const text = rawText!.trim();
-    headings.push({
-      id: slugger.slug(text),
-      text,
-      level: hashes!.length,
-    });
-  }
-
-  return headings;
-}
 
 /** Returns the URL path without leading/trailing slashes (e.g. "in/username"). */
 export function getUrlPathname(url: string): string {
@@ -82,4 +63,10 @@ export function createListFormatter() {
     style: 'long',
     type: 'conjunction',
   });
+}
+
+const FENCED_CODE_REGEX = /^(```|~~~)[\s\S]*?^\1/gm;
+
+export function stripFencedCode(content: string): string {
+  return content.replace(FENCED_CODE_REGEX, '');
 }

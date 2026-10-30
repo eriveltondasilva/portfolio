@@ -1,10 +1,10 @@
 import { ExternalLinkIcon, FolderGit2Icon, StarIcon } from 'lucide-react';
 import Image from 'next/image';
 
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { ProjectStatus } from '@/lib/constants';
 import GithubIcon from '@/assets/github.svg';
+import { Badge } from '@/components/ui/badge';
+import { ProjectStatus } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
 

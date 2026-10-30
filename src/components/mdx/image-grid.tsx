@@ -2,14 +2,14 @@
 
 import NextImage from 'next/image';
 
+import { ImageGridProvider, useImageGrid } from '@/contexts/image-grid-context';
 import { cn } from '@/lib/utils';
-import { useImageGrid, ImageGridProvider } from '@/contexts/image-grid-context';
 
 import { Figure } from './figure';
 
-import type { ComponentProps } from 'react';
-import type { ImageProps } from 'next/image';
 import type { GridColumns } from '@/types';
+import type { ImageProps } from 'next/image';
+import type { ComponentProps } from 'react';
 
 const gridColsMap = {
   2: 'grid-cols-2',

@@ -2,8 +2,8 @@ import { CalendarIcon, FolderIcon, LayersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { formatDate } from '@/lib';
-import { cn } from '@/lib/utils';
 import { SeriesStatus } from '@/lib/constants';
+import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
 import { Badge } from './ui/badge';

@@ -2,6 +2,9 @@
 
 import Image from 'next/image';
 
+import Github from '@/assets/github.svg';
+import Linkedin from '@/assets/linkedin.svg';
+import TwitterX from '@/assets/twitter-x.svg';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -12,12 +15,9 @@ import {
 import {
   createListFormatter,
   getGitHubAvatarUrl,
-  getUrlPathname,
   getNameInitials,
+  getUrlPathname,
 } from '@/lib';
-import TwitterX from '@/assets/twitter-x.svg';
-import Linkedin from '@/assets/linkedin.svg';
-import Github from '@/assets/github.svg';
 
 import type { Author } from '@/types';
 import type { LucideIcon } from 'lucide-react';

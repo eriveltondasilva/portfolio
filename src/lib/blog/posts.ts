@@ -1,5 +1,5 @@
-import { PostStatus } from '@/lib/constants';
 import postsIndex from '@/generated/indexes/posts.json';
+import { PostStatus } from '@/lib/constants';
 
 import type { AdjacentPosts, PostIndex } from '@/types';
 

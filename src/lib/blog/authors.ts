@@ -1,5 +1,5 @@
-import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
 import authorsIndex from '@/generated/indexes/authors.json';
+import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
 
 import type { Author } from '@/types';
 

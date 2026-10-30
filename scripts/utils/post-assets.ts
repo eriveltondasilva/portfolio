@@ -1,12 +1,12 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { stripFencedCode } from '@/lib';
 import {
   POST_CONTENT_FILE,
   POST_IMAGES_DIR,
   POST_META_FILE,
 } from '@/lib/constants';
-import { stripFencedCode } from '@/lib/headings';
 
 // Keep in sync with COVER_FILE_NAME below.
 export const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}';

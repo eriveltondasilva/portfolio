@@ -1,10 +1,4 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
-import { POST_CONTENT_FILE } from '@/lib/constants';
-import { extractHeadings } from '@/lib/headings';
-import { POSTS_DIR } from '@/lib/paths';
-
+import type { MDXModule } from 'mdx/types';
 import { getPostBySlug } from './posts';
 
 import type { PostWithContent } from '@/types';
@@ -13,15 +7,14 @@ import type { PostWithContent } from '@/types';
 // which lightweight consumers (e.g. the reactions API route) must not pay for.
 export async function getPostWithContent(
   slug: string,
-): Promise<PostWithContent | undefined> {
+): Promise<PostWithContent | null> {
   const post = getPostBySlug(slug);
 
-  if (!post) return;
+  if (!post) return null;
 
-  const [{ default: Content }, raw] = await Promise.all([
-    import(`@/content/posts/${post.folder}/index.mdx`),
-    readFile(join(POSTS_DIR, post.folder, POST_CONTENT_FILE), 'utf-8'),
-  ]);
+  const postModule = (await import(
+    `@/content/posts/${post.folder}/index.mdx`
+  )) as MDXModule;
 
-  return { Content, meta: post, headings: extractHeadings(raw) };
+  return { Content: postModule.default, meta: post };
 }

@@ -1,10 +1,10 @@
 import { MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 
-import { getGitHubAvatarUrl, getUrlPathname, getNameInitials } from '@/lib';
-import TwitterX from '@/assets/twitter-x.svg';
-import Linkedin from '@/assets/linkedin.svg';
 import Github from '@/assets/github.svg';
+import Linkedin from '@/assets/linkedin.svg';
+import TwitterX from '@/assets/twitter-x.svg';
+import { getGitHubAvatarUrl, getNameInitials, getUrlPathname } from '@/lib';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 
 import { Icon } from './icon';

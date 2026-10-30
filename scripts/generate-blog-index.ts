@@ -13,6 +13,7 @@ import {
 import { postSchema } from '@/lib/schemas';
 
 import { runScript, sortByDateDesc } from './utils';
+import { readAuthors, readSeries } from './utils/content';
 import {
   formatZodError,
   getErrMessage,
@@ -20,7 +21,6 @@ import {
   throwIfErrors,
 } from './utils/errors';
 import { log } from './utils/logger';
-import { readAuthors, readSeries } from './utils/content';
 import { COVER_GLOB, inspectPostAssets } from './utils/post-assets';
 import {
   checkAuthorsExist,

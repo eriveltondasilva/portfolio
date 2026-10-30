@@ -16,9 +16,9 @@ import {
 import { checkUniqueSlugs } from './utils/validations';
 
 import type { GithubRepo, Project } from '@/types';
-import { log } from './utils/logger';
 import { formatZodError, throwIfErrors } from './utils/errors';
 import { writeJson } from './utils/files';
+import { log } from './utils/logger';
 
 // # Fetchers
 
