@@ -34,7 +34,7 @@
     "fmt": "bunx prettier . --check",
     "fmt:fix": "bunx prettier . --write --cache",
     "5xxx": "",
-    "typeschekc": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "typegen": "bun run --bun next typegen",
     "fix": "bun run types && bun run lint:fix && bun run fmt:fix"
   },
