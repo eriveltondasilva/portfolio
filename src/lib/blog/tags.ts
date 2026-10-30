@@ -2,21 +2,23 @@ import { getAllPosts } from './posts';
 
 import type { TagCount } from '@/types';
 
-function buildTagCounts(): Record<string, number> {
-  return getAllPosts()
-    .flatMap((post) => post.tags)
-    .reduce<Record<string, number>>((acc, tag) => {
-      acc[tag] = (acc[tag] ?? 0) + 1;
-      return acc;
-    }, {});
+// A Map (not a plain object) so tags like "constructor" cannot collide with Object.prototype.
+function buildTagCounts(): Map<string, number> {
+  const counts = new Map<string, number>();
+
+  for (const post of getAllPosts()) {
+    for (const tag of post.tags) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+
+  return counts;
 }
 
 export function getAllTags(): string[] {
-  return Object.keys(buildTagCounts()).toSorted();
+  return [...buildTagCounts().keys()].toSorted();
 }
 
 export function getTagsWithCount(): TagCount[] {
-  return Object.entries(buildTagCounts())
+  return [...buildTagCounts()]
     .map(([tag, count]) => ({ tag, count }))
-    .toSorted((a, b) => b.count - a.count);
+    .toSorted((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 }

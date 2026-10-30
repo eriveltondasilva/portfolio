@@ -1,4 +1,5 @@
-import { join } from 'node:path';
+// Pure constants only: this module is bundled into client components,
+// so it must not import Node APIs. Filesystem paths live in `paths.ts`.
 
 export enum PostStatus {
   DRAFT = 'draft',
@@ -18,7 +19,7 @@ export enum ProjectStatus {
   ARCHIVED = 'archived',
 }
 
-export enum Topics {
+export enum GithubTopic {
   INCLUDE = 'portfolio',
   FEATURED = 'featured',
   WIP = 'wip',
@@ -27,36 +28,31 @@ export enum Topics {
 // -------------------------------------
 
 export const PRIMARY_AUTHOR_SLUG = 'erivelton';
-export const LOCALES = 'pt-BR';
-
-export const BASE_URL =
-  process.env['NEXT_PUBLIC_SITE_URL'] || `http://localhost:3000`;
+export const LOCALE = 'pt-BR';
 
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio';
 
+// # Files inside each post folder
+export const POST_META_FILE = 'meta.yml';
+export const POST_CONTENT_FILE = 'index.mdx';
+export const POST_IMAGES_DIR = 'images';
+
 // -------------------------------------
 
-export const CONTENT_DIR = join(process.cwd(), 'content');
-export const GENERATED_DIR = join(process.cwd(), 'generated');
+function resolveBaseUrl(): string {
+  const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'];
+  if (siteUrl) return siteUrl.replace(/\/+$/, '');
 
-// # Directories
-export const AUTHORS_DIR = join(CONTENT_DIR, 'authors');
-export const POSTS_DIR = join(CONTENT_DIR, 'posts');
-export const SERIES_DIR = join(CONTENT_DIR, 'series');
+  const vercelUrl = process.env['VERCEL_PROJECT_PRODUCTION_URL'];
+  if (vercelUrl) return `https://${vercelUrl}`;
 
-export const SCHEMAS_DIR = join(GENERATED_DIR, 'schemas');
-export const INDEXES_DIR = join(GENERATED_DIR, 'indexes');
+  // Inside a Next.js production build/server, a missing URL would silently ship localhost
+  // links in the sitemap and OG images. Build scripts (no NEXT_PHASE) are not affected.
+  if (process.env['NODE_ENV'] === 'production' && process.env['NEXT_PHASE']) {
+    throw new Error('NEXT_PUBLIC_SITE_URL is not set.');
+  }
 
-// # Files
-export const AUTHORS_SOURCE_FILE = join(AUTHORS_DIR, 'index.json');
-export const SERIES_SOURCE_FILE = join(SERIES_DIR, 'index.json');
+  return 'http://localhost:3000';
+}
 
-// # Schemas
-export const AUTHORS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'authors.json');
-export const SERIES_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'series.json');
-export const POSTS_SCHEMA_OUTPUT = join(SCHEMAS_DIR, 'posts.json');
-
-// # Indexes
-export const POSTS_INDEX_OUTPUT = join(INDEXES_DIR, 'posts.json');
-export const PROJECTS_INDEX_OUTPUT = join(INDEXES_DIR, 'projects.json');
-export const SERIES_INDEX_OUTPUT = join(INDEXES_DIR, 'series.json');
+export const BASE_URL = resolveBaseUrl();

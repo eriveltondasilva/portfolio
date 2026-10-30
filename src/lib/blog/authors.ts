@@ -1,14 +1,17 @@
 import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
-import authorsData from '@/content/authors/index.json';
+import authorsIndex from '@/generated/indexes/authors.json';
 
 import type { Author } from '@/types';
 
+const authors = authorsIndex as Author[];
+const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
+
 export function getAllAuthors(): Author[] {
-  return authorsData as Author[];
+  return [...authors];
 }
 
 export function getAuthorBySlug(slug: string): Author | null {
-  return getAllAuthors().find((author) => author.slug === slug) ?? null;
+  return authorsBySlug.get(slug) ?? null;
 }
 
 export function getPrimaryAuthor(): Author {
@@ -22,7 +25,5 @@ export function getPrimaryAuthor(): Author {
 }
 
 export function getAuthorsBySlugs(slugs: string[]): Author[] {
-  return slugs
-    .map(getAuthorBySlug)
-    .filter((author): author is Author => author !== null);
+  return slugs.flatMap((slug) => authorsBySlug.get(slug) ?? []);
 }

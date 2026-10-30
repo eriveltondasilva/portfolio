@@ -2,10 +2,12 @@ import projectsIndex from '@/generated/indexes/projects.json';
 
 import type { Project } from '@/types';
 
+const allProjects = projectsIndex as Project[];
+
 export function getAllProjects(): Project[] {
-  return projectsIndex as Project[];
+  return [...allProjects];
 }
 
 export function getFeaturedProjects(): Project[] {
-  return getAllProjects().filter((project) => project.featured);
+  return allProjects.filter((project) => project.featured);
 }

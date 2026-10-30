@@ -3,17 +3,20 @@ import { SeriesStatus } from '@/lib/constants';
 
 import type { SeriesIndex } from '@/types';
 
+const allSeries = seriesIndex as SeriesIndex[];
+const seriesBySlug = new Map(allSeries.map((series) => [series.slug, series]));
+
 export function getAllSeries(): SeriesIndex[] {
-  return seriesIndex as SeriesIndex[];
+  return [...allSeries];
 }
 
 export function getSeriesBySlug(slug: string): SeriesIndex | null {
-  return getAllSeries().find((series) => series.slug === slug) ?? null;
+  return seriesBySlug.get(slug) ?? null;
 }
 
-/** Retorna séries com status IN_PROGRESS, usadas na home. */
+/** Series with IN_PROGRESS status, shown on the home page. */
 export function getInProgressSeries(limit = 3): SeriesIndex[] {
-  return getAllSeries()
+  return allSeries
     .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
     .slice(0, limit);
 }

@@ -1,10 +1,10 @@
 import GithubSlugger from 'github-slugger';
 
-import { ProjectStatus, Topics, LOCALES } from '@/lib/constants';
+import { GithubTopic, LOCALE, ProjectStatus } from '@/lib/constants';
 
 import type { Author, GithubRepo, Heading } from '@/types';
 
-const UTILITY_TOPICS = new Set(Object.values(Topics));
+const UTILITY_TOPICS = new Set(Object.values(GithubTopic));
 
 export function extractHeadings(rawContent: string): Heading[] {
   const slugger = new GithubSlugger();
@@ -23,8 +23,9 @@ export function extractHeadings(rawContent: string): Heading[] {
   return headings;
 }
 
-export function getUrlPathname(url: string): string | null {
-  return new URL(url).pathname?.replace('/', '') ?? null;
+/** Returns the URL path without leading/trailing slashes (e.g. "in/username"). */
+export function getUrlPathname(url: string): string {
+  return new URL(url).pathname.replace(/^\/+|\/+$/g, '');
 }
 
 export function getNameInitials(name: string): string {
@@ -39,20 +40,21 @@ export function getNameInitials(name: string): string {
 export function formatProjectName(repo: GithubRepo): string {
   return repo.name
     .split('-')
-    .map((word) => word.at(0)?.toUpperCase() + word.slice(1))
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 }
 
 export function getProjectStatus(repo: GithubRepo): ProjectStatus {
   if (repo.archived) return ProjectStatus.ARCHIVED;
-  if (repo.topics?.includes(Topics.WIP)) return ProjectStatus.WIP;
+  if (repo.topics?.includes(GithubTopic.WIP)) return ProjectStatus.WIP;
 
   return ProjectStatus.ACTIVE;
 }
 
 export function filterProjectTags(repo: GithubRepo): string[] {
   return (repo.topics ?? []).filter(
-    (tag) => !UTILITY_TOPICS.has(tag as Topics),
+    (tag) => !UTILITY_TOPICS.has(tag as GithubTopic),
   );
 }
 
@@ -65,7 +67,7 @@ export function formatDate(
   options?: Intl.DateTimeFormatOptions,
 ): string {
   try {
-    return new Intl.DateTimeFormat(LOCALES, {
+    return new Intl.DateTimeFormat(LOCALE, {
       dateStyle: 'medium',
       timeZone: 'UTC',
       ...options,
@@ -76,7 +78,7 @@ export function formatDate(
 }
 
 export function createListFormatter() {
-  return new Intl.ListFormat(LOCALES, {
+  return new Intl.ListFormat(LOCALE, {
     style: 'long',
     type: 'conjunction',
   });
