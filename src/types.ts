@@ -1,6 +1,7 @@
 import type { Octokit } from '@octokit/rest';
 import type { MDXContent } from 'mdx/types';
 import type { z } from 'zod';
+import type { Toc } from '@stefanprobst/rehype-extract-toc';
 
 import type {
   authorSchema,
@@ -48,4 +49,11 @@ export interface AdjacentPosts {
 export interface PostWithContent {
   Content: MDXContent;
   meta: PostIndex;
+  toc: Toc;
+}
+
+export interface TocItem {
+  id: string;
+  title: string;
+  depth: number;
 }

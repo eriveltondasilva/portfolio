@@ -1,10 +1,7 @@
-import type { MDXModule } from 'mdx/types';
 import { getPostBySlug } from './posts';
 
 import type { PostWithContent } from '@/types';
 
-// Kept apart from posts.ts: the dynamic MDX import below makes the bundler include every post,
-// which lightweight consumers (e.g. the reactions API route) must not pay for.
 export async function getPostWithContent(
   slug: string,
 ): Promise<PostWithContent | null> {
@@ -12,11 +9,9 @@ export async function getPostWithContent(
 
   if (!post) return null;
 
-  const postModule = (await import(
+  const { default: Content, toc } = await import(
     `@/content/posts/${post.folder}/index.mdx`
-  )) as MDXModule;
+  );
 
-  console.log(postModule.toc);
-
-  return { Content: postModule.default, meta: post };
+  return { Content, meta: post, toc };
 }
