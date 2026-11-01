@@ -109,6 +109,22 @@ export function Button({ variant = 'default', className, ...props }: ButtonProps
 }
 ```
 
+Com
+
+```ts
+const old = 1 // [!code --]
+const novo = 2 // [!code ++]
+```
+
+```ts
+const importante = 3 // [!code highlight]
+```
+
+```ts
+console.log('focus')
+const importante = 3 // [!code focus]
+```
+
 Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
 
 ---
@@ -117,7 +133,7 @@ Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, 
 
 Caixas de destaque para informações importantes. Variantes: `info` (padrão), `tip`, `warning`, `danger`.
 
-<Callout>Mensagem informativa simples, sem título.</Callout>
+<Callout>Mensagem informativa simples, sem título. www.google.com</Callout>
 
 <Callout variant='info' title='Informação'>
   Use para contexto adicional que complementa o conteúdo principal mas não é
@@ -301,7 +317,7 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
 
 <Accordion>
   <AccordionItem title='Quando usar Accordion?'>
-    Use quando tiver conteúdo que nem todos os leitores precisarão consultar —
+    Use quando tiver conteúdo que nem todos www.google.com os leitores precisarão consultar —
     perguntas frequentes, detalhes avançados, ou explicações alternativas que
     interromperiam o fluxo do texto principal.
   </AccordionItem>
@@ -423,12 +439,12 @@ import MinhaImagem from './cover.jpg'
 
 **Exemplo:**
 
-<Image
+{/* <Image
   src={CoverImage}
   alt='Exemplo de imagem com legenda usando o componente Image.'
   title='Título da imagem. Opcional.'
   caption='Figura 1. Imagem de exemplo com legenda.'
-/>
+/> */}
 
 ### RatioImage
 
@@ -448,13 +464,13 @@ Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagen
 
 **Exemplo:**
 
-<RatioImage
+{/* <RatioImage
   src={CoverImage}
   alt='Exemplo de imagem com proporção fixa usando RatioImage.'
   ratio={16 / 9}
   title='Título da imagem. Opcional.'
   caption='Figura 2. Imagem com proporção fixa (16:9).'
-/>
+/> */}
 
 Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
@@ -483,11 +499,11 @@ Para sobrescrever o número de colunas em um item específico, passe `columns` d
 
 **Exemplo:**
 
-<ImageGrid columns={3}>
-  <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' />
-  <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' />
-  <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' />
-</ImageGrid>
+{/* <ImageGrid columns={3}> */}
+  {/* <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' /> */}
+  {/* <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' /> */}
+  {/* <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' /> */}
+{/* </ImageGrid> */}
 
 | Prop      | Componente  | Valores         | Padrão |
 | --------- | ----------- | --------------- | ------ |
