@@ -16,5 +16,7 @@ export async function getPostWithContent(
     `@/content/posts/${post.folder}/index.mdx`
   )) as MDXModule;
 
+  console.log(postModule.toc);
+
   return { Content: postModule.default, meta: post };
 }

@@ -1,32 +1,35 @@
-// Pure constants only: this module is bundled into client components,
-// so it must not import Node APIs. Filesystem paths live in `paths.ts`.
+export const PostStatus = {
+  DRAFT: 'draft',
+  PUBLISHED: 'published',
+  ARCHIVED: 'archived',
+} as const;
+export type PostStatus = (typeof PostStatus)[keyof typeof PostStatus];
 
-export enum PostStatus {
-  DRAFT = 'draft',
-  PUBLISHED = 'published',
-  ARCHIVED = 'archived',
-}
+export const SeriesStatus = {
+  PLANNED: 'planned',
+  IN_PROGRESS: 'in-progress',
+  COMPLETE: 'complete',
+} as const;
+export type SeriesStatus = (typeof SeriesStatus)[keyof typeof SeriesStatus];
 
-export enum SeriesStatus {
-  PLANNED = 'planned',
-  IN_PROGRESS = 'in-progress',
-  COMPLETE = 'complete',
-}
+export const ProjectStatus = {
+  ACTIVE: 'active',
+  WIP: 'wip',
+  ARCHIVED: 'archived',
+} as const;
+export type ProjectStatus = (typeof ProjectStatus)[keyof typeof ProjectStatus];
 
-export enum ProjectStatus {
-  ACTIVE = 'active',
-  WIP = 'wip',
-  ARCHIVED = 'archived',
-}
-
-export enum GithubTopic {
-  INCLUDE = 'portfolio',
-  FEATURED = 'featured',
-  WIP = 'wip',
-}
+export const GithubTopic = {
+  INCLUDE: 'portfolio',
+  FEATURED: 'featured',
+  WIP: 'wip',
+} as const;
+export type GithubTopic = (typeof GithubTopic)[keyof typeof GithubTopic];
 
 // -------------------------------------
 
+export const SITE_NAME = "Erivelton's Portfolio";
+export const TWITTER_HANDLE = '@erivelton_silv4';
 export const PRIMARY_AUTHOR_SLUG = 'erivelton';
 export const LOCALE = 'pt-BR';
 
