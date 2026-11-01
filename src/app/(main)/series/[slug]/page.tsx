@@ -50,7 +50,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 
-  if (!series) return notFound();
+  if (!series) notFound();
 
   const siteName = "Erivelton's Portfolio";
 
@@ -86,7 +86,7 @@ export default async function SeriesDetailPage({
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 
-  if (!series) return notFound();
+  if (!series) notFound();
 
   const posts = getSeriesPosts(slug);
   const hasPosts = posts.length > 0;

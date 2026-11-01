@@ -1,12 +1,12 @@
+import { Inter, Roboto_Mono } from 'next/font/google';
+
 import { Footer } from '@/components/footer';
 import { TopBorder } from '@/components/top-border';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { BASE_URL } from '@/lib/constants';
-import { Inter, Roboto_Mono } from 'next/font/google';
+import { BASE_URL, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import './globals.css';
 
-import { clsx } from 'cn';
 import type { Metadata } from 'next';
 
 const inter = Inter({
@@ -21,47 +21,36 @@ const robotoMono = Roboto_Mono({
   display: 'swap',
 });
 
-const meta = {
-  title: 'Erivelton Silva - Portfolio',
-  siteName: "Erivelton's Portfolio",
-  description:
-    'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.',
-};
+const SITE_TITLE = 'Erivelton Silva - Portfolio';
+const SITE_DESCRIPTION =
+  'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
-  title: { default: meta.title, template: `%s - ${meta.siteName}` },
-  description: meta.description,
-  alternates: { canonical: BASE_URL },
-  generator: 'Next.js',
-  keywords: ['frontend', 'react', 'nextjs', 'typescript', 'blog'],
+  title: { default: SITE_TITLE, template: `%s | ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
   authors: [{ name: 'Erivelton Silva', url: BASE_URL }],
   creator: 'Erivelton Silva',
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    title: meta.title,
-    description: meta.description,
-    siteName: meta.siteName,
-    url: BASE_URL,
+    siteName: SITE_NAME,
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: meta.title,
-    description: meta.description,
-    site: meta.siteName,
-    creator: '@erivelton_silv4',
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
   },
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html
-      lang='pt-BR'
-      className={clsx(inter.variable, robotoMono.variable)}
-      suppressHydrationWarning
-    >
-      <body className='flex min-h-screen flex-col bg-white font-sans antialiased dark:bg-[#0d1117]'>
+    <html lang='pt-BR' className={`${inter.variable} ${robotoMono.variable}`}>
+      <body className='flex min-h-dvh flex-col font-sans antialiased'>
         <TopBorder />
         <div className='flex-1'>
           <TooltipProvider>{children}</TooltipProvider>
