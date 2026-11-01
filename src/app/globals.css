@@ -120,7 +120,7 @@
 
 @layer base {
   * {
-    @apply no-scrollbar border-border outline-ring/50;
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
@@ -128,6 +128,24 @@
   html {
     @apply font-sans;
   }
+}
+
+/* Reading Progress */
+.reading-progress {
+  transform: scaleX(0);
+}
+
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    animation-name: reading-progress;
+    animation-timing-function: linear;
+    animation-timeline: scroll();
+  }
+}
+
+/* Locks page scroll while a modal dialog is open */
+body:has(dialog[open]) {
+  overflow: hidden;
 }
 
 /* ================================== */
@@ -142,56 +160,99 @@
   }
 }
 
-/* Headings posts */
-.prose {
-  :is(h2, h3, h4, h5, h6) {
-    @apply relative;
+/* Headings Posts */
+.prose :is(h2, h3, h4) {
+  @apply relative;
 
-    a[aria-hidden='true'] {
-      @apply absolute -left-3.5 -translate-x-full no-underline opacity-0 transition-all;
-    }
+  & .anchor {
+    @apply absolute -left-3.5 -translate-x-full no-underline opacity-0 transition-all;
+  }
 
-    &:hover a[aria-hidden='true'] {
-      @apply -translate-x-1 opacity-100;
-    }
+  &:hover .anchor {
+    @apply -translate-x-1 opacity-100;
   }
 }
-
-/* ================================== */
 
 /* Code Block */
 figure[data-rehype-pretty-code-figure] {
-  @apply relative my-6;
+  /* Background must match the Shiki theme (one-dark-pro) so title and caption blend with the code */
+  @apply relative my-6 overflow-hidden rounded-md border border-white/10 bg-[#282c34];
 
-  /* Title bar */
+  /* Title as a solid tab attached to the top-left corner of the block */
   & > [data-rehype-pretty-code-title] {
-    @apply rounded-t-lg border border-b-0 border-white/10 bg-zinc-900 px-4 py-2 font-mono text-xs text-zinc-400;
+    @apply m-0 w-fit rounded-br-md bg-[#3e4451] px-3 py-1 font-mono text-xs font-semibold text-zinc-200;
   }
 
-  /* Caption */
+  /* Caption as a footer inside the block */
   & > [data-rehype-pretty-code-caption] {
-    @apply mt-2 text-center text-xs text-muted-foreground;
+    @apply border-t border-white/10 px-4 py-2 text-xs text-zinc-400;
   }
 
-  /* Pre block */
-  & > pre {
-    @apply overflow-x-auto rounded-lg px-0 py-4;
+  /* The pre is wrapped by CodeBlock's div, so prose margins must be reset here */
+  & pre {
+    @apply my-0 overflow-x-auto rounded-none px-0 py-4;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+  }
 
-    & [data-line] {
-      @apply px-4 py-0;
+  /* Grid makes each line a block, so highlights span the full scroll width */
+  & code {
+    @apply grid w-max min-w-full;
+  }
+
+  /* Transparent border keeps text aligned when a line gets highlighted */
+  & [data-line] {
+    @apply border-l-4 border-transparent py-0 pr-4 pl-3;
+  }
+
+  /* {N} syntax and [!code highlight] */
+  & [data-highlighted-line],
+  & [data-line].highlighted {
+    @apply border-blue-500 bg-blue-500/10;
+  }
+
+  & [data-highlighted-chars] {
+    @apply rounded-sm border border-blue-700/30 bg-blue-800/20 px-1;
+  }
+
+  /* transformerNotationDiff */
+  & [data-line].diff.add {
+    @apply border-green-500 bg-green-500/10;
+
+    &::before {
+      content: '+';
+      @apply mr-3 text-green-400;
     }
   }
 
-  /* Remove top rounding when a title is present */
-  &:has([data-rehype-pretty-code-title]) > pre {
-    @apply rounded-t-none;
+  & [data-line].diff.remove {
+    @apply border-red-500 bg-red-500/10 opacity-60;
+
+    &::before {
+      content: '-';
+      @apply mr-3 text-red-400;
+    }
+  }
+
+  /* transformerNotationFocus */
+  & pre.has-focused [data-line]:not(.focused) {
+    @apply opacity-40 blur-[0.5px] transition-all duration-200;
+  }
+
+  & pre.has-focused:hover [data-line] {
+    @apply opacity-100 blur-none;
   }
 }
 
-/* Inline Code */
-/* span[data-rehype-pretty-code-figure] > code {
-  @apply rounded-md bg-muted px-1.5 py-1 text-xs text-foreground;
-} */
+/* Inline code: no backticks, no bold */
+.prose :not(pre) > code {
+  @apply rounded-sm bg-muted px-1.5 py-0.5 text-[0.85em] font-medium;
+
+  &::before,
+  &::after {
+    content: none;
+  }
+}
 
 /* Line Numbers */
 code[data-line-numbers] {
@@ -215,68 +276,3 @@ code[data-line-numbers] {
     @apply w-7;
   }
 }
-
-/* Code decorations — highlighted lines, chars, diff, focus */
-code {
-  /* rehype-pretty-code: line highlight via {N} syntax */
-  & [data-highlighted-line] {
-    @apply -ml-1 border-l-4 border-blue-500 bg-blue-500/10;
-  }
-
-  /* rehype-pretty-code: word/char highlight */
-  & [data-highlighted-chars] {
-    @apply rounded-sm border border-blue-700/30 bg-blue-800/20 px-1;
-  }
-
-  /* transformerNotationDiff */
-  & [data-line].diff {
-    @apply -ml-1 border-l-4;
-
-    &.add {
-      @apply border-green-500 bg-green-500/10;
-
-      &::before {
-        content: '+';
-        @apply mr-3 text-green-400;
-      }
-    }
-
-    &.remove {
-      @apply border-red-500 bg-red-500/10 opacity-60;
-
-      &::before {
-        content: '-';
-        @apply mr-3 text-red-400;
-      }
-    }
-  }
-}
-
-/*
-  Diff + line numbers: ::before can only render one thing.
-  Keep the line number but colorize it to preserve the diff hint.
-*/
-/* code[data-line-numbers] > [data-line].diff.add::before {
-  content: counter(line);
-  @apply text-green-400;
-}
-
-code[data-line-numbers] > [data-line].diff.remove::before {
-  content: counter(line);
-  @apply text-red-400;
-} */
-
-/* transformerNotationFocus */
-/* code:has([data-line].focused) {
-  & [data-line] {
-    @apply opacity-30 transition-opacity duration-200;
-  }
-
-  & [data-line].focused {
-    @apply opacity-100;
-  }
-
-  &:hover [data-line] {
-    @apply opacity-100;
-  }
-} */
