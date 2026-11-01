@@ -96,7 +96,7 @@ export const postSchema = z
     description: z
       .string()
       .min(10, 'Description must contain at least 10 characters.')
-      .max(300)
+      .max(160)
       .describe('Short summary of the post.'),
     //
     tags: z
