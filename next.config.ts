@@ -1,32 +1,37 @@
-import createMDX from '@next/mdx';
-// import { transformerNotationDiff, transformerNotationFocus } from '@shikijs/transformers'
-
 import type { NextConfig } from 'next';
-import type { Options as AutolinkHeadingsOptions } from 'rehype-autolink-headings';
-import type { Options as PrettyCodeOptions } from 'rehype-pretty-code';
-import type { Options as RemarkGfmOptions } from 'remark-gfm';
 
-// ── Options ──────────────────────────
+import createMDX from '@next/mdx';
+import { join } from 'node:path';
+import { cwd } from 'node:process';
 
-const remarkGFMOptions: RemarkGfmOptions = {
-  singleTilde: false,
-};
+import {
+  rehypeAutolinkHeadingsOptions,
+  rehypeExportTocMdxOptions,
+  remarkGFMOptions,
+} from './src/lib/plugins/options';
 
-const autolinkHeadingsOptions: AutolinkHeadingsOptions = {
-  behavior: 'prepend',
-  content: {
-    type: 'text',
-    value: '#',
+// ─────────────────────────────────────
+
+const mdxPluginPath = (fileName: string) =>
+  join(cwd(), 'src', 'lib', 'plugins', fileName + '.ts');
+
+const withMDX = createMDX({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
+    rehypePlugins: [
+      'rehype-slug',
+      '@stefanprobst/rehype-extract-toc',
+      ['@stefanprobst/rehype-extract-toc/mdx', rehypeExportTocMdxOptions],
+      ['rehype-autolink-headings', rehypeAutolinkHeadingsOptions],
+      'rehype-unwrap-images',
+      'rehype-mdx-import-media',
+      mdxPluginPath('rehype-pretty-code'),
+    ],
   },
-};
+});
 
-const prettyCodeOptions: PrettyCodeOptions = {
-  theme: 'github-dark-default',
-  defaultLang: 'plaintext',
-  bypassInlineCode: true,
-};
-
-// ── Config ───────────────────────────
+// ─────────────────────────────────────
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -50,19 +55,5 @@ const nextConfig: NextConfig = {
     },
   },
 };
-
-const withMDX = createMDX({
-  options: {
-    remarkPlugins: [['remark-gfm', remarkGFMOptions], 'remark-gemoji'],
-    rehypePlugins: [
-      'rehype-slug',
-      ['rehype-autolink-headings', autolinkHeadingsOptions],
-
-      'rehype-unwrap-images',
-      'rehype-mdx-import-media',
-      ['rehype-pretty-code', prettyCodeOptions],
-    ],
-  },
-});
 
 export default withMDX(nextConfig);
