@@ -1,21 +1,20 @@
-import { ArrowRightIcon, DotIcon, FileTextIcon, HashIcon } from 'lucide-react';
+import { DotIcon, FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { formatDate } from '@/lib';
 import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
-import { Badge } from './ui/badge';
 
 import type { PostIndex } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
+import { TagLink } from './tag-link';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
   post: PostIndex;
-  showSeriesBadge?: boolean;
 }
 
-export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
+export function PostCard({ post, ...props }: Props) {
   return (
     <article
       className={cn(
@@ -28,15 +27,7 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
       {post.tags.length > 0 && (
         <div className='mb-2 flex flex-wrap gap-1.5'>
           {post.tags.map((tag) => (
-            <Link key={tag} href={`/tags/${tag}`}>
-              <Badge
-                variant='secondary'
-                className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 transition-colors hover:bg-blue-50 hover:text-blue-700 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-300'
-              >
-                <Icon iconNode={HashIcon} />
-                {tag}
-              </Badge>
-            </Link>
+            <TagLink key={tag} tag={tag} />
           ))}
         </div>
       )}
@@ -52,14 +43,6 @@ export function PostCard({ post, showSeriesBadge = false, ...props }: Props) {
             {post.title}
           </Link>
         </div>
-
-        {showSeriesBadge && post.series && (
-          <Link href={`/series/${post.series}`}>
-            <Badge className='border-orange-300 bg-orange-100/10 text-orange-500 hover:bg-orange-300/10 dark:bg-orange-600/20'>
-              Série <Icon iconNode={ArrowRightIcon} />
-            </Badge>
-          </Link>
-        )}
       </div>
 
       {/* Description */}

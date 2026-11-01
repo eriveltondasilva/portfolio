@@ -1,8 +1,8 @@
+import { Icon } from '@/components/icon';
+import { getSeriesBySlug } from '@/lib/blog/series';
+import { clsx } from 'cn';
 import { LayersIcon } from 'lucide-react';
 import Link from 'next/link';
-import { getSeriesBySlug } from '@/lib/blog/series';
-import { Icon } from '@/components/icon';
-import { clsx } from 'cn';
 
 interface Props {
   slug?: string;
@@ -19,7 +19,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
   const total = series.posts.length;
 
   return (
-    <section aria-label='Nesta série' className='mb-6'>
+    <section aria-label='Nesta série' className='mt-6'>
       <h2 className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
         <Icon iconNode={LayersIcon} className='text-orange-500' />
         Nesta série

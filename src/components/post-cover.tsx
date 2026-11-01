@@ -1,38 +1,34 @@
+import { cn } from 'cn';
 import Image from 'next/image';
 
-import { cn } from '@/lib/utils';
+import { DEFAULT_IMAGE_SIZES, getPlaceholder } from '@/lib/images';
 
-import type { ComponentProps } from 'react';
-
-interface Props extends ComponentProps<'div'> {
-  title: string;
+interface Props {
   folder: string;
   coverFile: string;
+  className?: string;
 }
 
-export async function PostCover({
-  title,
-  folder,
-  coverFile,
-  className,
-}: Props) {
-  const { default: image } = await import(
+export async function PostCover({ folder, coverFile, className }: Props) {
+  const { default: coverImage } = await import(
     `@/content/posts/${folder}/${coverFile}`
   );
 
   return (
     <div
       className={cn(
-        'relative aspect-2/1 w-full overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700/60',
+        'relative aspect-2/1 w-full overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700/60',
         className,
       )}
     >
       <Image
-        src={image}
-        alt={`Cover: ${title}`}
+        src={coverImage}
+        alt=''
         className='object-cover'
-        sizes='(max-width: 768px) 100vw, 768px'
+        sizes={DEFAULT_IMAGE_SIZES}
+        placeholder={getPlaceholder(coverImage)}
         loading='eager'
+        fetchPriority='high'
         fill
       />
     </div>

@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from 'cn';
 
 import type { LucideIcon, LucideProps } from 'lucide-react';
 
@@ -7,12 +7,15 @@ interface Props extends LucideProps {
   label?: string;
 }
 
-export function Icon({ iconNode, className, label, ...props }: Props) {
-  const Comp = iconNode;
-
+export function Icon({
+  iconNode: IconComp,
+  className,
+  label,
+  ...props
+}: Props) {
   return (
     <>
-      <Comp className={cn('size-4', className)} {...props} />
+      <IconComp className={cn('size-4', className)} {...props} />
       {label && <span className='sr-only'>{label}</span>}
     </>
   );

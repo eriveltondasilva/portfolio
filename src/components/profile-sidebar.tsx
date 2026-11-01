@@ -9,7 +9,6 @@ import { getPrimaryAuthor } from '@/lib/blog/authors';
 
 import { Icon } from './icon';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Badge } from './ui/badge';
 
 import type { Author } from '@/types';
 
@@ -64,19 +63,6 @@ export function ProfileSidebar() {
       <p className='mt-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300'>
         {author.bio}
       </p>
-
-      {/* Skills */}
-      <div className='mt-4 flex flex-wrap gap-1.5'>
-        {author.skills.map((skill) => (
-          <Badge
-            key={skill}
-            variant='secondary'
-            className='rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
-          >
-            {skill}
-          </Badge>
-        ))}
-      </div>
 
       {/* Social Info */}
       <div className='mt-5 space-y-2 text-sm text-zinc-600 dark:text-zinc-400'>
