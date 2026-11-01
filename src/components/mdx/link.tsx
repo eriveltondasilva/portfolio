@@ -3,43 +3,51 @@ import LinkNext from 'next/link';
 
 import { Icon } from '../icon';
 
-import type { ComponentPropsWithoutRef } from 'react';
+import { cn } from 'cn';
 import type { Route } from 'next';
+import type { ComponentProps } from 'react';
 
 const isHttpUrl = (str: string) => /^https?:\/\//.test(str);
 
 export function Link({
   href = '',
+  className,
   children,
   ...props
-}: ComponentPropsWithoutRef<'a'>) {
-  if (!href) return <>{children}</>;
+}: ComponentProps<'a'>) {
+  if (!href) return children;
 
-  if (href.startsWith('/')) {
+  // # Internal link
+  if (href.startsWith('/') && !href.startsWith('//')) {
     return (
-      <LinkNext href={href as Route} {...props}>
+      <LinkNext href={href as Route} className={className} {...props}>
         {children}
       </LinkNext>
     );
   }
 
+  // # External link
   if (isHttpUrl(href)) {
     return (
       <a
         href={href}
         target='_blank'
         rel='noopener noreferrer'
+        className={cn(className, 'group')}
         {...props}
-        className='inline-flex items-center gap-1'
       >
         {children}
-        <Icon iconNode={ExternalLinkIcon} className='size-3.5' />
+        <Icon
+          iconNode={ExternalLinkIcon}
+          label='(abre em nova aba)'
+          className='ml-1 inline size-3.5 align-text-top group-hover:animate-bounce'
+        />
       </a>
     );
   }
 
   return (
-    <a href={href} {...props}>
+    <a href={href} className={className} {...props}>
       {children}
     </a>
   );

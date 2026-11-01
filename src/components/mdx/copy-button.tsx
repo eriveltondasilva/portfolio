@@ -1,0 +1,65 @@
+'use client';
+
+import { CheckIcon, CopyIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+import { Icon } from '@/components/icon';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+import type { MouseEvent } from 'react';
+
+const RESET_DELAY_MS = 3_000;
+
+export function CopyButton() {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = setTimeout(() => setCopied(false), RESET_DELAY_MS);
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  async function handleCopy(event: MouseEvent<HTMLButtonElement>) {
+    // Reads from the DOM so the highlighted code never enters the client bundle
+    const code = event.currentTarget
+      .closest('[data-code-block]')
+      ?.querySelector('code');
+
+    if (!code?.textContent) return;
+
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      setCopied(true);
+    } catch (error) {
+      console.error('[CopyButton] Failed to copy to clipboard:', error);
+    }
+  }
+
+  return (
+    <>
+      <Button
+        type='button'
+        variant='outline'
+        size='icon-sm'
+        onClick={handleCopy}
+        aria-label='Copiar código'
+        className={cn(
+          'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-[#282c34] text-zinc-400 transition-all',
+          'opacity-0 focus-visible:opacity-100 pointer-coarse:opacity-100 [figure:hover_&]:opacity-100',
+          'hover:border-white/20 hover:bg-[#343a45] hover:text-zinc-100',
+          copied &&
+            'border-green-500/50 text-green-400 opacity-100 hover:text-green-400',
+        )}
+      >
+        <Icon iconNode={copied ? CheckIcon : CopyIcon} className='size-3.5' />
+      </Button>
+
+      {/* Announces the result to screen readers without moving focus */}
+      <span role='status' className='sr-only'>
+        {copied ? 'Código copiado' : ''}
+      </span>
+    </>
+  );
+}

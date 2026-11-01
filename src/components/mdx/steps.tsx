@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from 'cn';
 
 import type { ComponentProps } from 'react';
 
@@ -15,8 +15,6 @@ export function Step({ title, className, children, ...props }: StepProps) {
   );
 }
 
-// -------------------------------------
-
 export function Steps({
   className,
   children,
@@ -27,7 +25,7 @@ export function Steps({
       className={cn(
         'not-prose',
         '[counter-reset:step]',
-        '[&_.step]:relative [&_.step]:border-l [&_.step]:border-border [&_.step]:pb-8 [&_.step]:pl-8 last:[&_.step]:pb-0',
+        '[&_.step]:relative [&_.step]:border-l [&_.step]:border-border [&_.step]:pb-8 [&_.step]:pl-8 [&_.step:last-child]:pb-0',
         '[&_.step]:before:absolute [&_.step]:before:-left-4 [&_.step]:before:flex [&_.step]:before:size-8',
         '[&_.step]:before:items-center [&_.step]:before:justify-center [&_.step]:before:rounded-full',
         '[&_.step]:before:border [&_.step]:before:border-border [&_.step]:before:bg-background',
@@ -35,7 +33,8 @@ export function Steps({
         '[&_.step]:[counter-increment:step] [&_.step]:before:[content:counter(step)]',
         '[&_.step-title]:mb-2 [&_.step-title]:font-semibold [&_.step-title]:text-foreground',
         '[&_.step>div]:text-sm [&_.step>div]:text-muted-foreground',
-        '[&_.step>div_pre]:my-3',
+        '[&_.step_figure]:my-3!',
+        '[&_.step_a]:underline',
         className,
       )}
       {...props}

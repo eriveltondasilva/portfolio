@@ -1,4 +1,5 @@
 import { cva } from 'class-variance-authority';
+import { cn } from 'cn';
 import {
   AlertTriangleIcon,
   CheckCircleIcon,
@@ -6,13 +7,11 @@ import {
   XCircleIcon,
 } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
-
-import type { ComponentProps } from 'react';
 import type { VariantProps } from 'class-variance-authority';
+import type { ReactNode } from 'react';
 
 const calloutVariants = cva(
-  'not-prose my-6 flex gap-3 rounded-lg border p-4 text-sm',
+  'not-prose my-6 flex gap-3 rounded-lg border p-4 text-sm [&_a]:underline [&_a]:underline-offset-2',
   {
     variants: {
       variant: {
@@ -37,9 +36,17 @@ const iconMap = {
   danger: XCircleIcon,
 };
 
-interface Props
-  extends ComponentProps<'div'>, VariantProps<typeof calloutVariants> {
+const labels = {
+  info: 'Informação',
+  tip: 'Dica',
+  warning: 'Atenção',
+  danger: 'Perigo',
+} as const;
+
+interface Props extends VariantProps<typeof calloutVariants> {
   title?: string;
+  className?: string;
+  children: ReactNode;
 }
 
 export function Callout({
@@ -49,16 +56,17 @@ export function Callout({
   children,
   ...props
 }: Props) {
-  const Icon = iconMap[variant ?? 'info'];
-  const hasTitle = !!title;
+  const type = variant ?? 'info';
+  const Icon = iconMap[type];
 
   return (
-    <div className={cn(calloutVariants({ variant }), className)} {...props}>
-      <Icon
-        className='mt-0.5 size-4 shrink-0'
-        aria-hidden={hasTitle}
-        aria-label={!hasTitle ? (variant ?? 'info') : undefined}
-      />
+    <div
+      role='note'
+      aria-label={title ?? labels[type]}
+      className={cn(calloutVariants({ variant: type }), className)}
+      {...props}
+    >
+      <Icon className='size-5 shrink-0' aria-hidden='true' />
       <div className='flex flex-col gap-1'>
         {title && <p className='font-semibold'>{title}</p>}
         <div className='[&_p]:leading-relaxed'>{children}</div>

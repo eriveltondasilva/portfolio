@@ -1,19 +1,14 @@
-'use client';
-
-import { useState } from 'react';
 import {
   ChevronRightIcon,
   FileIcon,
   FolderIcon,
   FolderOpenIcon,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
+
 import { Icon } from '@/components/icon';
+import { cn } from '@/lib/utils';
 
 import type { ComponentProps } from 'react';
-import { clsx } from 'cn';
-
-// -------------------------------------
 
 interface FileTreeFileProps {
   name: string;
@@ -27,22 +22,23 @@ export function FileTreeFile({
   className,
 }: FileTreeFileProps) {
   return (
-    <li
-      className={cn(
-        'flex items-center gap-1.5 py-0.5 pl-5 text-sm',
-        highlight ?
-          'rounded-sm bg-zinc-500/10 font-medium text-foreground'
-        : 'text-muted-foreground',
-        className,
-      )}
-    >
-      <Icon iconNode={FileIcon} className='size-3.5 shrink-0' />
-      <span>{name}</span>
+    // pl-3.5 + px-1.5 = 20px: the icon stays in the same column as sibling folder icons
+    <li className={cn('pl-3.5', className)}>
+      <div
+        className={cn(
+          'flex w-fit items-center gap-1.5 rounded-sm px-1.5 py-0.5 text-sm',
+          highlight ?
+            'bg-zinc-500/10 font-medium text-foreground'
+          : 'text-muted-foreground',
+        )}
+      >
+        <Icon iconNode={FileIcon} className='size-3.5 shrink-0' />
+        <span>{name}</span>
+        {highlight && <span className='sr-only'>(destacado)</span>}
+      </div>
     </li>
   );
 }
-
-// -------------------------------------
 
 interface FileTreeFolderProps extends ComponentProps<'li'> {
   name: string;
@@ -53,47 +49,33 @@ export function FileTreeFolder({
   name,
   defaultOpen = false,
   children,
-  className,
+  ...props
 }: FileTreeFolderProps) {
-  const [open, setOpen] = useState(defaultOpen);
-
   return (
-    <li className={className}>
-      <button
-        type='button'
-        aria-expanded={open}
-        onClick={() => setOpen((prev) => !prev)}
-        className='flex w-full items-center gap-1.5 py-0.5 text-left text-sm text-foreground/80 transition-colors hover:text-foreground'
-      >
-        <ChevronRightIcon
-          className={clsx(
-            'size-3.5 shrink-0 text-muted-foreground transition-transform duration-150',
-            open && 'rotate-90',
-          )}
-        />
-        {open && (
+    <li {...props}>
+      <details open={defaultOpen}>
+        <summary className='flex cursor-pointer list-none items-center gap-1.5 py-0.5 text-sm text-foreground/80 transition-colors marker:hidden hover:text-foreground [&::-webkit-details-marker]:hidden'>
+          {/* The selector targets this folder's own details, so nested folders keep independent states */}
           <Icon
-            iconNode={FolderOpenIcon}
-            className='size-3.5 shrink-0 text-blue-400'
+            iconNode={ChevronRightIcon}
+            className='size-3.5 shrink-0 text-muted-foreground transition-transform duration-150 [details[open]>summary_&]:rotate-90'
           />
-        )}
-        {!open && (
           <Icon
             iconNode={FolderIcon}
-            className='size-3.5 shrink-0 text-blue-400'
+            className='size-3.5 shrink-0 text-blue-400 [details[open]>summary_&]:hidden'
           />
-        )}
-        <span className='font-medium'>{name}</span>
-      </button>
+          <Icon
+            iconNode={FolderOpenIcon}
+            className='hidden size-3.5 shrink-0 text-blue-400 [details[open]>summary_&]:block'
+          />
+          <span className='font-medium'>{name}</span>
+        </summary>
 
-      {open && children && (
-        <ul className='ml-1.5 border-l border-border/50 pl-3'>{children}</ul>
-      )}
+        <ul className='ml-1.5 border-l border-border pl-3'>{children}</ul>
+      </details>
     </li>
   );
 }
-
-// -------------------------------------
 
 export function FileTree({ className, children }: ComponentProps<'div'>) {
   return (
@@ -103,7 +85,9 @@ export function FileTree({ className, children }: ComponentProps<'div'>) {
         className,
       )}
     >
-      <ul className='flex flex-col'>{children}</ul>
+      <ul className='flex flex-col' aria-label='Estrutura de arquivos'>
+        {children}
+      </ul>
     </div>
   );
 }

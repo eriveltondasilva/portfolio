@@ -1,42 +1,51 @@
+import { cn } from 'cn';
 import ImageNext from 'next/image';
 
-import { cn } from '@/lib/utils';
-import { AspectRatio } from '@/components/ui/aspect-ratio';
+import {
+  DEFAULT_IMAGE_SIZES,
+  getPlaceholder,
+  isStaticImageData,
+} from '@/lib/images';
 
 import { Figure } from './figure';
-
-const DEFAULT_SIZES =
-  '(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 4rem), 704px';
+import { ImageZoom } from './image-zoom';
 
 import type { ImageProps as NextImageProps } from 'next/image';
 
-// -------------------------------------
-
-interface ImageProps extends NextImageProps {
+interface ImageProps extends Omit<NextImageProps, 'fill'> {
   caption?: string;
+  zoom?: boolean;
 }
 
 export function Image({
   src,
   className,
   caption,
+  title,
   sizes,
+  zoom = true,
   ...props
 }: ImageProps) {
+  const image = (
+    <ImageNext
+      src={src}
+      className={cn('mx-auto rounded-md', className)}
+      sizes={sizes ?? DEFAULT_IMAGE_SIZES}
+      placeholder={getPlaceholder(src)}
+      {...props}
+    />
+  );
+
   return (
-    <Figure caption={caption}>
-      <ImageNext
-        src={src}
-        className={cn('rounded-md', className)}
-        sizes={sizes ?? DEFAULT_SIZES}
-        placeholder={typeof src === 'string' ? 'empty' : 'blur'}
-        {...props}
-      />
+    <Figure caption={caption ?? title}>
+      {zoom && isStaticImageData(src) ?
+        <ImageZoom src={src} alt={props.alt}>
+          {image}
+        </ImageZoom>
+      : image}
     </Figure>
   );
 }
-
-// -------------------------------------
 
 interface RatioImageProps extends Omit<NextImageProps, 'fill'> {
   ratio?: number;
@@ -53,19 +62,19 @@ export function RatioImage({
 }: RatioImageProps) {
   return (
     <Figure caption={caption}>
-      <AspectRatio
-        ratio={ratio}
-        className='overflow-hidden rounded-md bg-muted'
+      <div
+        className='relative overflow-hidden rounded-md bg-muted'
+        style={{ aspectRatio: ratio }}
       >
         <ImageNext
           src={src}
           className={cn('object-cover', className)}
-          sizes={sizes ?? DEFAULT_SIZES}
-          placeholder={typeof src === 'string' ? 'empty' : 'blur'}
+          sizes={sizes ?? DEFAULT_IMAGE_SIZES}
+          placeholder={getPlaceholder(src)}
           fill
           {...props}
         />
-      </AspectRatio>
+      </div>
     </Figure>
   );
 }
