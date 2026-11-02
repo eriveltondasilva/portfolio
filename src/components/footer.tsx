@@ -1,3 +1,5 @@
+import NextLink from 'next/link';
+
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 
 import type { ComponentProps } from 'react';
@@ -21,14 +23,20 @@ export function Footer() {
     <footer className='px-4 pb-8 md:px-8 lg:px-12'>
       <div className='mt-6 flex flex-col gap-1 border-t border-zinc-100 pt-5 sm:flex-row sm:items-center sm:justify-between dark:border-zinc-800'>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
-          &copy; {year}{' '}
+          &copy; {year}&nbsp;
           <Link href={author.socials.github}>
             {author.name.split(' ').at(0)}
           </Link>
-          . Todos os direitos reservados.
+          Todos os direitos reservados ·&nbsp;
+          <NextLink
+            href='/privacy'
+            className='transition-colors hover:text-zinc-700 dark:hover:text-zinc-300'
+          >
+            Privacidade
+          </NextLink>
         </p>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
-          Feito com <Link href='https://nextjs.org'>Next.js</Link>,{' '}
+          Feito com <Link href='https://nextjs.org'>Next.js</Link>,&nbsp;
           <Link href='https://vercel.com'>Vercel</Link> e muito café ☕
         </p>
       </div>
