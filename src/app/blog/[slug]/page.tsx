@@ -7,7 +7,7 @@ import { BackToTop } from '@/components/back-to-top';
 import { Icon } from '@/components/icon';
 import { PostAuthors } from '@/components/post-authors';
 import { PostCover } from '@/components/post-cover';
-import { PostFooterActions } from '@/components/post-footer-actions';
+import { PostFooter } from '@/components/post-footer';
 import { PostNavigation } from '@/components/post-navigation';
 import { PostSeriesBanner } from '@/components/post-series-banner';
 import { PostToc } from '@/components/post-toc';
@@ -97,10 +97,13 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { meta, Content, toc } = post;
 
-  const { prevPost, nextPost } = getAdjacentPosts(slug);
-  const isArchived = meta.status === PostStatus.ARCHIVED;
+  console.log(meta);
+
   const authors = getAuthorsBySlugs(meta.authors);
+  const { prevPost, nextPost } = getAdjacentPosts(slug);
   const tocItems = flattenToc(toc);
+
+  const isArchived = meta.status === PostStatus.ARCHIVED;
 
   const postUrl = `${BASE_URL}/blog/${slug}`;
   const editUrl = `${GITHUB_REPO}/edit/main/content/posts/${meta.folder}/index.mdx`;
@@ -190,7 +193,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
           <Separator />
 
-          <PostFooterActions slug={slug} editUrl={editUrl} />
+          <PostFooter slug={slug} editUrl={editUrl} isArchived={isArchived} />
         </article>
 
         {tocItems.length > 1 && <PostToc items={tocItems} />}

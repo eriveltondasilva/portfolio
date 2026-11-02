@@ -1,74 +1,118 @@
-import { NextResponse, type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
-import { redis } from '@/lib/redis';
+import { getPostBySlug } from '@/lib/blog/posts';
+import { PostStatus } from '@/lib/constants';
+import { isReactionType } from '@/lib/reactions/config';
 import {
-  RATE_LIMIT_TTL,
-  REACTION_CONFIG,
-  REACTION_TYPES,
-  reactionCountKey,
-  reactionRateLimitKey,
-  type ReactionType,
-} from '@/lib/reactions';
+  isNewVisitorRateLimited,
+  isReactionRateLimited,
+} from '@/lib/reactions/rate-limit';
+import {
+  readReactions,
+  removeReaction,
+  setReaction,
+} from '@/lib/reactions/store';
+import { createVisitorId, getVisitorId } from '@/lib/reactions/visitor';
 
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',').at(0)?.trim() ??
-    request.headers.get('x-real-ip') ??
-    'anonymous'
+import type { ReactionState } from '@/lib/reactions/config';
+
+type Context = RouteContext<'/api/reactions/[slug]'>;
+
+type ReactionErrorCode =
+  | 'post-not-found'
+  | 'post-archived'
+  | 'rate-limited'
+  | 'invalid-reaction-type'
+  | 'store-unavailable';
+
+function errorResponse(code: ReactionErrorCode, status: number) {
+  return NextResponse.json({ error: code }, { status });
+}
+
+// Drafts are not public, so they behave as if they did not exist
+function findVisiblePost(slug: string) {
+  const post = getPostBySlug(slug);
+
+  return post && post.status !== PostStatus.DRAFT ? post : null;
+}
+
+async function rejectInvalidWrite(request: Request, slug: string) {
+  const post = findVisiblePost(slug);
+
+  if (!post) return errorResponse('post-not-found', 404);
+  if (post.status === PostStatus.ARCHIVED) {
+    return errorResponse('post-archived', 409);
+  }
+  if (await isReactionRateLimited(request)) {
+    return errorResponse('rate-limited', 429);
+  }
+
+  return null;
+}
+
+async function respondWithState(loadState: () => Promise<ReactionState>) {
+  try {
+    const state = await loadState();
+
+    // The payload mixes public counts with the visitor's private choice
+    return NextResponse.json(state, {
+      headers: { 'Cache-Control': 'no-store' },
+    });
+  } catch (error) {
+    console.error('[reactions] Store failure:', error);
+
+    return errorResponse('store-unavailable', 503);
+  }
+}
+
+// Null means the new-visitor limit was hit; the cookie is only created when it was not
+async function registerNewVisitor(request: Request): Promise<string | null> {
+  if (await isNewVisitorRateLimited(request)) return null;
+
+  return createVisitorId();
+}
+
+export async function GET(_request: Request, { params }: Context) {
+  const { slug } = await params;
+
+  if (!findVisiblePost(slug)) return errorResponse('post-not-found', 404);
+
+  return respondWithState(async () =>
+    readReactions(slug, await getVisitorId()),
   );
 }
 
-export async function GET(
-  _: NextRequest,
-  ctx: RouteContext<'/api/reactions/[slug]'>,
-) {
-  const { slug } = await ctx.params;
+export async function PUT(request: Request, { params }: Context) {
+  const { slug } = await params;
 
-  const keys = REACTION_TYPES.map((type) => reactionCountKey(slug, type));
-  const values = await redis.mget<number[]>(...keys);
+  const rejection = await rejectInvalidWrite(request, slug);
+  if (rejection) return rejection;
 
-  const counts = Object.fromEntries(
-    REACTION_TYPES.map((type, index) => [type, values[index] ?? 0]),
-  );
+  const body: { type?: unknown } | null = await request
+    .json()
+    .catch(() => null);
+  const type = body?.type;
 
-  return NextResponse.json(counts);
+  if (!isReactionType(type)) return errorResponse('invalid-reaction-type', 400);
+
+  const visitorId =
+    (await getVisitorId()) ?? (await registerNewVisitor(request));
+
+  if (!visitorId) return errorResponse('rate-limited', 429);
+
+  return respondWithState(() => setReaction(slug, visitorId, type));
 }
 
-export async function POST(
-  request: NextRequest,
-  ctx: RouteContext<'/api/reactions/[slug]'>,
-) {
-  const { slug } = await ctx.params;
-  const ip = getClientIp(request);
+export async function DELETE(request: Request, { params }: Context) {
+  const { slug } = await params;
 
-  const body = await request.json();
-  const type = body?.type as ReactionType;
+  const rejection = await rejectInvalidWrite(request, slug);
+  if (rejection) return rejection;
 
-  if (!type || !REACTION_CONFIG[type]) {
-    return NextResponse.json(
-      { error: 'Tipo de reação inválido.' },
-      { status: 400 },
-    );
-  }
+  // Without a cookie there is nothing to remove, and no cookie should be created for it
+  const visitorId = await getVisitorId();
 
-  const rateLimitKey = reactionRateLimitKey(ip, slug, type);
-  const alreadyReacted = await redis.get(rateLimitKey);
-
-  if (alreadyReacted) {
-    return NextResponse.json(
-      { error: 'Você já reagiu com esse emoji recentemente.' },
-      { status: 429 },
-    );
-  }
-
-  const countKey = reactionCountKey(slug, type);
-
-  await Promise.all([
-    redis.incr(countKey),
-    redis.set(rateLimitKey, 1, { ex: RATE_LIMIT_TTL }),
-  ]);
-
-  const newCount = await redis.get<number>(countKey);
-
-  return NextResponse.json({ type, count: newCount ?? 1 });
+  return respondWithState(() =>
+    visitorId ? removeReaction(slug, visitorId) : readReactions(slug, null),
+  );
 }

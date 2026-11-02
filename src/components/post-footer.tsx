@@ -1,23 +1,24 @@
 import { FilePenIcon } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/icon';
 import { PostReactions } from '@/components/post-reactions';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   slug: string;
   editUrl: string;
+  isArchived?: boolean;
 }
 
-export function PostFooterActions({ slug, editUrl }: Props) {
+export function PostFooter({ slug, editUrl, isArchived = false }: Props) {
   return (
-    <footer className='flex items-center justify-between'>
-      <PostReactions slug={slug} />
+    <footer className='flex flex-wrap items-center justify-between gap-x-4 gap-y-2'>
+      <PostReactions slug={slug} readOnly={isArchived} />
 
       <Button variant='link' asChild>
         <a href={editUrl} target='_blank' rel='noopener noreferrer'>
           <Icon iconNode={FilePenIcon} />
-          Sugerir alterações
+          Sugerir Edição
         </a>
       </Button>
     </footer>
