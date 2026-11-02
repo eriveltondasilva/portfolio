@@ -1,14 +1,13 @@
-import type { Octokit } from '@octokit/rest';
-import type { MDXContent } from 'mdx/types';
-import type { z } from 'zod';
-import type { Toc } from '@stefanprobst/rehype-extract-toc';
-
 import type {
   authorSchema,
   postSchema,
   projectSchema,
   seriesSchema,
 } from '@/lib/schemas';
+import type { Octokit } from '@octokit/rest';
+import type { Toc } from '@stefanprobst/rehype-extract-toc';
+import type { MDXContent, MDXModule } from 'mdx/types';
+import type { z } from 'zod';
 
 export type Series = z.infer<typeof seriesSchema>;
 export type Post = z.infer<typeof postSchema>;
@@ -26,24 +25,14 @@ export interface SeriesPostRef {
   order: number;
 }
 
-export interface PostIndex extends Post {
-  readingTime: number;
-  folder: string;
-  coverFile: string | null;
-}
-
 export interface SeriesIndex extends Series {
   posts: SeriesPostRef[];
 }
 
-export interface TagCount {
-  tag: string;
-  count: number;
-}
-
-export interface AdjacentPosts {
-  prevPost: PostIndex | null;
-  nextPost: PostIndex | null;
+export interface PostIndex extends Post {
+  readingTime: number;
+  folder: string;
+  coverFile: string | null;
 }
 
 export interface PostWithContent {
@@ -52,8 +41,22 @@ export interface PostWithContent {
   toc: Toc;
 }
 
+export interface AdjacentPosts {
+  prevPost: PostIndex | null;
+  nextPost: PostIndex | null;
+}
+
+export interface PostModule extends MDXModule {
+  toc: Toc;
+}
+
 export interface TocItem {
   id: string;
   title: string;
   depth: number;
+}
+
+export interface TagCount {
+  tag: string;
+  count: number;
 }

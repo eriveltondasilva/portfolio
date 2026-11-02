@@ -1,6 +1,6 @@
 import { getPostBySlug } from './posts';
 
-import type { PostWithContent } from '@/types';
+import type { PostModule, PostWithContent } from '@/types';
 
 export async function getPostWithContent(
   slug: string,
@@ -9,9 +9,9 @@ export async function getPostWithContent(
 
   if (!post) return null;
 
-  const { default: Content, toc } = await import(
+  const { default: Content, toc } = (await import(
     `@/content/posts/${post.folder}/index.mdx`
-  );
+  )) as PostModule;
 
   return { Content, meta: post, toc };
 }
