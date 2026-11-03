@@ -12,17 +12,22 @@ export function PostNavigation({ prevPost, nextPost }: Props) {
   if (!prevPost && !nextPost) return null;
 
   return (
-    <section aria-label='Navegação entre posts'>
+    <>
       <Separator />
 
       <nav
         aria-label='Navegação entre posts'
-        className='flex flex-col gap-3 sm:flex-row'
+        className='grid gap-3 sm:grid-cols-2'
       >
         {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
-        {!prevPost && <div className='flex-1' />}
-        {nextPost && <AdjacentPostCard post={nextPost} direction='next' />}
+        {nextPost && (
+          <AdjacentPostCard
+            post={nextPost}
+            direction='next'
+            className={prevPost ? undefined : 'sm:col-start-2'}
+          />
+        )}
       </nav>
-    </section>
+    </>
   );
 }
