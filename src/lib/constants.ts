@@ -47,6 +47,14 @@ export const POST_META_FILE = 'meta.yml';
 export const POST_CONTENT_FILE = 'index.mdx';
 export const POST_IMAGES_DIR = 'images';
 
+// # Giscus
+export const GISCUS = {
+  repo: 'eriveltondasilva/portfolio',
+  repoId: 'R_kgDORkGhhA',
+  category: 'Comments',
+  categoryId: 'DIC_kwDORkGhhM4DKR_m',
+} as const;
+
 // ── BASE URL ─────────────────────────
 
 function resolveBaseUrl(): string {

@@ -34,6 +34,13 @@ export function Footer() {
           >
             Privacidade
           </NextLink>
+          &nbsp;·&nbsp;
+          <a
+            href='/feed.xml'
+            className='transition-colors hover:text-zinc-700 dark:hover:text-zinc-300'
+          >
+            RSS
+          </a>
         </p>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
           Feito com <Link href='https://nextjs.org'>Next.js</Link>,&nbsp;
