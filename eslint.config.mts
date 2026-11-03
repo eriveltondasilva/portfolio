@@ -1,9 +1,9 @@
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier/flat';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importXPlugin from 'eslint-plugin-import-x';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -49,6 +49,7 @@ const eslintConfig = defineConfig([
 
       'import-x/no-duplicates': 'error',
       'import-x/newline-after-import': 'error',
+      'import-x/no-unresolved': 'error',
     },
   },
 
