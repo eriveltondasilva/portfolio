@@ -24,8 +24,13 @@ export const metadata: Metadata = {
   description: SITE_DESCRIPTION,
   authors: [{ name: AUTHOR_NAME, url: BASE_URL }],
   creator: AUTHOR_NAME,
+  alternates: {
+    canonical: '/',
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
   openGraph: {
     type: 'website',
+    url: '/',
     locale: OG_LOCALE,
     siteName: SITE_NAME,
     title: SITE_NAME,

@@ -1,36 +1,55 @@
 # Política de privacidade
 
-Última atualização: 1 de novembro de 2026.
+Última atualização: 3 de novembro de 2026.
 
-Este blog é mantido por Erivelton Silva. Esta página explica quais dados são usados no recurso de reações dos posts, para que servem e por quanto tempo ficam guardados.
+Este blog é mantido por Erivelton Silva. Esta página explica quais dados são usados nos recursos de reações e comentários dos posts, para que servem e por quanto tempo ficam guardados.
 
-## O que é usado
+## Reações
 
-Reagir a um post não exige cadastro. Quando você reage, o site usa:
+Reagir a um post não exige cadastro.
+
+### O que é usado
+
+Quando você reage, o site usa:
 
 - **Um identificador anônimo**, gerado aleatoriamente e guardado em um cookie chamado `visitor_id`. Ele serve para saber qual reação você escolheu em cada post e permitir que você a troque ou desfaça. Não contém seu nome, e-mail nem outra informação sobre você. Apenas ler os posts não cria esse cookie.
 - **Um código derivado do seu endereço IP**, usado só para limitar quantas reações podem ser enviadas por minuto e evitar abuso. O IP original não é guardado, e não é possível recuperá-lo a partir desse código.
 - **A reação escolhida**, associada ao post e ao identificador anônimo, que também entra na contagem exibida na página.
 
-## Para que serve
+### Para que serve
 
 - Mostrar quantas pessoas reagiram a cada post.
 - Garantir uma única reação por visitante em cada post.
 - Proteger o recurso contra uso abusivo.
 
-## Por quanto tempo
+### Por quanto tempo
 
 - **Cookie:** até 1 ano, ou até você apagá-lo no navegador.
 - **Código derivado do IP:** poucas horas, no máximo.
 - **Reação e identificador associado:** enquanto o post existir. Ao desfazer uma reação, o registro dela é removido.
 
+## Comentários
+
+Os comentários usam o [Giscus](https://giscus.app), que grava tudo nas Discussões (GitHub Discussions) do repositório deste blog. Diferente das reações, comentar exige uma conta no GitHub.
+
+- **O que é usado:** ao comentar, você entra com sua conta do GitHub. O comentário é público e aparece com seu nome de usuário, sua foto de perfil e o texto que você escrever. O blog não guarda comentários em um banco de dados próprio.
+- **Para que serve:** exibir a conversa abaixo de cada post.
+- **Por quanto tempo:** até o comentário ser apagado. Você pode editá-lo ou excluí-lo a qualquer momento pelo GitHub.
+- **Ao carregar a seção:** a seção de comentários é carregada de `giscus.app`, então seu navegador se conecta a esse serviço quando ela se aproxima da tela, mesmo que você não comente. Para entrar e exibir fotos de perfil, o navegador também se conecta ao GitHub. Esses serviços recebem seu endereço IP e dados técnicos comuns de navegação, e podem usar cookies ou armazenamento local para manter seu login, conforme as próprias políticas de privacidade.
+
+## Conteúdo de terceiros
+
+As fotos de perfil dos autores são carregadas do GitHub. Alguns posts também podem incorporar conteúdo de outros serviços, como vídeos do YouTube e publicações do X. Ao exibir esse conteúdo, seu navegador pode se conectar a esses serviços, que seguem as próprias políticas de privacidade.
+
 ## Onde os dados ficam
 
-Os dados são armazenados em um banco Redis gerenciado pela Upstash, e o site é hospedado na Vercel. Esses serviços processam os dados em nome do blog. Os dados não são vendidos nem compartilhados com terceiros para outras finalidades.
+Os dados das reações são armazenados em um banco Redis gerenciado pela Upstash, e o site é hospedado na Vercel. Esses dois serviços processam os dados em nome do blog. Os comentários ficam no GitHub, e o GitHub e o Giscus tratam os dados deles conforme as próprias políticas. Os dados não são vendidos nem compartilhados com terceiros para outras finalidades.
 
 ## Seus direitos
 
 Você pode apagar o cookie a qualquer momento nas configurações do navegador. Também pode pedir informações sobre os dados ligados a você ou a eliminação deles, conforme a Lei Geral de Proteção de Dados (LGPD). Como o identificador é anônimo, posso pedir o valor do cookie `visitor_id`, visível nas ferramentas do desenvolvedor do navegador, para localizar seus dados.
+
+Seus comentários ficam vinculados à sua conta do GitHub: você pode editá-los ou excluí-los por lá a qualquer momento, ou pedir a remoção pelo contato abaixo.
 
 ## Contato e alterações
 
