@@ -1,36 +1,25 @@
 import { LOCALE } from '@/lib/constants';
 
-import type { Author } from '@/types';
+import type { Author, GithubRepo } from '@/types';
+
+// ── Date Formatter ───────────────────
 
 const DEFAULT_DATE_OPTIONS = {
   dateStyle: 'medium',
   timeZone: 'UTC',
 } satisfies Intl.DateTimeFormatOptions;
 
-// Intl objects are expensive to build, so each distinct configuration is created once.
 const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
 function getDateFormatter(
   options?: Intl.DateTimeFormatOptions,
 ): Intl.DateTimeFormat {
   const key = JSON.stringify(options ?? {});
-  let formatter = dateFormatters.get(key);
+  const callback = () =>
+    new Intl.DateTimeFormat(LOCALE, { ...DEFAULT_DATE_OPTIONS, ...options });
 
-  if (!formatter) {
-    formatter = new Intl.DateTimeFormat(LOCALE, {
-      ...DEFAULT_DATE_OPTIONS,
-      ...options,
-    });
-    dateFormatters.set(key, formatter);
-  }
-
-  return formatter;
+  return dateFormatters.getOrInsertComputed(key, callback);
 }
-
-export const listFormatter = new Intl.ListFormat(LOCALE, {
-  style: 'long',
-  type: 'conjunction',
-});
 
 export function formatDate(
   date: string,
@@ -43,6 +32,25 @@ export function formatDate(
   }
 }
 
+// ── List Formatter ───────────────────
+
+export function createListFormatter() {
+  return new Intl.ListFormat(LOCALE, {
+    style: 'long',
+    type: 'conjunction',
+  });
+}
+
+// ── Format Functions ─────────────────
+
+export function formatProjectName(repo: GithubRepo): string {
+  return repo.name
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export function getNameInitials(name: string): string {
   return name
     .split(/\s+/)
@@ -53,12 +61,10 @@ export function getNameInitials(name: string): string {
     .toUpperCase();
 }
 
-/** Returns the URL path without leading/trailing slashes (e.g. "in/username"). */
 export function getUrlPathname(url: string): string {
   return new URL(url).pathname.replace(/^\/+|\/+$/g, '');
 }
 
 export function getGitHubAvatarUrl(author: Author, size = 40): string {
-  // Built from the pathname so a trailing slash in the profile URL cannot break it.
   return `https://github.com/${getUrlPathname(author.socials.github)}.png?size=${size}`;
 }
