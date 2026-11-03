@@ -2,7 +2,7 @@ import { ArrowRightIcon, DotIcon, FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { formatDate } from '@/lib';
+import { formatDate } from '@/lib/format';
 import { getRelatedPosts } from '@/lib/blog/posts';
 import { Separator } from '@/components/separator';
 

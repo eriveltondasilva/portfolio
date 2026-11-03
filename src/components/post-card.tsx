@@ -1,7 +1,7 @@
 import { DotIcon, FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { formatDate } from '@/lib';
+import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';

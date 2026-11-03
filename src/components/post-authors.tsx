@@ -17,7 +17,7 @@ import {
   getGitHubAvatarUrl,
   getNameInitials,
   getUrlPathname,
-} from '@/lib';
+} from '@/lib/format';
 
 import type { Author } from '@/types';
 import type { LucideIcon } from 'lucide-react';

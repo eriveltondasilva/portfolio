@@ -1,5 +1,5 @@
-import NextImage from 'next/image';
 import { cn } from 'cn';
+import NextImage from 'next/image';
 
 import { GRID_IMAGE_SIZES, getPlaceholder } from '@/lib/images';
 

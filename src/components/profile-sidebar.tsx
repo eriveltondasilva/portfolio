@@ -4,7 +4,11 @@ import Image from 'next/image';
 import Github from '@/assets/github.svg';
 import Linkedin from '@/assets/linkedin.svg';
 import TwitterX from '@/assets/twitter-x.svg';
-import { getGitHubAvatarUrl, getNameInitials, getUrlPathname } from '@/lib';
+import {
+  getGitHubAvatarUrl,
+  getNameInitials,
+  getUrlPathname,
+} from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 
 import { Icon } from './icon';

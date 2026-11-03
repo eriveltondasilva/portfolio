@@ -1,10 +1,9 @@
-// src/app/(main)/series/[slug]/opengraph-image.tsx
 import { ImageResponse } from 'next/og';
 
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
 import { getSeriesPosts } from '@/lib/blog/posts';
 import { BASE_URL, SeriesStatus } from '@/lib/constants';
-import { formatDate } from '@/lib';
+import { formatDate } from '@/lib/format';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
