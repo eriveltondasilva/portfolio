@@ -9,12 +9,8 @@ import { notFound } from 'next/navigation';
 
 import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/post-card';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/separator';
-import { getSeriesPosts } from '@/lib/blog/posts';
-import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
-import { SeriesStatus } from '@/lib/constants';
-import { formatDate } from '@/lib';
+import { Badge } from '@/components/ui/badge';
 import {
   Empty,
   EmptyDescription,
@@ -22,6 +18,10 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { getSeriesPosts } from '@/lib/blog/posts';
+import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
+import { SeriesStatus } from '@/lib/constants';
+import { formatDate } from '@/lib/format';
 
 import type { Metadata } from 'next';
 
