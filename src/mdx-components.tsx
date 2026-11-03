@@ -19,26 +19,23 @@ import { Youtube } from './components/mdx/youtube';
 
 import type { MDXComponents } from 'mdx/types';
 
-const components = {
+// prettier-ignore
+const components: MDXComponents = {
   a: Link,
   img: Image,
   pre: CodeBlock,
+  table: Table,
   //
   Accordion,
   AccordionItem,
-  //
   Image,
   RatioImage,
-  //
   ImageGrid,
   GridImage,
-  //
   Tabs,
   Tab,
-  //
   Steps,
   Step,
-  //
   FileTree,
   FileTreeFolder,
   FileTreeFile,
@@ -48,8 +45,7 @@ const components = {
   Kbd,
   Youtube,
   Tweet,
-  Table,
-} satisfies MDXComponents;
+};
 
 export function useMDXComponents(inherited?: MDXComponents): MDXComponents {
   return { ...inherited, ...components };
