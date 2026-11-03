@@ -1,6 +1,6 @@
 import { LOCALE } from '@/lib/constants';
 
-import type { Author, GithubRepo } from '@/types';
+import type { Author } from '@/types';
 
 // ── Date Formatter ───────────────────
 
@@ -42,14 +42,6 @@ export function createListFormatter() {
 }
 
 // ── Format Functions ─────────────────
-
-export function formatProjectName(repo: GithubRepo): string {
-  return repo.name
-    .split('-')
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-}
 
 export function getNameInitials(name: string): string {
   return name
