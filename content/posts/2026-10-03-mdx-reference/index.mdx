@@ -26,7 +26,6 @@ O `id` é gerado em kebab-case. Use para linkar diretamente para uma seção:
 
 [Ir para seção "# Âncoras em headings"](#âncoras-em-headings)
 
-
 ### Links
 
 Links internos e externos são tratados automaticamente pelo componente `Link` da pasta `components/mdx/link.tsx`:
@@ -37,6 +36,7 @@ Links internos e externos são tratados automaticamente pelo componente `Link` d
 - `contato@exemplo.com` → vira link de e-mail
 
 Exemplos:
+
 - [Link interno](/blog/mdx-reference)
 - [Link externo](https://google.com)
 - https://google.com
@@ -83,7 +83,7 @@ Bloco simples:
 
 ```ts
 function greet(name: string): string {
-  return `Hello, ${name}!`
+  return `Hello, ${name}!`;
 }
 ```
 
@@ -91,7 +91,7 @@ Com `title` e `caption`:
 
 ```ts title="utils/greet.ts" caption="Função utilitária de saudação."
 function greet(name: string): string {
-  return `Hello, ${name}!`
+  return `Hello, ${name}!`;
 }
 ```
 
@@ -99,30 +99,34 @@ Com `showLineNumbers`:
 
 ```tsx title="components/button.tsx" showLineNumbers
 interface ButtonProps extends React.ComponentProps<'button'> {
-  variant?: 'default' | 'outline' | 'ghost'
+  variant?: 'default' | 'outline' | 'ghost';
 }
 
-export function Button({ variant = 'default', className, ...props }: ButtonProps) {
+export function Button({
+  variant = 'default',
+  className,
+  ...props
+}: ButtonProps) {
   return (
     <button className={cn(buttonVariants({ variant }), className)} {...props} />
-  )
+  );
 }
 ```
 
 Com
 
 ```ts
-const old = 1 // [!code --]
-const novo = 2 // [!code ++]
+const old = 1; // [!code --]
+const novo = 2; // [!code ++]
 ```
 
 ```ts
-const importante = 3 // [!code highlight]
+const importante = 3; // [!code highlight]
 ```
 
 ```ts
-console.log('focus')
-const importante = 3 // [!code focus]
+console.log('focus');
+const importante = 3; // [!code focus]
 ```
 
 Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
@@ -175,28 +179,41 @@ Etiquetas inline para categorizar ou destacar termos.
 
 **Variantes:**
 
-<Badge>default</Badge> <Badge variant='primary'>primary</Badge> <Badge variant='success'>success</Badge> <Badge variant='warning'>warning</Badge> <Badge variant='danger'>danger</Badge> <Badge variant='info'>info</Badge>
+<Badge>default</Badge> <Badge variant='primary'>primary</Badge>
+<Badge variant='success'>success</Badge>
+<Badge variant='warning'>warning</Badge> <Badge variant='danger'>danger</Badge>
+<Badge variant='info'>info</Badge>
 
 **Tamanhos:**
 
-<Badge size='sm'>sm</Badge> <Badge size='md'>md</Badge> <Badge size='lg'>lg</Badge>
+<Badge size='sm'>sm</Badge> <Badge size='md'>md</Badge>
+<Badge size='lg'>lg</Badge>
 
 **Modificadores:**
 
-<Badge dashed>dashed</Badge> <Badge variant='primary' dashed>primary dashed</Badge> <Badge borderless>borderless</Badge> <Badge variant='success' borderless>success borderless</Badge>
+<Badge dashed>dashed</Badge>
+<Badge variant='primary' dashed>
+  primary dashed
+</Badge>
+<Badge borderless>borderless</Badge>
+<Badge variant='success' borderless>
+  success borderless
+</Badge>
 
 **Sintaxe:**
 
 ```mdx
-<Badge variant='primary' size='md' dashed>texto</Badge>
+<Badge variant='primary' size='md' dashed>
+  texto
+</Badge>
 ```
 
-| Prop         | Valores                                                  | Padrão    |
-| ------------ | -------------------------------------------------------- | --------- |
+| Prop         | Valores                                                 | Padrão    |
+| ------------ | ------------------------------------------------------- | --------- |
 | `variant`    | `default` `primary` `success` `warning` `danger` `info` | `default` |
-| `size`       | `sm` `md` `lg`                                           | `md`      |
-| `dashed`     | `boolean`                                                | `false`   |
-| `borderless` | `boolean`                                                | `false`   |
+| `size`       | `sm` `md` `lg`                                          | `md`      |
+| `dashed`     | `boolean`                                               | `false`   |
+| `borderless` | `boolean`                                               | `false`   |
 
 ---
 
@@ -221,26 +238,10 @@ Conteúdo alternado em abas. Ideal para mostrar o mesmo conteúdo em múltiplas 
 A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve corresponder a um item do array `tabs`.
 
 <Tabs tabs={['npm', 'Yarn', 'pnpm', 'Bun']}>
-  <Tab value='npm'>
-    ```bash
-    npm install react react-dom
-    ```
-  </Tab>
-  <Tab value='Yarn'>
-    ```bash
-    yarn add react react-dom
-    ```
-  </Tab>
-  <Tab value='pnpm'>
-    ```bash
-    pnpm add react react-dom
-    ```
-  </Tab>
-  <Tab value='Bun'>
-    ```bash
-    bun add react react-dom
-    ```
-  </Tab>
+  <Tab value='npm'>```bash npm install react react-dom ```</Tab>
+  <Tab value='Yarn'>```bash yarn add react react-dom ```</Tab>
+  <Tab value='pnpm'>```bash pnpm add react react-dom ```</Tab>
+  <Tab value='Bun'>```bash bun add react react-dom ```</Tab>
 </Tabs>
 
 Use `defaultValue` para definir qual aba abre por padrão (padrão: primeira aba):
@@ -274,6 +275,7 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
     ```bash
     bun add react react-dom
     ```
+
   </Step>
 
   <Step title='Configure o arquivo principal'>
@@ -286,6 +288,7 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
       host: 'localhost',
     }
     ```
+
   </Step>
 
   <Step title='Inicie o servidor'>
@@ -294,6 +297,7 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
     ```bash
     bun dev
     ```
+
   </Step>
 </Steps>
 
@@ -322,10 +326,10 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
     interromperiam o fluxo do texto principal.
   </AccordionItem>
 
-  <AccordionItem title='Posso colocar código dentro?'>
-    Sim. O `AccordionContent` aceita qualquer conteúdo MDX, incluindo blocos de
-    código, listas e outros componentes.
-  </AccordionItem>
+<AccordionItem title='Posso colocar código dentro?'>
+  Sim. O `AccordionContent` aceita qualquer conteúdo MDX, incluindo blocos de
+  código, listas e outros componentes.
+</AccordionItem>
 
   <AccordionItem title='Qual a diferença entre type single e multiple?'>
     Com `single` (padrão), abrir um item fecha os demais. Com `multiple`, vários
@@ -402,8 +406,9 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
 ## Imagens
 
 <Callout variant='tip' title='Imagem de capa'>
-  A capa do post não usa componente: basta nomear o arquivo `cover` na pasta do post. Veja os
-  detalhes em [Como o blog funciona](/blog/como-o-blog-funciona#imagem-de-capa).
+  A capa do post não usa componente: basta nomear o arquivo `cover` na pasta do
+  post. Veja os detalhes em [Como o blog
+  funciona](/blog/como-o-blog-funciona#imagem-de-capa).
 </Callout>
 
 ### Imagem inline (Markdown)
@@ -427,7 +432,7 @@ Para imagens com legenda ou controle fino de propriedades, use o componente `Ima
 **Sintaxe:**
 
 ```mdx
-import MinhaImagem from './cover.jpg'
+import MinhaImagem from './cover.jpg';
 
 <Image
   src={MinhaImagem}
@@ -439,12 +444,12 @@ import MinhaImagem from './cover.jpg'
 
 **Exemplo:**
 
-{/* <Image
+{/_ <Image
   src={CoverImage}
   alt='Exemplo de imagem com legenda usando o componente Image.'
   title='Título da imagem. Opcional.'
   caption='Figura 1. Imagem de exemplo com legenda.'
-/> */}
+/> _/}
 
 ### RatioImage
 
@@ -464,13 +469,13 @@ Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagen
 
 **Exemplo:**
 
-{/* <RatioImage
-  src={CoverImage}
-  alt='Exemplo de imagem com proporção fixa usando RatioImage.'
-  ratio={16 / 9}
-  title='Título da imagem. Opcional.'
-  caption='Figura 2. Imagem com proporção fixa (16:9).'
-/> */}
+{/_ <RatioImage
+src={CoverImage}
+alt='Exemplo de imagem com proporção fixa usando RatioImage.'
+ratio={16 / 9}
+title='Título da imagem. Opcional.'
+caption='Figura 2. Imagem com proporção fixa (16:9).'
+/> _/}
 
 Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
@@ -493,21 +498,22 @@ Para sobrescrever o número de colunas em um item específico, passe `columns` d
 ```mdx
 <ImageGrid columns={3}>
   <GridImage src={Imagem1} alt='...' />
-  <GridImage src={Imagem2} alt='...' columns={2} />  {/* sobrescreve o contexto */}
+  <GridImage src={Imagem2} alt='...' columns={2} />{' '}
+  {/* sobrescreve o contexto */}
 </ImageGrid>
 ```
 
 **Exemplo:**
 
 {/* <ImageGrid columns={3}> */}
-  {/* <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' /> */}
-  {/* <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' /> */}
-  {/* <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' /> */}
+{/* <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' /> */}
+{/* <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' /> */}
+{/* <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' /> */}
 {/* </ImageGrid> */}
 
-| Prop      | Componente  | Valores         | Padrão |
-| --------- | ----------- | --------------- | ------ |
-| `columns` | `ImageGrid` | `2` `3` `4` `5` `6` | `3`    |
+| Prop      | Componente  | Valores             | Padrão   |
+| --------- | ----------- | ------------------- | -------- |
+| `columns` | `ImageGrid` | `2` `3` `4` `5` `6` | `3`      |
 | `columns` | `GridImage` | `2` `3` `4` `5` `6` | contexto |
 
 ---
@@ -524,7 +530,7 @@ O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o
 
 **Exemplo:**
 
-<Youtube id='m3DJmtLdqhU'/>
+<Youtube id='m3DJmtLdqhU' />
 
 ---
 
@@ -565,8 +571,8 @@ Referência completa: [github.com/ikatyang/emoji-cheat-sheet](https://github.com
 Imagens e outros arquivos da mesma pasta podem ser importados diretamente no MDX:
 
 ```mdx
-import Cover from './cover.jpg'
-import Diagrama from './diagrama.png'
+import Cover from './cover.jpg';
+import Diagrama from './diagrama.png';
 
 <Image src={Cover} alt='Capa do post' />
 <Image src={Diagrama} alt='Diagrama de arquitetura' caption='Figura 1.' />

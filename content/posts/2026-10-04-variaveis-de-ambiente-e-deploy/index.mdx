@@ -17,18 +17,19 @@ UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 ```
 
-| Variável                    | Usada por                                         | Lida em      | Sem ela                                    |
-| --------------------------- | ------------------------------------------------- | ------------ | ------------------------------------------ |
-| `GITHUB_TOKEN`              | Script `build:projects`                           | Build        | O script falha e o build não termina       |
-| `NEXT_PUBLIC_SITE_URL`      | Metadados, sitemap, OG image e botão de compartilhar | Build     | Usa `http://localhost:3000` como padrão    |
-| `UPSTASH_REDIS_REST_URL`    | Reações e keepalive                               | Execução     | Reações e keepalive deixam de funcionar    |
-| `UPSTASH_REDIS_REST_TOKEN`  | Reações e keepalive                               | Execução     | Reações e keepalive deixam de funcionar    |
-| `CRON_SECRET`               | Rota `/api/keepalive`                             | Execução     | A rota responde sempre `401`               |
+| Variável                   | Usada por                                            | Lida em  | Sem ela                                 |
+| -------------------------- | ---------------------------------------------------- | -------- | --------------------------------------- |
+| `GITHUB_TOKEN`             | Script `build:projects`                              | Build    | O script falha e o build não termina    |
+| `NEXT_PUBLIC_SITE_URL`     | Metadados, sitemap, OG image e botão de compartilhar | Build    | Usa `http://localhost:3000` como padrão |
+| `UPSTASH_REDIS_REST_URL`   | Reações e keepalive                                  | Execução | Reações e keepalive deixam de funcionar |
+| `UPSTASH_REDIS_REST_TOKEN` | Reações e keepalive                                  | Execução | Reações e keepalive deixam de funcionar |
+| `CRON_SECRET`              | Rota `/api/keepalive`                                | Execução | A rota responde sempre `401`            |
 
 <Callout variant='warning' title='NEXT_PUBLIC_SITE_URL precisa de protocolo'>
-  O valor deve ser uma URL completa, como `https://meusite.com`. Sem o `https://`, o Next.js lança
-  `Invalid URL` ao montar os metadados. E, como variáveis com prefixo `NEXT_PUBLIC_` são embutidas no
-  código durante o build, alterar o valor exige um novo build.
+  O valor deve ser uma URL completa, como `https://meusite.com`. Sem o
+  `https://`, o Next.js lança `Invalid URL` ao montar os metadados. E, como
+  variáveis com prefixo `NEXT_PUBLIC_` são embutidas no código durante o build,
+  alterar o valor exige um novo build.
 </Callout>
 
 ---
@@ -47,6 +48,7 @@ UPSTASH_REDIS_REST_TOKEN=
     UPSTASH_REDIS_REST_TOKEN=xxx
     CRON_SECRET=um-valor-longo-e-aleatorio
     ```
+
   </Tab>
   <Tab value='Vercel'>
     Cadastre as cinco variáveis em **Project Settings → Environment Variables** e faça um novo
@@ -54,12 +56,14 @@ UPSTASH_REDIS_REST_TOKEN=
 
     Quando `CRON_SECRET` existe no projeto, a Vercel envia automaticamente o cabeçalho
     `Authorization: Bearer` com esse valor em cada chamada do cron.
+
   </Tab>
 </Tabs>
 
 <Callout variant='danger' title='Cuidado'>
-  Arquivos `.env.local` não devem ir para o Git. Só o `.env.example`, sem valores, é versionado. Se
-  um token vazar, revogue-o no painel do provedor e gere outro.
+  Arquivos `.env.local` não devem ir para o Git. Só o `.env.example`, sem
+  valores, é versionado. Se um token vazar, revogue-o no painel do provedor e
+  gere outro.
 </Callout>
 
 ---
@@ -73,9 +77,10 @@ O comando `bun run build` dispara o `prebuild` antes do `next build`. Isso signi
     `build:blog` lê posts, autores e séries, aplica as [validações](/blog/como-o-blog-funciona#validações-no-build) e grava os índices.
   </Step>
 
-  <Step title='Busca os projetos'>
-    `build:projects` consulta o GitHub com o `GITHUB_TOKEN` e grava o índice de projetos.
-  </Step>
+<Step title='Busca os projetos'>
+  `build:projects` consulta o GitHub com o `GITHUB_TOKEN` e grava o índice de
+  projetos.
+</Step>
 
   <Step title='Compila o site'>
     O `next build` gera as páginas estáticas, usando os índices recém-criados.
@@ -117,10 +122,10 @@ Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O p
     reinicie o servidor.
   </AccordionItem>
 
-  <AccordionItem title='O build falha antes de compilar o site'>
-    Leia a mensagem do `prebuild`: ela indica o arquivo e o campo com problema (conteúdo inválido)
-    ou a ausência do `GITHUB_TOKEN`.
-  </AccordionItem>
+<AccordionItem title='O build falha antes de compilar o site'>
+  Leia a mensagem do `prebuild`: ela indica o arquivo e o campo com problema
+  (conteúdo inválido) ou a ausência do `GITHUB_TOKEN`.
+</AccordionItem>
 
   <AccordionItem title='Mudei uma variável na Vercel e nada mudou'>
     Variáveis só valem para deploys feitos depois da alteração. Gere um novo deploy, e lembre-se de

@@ -1,4 +1,3 @@
 src/components/ui/*
-content/posts/*
 generated/*
-scripts/utils/templates/
+scripts/utils/templates/*

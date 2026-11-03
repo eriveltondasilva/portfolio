@@ -19,11 +19,14 @@ export default function NotFound() {
           <EmptyMedia variant='icon'>
             <FileQuestion />
           </EmptyMedia>
+
           <EmptyTitle>Página não encontrada</EmptyTitle>
+
           <EmptyDescription>
             O conteúdo que você procura não existe ou foi removido.
           </EmptyDescription>
         </EmptyHeader>
+
         <EmptyContent>
           <Button asChild variant='outline' size='sm'>
             <Link href='/'>Voltar ao início</Link>
