@@ -444,12 +444,14 @@ import MinhaImagem from './cover.jpg';
 
 **Exemplo:**
 
-{/_ <Image
+```mdx
+{/\*_/ <Image
   src={CoverImage}
   alt='Exemplo de imagem com legenda usando o componente Image.'
   title='Título da imagem. Opcional.'
   caption='Figura 1. Imagem de exemplo com legenda.'
 /> _/}
+```
 
 ### RatioImage
 
@@ -469,6 +471,7 @@ Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagen
 
 **Exemplo:**
 
+```mdx
 {/_ <RatioImage
 src={CoverImage}
 alt='Exemplo de imagem com proporção fixa usando RatioImage.'
@@ -476,6 +479,7 @@ ratio={16 / 9}
 title='Título da imagem. Opcional.'
 caption='Figura 2. Imagem com proporção fixa (16:9).'
 /> _/}
+```
 
 Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
