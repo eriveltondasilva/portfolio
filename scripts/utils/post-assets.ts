@@ -1,7 +1,6 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import { stripFencedCode } from '@/lib';
 import {
   POST_CONTENT_FILE,
   POST_IMAGES_DIR,
@@ -27,6 +26,12 @@ const ALLOWED_ROOT_ENTRIES = new Set([
 const MARKDOWN_IMAGE = /!\[[^\]]*\]\(\s*<?([^)\s>]+)/g;
 const TAG_WITH_SRC = /<([A-Za-z][\w.]*)\b[^>]*?\bsrc=(?:"([^"]+)"|'([^']+)')/g;
 const IMAGE_IMPORT = /^import\s[^'"\n]*?from\s+['"]([^'"]+)['"]/gm;
+
+const FENCED_CODE_REGEX = /^(```|~~~)[\s\S]*?^\1/gm;
+
+function stripFencedCode(content: string): string {
+  return content.replace(FENCED_CODE_REGEX, '');
+}
 
 interface ImageReference {
   kind: 'markdown' | 'html' | 'jsx' | 'import';
