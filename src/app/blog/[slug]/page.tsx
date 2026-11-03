@@ -5,12 +5,14 @@ import { notFound } from 'next/navigation';
 import { ArchivedBanner } from '@/components/archived-banner';
 import { BackToTop } from '@/components/back-to-top';
 import { Icon } from '@/components/icon';
+import { JsonLd } from '@/components/json-ld';
 import { PostAuthors } from '@/components/post-authors';
 import { PostCover } from '@/components/post-cover';
 import { PostFooter } from '@/components/post-footer';
 import { PostNavigation } from '@/components/post-navigation';
 import { PostSeriesBanner } from '@/components/post-series-banner';
 import { PostToc } from '@/components/post-toc';
+import { PostTocMobile } from '@/components/post-toc-mobile';
 import { ReadingProgress } from '@/components/reading-progress';
 import { RelatedPosts } from '@/components/related-posts';
 import { Separator } from '@/components/separator';
@@ -31,6 +33,7 @@ import {
   getAllPostSlugs,
   getPostBySlug,
 } from '@/lib/blog/posts';
+import { buildPostJsonLd } from '@/lib/blog/structured-data';
 import { flattenToc } from '@/lib/blog/toc';
 import {
   BASE_URL,
@@ -41,6 +44,7 @@ import {
   TWITTER_HANDLE,
 } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
+import { PostComments } from '@/components/post-comments';
 
 import type { Metadata } from 'next';
 
@@ -68,9 +72,9 @@ export async function generateMetadata({
     ...(isArchived && { robots: { index: false, follow: true } }),
     openGraph: {
       type: 'article',
+      url: `/blog/${slug}`,
       locale: OG_LOCALE,
       siteName: SITE_NAME,
-      url: `/blog/${slug}`,
       title: post.title,
       description: post.description,
       publishedTime: post.publishedAt,
@@ -111,6 +115,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   return (
     <main className='mx-auto max-w-3xl px-4 py-8 md:px-8'>
+      <JsonLd data={buildPostJsonLd(meta, authors)} />
       <ReadingProgress />
       <BackToTop />
 
@@ -191,7 +196,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
             <Separator className='my-10' />
           </header>
 
-          {/* Article content */}
+          {tocItems.length > 1 && <PostTocMobile items={tocItems} />}
+
+          {/* Article Content */}
           <div className='prose max-w-none prose-zinc dark:prose-invert prose-headings:scroll-mt-24 prose-hr:my-10'>
             <Content />
           </div>
@@ -210,32 +217,9 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <>
           <RelatedPosts slug={slug} />
           <PostNavigation prevPost={prevPost} nextPost={nextPost} />
+          <PostComments slug={slug} />
         </>
       )}
     </main>
   );
 }
-
-// const jsonLd = {
-//   '@context': 'https://schema.org',
-//   '@type': 'BlogPosting',
-//   headline: meta.title,
-//   description: meta.description,
-//   datePublished: meta.publishedAt,
-//   dateModified: meta.updatedAt ?? meta.publishedAt,
-//   url: postUrl,
-//   inLanguage: LOCALE,
-//   author: authors.map((author) => ({
-//     '@type': 'Person',
-//     name: author.name,
-//     url: author.socials.github,
-//   })),
-// };
-
-// <script
-//   type='application/ld+json'
-//   // `<` is escaped so a title containing "</script>" cannot break out of the tag
-//   dangerouslySetInnerHTML={{
-//     __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
-//   }}
-// />

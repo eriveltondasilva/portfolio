@@ -1,4 +1,4 @@
-import { FileXIcon, LayersIcon } from 'lucide-react';
+import { FileXIcon, LayersIcon, RssIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/post-card';
@@ -10,32 +10,36 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { getAllPosts } from '@/lib/blog/posts';
+import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
 
 const meta = {
   title: 'Blog',
-  description: 'Todos os artigos sobre desenvolvimento frontend.',
-  siteName: "Erivelton's Portfolio",
+  description: 'Todos os posts sobre desenvolvimento frontend.',
 };
 
 export const metadata: Metadata = {
   title: meta.title,
   description: meta.description,
-  alternates: { canonical: '/blog' },
+  alternates: {
+    canonical: '/blog',
+    types: { 'application/rss+xml': '/feed.xml' },
+  },
   openGraph: {
     type: 'website',
     url: '/blog',
+    locale: OG_LOCALE,
+    siteName: SITE_NAME,
     title: meta.title,
     description: meta.description,
-    siteName: meta.siteName,
   },
   twitter: {
     card: 'summary',
     title: meta.title,
     description: meta.description,
-    site: meta.siteName,
-    creator: '@erivelton_silv4',
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
   },
 };
 
@@ -48,9 +52,19 @@ export default function BlogPage() {
     <div className='space-y-6'>
       {/* Header */}
       {hasPosts && (
-        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
-          <Icon iconNode={LayersIcon} className='size-3.5' />
-          {postCount} {postCount > 1 ? 'posts publicados' : 'post publicado'}
+        <div className='flex items-center justify-between gap-3 text-sm text-zinc-500 dark:text-zinc-400'>
+          <span className='flex items-center gap-1.5'>
+            <Icon iconNode={LayersIcon} className='size-3.5' />
+            {postCount} {postCount > 1 ? 'posts publicados' : 'post publicado'}
+          </span>
+          
+          <a
+            href='/feed.xml'
+            className='flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+          >
+            <Icon iconNode={RssIcon} className='size-3.5' />
+            RSS
+          </a>
         </div>
       )}
 
@@ -69,7 +83,9 @@ export default function BlogPage() {
             <EmptyMedia variant='icon'>
               <FileXIcon />
             </EmptyMedia>
+
             <EmptyTitle>Nenhum post publicado</EmptyTitle>
+
             <EmptyDescription>
               Os artigos aparecerão aqui assim que forem publicados.
             </EmptyDescription>
