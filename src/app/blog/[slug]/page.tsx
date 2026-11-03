@@ -15,7 +15,15 @@ import { ReadingProgress } from '@/components/reading-progress';
 import { RelatedPosts } from '@/components/related-posts';
 import { Separator } from '@/components/separator';
 import { ShareButton } from '@/components/share-button';
-import { formatDate } from '@/lib';
+import { TagLink } from '@/components/tag-link';
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import { getAuthorsBySlugs } from '@/lib/blog/authors';
 import { getPostWithContent } from '@/lib/blog/post-content';
 import {
@@ -27,20 +35,13 @@ import { flattenToc } from '@/lib/blog/toc';
 import {
   BASE_URL,
   GITHUB_REPO,
+  OG_LOCALE,
   PostStatus,
   SITE_NAME,
   TWITTER_HANDLE,
 } from '@/lib/constants';
+import { formatDate } from '@/lib/format';
 
-import { TagLink } from '@/components/tag-link';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
 import type { Metadata } from 'next';
 
 export const dynamicParams = false;
@@ -54,6 +55,7 @@ export async function generateMetadata({
   if (!post) notFound();
 
   const authors = getAuthorsBySlugs(post.authors);
+  const isArchived = post.status === PostStatus.ARCHIVED;
 
   return {
     title: post.title,
@@ -63,9 +65,10 @@ export async function generateMetadata({
       url: author.socials.github,
     })),
     alternates: { canonical: `/blog/${slug}` },
+    ...(isArchived && { robots: { index: false, follow: true } }),
     openGraph: {
       type: 'article',
-      locale: 'pt_BR',
+      locale: OG_LOCALE,
       siteName: SITE_NAME,
       url: `/blog/${slug}`,
       title: post.title,
@@ -97,8 +100,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
   const { meta, Content, toc } = post;
 
-  console.log(meta);
-
   const authors = getAuthorsBySlugs(meta.authors);
   const { prevPost, nextPost } = getAdjacentPosts(slug);
   const tocItems = flattenToc(toc);
@@ -109,7 +110,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
   const editUrl = `${GITHUB_REPO}/edit/main/content/posts/${meta.folder}/index.mdx`;
 
   return (
-    <>
+    <main className='mx-auto max-w-3xl px-4 py-8 md:px-8'>
       <ReadingProgress />
       <BackToTop />
 
@@ -117,11 +118,19 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
         <BreadcrumbList className='flex-nowrap'>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
+              <Link href='/'>Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+
+          <BreadcrumbSeparator>/</BreadcrumbSeparator>
+
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
               <Link href='/blog'>Blog</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
 
-          <BreadcrumbSeparator />
+          <BreadcrumbSeparator>/</BreadcrumbSeparator>
 
           <BreadcrumbItem className='min-w-0'>
             <BreadcrumbPage className='truncate'>{meta.title}</BreadcrumbPage>
@@ -176,14 +185,10 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
             </div>
 
             {meta.coverFile && (
-              <PostCover
-                className='mb-10'
-                folder={meta.folder}
-                coverFile={meta.coverFile}
-              />
+              <PostCover folder={meta.folder} coverFile={meta.coverFile} />
             )}
 
-            <Separator className='my-6' />
+            <Separator className='my-10' />
           </header>
 
           {/* Article content */}
@@ -207,6 +212,30 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           <PostNavigation prevPost={prevPost} nextPost={nextPost} />
         </>
       )}
-    </>
+    </main>
   );
 }
+
+// const jsonLd = {
+//   '@context': 'https://schema.org',
+//   '@type': 'BlogPosting',
+//   headline: meta.title,
+//   description: meta.description,
+//   datePublished: meta.publishedAt,
+//   dateModified: meta.updatedAt ?? meta.publishedAt,
+//   url: postUrl,
+//   inLanguage: LOCALE,
+//   author: authors.map((author) => ({
+//     '@type': 'Person',
+//     name: author.name,
+//     url: author.socials.github,
+//   })),
+// };
+
+// <script
+//   type='application/ld+json'
+//   // `<` is escaped so a title containing "</script>" cannot break out of the tag
+//   dangerouslySetInnerHTML={{
+//     __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c'),
+//   }}
+// />
