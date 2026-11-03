@@ -1,3 +1,4 @@
+// ── ENUMS ────────────────────────────
 export const PostStatus = {
   DRAFT: 'draft',
   PUBLISHED: 'published',
@@ -26,21 +27,27 @@ export const GithubTopic = {
 } as const;
 export type GithubTopic = (typeof GithubTopic)[keyof typeof GithubTopic];
 
-// -------------------------------------
+// ── CONSTANTS ────────────────────────
 
 export const SITE_NAME = "Erivelton's Portfolio";
+export const SITE_SHORT_NAME = 'Erivelton';
+export const SITE_DESCRIPTION =
+  'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.';
+
+export const AUTHOR_NAME = 'Erivelton Silva';
 export const TWITTER_HANDLE = '@erivelton_silv4';
 export const PRIMARY_AUTHOR_SLUG = 'erivelton';
-export const LOCALE = 'pt-BR';
-
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio';
+
+export const LOCALE = 'pt-BR';
+export const OG_LOCALE = LOCALE.replace('-', '_');
 
 // # Files inside each post folder
 export const POST_META_FILE = 'meta.yml';
 export const POST_CONTENT_FILE = 'index.mdx';
 export const POST_IMAGES_DIR = 'images';
 
-// -------------------------------------
+// ── BASE URL ─────────────────────────
 
 function resolveBaseUrl(): string {
   const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'];
