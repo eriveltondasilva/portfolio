@@ -36,7 +36,7 @@
     "5xxx": "",
     "typecheck": "tsc --noEmit",
     "typegen": "bun run --bun next typegen",
-    "fix": "bun run typecheck && bun run lint:fix && bun run fmt:fix"
+    "fix": "bun run typecheck && bun run lint && bun run fmt"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
@@ -83,7 +83,7 @@
     "eslint-config-next": "^16.4.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-import-x": "^4.17.1",
     "geist": "^1.9.0",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",

@@ -1,8 +1,9 @@
-import { defineConfig, globalIgnores } from 'eslint/config';
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier/flat';
-import importPlugin from 'eslint-plugin-import';
+import importXPlugin from 'eslint-plugin-import-x';
+import { defineConfig, globalIgnores } from 'eslint/config';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -16,17 +17,19 @@ const eslintConfig = defineConfig([
     rules: {
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'react/no-unescaped-entities': 'off',
-      // '@next/next/no-img-element': 'warn',
     },
   },
 
   // # Import plugin
   {
     plugins: {
-      import: importPlugin,
+      'import-x': importXPlugin,
+    },
+    settings: {
+      'import-x/resolver-next': [createTypeScriptImportResolver()],
     },
     rules: {
-      'import/order': [
+      'import-x/order': [
         'error',
         {
           groups: [
@@ -37,13 +40,15 @@ const eslintConfig = defineConfig([
             'type',
           ],
 
+          pathGroups: [{ pattern: '@/**', group: 'internal' }],
+          pathGroupsExcludedImportTypes: ['builtin', 'type'],
+
           'newlines-between': 'always',
         },
       ],
 
-      'import/no-duplicates': 'error',
-      'import/no-unresolved': 'error',
-      'import/newline-after-import': 'error',
+      'import-x/no-duplicates': 'error',
+      'import-x/newline-after-import': 'error',
     },
   },
 
