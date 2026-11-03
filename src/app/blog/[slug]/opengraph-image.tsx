@@ -1,3 +1,6 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import { ImageResponse } from 'next/og';
 
 import { getAuthorsBySlugs } from '@/lib/blog/authors';
@@ -10,6 +13,7 @@ export const contentType = 'image/png';
 export const alt = SITE_NAME;
 
 const MAX_TAGS = 4;
+const FONTS_DIR = join(process.cwd(), 'src', 'assets', 'fonts');
 
 export function generateStaticParams() {
   return getAllPostSlugs();
@@ -19,7 +23,14 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
 
-  if (!post) return new ImageResponse(<div>Not found</div>, size);
+  if (!post) {
+    return new ImageResponse(<div>Not found</div>, { ...size, status: 404 });
+  }
+
+  const [regularFont, semiBoldFont] = await Promise.all([
+    readFile(join(FONTS_DIR, 'Geist-Regular.otf')),
+    readFile(join(FONTS_DIR, 'Geist-SemiBold.otf')),
+  ]);
 
   const authorNames = createListFormatter().format(
     getAuthorsBySlugs(post.authors).map(
@@ -38,7 +49,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
         width: '100%',
         height: '100%',
         background: '#ffffff',
-        // fontFamily: 'Geist',
+        fontFamily: 'Geist',
       }}
     >
       <div
@@ -62,7 +73,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
           style={{
             display: 'flex',
             fontSize: 32,
-            fontWeight: 700,
+            fontWeight: 600,
             color: '#f97316',
           }}
         >
@@ -74,7 +85,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             style={{
               display: 'flex',
               fontSize: 52,
-              fontWeight: 700,
+              fontWeight: 600,
               lineHeight: 1.1,
               letterSpacing: '-2px',
               color: '#111827',
@@ -83,16 +94,16 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             {post.title}
           </div>
 
-            <div
-              style={{
-                display: 'flex',
-                fontSize: 32,
-                lineHeight: 1.4,
-                color: '#6b7280',
-              }}
-            >
-              {post.description}
-            </div>
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 32,
+              lineHeight: 1.4,
+              color: '#6b7280',
+            }}
+          >
+            {post.description}
+          </div>
 
           <div style={{ display: 'flex', gap: 12 }}>
             {post.tags.slice(0, MAX_TAGS).map((tag) => (
@@ -124,13 +135,17 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
             paddingTop: 24,
           }}
         >
-          <span>Por {authorNames}</span>
+          <span>{`Por ${authorNames}`}</span>
           <span>{`${displayDate} · ${post.readingTime} min de leitura`}</span>
         </div>
       </div>
     </div>,
     {
       ...size,
+      fonts: [
+        { name: 'Geist', data: regularFont, weight: 400, style: 'normal' },
+        { name: 'Geist', data: semiBoldFont, weight: 600, style: 'normal' },
+      ],
     },
   );
 }

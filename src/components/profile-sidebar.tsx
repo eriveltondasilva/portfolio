@@ -11,8 +11,8 @@ import {
 } from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 
-import { Icon } from './icon';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Icon } from './icon';
 
 import type { Author } from '@/types';
 

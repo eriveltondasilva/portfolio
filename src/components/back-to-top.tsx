@@ -3,6 +3,7 @@
 import { clsx } from 'cn';
 import { ChevronUp } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+
 import { Icon } from './icon';
 
 export function BackToTop() {

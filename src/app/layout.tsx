@@ -14,9 +14,9 @@ import {
   TWITTER_HANDLE,
 } from '@/lib/constants';
 
-import './globals.css';
-
 import type { Metadata } from 'next';
+
+import './globals.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

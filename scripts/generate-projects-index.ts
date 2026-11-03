@@ -1,9 +1,9 @@
 import { Octokit } from '@octokit/rest';
 
-import { GithubTopic } from '@/lib/constants';
-import { getUrlPathname } from '@/lib/format';
-import { PROJECTS_INDEX_OUTPUT } from '@/lib/paths';
 import { projectSchema } from '@/lib/schemas';
+import { PROJECTS_INDEX_OUTPUT } from '@/lib/paths';
+import { getUrlPathname } from '@/lib/format';
+import { GithubTopic } from '@/lib/constants';
 
 import { runScript } from './utils';
 import { readPrimaryAuthor } from './utils/content';
@@ -14,11 +14,11 @@ import {
   toProjectSlug,
 } from './utils/github';
 import { checkUniqueSlugs } from './utils/validations';
-
-import type { GithubRepo, Project } from '@/types';
 import { formatZodError, throwIfErrors } from './utils/errors';
 import { writeJson } from './utils/files';
 import { log } from './utils/logger';
+
+import type { GithubRepo, Project } from '@/types';
 
 // # Fetchers
 

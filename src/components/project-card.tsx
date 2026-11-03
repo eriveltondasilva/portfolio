@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
 
-import type { Project } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
+import type { Project } from '@/types';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
   project: Project;

@@ -19,8 +19,8 @@ import {
   getUrlPathname,
 } from '@/lib/format';
 
-import type { Author } from '@/types';
 import type { LucideIcon } from 'lucide-react';
+import type { Author } from '@/types';
 
 const SOCIAL_ICONS = [
   {

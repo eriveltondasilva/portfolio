@@ -3,14 +3,14 @@ import { join } from 'node:path';
 
 import getReadingTime from 'reading-time';
 
-import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
+import { postSchema } from '@/lib/schemas';
 import {
   AUTHORS_INDEX_OUTPUT,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   SERIES_INDEX_OUTPUT,
 } from '@/lib/paths';
-import { postSchema } from '@/lib/schemas';
+import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
 
 import { runScript, sortByDateDesc } from './utils';
 import { readAuthors, readSeries } from './utils/content';
@@ -29,9 +29,9 @@ import {
   checkUniqueSlugs,
   getPostMetaPath,
 } from './utils/validations';
+import { readYaml, writeJson } from './utils/files';
 
 import type { PostIndex, Series, SeriesIndex, SeriesPostRef } from '@/types';
-import { readYaml, writeJson } from './utils/files';
 
 type SeriesPost = PostIndex & { series: string; order: number };
 

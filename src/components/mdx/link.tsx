@@ -1,9 +1,9 @@
 import { ExternalLinkIcon } from 'lucide-react';
 import LinkNext from 'next/link';
+import { cn } from 'cn';
 
 import { Icon } from '../icon';
 
-import { cn } from 'cn';
 import type { Route } from 'next';
 import type { ComponentProps } from 'react';
 

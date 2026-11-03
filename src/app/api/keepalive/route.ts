@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+
 import { redis } from '@/lib/redis';
 
 // Prevents Next.js from caching the response, so every cron call really hits Redis

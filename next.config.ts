@@ -1,14 +1,15 @@
-import type { NextConfig } from 'next';
-
-import createMDX from '@next/mdx';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
+
+import createMDX from '@next/mdx';
 
 import {
   rehypeAutolinkHeadingsOptions,
   rehypeExportTocMdxOptions,
   remarkGFMOptions,
 } from './src/lib/plugins/options';
+
+import type { NextConfig } from 'next';
 
 // ─────────────────────────────────────
 

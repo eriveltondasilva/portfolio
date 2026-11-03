@@ -1,13 +1,14 @@
 import { join } from 'node:path';
 
+import { z } from 'zod';
+
 import { POST_META_FILE } from '@/lib/constants';
 import { POSTS_DIR } from '@/lib/paths';
 
-import type { PostIndex } from '@/types';
 import { BuildError, formatZodError } from './errors';
 import { readYaml } from './files';
 
-import { z } from 'zod';
+import type { PostIndex } from '@/types';
 
 interface Entry {
   slug: string;

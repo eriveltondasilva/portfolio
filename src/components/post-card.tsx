@@ -5,10 +5,10 @@ import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
+import { TagLink } from './tag-link';
 
 import type { PostIndex } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
-import { TagLink } from './tag-link';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
   post: PostIndex;

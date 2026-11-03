@@ -57,7 +57,7 @@ export default function BlogPage() {
             <Icon iconNode={LayersIcon} className='size-3.5' />
             {postCount} {postCount > 1 ? 'posts publicados' : 'post publicado'}
           </span>
-          
+
           <a
             href='/feed.xml'
             className='flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'

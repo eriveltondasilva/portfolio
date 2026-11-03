@@ -5,14 +5,14 @@ import { parseArgs } from 'node:util';
 
 import { z } from 'zod';
 
+import { postSchema } from '@/lib/schemas';
+import { POSTS_DIR } from '@/lib/paths';
 import {
   POST_IMAGES_DIR,
   POST_META_FILE,
   PRIMARY_AUTHOR_SLUG,
   PostStatus,
 } from '@/lib/constants';
-import { POSTS_DIR } from '@/lib/paths';
-import { postSchema } from '@/lib/schemas';
 
 import { runScript } from './utils';
 import { readAuthors, readSeries } from './utils/content';

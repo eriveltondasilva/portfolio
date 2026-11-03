@@ -1,5 +1,6 @@
-import { Ratelimit } from '@upstash/ratelimit';
 import { createHmac } from 'node:crypto';
+
+import { Ratelimit } from '@upstash/ratelimit';
 
 import { redis, namespaceKey } from '@/lib/redis';
 

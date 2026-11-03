@@ -1,11 +1,11 @@
-import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code';
-
 import {
   transformerNotationDiff,
   transformerNotationFocus,
   transformerNotationHighlight,
 } from '@shikijs/transformers';
 import rehypePrettyCode from 'rehype-pretty-code';
+
+import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code';
 
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   theme: 'one-dark-pro',

@@ -9,11 +9,12 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { clsx } from 'cn';
+
 import { Icon } from '@/components/icon';
 
 import type { Route } from 'next';
 import type { LucideIcon } from 'lucide-react';
-import { clsx } from 'cn';
 
 const tabs = [
   { label: 'Overview', href: '/', icon: LayoutGridIcon },
