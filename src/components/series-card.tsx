@@ -1,9 +1,9 @@
-import { CalendarIcon, FolderIcon, LayersIcon } from 'lucide-react';
+import { DotIcon, FolderBookmark } from 'lucide-react';
 import Link from 'next/link';
 
-import { cn } from '@/lib/utils';
 import { SeriesStatus } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
+import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
 import { Badge } from './ui/badge';
@@ -61,7 +61,7 @@ export function SeriesCard({
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2 text-orange-500 dark:text-orange-400'>
-          <Icon iconNode={FolderIcon} />
+          <Icon iconNode={FolderBookmark} />
           <Link
             href={`/series/${series.slug}`}
             className='font-semibold text-balance hover:underline'
@@ -84,25 +84,24 @@ export function SeriesCard({
       </p>
 
       {/* Meta info */}
-      <div className='mt-3 flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-500'>
-        <span className='flex items-center gap-1.5'>
-          <Icon iconNode={LayersIcon} className='size-3.5' />
-          <span>
-            {postCount} {postCount > 1 ? 'posts' : 'post'} nesta série
-          </span>
+      <div className='mt-2 flex items-center text-xs text-zinc-500 dark:text-zinc-500'>
+        <span>
+          {postCount} {postCount > 1 ? 'posts' : 'post'} nesta série
         </span>
 
-        <span className='flex items-center gap-1.5'>
-          <Icon iconNode={CalendarIcon} className='size-3.5' />
+        <Icon iconNode={DotIcon} />
+
+        <span>
+          Publicada em&nbsp;
           <time dateTime={series.publishedAt}>
-            {formatDate(series.publishedAt)}
+            {formatDate(series.publishedAt, { dateStyle: 'long' })}
           </time>
         </span>
       </div>
 
       {/* Posts list */}
       {postCount > 0 && (
-        <ol className='mt-3 space-y-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
+        <ol className='mt-3 space-y-1 border-t-2 border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {series.posts.slice(0, 3).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
               <span className='min-w-5 text-center text-xs text-zinc-400'>

@@ -3,7 +3,7 @@
 import {
   FileTextIcon,
   FolderGit2,
-  FolderIcon,
+  FolderBookmark,
   HashIcon,
   LayoutGridIcon,
 } from 'lucide-react';
@@ -19,7 +19,7 @@ import type { LucideIcon } from 'lucide-react';
 const tabs = [
   { label: 'Overview', href: '/', icon: LayoutGridIcon },
   { label: 'Blog', href: '/blog', icon: FileTextIcon },
-  { label: 'Séries', href: '/series', icon: FolderIcon },
+  { label: 'Séries', href: '/series', icon: FolderBookmark },
   { label: 'Projetos', href: '/projects', icon: FolderGit2 },
   { label: 'Tags', href: '/tags', icon: HashIcon },
 ] as const satisfies ReadonlyArray<{
