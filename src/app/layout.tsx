@@ -1,6 +1,5 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
-import { GeistSerif } from 'geist/font/serif/variable';
 
 import { Footer } from '@/components/footer';
 import { TopBorder } from '@/components/top-border';
@@ -49,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
       lang={LOCALE}
-      className={`${GeistSans.variable} ${GeistMono.variable} ${GeistSerif.variable}`}
+      className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <body className='flex min-h-dvh flex-col font-sans antialiased'>
         <TopBorder />
