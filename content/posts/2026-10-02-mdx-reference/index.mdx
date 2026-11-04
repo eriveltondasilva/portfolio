@@ -1,6 +1,6 @@
 Este é o segundo post da série **Manual do Blog** e cobre tudo o que você pode usar **dentro do texto** de um post: Markdown, blocos de código e componentes MDX. Mantenha-o aberto como guia enquanto escreve.
 
-Os recursos que ficam _em volta_ do texto (frontmatter, status, capa, séries e autores) estão no post anterior, [Como o blog funciona](/blog/como-o-blog-funciona). Se ainda não criou nenhum post, comece por ele.
+Os recursos que ficam _em volta_ do texto (metadados, status, capa, séries e autores) estão no post anterior, [Como o blog funciona](/blog/como-o-blog-funciona). Se ainda não criou nenhum post, comece por ele.
 
 ---
 
@@ -8,17 +8,25 @@ Os recursos que ficam _em volta_ do texto (frontmatter, status, capa, séries e 
 
 O Markdown padrão funciona normalmente. Todos os elementos abaixo não precisam de componentes extras.
 
+<Callout variant='tip' title='Chaves e sinais de menor'>
+  No MDX, chaves e sinais de menor no texto corrido são lidos como JSX. Para
+  mostrá-los, coloque-os em `código inline` ou escape-os com uma barra
+  invertida.
+</Callout>
+
 ### Tipografia
 
-**Negrito**, _itálico_, ~~tachado~~ e `código inline` funcionam nativamente.
+**Negrito**, _itálico_, ~~tachado~~ e `código inline` funcionam nativamente. O tachado exige dois til de cada lado: um só não funciona.
 
 > Blockquote para destacar citações ou trechos importantes de outras fontes.
 
 ### Âncoras em headings
 
-Todos os headings (`##`, `###`, etc.) recebem automaticamente um `id` gerado a partir do texto (via `rehype-slug`) e um link âncora `#` clicável ao passar o mouse (via `rehype-autolink-headings`).
+O título do post é o `h1` da página, então comece os títulos do texto em `##`.
 
-O `id` é gerado em kebab-case. Use para linkar diretamente para uma seção:
+Todos os headings (`##`, `###`, etc.) recebem automaticamente um `id` gerado a partir do texto (via `rehype-slug`). Os de nível 2 a 4 (`##` a `####`) ganham também um link âncora `#`, clicável ao passar o mouse (via `rehype-autolink-headings`).
+
+O `id` é o texto em minúsculas, com hífens no lugar dos espaços e mantendo os acentos. Use para linkar diretamente para uma seção:
 
 ```md
 [Ir para seção "# Âncoras em headings"](#âncoras-em-headings)
@@ -26,14 +34,23 @@ O `id` é gerado em kebab-case. Use para linkar diretamente para uma seção:
 
 [Ir para seção "# Âncoras em headings"](#âncoras-em-headings)
 
+### Índice do post
+
+Os títulos `##` e `###` formam o índice **Neste post**, montado automaticamente quando o post tem mais de um deles. Em telas largas ele fica fixo ao lado do texto e acompanha a leitura; em telas menores vira uma lista recolhível antes do conteúdo. Títulos `####` ganham âncora, mas não entram no índice.
+
 ### Links
 
 Links internos e externos são tratados automaticamente pelo componente `Link` da pasta `components/mdx/link.tsx`:
 
-- `[texto](/rota)` → link interno com Next.js, sem reload de página usando `Link` do Next.js
-- `[texto](https://...)` ou `[texto](http://...)` → abre em nova aba com ícone de link externo e usa 'a' com `target="_blank"` e `rel="noopener noreferrer"`
-- `www.exemplo.com` → detectado como externo e prefixado com `https://`
-- `contato@exemplo.com` → vira link de e-mail
+- `[texto](/rota)` → link interno com Next.js, sem recarregar a página
+- `[texto](https://...)` ou `[texto](http://...)` → abre em nova aba (`target="_blank"` e `rel="noopener noreferrer"`) e mostra um ícone de link externo
+- `[texto](#secao)` e `mailto:` → `<a>` simples, sem tratamento especial
+
+O `remark-gfm` também transforma endereços soltos no texto em links:
+
+- `https://exemplo.com` → link externo
+- `www.exemplo.com` → link externo, mas com o prefixo `http://` (e não `https://`); prefira escrever a URL completa
+- `contato@exemplo.com` → link de e-mail (`mailto:`)
 
 Exemplos:
 
@@ -77,7 +94,7 @@ Suporte nativo via `remark-gfm`:
 
 ## Código
 
-O `rehype-pretty-code` processa os blocos de código com syntax highlight automático. O componente `CodeBlock` adiciona o botão de copiar.
+O `rehype-pretty-code` processa os blocos de código com syntax highlight automático, usando o tema One Dark Pro. O componente `CodeBlock` adiciona o botão de copiar. Blocos sem linguagem são exibidos como texto simples, e o código inline não recebe highlight.
 
 Bloco simples:
 
@@ -113,21 +130,32 @@ export function Button({
 }
 ```
 
-Com
+Linhas marcadas com um comentário especial no fim ganham tratamento próprio. Diff, para mostrar o que sai e o que entra:
 
 ```ts
 const old = 1; // [!code --]
 const novo = 2; // [!code ++]
 ```
 
+Highlight, para destacar uma linha:
+
 ```ts
 const importante = 3; // [!code highlight]
 ```
+
+Focus, para dar foco a uma linha:
 
 ```ts
 console.log('focus');
 const importante = 3; // [!code focus]
 ```
+
+| Notação                | Efeito           |
+| ---------------------- | ---------------- |
+| `// [!code ++]`        | Linha adicionada |
+| `// [!code --]`        | Linha removida   |
+| `// [!code highlight]` | Linha destacada  |
+| `// [!code focus]`     | Linha em foco    |
 
 Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
 
@@ -137,7 +165,7 @@ Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, 
 
 Caixas de destaque para informações importantes. Variantes: `info` (padrão), `tip`, `warning`, `danger`.
 
-<Callout>Mensagem informativa simples, sem título. www.google.com</Callout>
+<Callout>Mensagem informativa simples, sem título.</Callout>
 
 <Callout variant='info' title='Informação'>
   Use para contexto adicional que complementa o conteúdo principal mas não é
@@ -235,13 +263,37 @@ Salve com <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS ou <Kbd>Ctrl</Kbd> + <Kbd>S</Kb
 
 Conteúdo alternado em abas. Ideal para mostrar o mesmo conteúdo em múltiplas variações — gerenciadores de pacotes, linguagens, frameworks.
 
-A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve corresponder a um item do array `tabs`.
+A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve corresponder a um item do array `tabs`. Para mostrar código dentro de uma aba, use um bloco de código normal, com as cercas em linhas próprias.
 
 <Tabs tabs={['npm', 'Yarn', 'pnpm', 'Bun']}>
-  <Tab value='npm'>```bash npm install react react-dom ```</Tab>
-  <Tab value='Yarn'>```bash yarn add react react-dom ```</Tab>
-  <Tab value='pnpm'>```bash pnpm add react react-dom ```</Tab>
-  <Tab value='Bun'>```bash bun add react react-dom ```</Tab>
+  <Tab value='npm'>
+
+    ```bash
+    npm install react react-dom
+    ```
+
+  </Tab>
+  <Tab value='Yarn'>
+
+    ```bash
+    yarn add react react-dom
+    ```
+
+  </Tab>
+  <Tab value='pnpm'>
+
+    ```bash
+    pnpm add react react-dom
+    ```
+
+  </Tab>
+  <Tab value='Bun'>
+
+    ```bash
+    bun add react react-dom
+    ```
+
+  </Tab>
 </Tabs>
 
 Use `defaultValue` para definir qual aba abre por padrão (padrão: primeira aba):
@@ -321,7 +373,7 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
 
 <Accordion>
   <AccordionItem title='Quando usar Accordion?'>
-    Use quando tiver conteúdo que nem todos www.google.com os leitores precisarão consultar —
+    Use quando tiver conteúdo que nem todos os leitores precisarão consultar —
     perguntas frequentes, detalhes avançados, ou explicações alternativas que
     interromperiam o fluxo do texto principal.
   </AccordionItem>
@@ -411,51 +463,54 @@ Visualização de estrutura de arquivos e pastas. Pastas são clicáveis e expan
   funciona](/blog/como-o-blog-funciona#imagem-de-capa).
 </Callout>
 
+Todas as imagens usadas no texto seguem as mesmas regras, conferidas no build (veja as [validações](/blog/como-o-blog-funciona#validações-no-build)):
+
+- ficam na pasta `images/` do post e são referenciadas como `./images/nome-do-arquivo.ext`, com o caminho relativo ao `index.mdx`;
+- os nomes usam só letras minúsculas, números e hífens (`meu-diagrama.png`): maiúsculas funcionam no macOS e no Windows, mas quebram o build no Linux;
+- imagens acima de 1 MB e imagens que nenhum trecho do texto usa geram um aviso;
+- imagens remotas (`https://...`) não são suportadas, porque o `next.config.ts` não libera nenhum domínio.
+
+Este post não traz imagens próprias, então os exemplos abaixo aparecem só como código.
+
 ### Imagem inline (Markdown)
 
-Imagens inseridas diretamente no Markdown. O caminho é relativo ao `index.mdx`.
+Imagens inseridas diretamente no Markdown. O caminho é relativo ao `index.mdx` e o arquivo é importado automaticamente, sem `import` explícito.
 
 **Sintaxe:**
 
 ```mdx
-![Descrição da imagem](./nome-do-arquivo.jpg 'Título tooltip')
+![Descrição da imagem](./images/nome-do-arquivo.jpg 'Legenda opcional')
 ```
 
-**Exemplo:**
-
-{/* ![Imagem de exemplo](./images/cover.jpg 'Título da imagem. Opcional.') */}
+O texto entre colchetes é o texto alternativo, e o título entre aspas vira a legenda exibida abaixo da imagem. Ao clicar na imagem, ela é ampliada.
 
 ### Componente Image
 
-Para imagens com legenda ou controle fino de propriedades, use o componente `Image`.
+Para controlar as propriedades da imagem, use o componente `Image`. Ele exige que a imagem seja **importada**: passar o caminho como texto em `src` gera erro no build.
 
 **Sintaxe:**
 
 ```mdx
-import MinhaImagem from './cover.jpg';
+import MinhaImagem from './images/minha-imagem.jpg';
 
 <Image
   src={MinhaImagem}
   alt='Descrição acessível obrigatória'
-  title='Título da imagem. Opcional.'
   caption='Legenda exibida abaixo da imagem. Opcional.'
 />
 ```
 
-**Exemplo:**
-
-```mdx
-{/\*_/ <Image
-  src={CoverImage}
-  alt='Exemplo de imagem com legenda usando o componente Image.'
-  title='Título da imagem. Opcional.'
-  caption='Figura 1. Imagem de exemplo com legenda.'
-/> _/}
-```
+| Prop      | Valores          | Padrão | Descrição                                            |
+| --------- | ---------------- | ------ | ---------------------------------------------------- |
+| `src`     | imagem importada | —      | Obrigatória                                          |
+| `alt`     | `string`         | —      | Texto alternativo, obrigatório                       |
+| `caption` | `string`         | —      | Legenda exibida abaixo da imagem                     |
+| `title`   | `string`         | —      | Usado como legenda quando não há `caption`           |
+| `zoom`    | `boolean`        | `true` | Amplia a imagem ao clicar; use `false` para desligar |
 
 ### RatioImage
 
-Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagens de tamanhos variados.
+Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com imagens de tamanhos variados. Não tem zoom.
 
 **Sintaxe:**
 
@@ -464,28 +519,15 @@ Imagem com proporção fixa usando `object-cover`. Evita layout shift com imagen
   src={MinhaImagem}
   alt='Descrição acessível'
   ratio={16 / 9}
-  title='Título da imagem. Opcional.'
   caption='Legenda opcional.'
 />
 ```
 
-**Exemplo:**
-
-```mdx
-{/_ <RatioImage
-src={CoverImage}
-alt='Exemplo de imagem com proporção fixa usando RatioImage.'
-ratio={16 / 9}
-title='Título da imagem. Opcional.'
-caption='Figura 2. Imagem com proporção fixa (16:9).'
-/> _/}
-```
-
-Proporções comuns: `16 / 9`, `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
+Proporções comuns: `16 / 9` (padrão), `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
 ### ImageGrid
 
-Grade de imagens com número de colunas configurável. O `columns` definido no `ImageGrid` é propagado automaticamente via context para todos os `GridImage` filhos — não é necessário repetir a prop em cada um.
+Grade de imagens quadradas, cortadas com `object-cover`. O número de colunas é definido no `ImageGrid` e vale para todos os `GridImage` dentro dele.
 
 **Sintaxe:**
 
@@ -497,40 +539,30 @@ Grade de imagens com número de colunas configurável. O `columns` definido no `
 </ImageGrid>
 ```
 
-Para sobrescrever o número de colunas em um item específico, passe `columns` diretamente no `GridImage`:
+| Prop      | Componente  | Valores  | Padrão |
+| --------- | ----------- | -------- | ------ |
+| `columns` | `ImageGrid` | `2` `3`  | `3`    |
+| `caption` | `GridImage` | `string` | —      |
 
-```mdx
-<ImageGrid columns={3}>
-  <GridImage src={Imagem1} alt='...' />
-  <GridImage src={Imagem2} alt='...' columns={2} />{' '}
-  {/* sobrescreve o contexto */}
-</ImageGrid>
-```
-
-**Exemplo:**
-
-{/* <ImageGrid columns={3}> */}
-{/* <GridImage src={CoverImage} alt='Imagem 1' caption='Legenda 1' title='Título da imagem. Opcional.' /> */}
-{/* <GridImage src={CoverImage} alt='Imagem 2' caption='Legenda 2' title='Título da imagem. Opcional.' /> */}
-{/* <GridImage src={CoverImage} alt='Imagem 3' caption='Legenda 3' title='Título da imagem. Opcional.' /> */}
-{/* </ImageGrid> */}
-
-| Prop      | Componente  | Valores             | Padrão   |
-| --------- | ----------- | ------------------- | -------- |
-| `columns` | `ImageGrid` | `2` `3` `4` `5` `6` | `3`      |
-| `columns` | `GridImage` | `2` `3` `4` `5` `6` | contexto |
+Com `columns={3}`, a grade usa 3 colunas a partir de telas médias e 2 colunas em telas menores.
 
 ---
 
 ## YouTube
 
-O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o id é `dQw4w9WgXcQ`.
+O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o id é `dQw4w9WgXcQ`. O player só é carregado quando o leitor clica em reproduzir.
 
 **Sintaxe:**
 
 ```mdx
-<Youtube id='m3DJmtLdqhU' />
+<Youtube id='m3DJmtLdqhU' title='Rótulo do botão' params='controls=0' />
 ```
+
+| Prop     | Valores  | Padrão             | Descrição                               |
+| -------- | -------- | ------------------ | --------------------------------------- |
+| `id`     | `string` | —                  | Código do vídeo, obrigatório            |
+| `title`  | `string` | `Reproduzir vídeo` | Rótulo acessível do botão de reprodução |
+| `params` | `string` | vazio              | Parâmetros do player, como `controls=0` |
 
 **Exemplo:**
 
@@ -540,7 +572,7 @@ O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o
 
 ## Tweet
 
-Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` → id é `123456789`.
+Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` → id é `123456789`. O tweet é exibido sempre no tema escuro.
 
 **Sintaxe:**
 
@@ -567,22 +599,6 @@ O `remark-gemoji` converte shortcodes no emoji correspondente.
 :rocket: :tada: :warning: :bulb: :white_check_mark:
 
 Referência completa: [github.com/ikatyang/emoji-cheat-sheet](https://github.com/ikatyang/emoji-cheat-sheet)
-
----
-
-## Importando assets locais
-
-Imagens e outros arquivos da mesma pasta podem ser importados diretamente no MDX:
-
-```mdx
-import Cover from './cover.jpg';
-import Diagrama from './diagrama.png';
-
-<Image src={Cover} alt='Capa do post' />
-<Image src={Diagrama} alt='Diagrama de arquitetura' caption='Figura 1.' />
-```
-
-O `rehype-mdx-import-media` permite referenciar imagens diretamente no Markdown sem import explícito — o plugin resolve o caminho automaticamente.
 
 ---
 
