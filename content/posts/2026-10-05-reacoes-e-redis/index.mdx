@@ -1,116 +1,211 @@
-Este é o quinto e último post da série **Manual do Blog**. Ele explica a única parte do blog que guarda dados de visitantes: as reações dos posts, que usam Redis (Upstash). As variáveis necessárias estão em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
+Este é o quinto post da série **Manual do Blog**. Ele explica a única parte do blog que grava dados de visitantes em um banco próprio: as reações dos posts, que usam Redis (Upstash). As variáveis necessárias estão em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
 
 ---
 
 ## Visão geral
 
-Cada post tem três reações, definidas em `lib/reactions.ts`:
+Cada post tem três reações, definidas em `lib/reactions/config.ts`:
 
-| Tipo         | Emoji | Rótulo        |
-| ------------ | :---: | ------------- |
-| `like`       |  ❤️   | Curtir        |
-| `fire`       |  🔥   | Incrível      |
-| `mind_blown` |  🤯   | Surpreendente |
+| Tipo      | Emoji | Rótulo  |
+| --------- | :---: | ------- |
+| `like`    |  ❤️   | Gostei  |
+| `learned` |  💡   | Aprendi |
+| `thanks`  |  ☕   | Valeu!  |
+
+Cada visitante tem **no máximo uma reação por post**: clicar em outra reação troca a escolha, e clicar de novo na reação escolhida a remove.
 
 As peças envolvidas:
 
-- **`lib/reactions.ts`**: tipos, rótulos, tempo do limite e funções que montam as chaves do Redis.
-- **`lib/redis.ts`**: cliente do Upstash, configurado pelas variáveis de ambiente.
-- **`app/api/reactions/[slug]/route.ts`**: rota com `GET` (contagens) e `POST` (nova reação).
+- **`lib/reactions/config.ts`**: tipos, rótulos e a função que valida um tipo.
+- **`lib/reactions/store.ts`**: leitura e escrita no Redis.
+- **`lib/reactions/visitor.ts`**: o cookie que identifica o visitante.
+- **`lib/reactions/rate-limit.ts`**: os limites de requisições.
+- **`lib/redis.ts`**: cliente do Upstash, configurado pelas variáveis de ambiente, e o prefixo de ambiente das chaves.
+- **`app/api/reactions/[slug]/route.ts`**: rota com `GET`, `PUT` e `DELETE`.
 - **`components/post-reactions.tsx`**: componente de cliente que exibe e envia as reações.
+- **`app/api/keepalive/route.ts`**: rota chamada pelo cron para manter o banco ativo.
+
+---
+
+## Como o visitante é identificado
+
+O blog não pede login, e a identidade de quem reage é um cookie chamado `visitor_id`, com um UUID gerado no servidor. Ele:
+
+- só é criado na **primeira reação**: ler as contagens de um post nunca grava cookie;
+- é `httpOnly` (o JavaScript da página não consegue lê-lo), `sameSite=lax` e, em produção, `secure`;
+- vale por 1 ano;
+- é validado a cada requisição, porque vem do navegador: um valor que não seja um UUID v4 é tratado como se não existisse.
+
+O cookie e os dados guardados estão descritos na [política de privacidade](/privacy).
 
 ---
 
 ## Dados no Redis
 
-Cada reação usa duas chaves:
+Cada post usa dois hashes, e as chaves levam o prefixo do ambiente (veja [Ambientes separados no Redis](/blog/variaveis-de-ambiente-e-deploy#ambientes-separados-no-redis)):
 
-| Chave                                   | Valor                   | Expira em |
-| --------------------------------------- | ----------------------- | --------- |
-| `reactions::slug::tipo`                 | Contador da reação      | Nunca     |
-| `reactions::rate-limit::ip::slug::tipo` | Marcador de "já reagiu" | 24 horas  |
+| Chave                                   | Conteúdo                                                      |
+| --------------------------------------- | ------------------------------------------------------------- |
+| `production:reactions:meu-post:counts`  | Contagem de cada tipo de reação                               |
+| `production:reactions:meu-post:choices` | ID do visitante (o do cookie) e o tipo que ele escolheu       |
+| `production:rate-limit:...`             | Janelas do limite de requisições, indexadas por um hash do IP |
 
-O contador é um número incrementado a cada reação. O marcador existe só para impedir repetições: ele guarda a combinação IP, post e tipo de reação por 24 horas.
+O hash `choices` é a fonte da verdade, e o `counts` é derivado dele e pode ser reconstruído. Nenhum dos dois expira.
+
+Trocar ou remover uma reação depende da escolha anterior do visitante, e uma transação simples do Redis não consegue decidir com base nesse valor. Por isso a escrita é feita por um **script Lua** que roda de forma atômica no Redis:
+
+<Steps>
+  <Step title='Lê a escolha anterior'>
+    Busca no hash `choices` o que aquele visitante tinha escolhido antes, se algo.
+  </Step>
+
+<Step title='Ajusta os contadores'>
+  Se a escolha mudou, diminui o contador do tipo anterior e aumenta o do novo.
+  Ao remover, só diminui.
+</Step>
+
+<Step title='Atualiza a escolha'>
+  Grava o novo tipo em `choices`, ou apaga a entrada do visitante quando a
+  reação é removida.
+</Step>
+
+  <Step title='Devolve as contagens'>
+    Responde com o hash `counts` atualizado, que o servidor devolve para a página.
+  </Step>
+</Steps>
+
+Como o script verifica a escolha anterior antes de mexer nos contadores, repetir a mesma requisição não conta duas vezes. Dois cliques simultâneos também não corrompem os números, porque o Redis executa o script inteiro de uma vez.
+
+<Callout variant='info' title='Removendo um tipo de reação'>
+  Dados de um tipo que saiu da configuração continuam no Redis, mas são
+  ignorados: o contador não aparece e a escolha daquele visitante conta como
+  nenhuma.
+</Callout>
+
+---
+
+## Limite de requisições
+
+Para dificultar abusos, as escritas passam por dois limites, ambos por IP, usando `@upstash/ratelimit` com janela deslizante:
+
+| Limite           | Valor         | Para que serve                                                    |
+| ---------------- | ------------- | ----------------------------------------------------------------- |
+| Escritas         | 20 por minuto | Frear quem envia reações em sequência                             |
+| Novos visitantes | 10 por hora   | Impedir que um script ganhe uma identidade nova a cada requisição |
+
+O segundo limite existe porque, sem cookie, cada escrita criaria um visitante novo, e limitar só a frequência não impediria de inflar as contagens.
+
+O IP vem do primeiro valor do cabeçalho `x-forwarded-for` ou, na falta dele, de `x-real-ip`. Sem nenhum dos dois, todas as requisições são tratadas como o mesmo IP, `unknown`. O endereço **nunca é gravado**: o que chega ao Redis é um hash HMAC-SHA256 do IP, calculado com o `RATE_LIMIT_SECRET`.
+
+Se o Redis falhar durante a checagem do limite, a requisição segue (o limite "falha aberto"). Isso não deixa a escrita passar de fato, porque a gravação que vem depois falharia pelo mesmo motivo.
 
 ---
 
 ## A API
 
-### GET `/api/reactions/slug-do-post`
-
-Busca os três contadores de uma vez e responde com um objeto. Reações sem registro valem `0`:
+Todas as rotas ficam em `/api/reactions/slug-do-post` e respondem com o estado atual do post, sem cache, porque a resposta mistura as contagens públicas com a escolha privada do visitante:
 
 ```json
-{ "like": 12, "fire": 3, "mind_blown": 0 }
+{
+  "counts": { "like": 12, "learned": 3, "thanks": 0 },
+  "choice": "learned"
+}
 ```
 
-### POST `/api/reactions/slug-do-post`
+O campo `choice` é `null` para quem ainda não reagiu. Erros têm o formato `{ "error": "codigo" }`.
 
-Recebe o tipo da reação no corpo da requisição:
+### GET
+
+Devolve as contagens e, se o cookie existir, a escolha do visitante. Funciona também em posts arquivados.
+
+### PUT
+
+Recebe o tipo da reação no corpo da requisição e cria ou troca a escolha do visitante:
 
 ```json
-{ "type": "fire" }
+{ "type": "thanks" }
 ```
 
 <Steps>
-  <Step title='Valida o tipo'>
-    Se o tipo não existir em `REACTION_CONFIG`, responde `400` com "Tipo de reação inválido."
+  <Step title='Confere o post'>
+    Se o post não existe (ou é rascunho), responde `404`. Se está arquivado, responde `409`.
   </Step>
 
-<Step title='Confere o limite'>
-  Se o marcador de rate limit já existe para aquele IP, post e tipo, responde
-  `429` com "Você já reagiu com esse emoji recentemente."
+<Step title='Confere o limite de escritas'>
+  Se o IP passou de 20 escritas por minuto, responde `429`.
 </Step>
 
-<Step title='Registra a reação'>
-  Incrementa o contador e grava o marcador com validade de 24 horas.
+<Step title='Valida o tipo'>
+  Se o tipo não for um dos três da configuração, responde `400`.
 </Step>
 
-  <Step title='Responde com o total'>
-    Lê o contador atualizado e devolve o tipo e a nova contagem.
+<Step title='Identifica o visitante'>
+  Usa o cookie, se houver. Sem cookie, confere o limite de novos visitantes
+  (`429` se estourou) e cria o cookie.
+</Step>
+
+  <Step title='Grava e responde'>
+    Aplica o script Lua e devolve o estado atualizado.
   </Step>
 </Steps>
 
-O IP vem do primeiro valor do cabeçalho `x-forwarded-for` ou, na falta dele, de `x-real-ip`. Sem nenhum dos dois, todas as requisições são tratadas como o mesmo IP, `anonymous`.
+### DELETE
 
-<Callout variant='tip' title='Testando localmente'>
-  Em desenvolvimento, todas as suas requisições partem do mesmo IP (localhost ou
-  `anonymous`), então a segunda reação do mesmo tipo recebe `429`. Para testar
-  de novo, apague a chave `reactions::rate-limit::ip::slug::tipo` correspondente
-  no painel do Upstash.
-</Callout>
+Remove a escolha do visitante, depois das mesmas conferências de post e de limite do `PUT`. Sem cookie não há nada para remover, então a rota só devolve o estado atual e **não cria cookie**.
+
+### Códigos de erro
+
+| Status | `error`                 | Quando                                              |
+| :----: | ----------------------- | --------------------------------------------------- |
+|  400   | `invalid-reaction-type` | O corpo do `PUT` não traz um tipo válido            |
+|  404   | `post-not-found`        | O post não existe ou é rascunho                     |
+|  409   | `post-archived`         | Tentativa de escrever em um post arquivado          |
+|  429   | `rate-limited`          | Limite de escritas ou de novos visitantes estourado |
+|  503   | `store-unavailable`     | O Redis falhou ao ler ou gravar                     |
+
+Sem o `RATE_LIMIT_SECRET`, o `PUT` e o `DELETE` respondem `500`, porque não conseguem calcular o hash do IP.
 
 ---
 
 ## O componente
 
-O `PostReactions` recebe o `slug` do post e funciona assim:
+O `PostReactions` recebe o `slug` do post (e `readOnly`, para posts arquivados) e funciona assim:
 
-- Ao montar, faz um `GET` para carregar as contagens.
-- Ao clicar, **atualiza a tela na hora** (atualização otimista) e só então envia o `POST`.
-- Se a resposta não for bem-sucedida, ou se a rede falhar, desfaz o incremento e libera o botão de novo.
-- Enquanto uma requisição está pendente, os botões ficam desabilitados.
+- Ao montar, faz um `GET` para carregar as contagens e a escolha do visitante. Se falhar, mostra um traço no lugar dos números.
+- Contagem zero, ou ainda em carregamento, não mostra número, para um post novo não aparecer com "0 0 0".
+- Ao clicar, **atualiza a tela na hora** (atualização otimista) e só então envia a requisição: `PUT` para escolher ou trocar, `DELETE` ao clicar na reação já escolhida.
+- Se a requisição falhar, a tela volta sozinha ao estado anterior e aparece uma mensagem: uma específica para o limite de requisições e uma genérica para os outros erros.
+- Cliques enquanto uma requisição está em andamento são ignorados. Os botões não ficam desabilitados nesse intervalo.
+- Em posts arquivados, os botões ficam desabilitados e só mostram as contagens.
 
-O estado "já reagi" do componente vale apenas enquanto a página está aberta. Ao recarregar, os botões voltam a ficar ativos, mas o servidor continua bloqueando a repetição por 24 horas, e a interface desfaz o incremento quando recebe o `429`.
+A escolha do visitante vem do servidor, então ela continua marcada ao recarregar a página ou voltar ao post depois.
+
+<Callout variant='tip' title='Testando localmente'>
+  Em desenvolvimento, as chaves levam o prefixo `local` e não afetam a produção.
+  Para reagir como um visitante novo, apague o cookie `visitor_id` no navegador.
+  Como em desenvolvimento todas as requisições partem do mesmo IP, elas dividem
+  o limite de 10 novos visitantes por hora. Se chegar ao limite, apague no
+  painel do Upstash as chaves que começam com `local:rate-limit:`.
+</Callout>
 
 ---
 
 ## Adicionando um tipo de reação
 
-Edite `lib/reactions.ts`: acrescente o tipo em `REACTION_TYPES` e a configuração correspondente em `REACTION_CONFIG`.
+Edite `lib/reactions/config.ts`: acrescente o tipo em `REACTION_TYPES` e a configuração correspondente em `REACTION_CONFIG`.
 
-```ts title="lib/reactions.ts"
-export const REACTION_TYPES = ['like', 'fire', 'mind_blown', 'clap'] as const;
+```ts title="lib/reactions/config.ts"
+export const REACTION_TYPES = ['like', 'learned', 'thanks', 'clap'] as const;
 
 export const REACTION_CONFIG = {
-  like: { emoji: '❤️', label: 'Curtir' },
-  fire: { emoji: '🔥', label: 'Incrível' },
-  mind_blown: { emoji: '🤯', label: 'Surpreendente' },
+  like: { emoji: '❤️', label: 'Gostei' },
+  learned: { emoji: '💡', label: 'Aprendi' },
+  thanks: { emoji: '☕', label: 'Valeu!' },
   clap: { emoji: '👏', label: 'Parabéns' },
-} as const satisfies ReactionConfig;
+} as const satisfies Record<ReactionType, { emoji: string; label: string }>;
 ```
 
-O TypeScript acusa um erro se o tipo existir em uma lista e faltar na outra, e a API e o componente passam a usar o novo tipo automaticamente.
+O TypeScript acusa um erro se o tipo existir em uma lista e faltar na outra, e a API, o armazenamento e o componente passam a usar o novo tipo automaticamente.
 
 ---
 
@@ -149,7 +244,7 @@ curl -H "Authorization: Bearer $CRON_SECRET" https://seu-dominio.com/api/keepali
 A resposta esperada é um JSON com a chave e a data gravada:
 
 ```json
-{ "key": "keepalive:last_run", "value": "2026-10-25T12:00:00.000Z" }
+{ "key": "keepalive:last_run", "value": "2026-10-26T12:00:00.000Z" }
 ```
 
 ---
@@ -157,17 +252,21 @@ A resposta esperada é um JSON com a chave e a data gravada:
 ## Limitações conhecidas
 
 <Callout variant='warning' title='Não é à prova de abuso'>
-  O limite é por IP, então pessoas atrás do mesmo IP (empresa, rede móvel)
-  compartilham a restrição, e quem troca de IP pode reagir de novo. A checagem e
-  o registro não são atômicos, de modo que requisições simultâneas podem passar
-  pelo limite. A API também não confere se o `slug` existe, então é possível
-  criar contadores para posts inexistentes.
+  A identidade do visitante é um cookie, então quem limpa os cookies ou usa uma
+  janela anônima pode reagir de novo; o limite de novos visitantes por IP reduz
+  esse efeito, mas não o elimina. Pessoas atrás do mesmo IP (empresa, rede
+  móvel) compartilham os limites, e quem troca de IP tem limites novos. Fora da
+  Vercel, o cabeçalho `x-forwarded-for` pode ser forjado pelo cliente, o que
+  enfraquece o limite. E, se o Redis falhar durante a checagem, o limite é
+  ignorado.
 </Callout>
 
-Para um blog pessoal, esse nível de proteção costuma ser suficiente. Se virar um problema, os caminhos naturais são validar o `slug` contra a lista de posts e tornar a checagem atômica no Redis.
+O que **não** é mais problema: a API só aceita `slug` de posts que existem, e a escrita é atômica, então requisições simultâneas não passam do limite de uma reação por visitante.
+
+Para um blog pessoal, esse nível de proteção costuma ser suficiente. Se virar um problema, os caminhos naturais são exigir algum tipo de verificação para novos visitantes ou autenticar quem reage.
 
 ---
 
-## Fim da série
+## Próximo passo
 
-Você chegou ao fim do **Manual do Blog**. Para voltar ao começo, veja [Como o blog funciona](/blog/como-o-blog-funciona).
+O último post da série reúne o que o blog gera sozinho a partir do conteúdo, como o feed RSS, o SEO e os comentários: [Recursos Automáticos](/blog/recursos-automaticos).
