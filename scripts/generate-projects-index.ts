@@ -139,7 +139,10 @@ async function main(): Promise<void> {
 
   log.section('Writing index');
 
-  await writeJson(PROJECTS_INDEX_OUTPUT, projects);
+  await writeJson(
+    PROJECTS_INDEX_OUTPUT,
+    projects.toSorted((a, b) => a.slug.localeCompare(b.slug)),
+  );
   log.ok('projects index:', PROJECTS_INDEX_OUTPUT);
 }
 
