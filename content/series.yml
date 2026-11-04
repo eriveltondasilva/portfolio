@@ -1,7 +1,7 @@
 # Series: A list of series for this blog, each series has a unique slug, title, description, published date, and status.
 ---
-- slug: 'manual-do-blog'
-  title: 'Manual do Blog'
-  description: 'A guide to writing, publishing, and maintaining this blog: content structure, MDX components, projects, deployment, and reactions.'
-  publishedAt: '2026-10-25'
-  status: 'complete'
+- slug: manual-do-blog
+  title: Manual do Blog
+  description: 'Guia para escrever, publicar e manter este blog: estrutura de conteúdo, componentes MDX, projetos do GitHub, variáveis de ambiente e deploy, reações com Redis e recursos automáticos.'
+  publishedAt: 2026-10-01
+  status: complete
