@@ -12,6 +12,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
+import { LOCALE } from '@/lib/constants';
+
+import './globals.css';
 
 interface Props {
   error: Error & { digest?: string };
@@ -24,26 +27,32 @@ export default function GlobalError({ error, reset }: Props) {
   }, [error]);
 
   return (
-    <div className='flex min-h-[60vh] items-center justify-center'>
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant='icon'>
-            <AlertTriangle />
-          </EmptyMedia>
+    <html lang={LOCALE}>
+      <body className='font-sans antialiased'>
+        <main className='flex min-h-dvh items-center justify-center'>
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant='icon'>
+                <AlertTriangle />
+              </EmptyMedia>
 
-          <EmptyTitle>Algo deu errado</EmptyTitle>
+              <EmptyTitle role='heading' aria-level={1}>
+                Algo deu errado
+              </EmptyTitle>
 
-          <EmptyDescription>
-            Ocorreu um erro inesperado. Tente novamente.
-          </EmptyDescription>
-        </EmptyHeader>
+              <EmptyDescription>
+                Ocorreu um erro inesperado. Tente novamente.
+              </EmptyDescription>
+            </EmptyHeader>
 
-        <EmptyContent>
-          <Button variant='outline' size='sm' onClick={reset}>
-            Tentar novamente
-          </Button>
-        </EmptyContent>
-      </Empty>
-    </div>
+            <EmptyContent>
+              <Button variant='outline' size='sm' onClick={reset}>
+                Tentar novamente
+              </Button>
+            </EmptyContent>
+          </Empty>
+        </main>
+      </body>
+    </html>
   );
 }
