@@ -1,16 +1,9 @@
+import { escapeHTML as escapeXml } from 'bun';
+
 import { getAllPosts } from '@/lib/blog/posts';
 import { BASE_URL, LOCALE, SITE_NAME } from '@/lib/constants';
 
 export const dynamic = 'force-static';
-
-function escapeXml(value: string): string {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&apos;');
-}
 
 export function GET() {
   const posts = getAllPosts();
