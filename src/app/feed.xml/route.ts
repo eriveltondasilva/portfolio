@@ -20,14 +20,14 @@ export function GET() {
   <link>${url}</link>
   <guid isPermaLink="true">${url}</guid>
   <description>${escapeXml(post.description)}</description>
-  <pubDate>${new Date(post.updatedAt ?? post.publishedAt).toUTCString()}</pubDate>
+  <pubDate>${new Date(post.publishedAt).toUTCString()}</pubDate>
   ${categories}
 </item>`;
     })
     .join('\n');
 
   const lastBuildDate = new Date(
-    posts[0]?.updatedAt ?? posts[0]?.publishedAt ?? Date.now(),
+    posts[0]?.publishedAt ?? Date.now(),
   ).toUTCString();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

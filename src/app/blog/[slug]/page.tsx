@@ -68,7 +68,10 @@ export async function generateMetadata({
       name: author.name,
       url: author.socials.github,
     })),
-    alternates: { canonical: `/blog/${slug}` },
+    alternates: {
+      canonical: `/blog/${slug}`,
+      types: { 'application/rss+xml': '/feed.xml' },
+    },
     ...(isArchived && { robots: { index: false, follow: true } }),
     openGraph: {
       type: 'article',
@@ -161,7 +164,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
             {/* Title + share button */}
             <div className='mt-1 flex items-start justify-between gap-3'>
-              <h1 className='font-mono text-xl leading-tight font-bold tracking-tight text-balance text-zinc-900 text-shadow-xs sm:text-3xl dark:text-zinc-50'>
+              <h1 className='font-serif text-xl leading-tight font-bold tracking-tight text-balance text-zinc-900 text-shadow-xs sm:text-3xl dark:text-zinc-50'>
                 {meta.title}
               </h1>
               <ShareButton title={meta.title} url={postUrl} />
