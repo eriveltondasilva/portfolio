@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+
+      - run: bun install --frozen-lockfile
+
+      - run: bun run build:indexes
+        env:
+          # The automatic token only raises the GitHub API rate limit
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Generates PageProps, RouteContext and the typed routes used in the code
+      - run: bun run typegen
+
+      - run: bun run typecheck
+      - run: bun run lint:check
+      - run: bun run fmt:check
