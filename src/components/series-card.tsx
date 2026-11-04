@@ -1,7 +1,7 @@
 import { DotIcon, FolderBookmark } from 'lucide-react';
 import Link from 'next/link';
 
-import { SeriesStatus } from '@/lib/constants';
+import { SERIES_STATUS_LABEL, SeriesStatus } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
@@ -16,26 +16,22 @@ interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
   showStatusBadge?: boolean;
 }
 
-interface BadgeProps {
-  label: string;
+interface BadgeStyle {
   className: string;
   dot: string;
 }
 
-const statusConfig: Record<SeriesStatus, BadgeProps> = {
+const statusStyle: Record<SeriesStatus, BadgeStyle> = {
   [SeriesStatus.PLANNED]: {
-    label: 'Em planejamento',
     dot: 'bg-primary size-1.5 rounded-full',
     className: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
   },
   [SeriesStatus.IN_PROGRESS]: {
-    label: 'Em progresso',
     dot: 'size-1.5 rounded-full bg-amber-500',
     className:
       'border-none bg-amber-600/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400',
   },
   [SeriesStatus.COMPLETE]: {
-    label: 'Completa',
     dot: 'size-1.5 rounded-full bg-green-500',
     className:
       'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
@@ -45,16 +41,17 @@ const statusConfig: Record<SeriesStatus, BadgeProps> = {
 export function SeriesCard({
   series,
   showStatusBadge = false,
+  className,
   ...props
 }: SeriesCardProps) {
-  const status = statusConfig[series.status];
+  const status = statusStyle[series.status];
   const postCount = series.posts.length;
 
   return (
     <article
       className={cn(
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        props.className,
+        className,
       )}
       {...props}
     >
@@ -73,7 +70,7 @@ export function SeriesCard({
         {showStatusBadge && (
           <Badge className={status.className}>
             <span className={status.dot} aria-hidden='true' />
-            {status.label}
+            {SERIES_STATUS_LABEL[series.status]}
           </Badge>
         )}
       </div>
@@ -86,7 +83,7 @@ export function SeriesCard({
       {/* Meta info */}
       <div className='mt-2 flex items-center text-xs text-zinc-500 dark:text-zinc-500'>
         <span>
-          {postCount} {postCount > 1 ? 'posts' : 'post'} nesta série
+          {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
         </span>
 
         <Icon iconNode={DotIcon} />

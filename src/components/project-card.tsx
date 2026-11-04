@@ -42,23 +42,21 @@ const statusConfig: Record<ProjectStatus, BadgeProps> = {
   },
 };
 
-export function ProjectCard({ project, ...props }: Props) {
+export function ProjectCard({ project, className, ...props }: Props) {
   const status = statusConfig[project.status];
 
   return (
     <article
       className={cn(
         'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        props.className,
+        className,
       )}
       {...props}
     >
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2'>
-          <div>
-            <Icon iconNode={FolderGit2Icon} />
-          </div>
+          <Icon iconNode={FolderGit2Icon} />
           <a
             href={project.repository}
             target='_blank'
@@ -70,6 +68,7 @@ export function ProjectCard({ project, ...props }: Props) {
           {project.featured && (
             <Icon
               iconNode={StarIcon}
+              label='Em destaque'
               className='size-3.5 fill-amber-400 text-amber-400'
             />
           )}
@@ -109,7 +108,7 @@ export function ProjectCard({ project, ...props }: Props) {
           rel='noopener noreferrer'
           className='flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
         >
-          <Image src={GithubIcon} alt='Github' width={14} height={14} />
+          <Image src={GithubIcon} alt='' width={14} height={14} />
           Repositório
         </a>
 

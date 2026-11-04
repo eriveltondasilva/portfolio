@@ -55,9 +55,9 @@ export function ProfileSidebar() {
 
       {/* Name & username */}
       <div className='mt-4'>
-        <h1 className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
+        <p className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
           {author.name}
-        </h1>
+        </p>
         <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
           {githubUsername} • ele/dele
         </p>
