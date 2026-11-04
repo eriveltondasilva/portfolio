@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: meta.description,
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: meta.title,
     description: meta.description,
     site: TWITTER_HANDLE,
@@ -45,53 +45,53 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getAllPosts();
-  const hasPosts = posts.length > 0;
   const postCount = posts.length;
+
+  if (postCount === 0) {
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant='icon'>
+            <FileXIcon />
+          </EmptyMedia>
+
+          <EmptyTitle>Nenhum post publicado</EmptyTitle>
+
+          <EmptyDescription>
+            Os artigos aparecerão aqui assim que forem publicados.
+          </EmptyDescription>
+        </EmptyHeader>
+      </Empty>
+    );
+  }
 
   return (
     <div className='space-y-6'>
-      {/* Header */}
-      {hasPosts && (
-        <div className='flex items-center justify-between gap-3 text-sm text-zinc-500 dark:text-zinc-400'>
-          <span className='flex items-center gap-1.5'>
-            <Icon iconNode={LayersIcon} className='size-3.5' />
-            {postCount} {postCount > 1 ? 'posts publicados' : 'post publicado'}
-          </span>
+      {/* Page title */}
+      <h1 className='sr-only'>Blog</h1>
 
-          <a
-            href='/feed.xml'
-            className='flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-          >
-            <Icon iconNode={RssIcon} className='size-3.5' />
-            RSS
-          </a>
-        </div>
-      )}
+      {/* Header */}
+      <div className='flex items-center justify-between gap-3 text-sm text-zinc-500 dark:text-zinc-400'>
+        <span className='flex items-center gap-1.5'>
+          <Icon iconNode={LayersIcon} className='size-3.5' />
+          {postCount} {postCount === 1 ? 'post publicado' : 'posts publicados'}
+        </span>
+
+        <a
+          href='/feed.xml'
+          className='flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+        >
+          <Icon iconNode={RssIcon} className='size-3.5' />
+          RSS
+        </a>
+      </div>
 
       {/* Posts list */}
-      {hasPosts && (
-        <div className='space-y-3'>
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
-      )}
-
-      {!hasPosts && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant='icon'>
-              <FileXIcon />
-            </EmptyMedia>
-
-            <EmptyTitle>Nenhum post publicado</EmptyTitle>
-
-            <EmptyDescription>
-              Os artigos aparecerão aqui assim que forem publicados.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      )}
+      <div className='space-y-3'>
+        {posts.map((post) => (
+          <PostCard key={post.slug} post={post} />
+        ))}
+      </div>
     </div>
   );
 }

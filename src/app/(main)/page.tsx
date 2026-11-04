@@ -6,8 +6,18 @@ import { PostCard } from '@/components/post-card';
 import { SeriesCard } from '@/components/series-card';
 import { getRecentPosts } from '@/lib/blog/posts';
 import { getInProgressSeries } from '@/lib/blog/series';
+import { getPrimaryAuthor } from '@/lib/blog/authors';
+import { JsonLd } from '@/components/json-ld';
+import { buildHomeJsonLd } from '@/lib/blog/structured-data';
 
-function Code({ children }: { children: React.ReactNode }) {
+import type { ReactNode } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/', types: { 'application/rss+xml': '/feed.xml' } },
+};
+
+function Code({ children }: { children: ReactNode }) {
   return (
     <code className='rounded bg-zinc-200 px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200'>
       {children}
@@ -16,11 +26,14 @@ function Code({ children }: { children: React.ReactNode }) {
 }
 
 export default function HomePage() {
+  const author = getPrimaryAuthor();
   const recentPosts = getRecentPosts();
   const inProgressSeries = getInProgressSeries();
 
   return (
     <div className='space-y-10'>
+      <JsonLd data={buildHomeJsonLd(author)} />
+
       {/* Hero README block */}
       <section className='rounded-md border border-zinc-200 bg-zinc-50/80 p-6 dark:border-zinc-700/60 dark:bg-zinc-800/20'>
         <div className='mb-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-500'>
@@ -32,10 +45,10 @@ export default function HomePage() {
         </div>
 
         <div className='space-y-3'>
-          <h2 className='flex items-center gap-2 text-lg font-bold text-zinc-900 dark:text-zinc-50'>
+          <h1 className='flex items-center gap-2 text-lg font-bold text-zinc-900 dark:text-zinc-50'>
             <Icon iconNode={SparklesIcon} className='size-5 text-emerald-500' />
-            Olá, mundo! Sou o Erivelton 👋
-          </h2>
+            Olá, mundo! Sou Erivelton 👋
+          </h1>
 
           <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
             Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
