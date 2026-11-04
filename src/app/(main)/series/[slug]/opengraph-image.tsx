@@ -1,231 +1,178 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
 import { ImageResponse } from 'next/og';
 
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
-import { getSeriesPosts } from '@/lib/blog/posts';
-import { BASE_URL, SeriesStatus } from '@/lib/constants';
+import {
+  AUTHOR_NAME,
+  BASE_URL,
+  SERIES_STATUS_LABEL,
+  SeriesStatus,
+} from '@/lib/constants';
 import { formatDate } from '@/lib/format';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
-export const alt = 'Erivelton Silva — Séries';
+export const alt = `${AUTHOR_NAME} — Séries`;
 
-export function generateStaticParams() {
-  return getAllSeries().map(({ slug }) => ({ slug }));
-}
-
-const statusLabel: Record<SeriesStatus, string> = {
-  [SeriesStatus.PLANNED]: 'Planejada',
-  [SeriesStatus.IN_PROGRESS]: 'Em andamento',
-  [SeriesStatus.COMPLETE]: 'Completa',
-};
+const FONTS_DIR = join(process.cwd(), 'src', 'assets', 'fonts');
 
 const statusStyle: Record<
   SeriesStatus,
-  { color: string; border: string; bg: string }
+  { color: string; border: string; background: string }
 > = {
   [SeriesStatus.PLANNED]: {
-    bg: '#f9fafb',
+    background: '#f9fafb',
     border: '#e5e7eb',
     color: '#6b7280',
   },
   [SeriesStatus.IN_PROGRESS]: {
-    bg: '#fffbeb',
+    background: '#fffbeb',
     border: '#fde68a',
     color: '#d97706',
   },
   [SeriesStatus.COMPLETE]: {
-    bg: '#f0fdf4',
+    background: '#f0fdf4',
     border: '#bbf7d0',
     color: '#16a34a',
   },
 };
 
+export function generateStaticParams() {
+  return getAllSeries().map(({ slug }) => ({ slug }));
+}
+
 export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 
-  if (!series) return new ImageResponse(<div>Not found</div>, size);
+  if (!series) {
+    return new ImageResponse(<div>Not found</div>, { ...size, status: 404 });
+  }
 
-  const posts = getSeriesPosts(slug);
-  const postCount = posts.length;
+  const [regularFont, semiBoldFont] = await Promise.all([
+    readFile(join(FONTS_DIR, 'Geist-Regular.otf')),
+    readFile(join(FONTS_DIR, 'Geist-SemiBold.otf')),
+  ]);
+
+  const postCount = series.posts.length;
   const style = statusStyle[series.status];
-  const label = statusLabel[series.status];
-  const displayDate = formatDate(series.publishedAt, { dateStyle: 'long' });
+  const displayDate = formatDate(series.publishedAt, { dateStyle: 'medium' });
 
   return new ImageResponse(
     <div
       style={{
-        background: '#ffffff',
-        width: '100%',
-        height: '100%',
         display: 'flex',
         flexDirection: 'column',
+        width: '100%',
+        height: '100%',
+        background: '#ffffff',
+        fontFamily: 'Geist',
       }}
     >
-      {/* Top accent bar */}
       <div
         style={{
           display: 'flex',
-          height: 5,
-          width: '100%',
+          height: 12,
           background: 'linear-gradient(to right, #f97316, #fbbf24, #ea580c)',
         }}
       />
 
-      {/* Main content */}
       <div
         style={{
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'space-between',
-          padding: '48px 64px 52px',
+          padding: '48px 72px',
         }}
       >
-        {/* Breadcrumb */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            fontSize: 16,
-            fontFamily: 'monospace',
+            fontSize: 32,
+            fontWeight: 600,
+            color: '#f97316',
           }}
         >
-          <span style={{ color: '#f97316', fontWeight: 600 }}>
-            {new URL(BASE_URL).hostname}
-          </span>
-          <span style={{ color: '#d1d5db' }}>/</span>
-          <span style={{ color: '#9ca3af' }}>series</span>
-          <span style={{ color: '#d1d5db' }}>/</span>
-          <span style={{ color: '#9ca3af' }}>{slug}</span>
+          {new URL(BASE_URL).hostname}
         </div>
 
-        {/* Middle: title + description + status */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* Title */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div
             style={{
               display: 'flex',
-              color: '#111827',
               fontSize: 52,
-              fontWeight: 800,
+              fontWeight: 600,
               lineHeight: 1.1,
-              letterSpacing: '-1px',
-              maxWidth: 980,
+              letterSpacing: '-2px',
+              color: '#111827',
             }}
           >
             {series.title}
           </div>
 
-          {/* Description */}
           <div
             style={{
               display: 'flex',
+              fontSize: 32,
+              lineHeight: 1.4,
               color: '#6b7280',
-              fontSize: 22,
-              lineHeight: 1.5,
-              maxWidth: 860,
             }}
           >
             {series.description}
           </div>
 
-          {/* Status badge */}
-          <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+          <div style={{ display: 'flex' }}>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8,
-                background: style.bg,
-                border: `1px solid ${style.border}`,
+                gap: 12,
+                padding: '6px 18px',
                 borderRadius: 999,
-                padding: '5px 14px',
+                border: `2px solid ${style.border}`,
+                background: style.background,
+                color: style.color,
+                fontSize: 28,
               }}
             >
               <div
                 style={{
                   display: 'flex',
-                  width: 8,
-                  height: 8,
-                  borderRadius: '50%',
+                  width: 12,
+                  height: 12,
+                  borderRadius: 999,
                   background: style.color,
                 }}
               />
-              <span
-                style={{
-                  color: style.color,
-                  fontSize: 14,
-                  fontFamily: 'monospace',
-                  fontWeight: 600,
-                }}
-              >
-                {label}
-              </span>
+              {SERIES_STATUS_LABEL[series.status]}
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
             justifyContent: 'space-between',
-            borderTop: '1px solid #e5e7eb',
+            fontSize: 28,
+            color: '#4b5563',
+            borderTop: '3px solid #e5e7eb',
             paddingTop: 24,
           }}
         >
-          {/* Post count */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              color: '#374151',
-              fontSize: 15,
-              fontWeight: 600,
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 32,
-                height: 32,
-                borderRadius: 8,
-                background: '#fff7ed',
-                border: '1px solid #fed7aa',
-                color: '#ea580c',
-                fontSize: 14,
-                fontWeight: 700,
-              }}
-            >
-              {postCount}
-            </div>
-            <span style={{ color: '#6b7280', fontSize: 15 }}>
-              {postCount > 1 ? 'posts nesta série' : 'post nesta série'}
-            </span>
-          </div>
-
-          {/* Date */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              color: '#9ca3af',
-              fontSize: 15,
-              fontFamily: 'monospace',
-            }}
-          >
-            <span>{displayDate}</span>
-          </div>
+          <span>{`${postCount} ${postCount === 1 ? 'post' : 'posts'} nesta série`}</span>
+          <span>{`Publicada em ${displayDate}`}</span>
         </div>
       </div>
     </div>,
-    size,
+    {
+      ...size,
+      fonts: [
+        { name: 'Geist', data: regularFont, weight: 400, style: 'normal' },
+        { name: 'Geist', data: semiBoldFont, weight: 600, style: 'normal' },
+      ],
+    },
   );
 }

@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${BASE_URL}/blog`,
       ...(lastPostChange ? { lastModified: lastPostChange } : {}),
     },
+    { url: `${BASE_URL}/privacy` },
     { url: `${BASE_URL}/projects` },
     { url: `${BASE_URL}/series` },
     { url: `${BASE_URL}/tags` },

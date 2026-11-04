@@ -11,16 +11,24 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Página não encontrada',
+};
+
 export default function NotFound() {
   return (
-    <div className='flex min-h-[60vh] items-center justify-center'>
+    <main className='flex min-h-[60vh] items-center justify-center'>
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant='icon'>
             <FileQuestion />
           </EmptyMedia>
 
-          <EmptyTitle>Página não encontrada</EmptyTitle>
+          <EmptyTitle role='heading' aria-level={1}>
+            Página não encontrada
+          </EmptyTitle>
 
           <EmptyDescription>
             O conteúdo que você procura não existe ou foi removido.
@@ -33,6 +41,6 @@ export default function NotFound() {
           </Button>
         </EmptyContent>
       </Empty>
-    </div>
+    </main>
   );
 }
