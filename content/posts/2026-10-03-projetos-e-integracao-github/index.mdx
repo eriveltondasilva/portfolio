@@ -6,11 +6,11 @@ Este é o terceiro post da série **Manual do Blog**. Ao contrário dos posts, o
 
 <Steps>
   <Step title='Busca'>
-    O script `build:projects` consulta a API do GitHub (via `@octokit/rest`) e lista os repositórios do autor principal.
+    O script `build:projects` consulta a API do GitHub (via `@octokit/rest`) e lista, com paginação, todos os repositórios públicos do autor principal.
   </Step>
 
 <Step title='Filtro'>
-  Ficam apenas os repositórios **públicos** que tenham o topic `portfolio`.
+  Ficam apenas os repositórios que tenham o topic `portfolio`.
 </Step>
 
 <Step title='Transformação'>
@@ -18,12 +18,17 @@ Este é o terceiro post da série **Manual do Blog**. Ao contrário dos posts, o
   tags e status.
 </Step>
 
+<Step title='Validação'>
+  Cada projeto passa por um schema. Se algum for inválido, o script falha e o
+  build também.
+</Step>
+
   <Step title='Saída'>
-    O resultado é gravado em `generated/indexes/projects.json`, que o site importa para montar a página de projetos e a seção de destaques.
+    O resultado é gravado em `generated/indexes/projects.json`, que o site importa para montar a página `/projects`, com os destaques primeiro.
   </Step>
 </Steps>
 
-O usuário consultado vem do campo `socials.github` do autor principal, definido em `content/authors/index.json` (veja [Como o blog funciona](/blog/como-o-blog-funciona#autores)).
+O usuário consultado vem do campo `socials.github` do autor principal, definido em `content/authors.yml` (veja [Como o blog funciona](/blog/como-o-blog-funciona#autores)).
 
 ---
 
@@ -31,32 +36,34 @@ O usuário consultado vem do campo `socials.github` do autor principal, definido
 
 Você decide o que aparece pela interface do GitHub, na engrenagem ao lado de **About** na página do repositório, campo **Topics**.
 
-| Topic       | Efeito                                              |
-| ----------- | --------------------------------------------------- |
-| `portfolio` | Inclui o repositório na listagem de projetos        |
-| `featured`  | Marca como destaque, aparece na seção "Em destaque" |
-| `wip`       | Define o status como **Em progresso**               |
+| Topic       | Efeito                                                                              |
+| ----------- | ----------------------------------------------------------------------------------- |
+| `portfolio` | Inclui o repositório na listagem de projetos                                        |
+| `featured`  | Marca como destaque: aparece na seção "Em destaque" de `/projects`, com uma estrela |
+| `wip`       | Define o status como **Em progresso**                                               |
 
 Repositórios privados nunca entram, mesmo com o topic `portfolio`.
 
-As tags exibidas no card são os demais topics do repositório, excluindo os três de controle acima.
+As tags exibidas no card são os demais topics do repositório, excluindo os três de controle acima. São aceitas até 10 tags por projeto.
 
 ---
 
 ## De onde vem cada campo
 
-| Campo do projeto | Origem                                                                        |
-| ---------------- | ----------------------------------------------------------------------------- |
-| `slug`           | Nome do repositório                                                           |
-| `name`           | Nome do repositório formatado: `meu-projeto-legal` vira **Meu Projeto Legal** |
-| `description`    | Descrição do repositório; sem ela, aparece "Sem descrição."                   |
-| `repository`     | URL do repositório                                                            |
-| `url`            | Campo **Website** do repositório, quando preenchido                           |
-| `tags`           | Topics do repositório, menos os de controle                                   |
-| `status`         | Veja a seção abaixo                                                           |
-| `featured`       | `true` se o repositório tem o topic `featured`                                |
+| Campo do projeto | Origem                                                                                                                      |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `slug`           | Nome do repositório em minúsculas e em kebab-case: `My_App` vira `my-app`                                                   |
+| `name`           | Nome do repositório, com hífens, underscores e pontos separando as palavras: `meu-projeto-legal` vira **Meu Projeto Legal** |
+| `description`    | Descrição do repositório, de 10 a 500 caracteres; sem ela, aparece "Sem descrição."                                         |
+| `repository`     | URL do repositório                                                                                                          |
+| `url`            | Campo **Website** do repositório, quando preenchido; precisa ser uma URL completa                                           |
+| `tags`           | Topics do repositório, menos os de controle                                                                                 |
+| `status`         | Veja a seção abaixo                                                                                                         |
+| `featured`       | `true` se o repositório tem o topic `featured`                                                                              |
 
-Na formatação do nome, apenas hífens separam palavras.
+Na formatação do nome, só a primeira letra de cada palavra vira maiúscula; o resto da palavra fica como está no GitHub.
+
+Como o `slug` vem do nome do repositório, dois repositórios podem gerar o mesmo valor (`My_App` e `my-app`). Nesse caso o build falha e aponta os dois repositórios.
 
 ---
 
@@ -68,13 +75,15 @@ Na formatação do nome, apenas hífens separam palavras.
 | Topic `wip` (e não arquivado) | **Em progresso** |
 | Qualquer outro caso           | **Ativo**        |
 
-O arquivamento tem prioridade: um repositório arquivado com o topic `wip` aparece como **Arquivado**.
+O arquivamento tem prioridade: um repositório arquivado com o topic `wip` aparece como **Arquivado**. Repositórios arquivados continuam na listagem, só com esse status.
 
 ---
 
 ## Token e variáveis de ambiente
 
-O script exige a variável `GITHUB_TOKEN` e falha com uma mensagem explicativa se ela não existir. Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens); para listar repositórios públicos não são necessárias permissões extras. Todas as variáveis do projeto estão reunidas em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
+O `GITHUB_TOKEN` é opcional. Sem ele, o script avisa que vai usar o limite de requisições sem autenticação e segue normalmente. Com ele, o limite é maior, o que evita falhas quando muitas requisições partem do mesmo IP, algo comum em plataformas de deploy.
+
+Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens); para listar repositórios públicos não são necessárias permissões extras. Todas as variáveis do projeto estão reunidas em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
 
 <Tabs tabs={['Local', 'Deploy']}>
   <Tab value='Local'>
@@ -103,7 +112,7 @@ O script exige a variável `GITHUB_TOKEN` e falha com uma mensagem explicativa s
 bun run build:projects
 ```
 
-O comando também roda automaticamente antes de `dev` e `build`.
+O comando roda automaticamente antes do `build` (pelo `prebuild`), mas **não** antes do `dev`. Em um clone novo, ou para atualizar a lista durante o desenvolvimento, rode-o manualmente ou use `bun run build:indexes`, que gera todos os índices. Os detalhes estão em [Do arquivo ao site](/blog/como-o-blog-funciona#do-arquivo-ao-site).
 
 <Callout variant='info' title='A lista é estática'>
   Os projetos são buscados em tempo de build. Mudar topics, descrição ou
@@ -111,13 +120,7 @@ O comando também roda automaticamente antes de `dev` e `build`.
   `build:projects` localmente ou de publicar uma nova versão.
 </Callout>
 
-<Callout variant='warning' title='Limite de 100 repositórios'>
-  O script busca uma única página com até 100 repositórios, ordenados por nome.
-  Se a conta passar disso, os demais ficam de fora até que o script ganhe
-  paginação.
-</Callout>
-
-Durante a execução, o script informa quantos repositórios foram incluídos e por que outros ficaram de fora (privados ou sem o topic `portfolio`), além da contagem de destaques, em progresso e arquivados.
+Durante a execução, o script informa quantos repositórios públicos foram buscados e quantos entraram na listagem, quantos ficaram de fora por não terem o topic `portfolio` e a contagem de destaques, em progresso e arquivados.
 
 ---
 
@@ -131,12 +134,21 @@ Durante a execução, o script informa quantos repositórios foram incluídos e 
 
 <AccordionItem title='O projeto não mostra link de demonstração'>
   O link vem do campo **Website** do repositório. Preencha-o na engrenagem ao
-  lado de **About** e regenere o índice.
+  lado de **About**, com a URL completa (começando por `https://`), e regenere o
+  índice.
 </AccordionItem>
 
-  <AccordionItem title='O build falha com GITHUB_TOKEN is not set'>
-    A variável não está definida no ambiente em que o comando rodou. Defina-a no `.env.local` ou nas
-    variáveis da plataforma de deploy.
+<AccordionItem title='O build falha com erro de validação em um projeto'>
+  A mensagem indica a URL do repositório e o campo com problema. As causas mais
+  comuns são descrição com menos de 10 caracteres, mais de 10 tags (sem contar
+  os topics de controle), **Website** que não é uma URL válida e dois
+  repositórios que geram o mesmo slug. Corrija no GitHub e rode `bun run
+  build:projects` de novo.
+</AccordionItem>
+
+  <AccordionItem title='O build falha por limite de requisições do GitHub'>
+    Sem `GITHUB_TOKEN`, o script usa o limite de requisições sem autenticação, que é bem menor e
+    compartilhado por IP. Defina o token no `.env.local` ou nas variáveis da plataforma de deploy.
   </AccordionItem>
 </Accordion>
 
