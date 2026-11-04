@@ -1,30 +1,31 @@
-Este é o primeiro post da série **Manual do Blog**. Aqui está tudo o que acontece em volta do texto: onde ficam os arquivos, o que o frontmatter aceita, como funcionam status e séries e o que o build valida antes de publicar.
+Este é o primeiro post da série **Manual do Blog**. Aqui está tudo o que acontece em volta do texto: onde ficam os arquivos, o que o `meta.yml` aceita, como funcionam status e séries e o que o build valida antes de publicar.
 
-Os próximos posts cobrem o que usar dentro do texto ([componentes MDX](/blog/mdx-reference)), a [listagem de projetos](/blog/projetos-e-integracao-github), as [variáveis de ambiente e o deploy](/blog/variaveis-de-ambiente-e-deploy) e as [reações com Redis](/blog/reacoes-e-redis).
+Os próximos posts cobrem o que usar dentro do texto ([componentes MDX](/blog/mdx-reference)), a [listagem de projetos](/blog/projetos-e-integracao-github), as [variáveis de ambiente e o deploy](/blog/variaveis-de-ambiente-e-deploy), as [reações com Redis](/blog/reacoes-e-redis) e os [recursos automáticos do blog](/blog/recursos-automaticos).
 
 ---
 
 ## Estrutura de conteúdo
 
-Todo o conteúdo vive na pasta `content`. A pasta `generated` é produzida pelos scripts e **não deve ser editada à mão**.
+Todo o conteúdo vive na pasta `content`: autores e séries em arquivos YAML, e cada post em sua própria pasta. A pasta `generated` é produzida pelos scripts e **não deve ser editada à mão**.
 
 <FileTree>
   <FileTreeFolder name='content' defaultOpen>
-    <FileTreeFolder name='authors' defaultOpen>
-      <FileTreeFile name='index.json' />
-    </FileTreeFolder>
-    <FileTreeFolder name='series' defaultOpen>
-      <FileTreeFile name='index.json' />
-    </FileTreeFolder>
+    <FileTreeFile name='authors.yml' />
+    <FileTreeFile name='series.yml' />
     <FileTreeFolder name='posts' defaultOpen>
       <FileTreeFolder name='2026-01-15-meu-post' defaultOpen>
+        <FileTreeFile name='meta.yml' />
         <FileTreeFile name='index.mdx' highlight />
         <FileTreeFile name='cover.jpg' />
+        <FileTreeFolder name='images'>
+          <FileTreeFile name='diagrama.png' />
+        </FileTreeFolder>
       </FileTreeFolder>
     </FileTreeFolder>
   </FileTreeFolder>
   <FileTreeFolder name='generated'>
     <FileTreeFolder name='indexes'>
+      <FileTreeFile name='authors.json' />
       <FileTreeFile name='posts.json' />
       <FileTreeFile name='series.json' />
       <FileTreeFile name='projects.json' />
@@ -32,104 +33,154 @@ Todo o conteúdo vive na pasta `content`. A pasta `generated` é produzida pelos
     <FileTreeFolder name='schemas'>
       <FileTreeFile name='authors.json' />
       <FileTreeFile name='series.json' />
-      <FileTreeFile name='posts.json' />
+      <FileTreeFile name='post.json' />
     </FileTreeFolder>
   </FileTreeFolder>
 </FileTree>
 
-O nome da pasta de um post é livre. A URL vem do campo `slug` do frontmatter; a pasta é usada apenas para localizar o arquivo, a capa e o link "Editar no GitHub".
+O nome da pasta de um post é livre. A URL vem do campo `slug` do `meta.yml`; a pasta é usada apenas para localizar o arquivo, a capa e o link "Sugerir Edição". Pastas que começam com ponto são ignoradas.
+
+Na pasta do post só são esperados `meta.yml`, `index.mdx`, `images/` e uma capa opcional. Qualquer outro arquivo gera um aviso no build.
+
+---
+
+## Criando um post
+
+O jeito mais curto é o script interativo:
+
+```bash
+bun run new-post
+```
+
+Ele pergunta título, slug, descrição, tags e autores. Se existirem séries, pergunta também a série e a posição do post nela (`order`). Cada resposta é validada pelo mesmo schema que o build usa.
+
+O script também aceita flags (`--title`, `--slug`, `--description`, `--tags`, `--authors`, `--series` e `--order`). Cada flag dispensa a pergunta correspondente, e uma flag inválida interrompe o script em vez de perguntar de novo:
+
+```bash
+bun run new-post --title "Meu primeiro post" --tags "react,nextjs"
+```
+
+O resultado é a pasta `content/posts/slug-do-post/` com:
+
+- `meta.yml`, com a data de hoje em `publishedAt` e `status: 'draft'`;
+- `index.mdx`, com um modelo mínimo;
+- uma pasta `images/` vazia.
+
+O script usa o slug como nome da pasta. Se preferir um prefixo de data, como nos posts deste blog, renomeie a pasta depois. O Git não versiona pastas vazias, e um post sem `images/` é válido.
+
+Escreva o post e troque o `status` para `published` quando estiver pronto.
 
 ---
 
 ## Do arquivo ao site
 
-O site não lê os arquivos de conteúdo diretamente para listar posts. Em vez disso, scripts leem o conteúdo, validam, e gravam índices em JSON que o Next.js importa.
+O site não lê os arquivos de conteúdo diretamente para listar posts. Em vez disso, scripts leem o conteúdo, validam e gravam índices em JSON que o Next.js importa. A exceção é o texto do `index.mdx`, que o Next.js importa direto.
 
-| Comando                  | O que faz                                    |
-| ------------------------ | -------------------------------------------- |
-| `bun run build:blog`     | Gera os índices de posts e séries            |
-| `bun run build:projects` | Gera o índice de projetos a partir do GitHub |
-| `bun run build:schemas`  | Gera JSON Schemas a partir dos schemas Zod   |
-| `bun run build:indexes`  | Executa `build:blog` e `build:projects`      |
+| Comando                  | O que faz                                                      |
+| ------------------------ | -------------------------------------------------------------- |
+| `bun run new-post`       | Cria a pasta de um post novo                                   |
+| `bun run build:blog`     | Valida o conteúdo e gera os índices de posts, autores e séries |
+| `bun run build:projects` | Gera o índice de projetos a partir do GitHub                   |
+| `bun run build:schemas`  | Gera JSON Schemas a partir dos schemas Zod                     |
+| `bun run build:indexes`  | Executa `build:blog`, `build:projects` e `build:schemas`       |
 
-Antes do `dev` rodam `build:indexes` e `build:schemas`; antes do `build`, apenas `build:indexes`.
+Antes do `build` roda o `prebuild`, que executa `build:blog` e `build:projects`. Já o `dev` não tem nenhum passo anterior.
 
-<Callout variant='tip' title='Editou o frontmatter com o servidor rodando?'>
-  O texto do post atualiza sozinho, mas o frontmatter, o tempo de leitura e as
-  séries vêm dos índices gerados. Rode `bun run build:blog` de novo para
-  refletir essas mudanças.
+<Callout variant='warning' title='O dev não gera os índices'>
+  Se a pasta `generated` não existir (um clone novo, por exemplo), rode `bun run
+  build:indexes` antes do primeiro `bun dev`. Depois, sempre que mudar o
+  `meta.yml`, o `authors.yml` ou o `series.yml` com o servidor rodando, rode
+  `bun run build:blog` de novo: o texto do post atualiza sozinho, mas os
+  metadados, o tempo de leitura e as séries vêm dos índices gerados.
 </Callout>
 
 ---
 
-## Frontmatter
+## Metadados
 
-Todo post começa com um frontmatter validado por um schema Zod:
+Os metadados de cada post ficam no `meta.yml`, validado por um schema Zod:
 
-```yml
----
-slug: 'meu-post'
-title: 'Título do Post'
-description: 'Descrição curta exibida no card e no SEO.'
-publishedAt: '2026-01-15'
-updatedAt: '2026-04-03' # opcional
-tags: ['tag1', 'tag2']
-status: 'published'
-authors:
-  - erivelton
-series: 'slug-da-serie' # opcional, exige order
+```yml title="content/posts/2026-01-15-meu-post/meta.yml"
+slug: meu-post
+title: Título do Post
+description: Descrição curta exibida no card e no SEO.
+publishedAt: 2026-01-15
+updatedAt: 2026-04-03 # opcional
+tags: [tag1, tag2]
+status: published
+authors: [erivelton]
+series: slug-da-serie # opcional, exige order
 order: 1 # opcional, exige series
----
 ```
 
-| Campo         | Obrigatório | Regra                                                |
-| ------------- | :---------: | ---------------------------------------------------- |
-| `slug`        |     ✅      | kebab-case, até 120 caracteres                       |
-| `title`       |     ✅      | até 160 caracteres                                   |
-| `description` |     ✅      | de 10 a 300 caracteres                               |
-| `tags`        |     ✅      | de 1 a 10 itens, cada um em kebab-case               |
-| `publishedAt` |     ✅      | data ISO (`YYYY-MM-DD`)                              |
-| `authors`     |     ✅      | ao menos um slug de autor existente                  |
-| `status`      |             | `draft`, `published` ou `archived` (padrão: `draft`) |
-| `updatedAt`   |             | data ISO da última atualização significativa         |
-| `series`      |             | slug de uma série existente; exige `order`           |
-| `order`       |             | inteiro positivo; exige `series`                     |
+Escreva as datas entre aspas, como o modelo gerado pelo script: o schema espera texto no formato `YYYY-MM-DD`.
+
+| Campo         | Obrigatório | Regra                                                                 |
+| ------------- | :---------: | --------------------------------------------------------------------- |
+| `slug`        |     ✅      | kebab-case, até 120 caracteres                                        |
+| `title`       |     ✅      | até 160 caracteres                                                    |
+| `description` |     ✅      | de 10 a 160 caracteres                                                |
+| `tags`        |     ✅      | de 1 a 10 itens, sem repetição, cada um em kebab-case                 |
+| `publishedAt` |     ✅      | data ISO (`YYYY-MM-DD`)                                               |
+| `authors`     |     ✅      | ao menos um slug de autor existente, sem repetição                    |
+| `status`      |             | `draft`, `published` ou `archived` (padrão: `draft`)                  |
+| `updatedAt`   |             | data ISO da última atualização; não pode ser anterior a `publishedAt` |
+| `series`      |             | slug de uma série existente; exige `order`                            |
+| `order`       |             | inteiro positivo; exige `series`                                      |
 
 <Callout variant='warning' title='Atenção'>
   O schema é estrito: campos desconhecidos geram erro de build. E, como o
   `status` padrão é `draft`, esquecer esse campo faz o post não ser publicado.
 </Callout>
 
+<Callout variant='danger' title='Nada de metadados no MDX'>
+  Os metadados não ficam mais no começo do `index.mdx`. Se o arquivo começar com
+  `---`, o build falha e pede para mover esse bloco para o `meta.yml`.
+</Callout>
+
 ### Campo `status`
 
-| Valor       | Comportamento                                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `draft`     | Ignorado pelo índice: sem rota e fora das listagens                                                                      |
-| `published` | Visível publicamente, presente nas listagens e no sitemap                                                                |
-| `archived`  | Fora das listagens e do sitemap, mas a URL continua acessível, com banner de aviso e sem posts relacionados ou navegação |
+| Valor       | Comportamento                                                                                          |
+| ----------- | ------------------------------------------------------------------------------------------------------ |
+| `draft`     | Ignorado pelo índice: sem rota e fora das listagens                                                    |
+| `published` | Visível publicamente, presente nas listagens, nas páginas de tag, no sitemap e no RSS                  |
+| `archived`  | Fora das listagens, das páginas de tag, do sitemap, do RSS e dos posts relacionados, mas com URL ativa |
+
+Rascunhos passam só pela verificação de arquivos e do schema. Slug duplicado, série, autor e imagens só são conferidos quando o post deixa de ser rascunho.
+
+Um post `archived` continua acessível pela URL, com estas diferenças:
+
+- exibe um banner de aviso e é marcado como `noindex` para os buscadores;
+- não mostra posts relacionados, navegação entre posts nem comentários;
+- mostra as reações, mas só para leitura;
+- continua fazendo parte da sua série.
 
 ### Campo `updatedAt`
 
-Quando informado, substitui o `publishedAt` nas datas exibidas e troca o rótulo para "Atualizado em" no cabeçalho do post:
+Quando informado, substitui o `publishedAt` nas datas exibidas e troca o rótulo para "Atualizado em" no cabeçalho do post. O mesmo valor vai para o RSS, o sitemap e os dados estruturados do post.
 
 ```yml
----
-publishedAt: '2026-01-15'
-updatedAt: '2026-04-03' # use ao fazer atualizações significativas
----
+publishedAt: 2026-01-15
+updatedAt: 2026-04-03 # use ao fazer atualizações significativas
 ```
+
+A ordem das listagens continua seguindo o `publishedAt`.
 
 ---
 
 ## Imagem de capa
 
-Para ter uma capa, coloque na pasta do post um arquivo chamado `cover` com uma das extensões `.jpg`, `.jpeg`, `.png`, `.webp` ou `.avif`. Nenhuma configuração é necessária: o script de índice detecta o arquivo e a capa aparece no cabeçalho do post, antes do conteúdo.
+Para ter uma capa, coloque na pasta do post um arquivo chamado `cover`, **em minúsculas**, com uma das extensões `.jpg`, `.jpeg`, `.png`, `.webp` ou `.avif`. Nenhuma configuração é necessária: o script de índice detecta o arquivo e a capa aparece no cabeçalho do post, abaixo do título.
+
+Um nome como `Cover.png` é rejeitado pelo build, porque seria ignorado em sistemas de arquivos que diferenciam maiúsculas de minúsculas.
 
 <Callout variant='info' title='Capa e imagem de compartilhamento'>
   A imagem Open Graph (usada ao compartilhar o link em redes sociais) é gerada
   automaticamente com título, descrição, tags, autores, data e tempo de leitura.
   Ela **não** usa o arquivo de capa.
 </Callout>
+
+As imagens usadas dentro do texto ficam na pasta `images/`, e as regras para elas estão na seção de imagens da [Referência de Componentes MDX](/blog/mdx-reference#imagens).
 
 ---
 
@@ -138,28 +189,29 @@ Para ter uma capa, coloque na pasta do post um arquivo chamado `cover` com uma d
 Sem nenhuma configuração extra, cada post recebe:
 
 - **Tempo de leitura**, calculado a partir do conteúdo e arredondado para cima.
-- **Metadados de SEO e Open Graph**, montados a partir do frontmatter e dos autores.
+- **Metadados de SEO e Open Graph**, montados a partir dos metadados do post e dos autores, além de dados estruturados (JSON-LD).
 - **Imagem Open Graph** própria, como descrito acima.
-- **Entrada no sitemap**, apenas para posts `published`.
-- **Link "Editar no GitHub"**, apontando para o `index.mdx` do post.
-- **Posts relacionados**, ordenados por quantidade de tags em comum.
+- **Entrada no sitemap e no RSS** (`/feed.xml`), apenas para posts `published`.
+- **Página de tag** para cada tag, em `/tags/nome-da-tag`, com os posts publicados.
+- **Índice "Neste post"**, montado a partir dos títulos `##` e `###` quando o post tem mais de um.
+- **Posts relacionados**, ordenados por quantidade de tags em comum, e navegação para o post anterior e o próximo.
+- **Reações** e **comentários** (via Giscus), que não aparecem no mesmo formato em posts arquivados.
+- **Botão "Sugerir Edição"**, apontando para o `index.mdx` do post no GitHub.
+
+Cada um desses recursos é detalhado em [Recursos Automáticos](/blog/recursos-automaticos).
 
 ---
 
 ## Séries
 
-Séries agrupam posts em uma sequência. Elas são definidas em `content/series/index.json`:
+Séries agrupam posts em uma sequência. Elas são definidas em `content/series.yml`:
 
-```json
-[
-  {
-    "slug": "minha-serie",
-    "title": "Minha Série",
-    "description": "Descrição curta da série.",
-    "publishedAt": "2026-01-15",
-    "status": "in-progress"
-  }
-]
+```yml title="content/series.yml"
+- slug: minha-serie
+  title: Minha Série
+  description: Descrição curta da série.
+  publishedAt: 2026-01-15
+  status: in-progress
 ```
 
 | Campo         | Tipo     | Valores                            | Obrigatório |
@@ -170,9 +222,9 @@ Séries agrupam posts em uma sequência. Elas são definidas em `content/series/
 | `publishedAt` | `string` | data ISO (`YYYY-MM-DD`)            |     ✅      |
 | `status`      | `string` | `planned` `in-progress` `complete` |             |
 
-O `status` da série é `planned` por padrão. Séries `in-progress` aparecem automaticamente na seção **Séries em andamento** da home.
+O `status` da série é `planned` por padrão. Séries `in-progress` aparecem automaticamente na seção **Séries em andamento** da home. Todas as séries têm página própria em `/series/slug-da-serie`, com a lista dos posts.
 
-Para incluir um post na série, informe `series` e `order` no frontmatter do post. O banner da série aparece no rodapé do post, com a lista de todos os posts e a posição atual destacada, e a ordem dos posts na lista segue o `order`.
+Para incluir um post na série, informe `series` e `order` no `meta.yml` do post. O banner da série aparece no final do post, com a lista de todos os posts e a posição atual destacada, e a ordem dos posts na lista segue o `order`.
 
 <Callout variant='info' title='Exemplo ao vivo'>
   A série **Manual do Blog**, da qual este post faz parte, usa exatamente esse
@@ -183,20 +235,17 @@ Para incluir um post na série, informe `series` e `order` no frontmatter do pos
 
 ## Autores
 
-Autores ficam em `content/authors/index.json`:
+Autores ficam em `content/authors.yml`:
 
-```json
-[
-  {
-    "slug": "erivelton",
-    "name": "Erivelton Silva",
-    "bio": "Desenvolvedor web.",
-    "skills": ["TypeScript", "Laravel"],
-    "socials": {
-      "github": "https://github.com/usuario"
-    }
-  }
-]
+```yml title="content/authors.yml"
+- slug: erivelton
+  name: Erivelton Silva
+  bio: Desenvolvedor web.
+  skills:
+    - TypeScript
+    - Laravel
+  socials:
+    github: https://github.com/usuario
 ```
 
 | Campo     | Obrigatório | Regra                                                        |
@@ -207,21 +256,40 @@ Autores ficam em `content/authors/index.json`:
 | `skills`  |     ✅      | de 1 a 20 itens                                              |
 | `socials` |     ✅      | `github` é obrigatório; `linkedin` e `twitter` são opcionais |
 
-O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Dele sai, por exemplo, o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github).
+As redes sociais aceitam apenas URLs `https` dos domínios esperados:
+
+- `github`: `github.com`;
+- `linkedin`: `linkedin.com` ou `www.linkedin.com`;
+- `twitter`: `x.com` ou `twitter.com`, com ou sem `www`.
+
+O nome do autor aparece no cabeçalho do post, com um cartão que mostra a bio, as principais habilidades e as redes. O avatar é buscado no GitHub, a partir do usuário da URL em `socials.github`.
+
+O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Ele alimenta a barra lateral, o rodapé e o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github). Se esse slug não existir no `authors.yml`, o build falha.
 
 ---
 
 ## Validações no build
 
-Ao gerar os índices, o build confere o conteúdo e **para com uma mensagem detalhada** (caminho do arquivo e campo com problema) se algo estiver errado:
+Ao gerar os índices, o build confere o conteúdo e **para com uma mensagem detalhada** (caminho do arquivo e campo com problema) se algo estiver errado. Os erros de cada etapa são reunidos em uma única mensagem.
 
-| Verificação     | O build falha quando                                             |
-| --------------- | ---------------------------------------------------------------- |
-| Schema          | Frontmatter, autores ou séries têm campos inválidos ou extras    |
-| Slugs únicos    | Dois posts, autores ou séries compartilham o mesmo `slug`        |
-| Série existente | Um post referencia uma série que não está em `series/index.json` |
-| Ordem única     | Dois posts da mesma série usam o mesmo `order`                   |
-| Autor existente | Um post cita um autor que não está em `authors/index.json`       |
+| Verificação      | O build falha quando                                                        |
+| ---------------- | --------------------------------------------------------------------------- |
+| Arquivos         | A pasta do post não tem `meta.yml` ou `index.mdx`                           |
+| Metadados no MDX | O `index.mdx` começa com `---`                                              |
+| Schema           | `meta.yml`, `authors.yml` ou `series.yml` têm campos inválidos ou extras    |
+| Slugs únicos     | Dois posts, autores ou séries compartilham o mesmo `slug`                   |
+| Série existente  | Um post referencia uma série que não está em `series.yml`                   |
+| Ordem única      | Dois posts da mesma série usam o mesmo `order`                              |
+| Autor existente  | Um post cita um autor que não está em `authors.yml`                         |
+| Imagens          | Uma imagem não está em `images/`, tem nome fora do kebab-case ou não existe |
+| Imagens em JSX   | Um componente JSX recebe `src` como texto em vez de uma imagem importada    |
+| Capa             | O arquivo de capa tem letras maiúsculas no nome, como `Cover.png`           |
+
+Alguns problemas não derrubam o build e aparecem como aviso no terminal:
+
+- uma imagem de `images/` com mais de 1 MB;
+- uma imagem de `images/` que o `index.mdx` não usa;
+- um arquivo inesperado na pasta do post.
 
 ---
 
