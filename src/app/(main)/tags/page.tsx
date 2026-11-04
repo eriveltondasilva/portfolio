@@ -10,13 +10,13 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { getTagsWithCount } from '@/lib/blog/tags';
+import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
 
 const meta = {
   title: 'Tags',
   description: 'Navegue pelos posts por tema.',
-  siteName: "Erivelton's Portfolio",
 };
 
 export const metadata: Metadata = {
@@ -26,16 +26,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/tags',
+    locale: OG_LOCALE,
+    siteName: SITE_NAME,
     title: meta.title,
     description: meta.description,
-    siteName: meta.siteName,
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: meta.title,
     description: meta.description,
-    site: meta.siteName,
-    creator: '@erivelton_silv4',
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
   },
 };
 
@@ -46,11 +47,14 @@ export default function TagsPage() {
 
   return (
     <div className='space-y-6'>
+      {/* Page title */}
+      <h1 className='sr-only'>Tags</h1>
+
       {/* Header */}
       {hasTags && (
         <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
-          {tagCount} {tagCount > 1 ? 'tags' : 'tag'}
+          {tagCount} {tagCount === 1 ? 'tag' : 'tags'}
         </div>
       )}
 
@@ -80,7 +84,9 @@ export default function TagsPage() {
             <EmptyMedia variant='icon'>
               <HashIcon />
             </EmptyMedia>
+
             <EmptyTitle>Nenhuma tag encontrada</EmptyTitle>
+
             <EmptyDescription>
               As tags são criadas automaticamente a partir dos posts publicados.
             </EmptyDescription>

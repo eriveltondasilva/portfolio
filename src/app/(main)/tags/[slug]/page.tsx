@@ -5,13 +5,7 @@ import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/post-card';
 import { getPostsByTag } from '@/lib/blog/posts';
 import { getAllTags } from '@/lib/blog/tags';
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty';
+import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
 
@@ -25,7 +19,6 @@ export async function generateMetadata({
   const meta = {
     title: `#${slug}`,
     description: `Posts sobre ${slug}.`,
-    siteName: "Erivelton's Portfolio",
   };
 
   return {
@@ -35,30 +28,30 @@ export async function generateMetadata({
     openGraph: {
       type: 'website',
       url: `/tags/${slug}`,
+      locale: OG_LOCALE,
+      siteName: SITE_NAME,
       title: meta.title,
       description: meta.description,
-      siteName: meta.siteName,
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: meta.title,
       description: meta.description,
-      site: meta.siteName,
-      creator: '@erivelton_silv4',
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
     },
   };
 }
 
 export function generateStaticParams() {
-  const tags = getAllTags();
-  return tags.map((tag) => ({ slug: tag }));
+  return getAllTags().map((tag) => ({ slug: tag }));
 }
 
 export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
   const { slug } = await params;
+
   const posts = getPostsByTag(slug);
-  const hasPosts = posts.length > 0;
-  const tagCount = posts.length;
+  const postCount = posts.length;
 
   return (
     <div className='space-y-6'>
@@ -79,33 +72,16 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
         </h1>
         <p className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
-          {tagCount} {tagCount > 1 ? 'posts' : 'post'}
+          {postCount} {postCount === 1 ? 'post' : 'posts'}
         </p>
       </header>
 
       {/* Posts */}
-      {hasPosts && (
-        <div className='space-y-3'>
-          {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
-          ))}
-        </div>
-      )}
-
-      {!hasPosts && (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant='icon'>
-              <HashIcon />
-            </EmptyMedia>
-            <EmptyTitle>Nenhum post com esta tag</EmptyTitle>
-            <EmptyDescription>
-              Nenhum post foi publicado com a tag <strong>#{slug}</strong>{' '}
-              ainda.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      )}
+      <div className='space-y-3'>
+        {posts.map((post) => (
+          <PostCard key={post.slug} post={post} />
+        ))}
+      </div>
     </div>
   );
 }
