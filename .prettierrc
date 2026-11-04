@@ -1,10 +1,15 @@
 {
-  "experimentalTernaries": true,
-  "jsxSingleQuote": true,
-  "singleQuote": true,
-  "semi": true,
-  "printWidth": 80,
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "tailwindStylesheet": "./src/app/globals.css",
-  "tailwindFunctions": ["clsx", "cn", "twMerge", "twJoin"]
+  experimentalTernaries: true,
+  jsxSingleQuote: true,
+  singleQuote: true,
+  semi: true,
+  printWidth: 80,
+  plugins:
+    [
+      prettier-plugin-tailwindcss,
+      prettier-plugin-package,
+      prettier-plugin-yaml,
+    ],
+  tailwindStylesheet: ./src/app/globals.css,
+  tailwindFunctions: [clsx, cn, twMerge, twJoin],
 }
