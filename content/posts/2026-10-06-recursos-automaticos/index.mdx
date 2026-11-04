@@ -1,0 +1,136 @@
+Este é o sexto e último post da série **Manual do Blog**. Os posts anteriores mostram o que você escreve e configura; este reúne o que o blog faz sozinho a partir desse conteúdo: feed RSS, SEO, sitemap, imagens de compartilhamento, páginas de tags, comentários e os recursos de leitura de cada post.
+
+Quase tudo é gerado no build. Mudou um `meta.yml`, um texto ou uma tag? Rode `bun run build:blog` durante o desenvolvimento, ou publique uma nova versão, para o resultado aparecer. As rotas de post, série e tag só existem para o que está nos índices: qualquer outro endereço responde `404`.
+
+---
+
+## Feed RSS
+
+O feed fica em `/feed.xml` e lista os posts `published`, do mais novo para o mais antigo. Cada item traz:
+
+- o título, o link e a `description` do `meta.yml`;
+- uma `category` para cada tag;
+- a data de publicação do item: o `updatedAt`, se existir, ou o `publishedAt`.
+
+O feed leva só o resumo, não o texto completo do post. Ele é gerado no build, então só muda a cada deploy.
+
+Para os leitores de feed encontrarem o endereço sozinhos, todas as páginas o declaram no `<head>` (`<link rel="alternate">`), e há links "RSS" no rodapé e na página do blog.
+
+---
+
+## SEO e dados estruturados
+
+Cada post monta os metadados a partir do `meta.yml` e dos autores:
+
+- o título da aba é o título do post seguido do nome do site;
+- a `description` vira a descrição para buscadores, para o Open Graph e para o Twitter (daí o limite de 160 caracteres);
+- a URL canônica é `/blog/slug-do-post`, montada sobre a `NEXT_PUBLIC_SITE_URL`;
+- o Open Graph usa o tipo `article`, com as datas de publicação e de modificação, as tags e os autores;
+- o cartão do Twitter é o `summary_large_image`;
+- posts `archived` recebem `noindex, follow`, para os buscadores pararem de indexá-los sem deixar de seguir os links.
+
+As páginas de listagem, de tags, de séries e de projetos têm título, descrição e URL canônica próprios.
+
+Cada post também embute dados estruturados (JSON-LD) com:
+
+- um `BlogPosting`: título, descrição, tags como palavras-chave, idioma, `datePublished`, `dateModified` (o `updatedAt`, quando existe) e os autores, com o link do GitHub;
+- um `BreadcrumbList` com o Blog e o post.
+
+---
+
+## Sitemap e robots
+
+O `/sitemap.xml` inclui:
+
+- a home, o blog, os projetos, as séries e as tags;
+- uma entrada para cada série e para cada tag;
+- uma entrada para cada post `published`, com `lastModified` igual ao `updatedAt` ou ao `publishedAt`.
+
+A entrada do blog usa como `lastModified` a data mais recente entre os posts. Rascunhos e posts arquivados ficam de fora.
+
+O `/robots.txt` libera o site inteiro, bloqueia `/api/` e aponta para o sitemap.
+
+---
+
+## Imagens de compartilhamento
+
+A imagem Open Graph, exibida quando o link é compartilhado, é gerada no build em 1200 × 630 pixels, com a fonte Geist, e serve também como imagem do Twitter. Ela existe para posts e para séries:
+
+| Página | O que aparece na imagem                                                      |
+| ------ | ---------------------------------------------------------------------------- |
+| Post   | Domínio, título, descrição, até 4 tags, autores, data e tempo de leitura     |
+| Série  | Domínio, título, descrição, status, quantidade de posts e data de publicação |
+
+A imagem de um post **não usa** o arquivo de capa (veja [Imagem de capa](/blog/como-o-blog-funciona#imagem-de-capa)). Se você mudar o título, a descrição ou as tags, ela é regenerada no próximo build.
+
+---
+
+## Tags
+
+As tags do `meta.yml` viram páginas automaticamente:
+
+- `/tags` lista todas as tags dos posts publicados, com a quantidade de posts de cada uma, da mais usada para a menos usada (empates em ordem alfabética);
+- `/tags/nome-da-tag` lista os posts daquela tag, do mais novo para o mais antigo;
+- cada tag exibida nos cards e no cabeçalho do post é um link para a sua página.
+
+<Callout variant='warning' title='Tag usada só em posts arquivados'>
+  Posts arquivados não contam para as páginas de tags. Se uma tag aparece apenas
+  em posts arquivados, ela não tem página, e o link no cabeçalho desses posts
+  leva a um erro 404.
+</Callout>
+
+---
+
+## Comentários
+
+Os comentários usam o [Giscus](https://giscus.app), que guarda cada conversa como uma **discussão** no repositório do GitHub. Quem comenta precisa entrar com a conta do GitHub, e a moderação é feita pelo próprio GitHub.
+
+- Cada post é ligado a uma discussão pelo `slug`, com correspondência exata. A discussão é criada quando o primeiro comentário é publicado.
+- O repositório e a categoria (`Comments`) ficam em `GISCUS`, no arquivo `lib/constants.ts` (veja [Valores fixos no código](/blog/variaveis-de-ambiente-e-deploy#valores-fixos-no-código)).
+- O Giscus só é carregado quando a seção se aproxima da tela. Ele aparece em português, com o tema claro fixo, e sem as reações dele, que ficam por conta das [reações do blog](/blog/reacoes-e-redis).
+- Posts arquivados não mostram comentários.
+
+<Callout variant='warning' title='Mudou o slug, mudou a discussão'>
+  Como a ligação é feita pelo slug, mudar o `slug` de um post faz o Giscus
+  procurar uma discussão nova. As conversas antigas continuam no GitHub, mas
+  deixam de aparecer no post.
+</Callout>
+
+---
+
+## Recursos de leitura
+
+Cada post recebe, sem nenhuma configuração:
+
+- **Índice "Neste post"**, montado com os títulos `##` e `###` (veja [Índice do post](/blog/mdx-reference#índice-do-post)). Em telas largas ele acompanha a leitura e destaca a seção em que você está.
+- **Barra de progresso** fina no topo da página.
+- **Botão de voltar ao topo**, que aparece quando o leitor sai do começo da página.
+- **Botão de compartilhar** no cabeçalho: em navegadores com compartilhamento nativo, como os de celular, abre o painel do sistema; nos demais, copia o link.
+- **Botão de copiar** em cada bloco de código.
+- **Posts relacionados**: até 3 posts publicados que têm tags em comum, com os de mais tags em comum primeiro e, nos empates, os mais novos.
+- **Anterior e próximo**, na ordem de `publishedAt`. A ordem da série tem o banner próprio, descrito em [Séries](/blog/como-o-blog-funciona#séries).
+- **Reações** e o botão **Sugerir Edição**, que abre o `index.mdx` do post no GitHub.
+
+---
+
+## Posts arquivados
+
+Um post `archived` mantém a URL, mas perde parte desses recursos:
+
+| Recurso                                | `published` | `archived` |
+| -------------------------------------- | :---------: | :--------: |
+| Listagens (home, blog, tags)           |     ✅      |     ❌     |
+| Sitemap e RSS                          |     ✅      |     ❌     |
+| `noindex` para buscadores              |     ❌      |     ✅     |
+| Banner de aviso                        |     ❌      |     ✅     |
+| Posts relacionados, anterior e próximo |     ✅      |     ❌     |
+| Comentários                            |     ✅      |     ❌     |
+| Reações                                |     ✅      | Só leitura |
+| Imagem de compartilhamento e JSON-LD   |     ✅      |     ✅     |
+| Índice "Neste post" e banner da série  |     ✅      |     ✅     |
+
+---
+
+## Fim da série
+
+Você chegou ao fim do **Manual do Blog**. Para voltar ao começo, veja [Como o blog funciona](/blog/como-o-blog-funciona).
