@@ -1,4 +1,4 @@
-import { BASE_URL, LOCALE } from '@/lib/constants';
+import { BASE_URL, LOCALE, SITE_DESCRIPTION, SITE_NAME } from '@/lib/constants';
 
 import type { Author, PostIndex } from '@/types';
 
@@ -41,6 +41,34 @@ export function buildPostJsonLd(post: PostIndex, authors: Author[]) {
             item: postUrl,
           },
         ],
+      },
+    ],
+  };
+}
+
+export function buildHomeJsonLd(author: Author) {
+  const personId = `${BASE_URL}/#person`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${BASE_URL}/#website`,
+        url: BASE_URL,
+        name: SITE_NAME,
+        description: SITE_DESCRIPTION,
+        inLanguage: LOCALE,
+        publisher: { '@id': personId },
+      },
+      {
+        '@type': 'Person',
+        '@id': personId,
+        name: author.name,
+        url: BASE_URL,
+        description: author.bio,
+        knowsAbout: author.skills,
+        sameAs: Object.values(author.socials),
       },
     ],
   };

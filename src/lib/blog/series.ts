@@ -15,7 +15,7 @@ export function getSeriesBySlug(slug: string): SeriesIndex | null {
 }
 
 /** Series with IN_PROGRESS status, shown on the home page. */
-export function getInProgressSeries(limit = 3): SeriesIndex[] {
+export function getInProgressSeries(limit = 2): SeriesIndex[] {
   return allSeries
     .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
     .slice(0, limit);

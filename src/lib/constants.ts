@@ -13,6 +13,12 @@ export const SeriesStatus = {
 } as const;
 export type SeriesStatus = (typeof SeriesStatus)[keyof typeof SeriesStatus];
 
+export const SERIES_STATUS_LABEL = {
+  [SeriesStatus.PLANNED]: 'Planejada',
+  [SeriesStatus.IN_PROGRESS]: 'Em andamento',
+  [SeriesStatus.COMPLETE]: 'Completa',
+} as const satisfies Record<SeriesStatus, string>;
+
 export const ProjectStatus = {
   ACTIVE: 'active',
   WIP: 'wip',
@@ -30,7 +36,6 @@ export type GithubTopic = (typeof GithubTopic)[keyof typeof GithubTopic];
 // ── CONSTANTS ────────────────────────
 
 export const SITE_NAME = "Erivelton's Portfolio";
-export const SITE_SHORT_NAME = 'Erivelton';
 export const SITE_DESCRIPTION =
   'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.';
 
