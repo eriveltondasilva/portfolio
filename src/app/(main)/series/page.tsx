@@ -10,13 +10,13 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { getAllSeries } from '@/lib/blog/series';
+import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
 
 const meta = {
   title: 'Séries',
   description: 'Coleções de posts organizados por tema.',
-  siteName: "Erivelton's Portfolio",
 };
 
 export const metadata: Metadata = {
@@ -26,16 +26,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: '/series',
+    locale: OG_LOCALE,
+    siteName: SITE_NAME,
     title: meta.title,
     description: meta.description,
-    siteName: meta.siteName,
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: meta.title,
     description: meta.description,
-    site: meta.siteName,
-    creator: '@erivelton_silv4',
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
   },
 };
 
@@ -46,18 +47,21 @@ export default function SeriesPage() {
 
   return (
     <div className='space-y-6'>
+      {/* Page title */}
+      <h1 className='sr-only'>Séries</h1>
+
       {/* Header */}
       {hasSeries && (
         <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
-          {seriesCount} {seriesCount > 1 ? 'séries' : 'série'}
+          {seriesCount} {seriesCount === 1 ? 'série' : 'séries'}
         </div>
       )}
 
       {hasSeries && (
         <div className='space-y-3'>
-          {series.map((s) => (
-            <SeriesCard key={s.slug} series={s} showStatusBadge />
+          {series.map((item) => (
+            <SeriesCard key={item.slug} series={item} showStatusBadge />
           ))}
         </div>
       )}
@@ -68,7 +72,9 @@ export default function SeriesPage() {
             <EmptyMedia variant='icon'>
               <FolderXIcon />
             </EmptyMedia>
+
             <EmptyTitle>Nenhuma série criada</EmptyTitle>
+
             <EmptyDescription>
               As séries de posts aparecerão aqui quando forem criadas.
             </EmptyDescription>
