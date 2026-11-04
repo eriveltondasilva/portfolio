@@ -10,6 +10,7 @@ O arquivo `.env.example` lista todas as variáveis, sem valores. Para começar, 
 GITHUB_TOKEN=
 
 CRON_SECRET=
+RATE_LIMIT_SECRET=
 
 NEXT_PUBLIC_SITE_URL=
 
@@ -17,20 +18,31 @@ UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
 ```
 
-| Variável                   | Usada por                                            | Lida em  | Sem ela                                 |
-| -------------------------- | ---------------------------------------------------- | -------- | --------------------------------------- |
-| `GITHUB_TOKEN`             | Script `build:projects`                              | Build    | O script falha e o build não termina    |
-| `NEXT_PUBLIC_SITE_URL`     | Metadados, sitemap, OG image e botão de compartilhar | Build    | Usa `http://localhost:3000` como padrão |
-| `UPSTASH_REDIS_REST_URL`   | Reações e keepalive                                  | Execução | Reações e keepalive deixam de funcionar |
-| `UPSTASH_REDIS_REST_TOKEN` | Reações e keepalive                                  | Execução | Reações e keepalive deixam de funcionar |
-| `CRON_SECRET`              | Rota `/api/keepalive`                                | Execução | A rota responde sempre `401`            |
+| Variável                   | Usada por                                                           | Lida em  | Sem ela                                                                                                              |
+| -------------------------- | ------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
+| `GITHUB_TOKEN`             | Script `build:projects`                                             | Build    | Opcional: o script usa o limite de requisições sem autenticação do GitHub                                            |
+| `NEXT_PUBLIC_SITE_URL`     | Metadados, sitemap, RSS, imagens Open Graph e botão de compartilhar | Build    | Usa `VERCEL_PROJECT_PRODUCTION_URL`; sem ela, `http://localhost:3000` em desenvolvimento e erro no build de produção |
+| `UPSTASH_REDIS_REST_URL`   | Reações, limite de requisições e keepalive                          | Execução | Reações e keepalive deixam de funcionar                                                                              |
+| `UPSTASH_REDIS_REST_TOKEN` | Reações, limite de requisições e keepalive                          | Execução | Reações e keepalive deixam de funcionar                                                                              |
+| `RATE_LIMIT_SECRET`        | Limite de requisições das reações                                   | Execução | Salvar ou remover uma reação responde `500`; a leitura das contagens continua                                        |
+| `CRON_SECRET`              | Rota `/api/keepalive`                                               | Execução | A rota responde sempre `401`                                                                                         |
+
+`RATE_LIMIT_SECRET` e `CRON_SECRET` podem ser qualquer texto longo e aleatório. Um jeito de gerar um:
+
+```bash
+openssl rand -hex 32
+```
+
+Trocar o `RATE_LIMIT_SECRET` só reinicia os contadores do limite de requisições; as reações já registradas não são afetadas.
 
 <Callout variant='warning' title='NEXT_PUBLIC_SITE_URL precisa de protocolo'>
-  O valor deve ser uma URL completa, como `https://meusite.com`. Sem o
-  `https://`, o Next.js lança `Invalid URL` ao montar os metadados. E, como
-  variáveis com prefixo `NEXT_PUBLIC_` são embutidas no código durante o build,
-  alterar o valor exige um novo build.
+  O valor deve ser uma URL completa, como `https://meusite.com` (barras no final
+  são removidas). Sem o `https://`, o Next.js lança `Invalid URL` ao montar os
+  metadados. E, como variáveis com prefixo `NEXT_PUBLIC_` são embutidas no
+  código durante o build, alterar o valor exige um novo build.
 </Callout>
+
+Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VERCEL_PROJECT_PRODUCTION_URL`, que traz o domínio de produção da Vercel. Se nenhuma das duas estiver definida, o desenvolvimento cai em `http://localhost:3000`, mas o build de produção falha com `NEXT_PUBLIC_SITE_URL is not set`. É de propósito: assim o sitemap e as imagens de compartilhamento nunca saem com links para localhost.
 
 ---
 
@@ -46,13 +58,16 @@ UPSTASH_REDIS_REST_TOKEN=
     NEXT_PUBLIC_SITE_URL=http://localhost:3000
     UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
     UPSTASH_REDIS_REST_TOKEN=xxx
+    RATE_LIMIT_SECRET=um-valor-longo-e-aleatorio
     CRON_SECRET=um-valor-longo-e-aleatorio
     ```
 
+    Em desenvolvimento, `GITHUB_TOKEN` pode ficar de fora, e `CRON_SECRET` só é necessário para testar a rota `/api/keepalive`.
+
   </Tab>
   <Tab value='Vercel'>
-    Cadastre as cinco variáveis em **Project Settings → Environment Variables** e faça um novo
-    deploy. Use a URL de produção em `NEXT_PUBLIC_SITE_URL`.
+    Cadastre as seis variáveis em **Project Settings → Environment Variables** e faça um novo
+    deploy. O `GITHUB_TOKEN` é opcional, mas recomendado. Use a URL de produção em `NEXT_PUBLIC_SITE_URL`.
 
     Quando `CRON_SECRET` existe no projeto, a Vercel envia automaticamente o cabeçalho
     `Authorization: Bearer` com esse valor em cada chamada do cron.
@@ -62,9 +77,24 @@ UPSTASH_REDIS_REST_TOKEN=
 
 <Callout variant='danger' title='Cuidado'>
   Arquivos `.env.local` não devem ir para o Git. Só o `.env.example`, sem
-  valores, é versionado. Se um token vazar, revogue-o no painel do provedor e
-  gere outro.
+  valores, é versionado. Se um token ou segredo vazar, revogue-o no painel do
+  provedor e gere outro.
 </Callout>
+
+---
+
+## Ambientes separados no Redis
+
+As chaves usadas pelas reações e pelo limite de requisições começam com o nome do ambiente: `production`, `preview` ou `development` na Vercel (valor de `VERCEL_ENV`) e `local` em qualquer outro lugar. Assim, reagir em uma preview ou no `localhost` não altera os números do site em produção, mesmo com todos usando o mesmo banco do Upstash.
+
+---
+
+## Valores fixos no código
+
+Dois valores ficam em `lib/constants.ts` e não em variáveis de ambiente:
+
+- **`PRIMARY_AUTHOR_SLUG`**: o autor principal do site (veja [Autores](/blog/como-o-blog-funciona#autores)).
+- **`GISCUS`**: `repo`, `repoId`, `category` e `categoryId` dos comentários. Ao reaproveitar o projeto, troque-os pelos valores do seu repositório, gerados em [giscus.app](https://giscus.app).
 
 ---
 
@@ -78,8 +108,8 @@ O comando `bun run build` dispara o `prebuild` antes do `next build`. Isso signi
   </Step>
 
 <Step title='Busca os projetos'>
-  `build:projects` consulta o GitHub com o `GITHUB_TOKEN` e grava o índice de
-  projetos.
+  `build:projects` consulta o GitHub (com o `GITHUB_TOKEN`, se existir), valida
+  os projetos e grava o índice.
 </Step>
 
   <Step title='Compila o site'>
@@ -87,7 +117,7 @@ O comando `bun run build` dispara o `prebuild` antes do `next build`. Isso signi
   </Step>
 </Steps>
 
-Por isso, qualquer erro de conteúdo ou a falta do `GITHUB_TOKEN` interrompe o deploy antes de a versão nova ir ao ar. É um comportamento desejado: o site publicado nunca fica com conteúdo inválido.
+Por isso, qualquer erro de conteúdo ou de projeto, ou uma falha na API do GitHub, interrompe o deploy antes de a versão nova ir ao ar. É um comportamento desejado: o site publicado nunca fica com conteúdo inválido.
 
 ---
 
@@ -95,22 +125,25 @@ Por isso, qualquer erro de conteúdo ou a falta do `GITHUB_TOKEN` interrompe o d
 
 ### Antes de publicar um post
 
-- [ ] Frontmatter completo e com `status: 'published'`
-- [ ] `description` com 10 a 300 caracteres e tags em kebab-case
-- [ ] Autor cadastrado em `authors/index.json` e série (se houver) em `series/index.json`
+- [ ] `meta.yml` completo e com `status: 'published'`
+- [ ] `description` com 10 a 160 caracteres e tags em kebab-case
+- [ ] Autor cadastrado em `authors.yml` e série (se houver) em `series.yml`
+- [ ] Imagens dentro de `images/`, com nomes em kebab-case
 - [ ] `bun run build:blog` roda sem erros
 - [ ] `bun run fix` não aponta problemas de tipos, lint ou formatação
 
 ### Antes do primeiro deploy
 
-- [ ] As cinco variáveis cadastradas na plataforma de deploy
+- [ ] As seis variáveis cadastradas na plataforma de deploy (`GITHUB_TOKEN` é opcional)
 - [ ] `NEXT_PUBLIC_SITE_URL` com `https://` e o domínio final
+- [ ] `RATE_LIMIT_SECRET` e `CRON_SECRET` com valores longos e aleatórios
 - [ ] Banco do Upstash criado e as duas variáveis copiadas do painel
 - [ ] Cron registrado no `vercel.json` (veja [Reações e Redis](/blog/reacoes-e-redis#keepalive-do-redis))
+- [ ] IDs do Giscus apontando para o seu repositório
 
 ### Arquivando um post antigo
 
-Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O post sai das listagens e do sitemap, mas a URL continua funcionando com um banner de aviso.
+Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O post sai das listagens, do sitemap e do RSS, mas a URL continua funcionando, com um banner de aviso e sem comentários.
 
 ---
 
@@ -122,14 +155,31 @@ Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O p
     reinicie o servidor.
   </AccordionItem>
 
-<AccordionItem title='O build falha antes de compilar o site'>
-  Leia a mensagem do `prebuild`: ela indica o arquivo e o campo com problema
-  (conteúdo inválido) ou a ausência do `GITHUB_TOKEN`.
+<AccordionItem title='O build de produção falha com NEXT_PUBLIC_SITE_URL is not set'>
+  Nem `NEXT_PUBLIC_SITE_URL` nem `VERCEL_PROJECT_PRODUCTION_URL` estão
+  definidas. Cadastre `NEXT_PUBLIC_SITE_URL` e faça um novo build.
 </AccordionItem>
 
-  <AccordionItem title='Mudei uma variável na Vercel e nada mudou'>
-    Variáveis só valem para deploys feitos depois da alteração. Gere um novo deploy, e lembre-se de
-    que as `NEXT_PUBLIC_` são embutidas durante o build.
+<AccordionItem title='O build falha antes de compilar o site'>
+  Leia a mensagem do `prebuild`: ela indica o arquivo e o campo com problema
+  (conteúdo ou projeto inválido) ou um erro da API do GitHub, como o limite de
+  requisições.
+</AccordionItem>
+
+<AccordionItem title='Mudei uma variável na Vercel e nada mudou'>
+  Variáveis só valem para deploys feitos depois da alteração. Gere um novo
+  deploy, e lembre-se de que as `NEXT_PUBLIC_` são embutidas durante o build.
+</AccordionItem>
+
+<AccordionItem title='Dá erro ao salvar uma reação'>
+  Confira se `RATE_LIMIT_SECRET` está definida. Sem ela, o servidor responde
+  `500` ao salvar ou remover uma reação, embora a leitura das contagens continue
+  funcionando.
+</AccordionItem>
+
+  <AccordionItem title='As reações mostram um traço no lugar dos números'>
+    As contagens não puderam ser carregadas. Confira as duas variáveis do Upstash e se o banco
+    está ativo.
   </AccordionItem>
 </Accordion>
 
@@ -137,4 +187,4 @@ Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O p
 
 ## Próximo passo
 
-O último post da série mostra como as reações dependem do Redis: [Reações e Redis](/blog/reacoes-e-redis).
+O próximo post mostra como as reações dependem do Redis: [Reações e Redis](/blog/reacoes-e-redis).
