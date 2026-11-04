@@ -7,6 +7,7 @@ import { BackToTop } from '@/components/back-to-top';
 import { Icon } from '@/components/icon';
 import { JsonLd } from '@/components/json-ld';
 import { PostAuthors } from '@/components/post-authors';
+import { PostComments } from '@/components/post-comments';
 import { PostCover } from '@/components/post-cover';
 import { PostFooter } from '@/components/post-footer';
 import { PostNavigation } from '@/components/post-navigation';
@@ -44,7 +45,6 @@ import {
   TWITTER_HANDLE,
 } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
-import { PostComments } from '@/components/post-comments';
 
 import type { Metadata } from 'next';
 
@@ -161,7 +161,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
             {/* Title + share button */}
             <div className='mt-1 flex items-start justify-between gap-3'>
-              <h1 className='font-mono text-xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-3xl dark:text-zinc-50'>
+              <h1 className='font-mono text-xl leading-tight font-bold tracking-tight text-balance text-zinc-900 text-shadow-xs sm:text-3xl dark:text-zinc-50'>
                 {meta.title}
               </h1>
               <ShareButton title={meta.title} url={postUrl} />
