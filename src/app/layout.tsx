@@ -8,6 +8,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   AUTHOR_NAME,
   BASE_URL,
+  LOCALE,
   OG_LOCALE,
   SITE_DESCRIPTION,
   SITE_NAME,
@@ -25,7 +26,6 @@ export const metadata: Metadata = {
   authors: [{ name: AUTHOR_NAME, url: BASE_URL }],
   creator: AUTHOR_NAME,
   alternates: {
-    canonical: '/',
     types: { 'application/rss+xml': '/feed.xml' },
   },
   openGraph: {
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html
-      lang='pt-BR'
+      lang={LOCALE}
       className={`${GeistSans.variable} ${GeistMono.variable} ${GeistSerif.variable}`}
     >
       <body className='flex min-h-dvh flex-col font-sans antialiased'>
