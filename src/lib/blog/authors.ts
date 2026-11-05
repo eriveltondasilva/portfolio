@@ -6,10 +6,6 @@ import type { Author } from '@/types';
 const authors = authorsIndex as Author[];
 const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
 
-export function getAllAuthors(): Author[] {
-  return [...authors];
-}
-
 export function getAuthorBySlug(slug: string): Author | null {
   return authorsBySlug.get(slug) ?? null;
 }

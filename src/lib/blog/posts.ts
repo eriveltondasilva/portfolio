@@ -31,10 +31,6 @@ export function getPostsByTag(tag: string): PostIndex[] {
   return publishedPosts.filter((post) => post.tags.includes(tag));
 }
 
-export function getPostsByAuthor(authorSlug: string): PostIndex[] {
-  return publishedPosts.filter((post) => post.authors.includes(authorSlug));
-}
-
 /** Posts of a series in reading order. Archived posts stay part of the series. */
 export function getSeriesPosts(seriesSlug: string): PostIndex[] {
   return allPosts
