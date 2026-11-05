@@ -12,7 +12,7 @@ function slugSchema(maxLength: number, label = 'Slug') {
     .regex(SLUG_REGEX, `${label} must be in kebab-case.`);
 }
 
-function hasUniqueItems(items: readonly string[]): boolean {
+function hasUniqueItems(items: string[]): boolean {
   return new Set(items).size === items.length;
 }
 
@@ -24,6 +24,10 @@ const socialsSchema = z
         protocol: /^https$/,
         hostname: /^github\.com$/,
       })
+      .regex(
+        /^https:\/\/github\.com\/[^/?#]+\/?$/,
+        'GitHub URL must point to a profile: https://github.com/username.',
+      )
       .describe('GitHub profile URL. Example: https://github.com/username'),
     //
     linkedin: z
@@ -220,7 +224,7 @@ export const projectSchema = z
     //
     description: z
       .string()
-      .min(10)
+      .min(1)
       .max(500)
       .describe('Short summary of the project.'),
     //
@@ -231,7 +235,10 @@ export const projectSchema = z
       })
       .describe('GitHub repository URL.'),
     //
-    url: z.url().optional().describe('Live URL of the project, if deployed.'),
+    url: z
+      .url({ protocol: /^https$/ })
+      .optional()
+      .describe('Live URL of the project, if deployed.'),
     //
     tags: z
       .array(slugSchema(50, 'Tag'))
