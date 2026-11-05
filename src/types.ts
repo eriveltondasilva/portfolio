@@ -4,7 +4,6 @@ import type {
   projectSchema,
   seriesSchema,
 } from '@/lib/schemas';
-import type { Octokit } from '@octokit/rest';
 import type { Toc } from '@stefanprobst/rehype-extract-toc';
 import type { MDXContent, MDXModule } from 'mdx/types';
 import type { z } from 'zod';
@@ -15,9 +14,6 @@ export type Author = z.infer<typeof authorSchema>;
 export type Project = z.infer<typeof projectSchema>;
 
 export type GridColumns = 2 | 3;
-export type GithubRepo = Awaited<
-  ReturnType<Octokit['repos']['listForUser']>
->['data'][number];
 
 export interface SeriesPostRef {
   slug: string;

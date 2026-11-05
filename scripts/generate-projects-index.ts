@@ -18,7 +18,8 @@ import { formatZodError, throwIfErrors } from './utils/errors';
 import { writeJson } from './utils/files';
 import { log } from './utils/logger';
 
-import type { GithubRepo, Project } from '@/types';
+import type { Project } from '@/types';
+import type { GithubRepo } from './utils/github';
 
 // # Fetchers
 

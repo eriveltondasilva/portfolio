@@ -1,6 +1,10 @@
 import { GithubTopic, ProjectStatus } from '@/lib/constants';
 
-import type { GithubRepo } from '@/types';
+import type { Octokit } from '@octokit/rest';
+
+export type GithubRepo = Awaited<
+  ReturnType<Octokit['repos']['listForUser']>
+>['data'][number];
 
 const UTILITY_TOPICS = new Set<string>(Object.values(GithubTopic));
 
