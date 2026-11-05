@@ -9,9 +9,8 @@ function resolveBaseUrl(): string {
   const vercelUrl = process.env['VERCEL_PROJECT_PRODUCTION_URL'];
   if (vercelUrl) return `https://${vercelUrl}`;
 
-  // Inside a Next.js production build/server, a missing URL would silently ship localhost
-  // links in the sitemap and OG images. Build scripts (no NEXT_PHASE) are not affected.
-  if (process.env['NODE_ENV'] === 'production' && process.env['NEXT_PHASE']) {
+  // A missing URL in production would silently ship localhost links in the sitemap and OG images.
+  if (process.env['NODE_ENV'] === 'production') {
     throw new Error('NEXT_PUBLIC_SITE_URL is not set.');
   }
 
