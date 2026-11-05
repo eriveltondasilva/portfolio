@@ -6,13 +6,13 @@ import { TopBorder } from '@/components/top-border';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   AUTHOR_NAME,
-  BASE_URL,
   LOCALE,
   OG_LOCALE,
   SITE_DESCRIPTION,
   SITE_NAME,
   TWITTER_HANDLE,
 } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 
 import type { Metadata } from 'next';
 

@@ -4,12 +4,8 @@ import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 
 import { getPrimaryAuthor } from '@/lib/blog/authors';
-import {
-  BASE_URL,
-  SITE_DESCRIPTION,
-  SITE_NAME,
-  TWITTER_HANDLE,
-} from '@/lib/constants';
+import { SITE_DESCRIPTION, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';

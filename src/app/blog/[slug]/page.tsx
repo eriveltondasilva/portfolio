@@ -37,13 +37,13 @@ import {
 import { buildPostJsonLd } from '@/lib/blog/structured-data';
 import { flattenToc } from '@/lib/blog/toc';
 import {
-  BASE_URL,
   GITHUB_REPO,
   OG_LOCALE,
   PostStatus,
   SITE_NAME,
   TWITTER_HANDLE,
 } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 import { formatDate } from '@/lib/format';
 
 import type { Metadata } from 'next';

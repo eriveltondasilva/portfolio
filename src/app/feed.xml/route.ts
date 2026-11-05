@@ -1,7 +1,8 @@
 import { escapeHTML as escapeXml } from 'bun';
 
 import { getAllPosts } from '@/lib/blog/posts';
-import { BASE_URL, LOCALE, SITE_NAME } from '@/lib/constants';
+import { LOCALE, SITE_NAME } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 
 export const dynamic = 'force-static';
 

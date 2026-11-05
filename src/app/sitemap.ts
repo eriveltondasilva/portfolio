@@ -1,7 +1,7 @@
 import { getAllPosts } from '@/lib/blog/posts';
 import { getAllSeries } from '@/lib/blog/series';
 import { getAllTags } from '@/lib/blog/tags';
-import { BASE_URL } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 
 import type { MetadataRoute } from 'next';
 

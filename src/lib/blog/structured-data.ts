@@ -1,4 +1,5 @@
-import { BASE_URL, LOCALE, SITE_DESCRIPTION, SITE_NAME } from '@/lib/constants';
+import { LOCALE, SITE_DESCRIPTION, SITE_NAME } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 
 import type { Author, PostIndex } from '@/types';
 

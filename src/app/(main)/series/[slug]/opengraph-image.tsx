@@ -6,10 +6,10 @@ import { ImageResponse } from 'next/og';
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
 import {
   AUTHOR_NAME,
-  BASE_URL,
   SERIES_STATUS_LABEL,
   SeriesStatus,
 } from '@/lib/constants';
+import { BASE_URL } from '@/lib/base-url';
 import { formatDate } from '@/lib/format';
 
 export const size = { width: 1200, height: 630 };
