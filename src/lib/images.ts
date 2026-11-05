@@ -1,6 +1,9 @@
 import type { ImageProps, StaticImageData } from 'next/image';
 
-// Post content width: max-w-3xl (768px) minus md:px-8 on both sides. Keep in sync with PostLayout
+/**
+ * Post content width: max-w-3xl (768px) minus md:px-8 on both sides.
+ * Keep in sync with the <main> in app/blog/[slug]/page.tsx.
+ */
 export const POST_CONTENT_WIDTH = 704;
 
 const MOBILE_MAX_WIDTH = 767; // below Tailwind's md breakpoint
@@ -16,15 +19,16 @@ export function getPlaceholder(src: ImageProps['src']): 'blur' | 'empty' {
     : 'empty';
 }
 
-// Widest grid slot: 2 columns. The 3-column grid (md+) only makes slots smaller,
-// so a single conservative value serves both
+/**
+ * Widest grid slot: 2 columns. The 3-column grid (md+) only makes slots smaller,
+ * so a single conservative value serves both.
+ */
 const GRID_DESKTOP_WIDTH = Math.ceil(
   (POST_CONTENT_WIDTH - GRID_GAP_REM * 16) / 2,
 );
 
 export const GRID_IMAGE_SIZES = `(max-width: ${MOBILE_MAX_WIDTH}px) calc((100vw - ${MOBILE_GUTTER_REM}rem - ${GRID_GAP_REM}rem) / 2), ${GRID_DESKTOP_WIDTH}px`;
 
-// Zoom needs intrinsic dimensions, which only static imports have
 export function isStaticImageData(
   src: ImageProps['src'],
 ): src is StaticImageData {
