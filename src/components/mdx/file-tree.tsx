@@ -17,8 +17,6 @@ import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 
-// # File icons
-
 const FILE_ICON_GROUPS: ReadonlyArray<readonly [LucideIcon, string[]]> = [
   [FileImageIcon, ['png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'svg']],
   [FileCodeIcon, ['ts', 'tsx', 'js', 'jsx', 'php', 'css', 'html']],
@@ -45,21 +43,6 @@ function getFileIcon(name: string): LucideIcon {
 
   return FILE_ICON_BY_EXTENSION.get(extension) ?? FileIcon;
 }
-
-// # Folder animation
-
-// Slides the folder content by animating ::details-content from 0 to auto.
-// - interpolate-size lets the browser interpolate to "auto" (Chromium only for now).
-// - content-visibility is transitioned too, so the content stays visible while closing.
-// Browsers without interpolate-size open the folder instantly, like a plain <details>.
-// "open:" must come before the pseudo-element variant, or the selector becomes invalid.
-const FOLDER_ANIMATION_CLASSES = cn(
-  '[interpolate-size:allow-keywords]',
-  'details-content:h-0 details-content:overflow-y-clip',
-  'details-content:transition-[height,content-visibility] details-content:transition-discrete details-content:duration-200 details-content:ease-out',
-  'open:details-content:h-auto',
-  'motion-reduce:details-content:transition-none',
-);
 
 // ─────────────────────────────────────
 
@@ -91,7 +74,7 @@ export function FileTreeFolder({
 }: FileTreeFolderProps) {
   return (
     <li {...props}>
-      <details open={defaultOpen} className={FOLDER_ANIMATION_CLASSES}>
+      <details open={defaultOpen}>
         <summary className='flex cursor-pointer list-none items-center gap-1.5 py-0.5 text-sm text-foreground/80 transition-colors marker:hidden hover:text-foreground [&::-webkit-details-marker]:hidden'>
           {/* The selector targets this folder's own details, so nested folders keep independent states */}
           <Icon
