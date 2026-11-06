@@ -6,33 +6,9 @@ import {
 } from '@/components/ui/accordion';
 import { cn } from '@/lib/utils';
 
+import { RICH_TEXT_CLASSES } from './rich-text';
+
 import type { ComponentProps } from 'react';
-
-// -------------------------------------
-
-interface AccordionItemProps extends Omit<
-  ComponentProps<typeof AccordionItemRoot>,
-  'value'
-> {
-  title: string;
-  value?: string;
-}
-
-export function AccordionItem({
-  title,
-  value,
-  children,
-  ...props
-}: AccordionItemProps) {
-  return (
-    <AccordionItemRoot value={value ?? title} {...props}>
-      <AccordionTrigger>{title}</AccordionTrigger>
-      <AccordionContent>{children}</AccordionContent>
-    </AccordionItemRoot>
-  );
-}
-
-// -------------------------------------
 
 interface AccordionBaseProps {
   className?: string;
@@ -62,5 +38,31 @@ export function Accordion({
     <AccordionRoot type='single' collapsible {...sharedProps}>
       {children}
     </AccordionRoot>
+  );
+}
+
+// ─────────────────────────────────────
+
+interface AccordionItemProps extends Omit<
+  ComponentProps<typeof AccordionItemRoot>,
+  'value'
+> {
+  title: string;
+  value?: string;
+}
+
+export function AccordionItem({
+  title,
+  value,
+  children,
+  ...props
+}: AccordionItemProps) {
+  return (
+    <AccordionItemRoot value={value ?? title} {...props}>
+      <AccordionTrigger>{title}</AccordionTrigger>
+      <AccordionContent>
+        <div className={RICH_TEXT_CLASSES}>{children}</div>
+      </AccordionContent>
+    </AccordionItemRoot>
   );
 }

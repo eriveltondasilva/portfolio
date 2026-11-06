@@ -1,29 +1,14 @@
 import { cn } from 'cn';
 
+import { RICH_TEXT_CLASSES } from './rich-text';
+
 import type { ComponentProps } from 'react';
 
-interface StepProps extends ComponentProps<'div'> {
-  title: string;
-}
-
-export function Step({ title, className, children, ...props }: StepProps) {
+export function Steps({ className, children, ...props }: ComponentProps<'ol'>) {
   return (
-    <div className={cn('step', className)} {...props}>
-      <p className='step-title'>{title}</p>
-      <div>{children}</div>
-    </div>
-  );
-}
-
-export function Steps({
-  className,
-  children,
-  ...props
-}: ComponentProps<'div'>) {
-  return (
-    <div
+    <ol
       className={cn(
-        'not-prose',
+        'not-prose list-none',
         '[counter-reset:step]',
         '[&_.step]:relative [&_.step]:border-l [&_.step]:border-border [&_.step]:pb-8 [&_.step]:pl-8 [&_.step:last-child]:pb-0',
         '[&_.step]:before:absolute [&_.step]:before:-left-4 [&_.step]:before:flex [&_.step]:before:size-8',
@@ -40,6 +25,21 @@ export function Steps({
       {...props}
     >
       {children}
-    </div>
+    </ol>
+  );
+}
+
+// ─────────────────────────────────────
+
+interface StepProps extends ComponentProps<'li'> {
+  title: string;
+}
+
+export function Step({ title, className, children, ...props }: StepProps) {
+  return (
+    <li className={cn('step', className)} {...props}>
+      <p className='step-title'>{title}</p>
+      <div className={RICH_TEXT_CLASSES}>{children}</div>
+    </li>
   );
 }

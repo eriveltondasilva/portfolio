@@ -12,7 +12,7 @@ export function Youtube({ id, title, params = '' }: Props) {
       <YouTubeEmbed
         videoid={id}
         params={params}
-        playlabel={title ?? 'Reproduzir vídeo'}
+        playlabel={`Reproduzir vídeo: ${title}`}
       />
     </div>
   );

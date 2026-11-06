@@ -14,6 +14,8 @@ const gridCols = {
   3: 'grid-cols-2 md:grid-cols-3',
 } as const satisfies Record<GridColumns, string>;
 
+// ─────────────────────────────────────
+
 interface ImageGridProps extends ComponentProps<'div'> {
   columns?: GridColumns;
 }
@@ -33,6 +35,8 @@ export function ImageGrid({
     </div>
   );
 }
+
+// ─────────────────────────────────────
 
 interface GridImageProps extends Omit<ImageProps, 'fill' | 'sizes'> {
   caption?: string;

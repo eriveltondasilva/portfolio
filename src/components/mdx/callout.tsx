@@ -7,6 +7,8 @@ import {
   XCircleIcon,
 } from 'lucide-react';
 
+import { RICH_TEXT_CLASSES } from './rich-text';
+
 import type { VariantProps } from 'class-variance-authority';
 import type { ReactNode } from 'react';
 
@@ -69,7 +71,9 @@ export function Callout({
       <Icon className='size-5 shrink-0' aria-hidden='true' />
       <div className='flex flex-col gap-1'>
         {title && <p className='font-semibold'>{title}</p>}
-        <div className='[&_p]:leading-relaxed'>{children}</div>
+        <div className={cn('[&_p]:leading-relaxed', RICH_TEXT_CLASSES)}>
+          {children}
+        </div>
       </div>
     </div>
   );
