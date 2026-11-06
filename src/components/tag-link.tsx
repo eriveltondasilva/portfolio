@@ -16,7 +16,7 @@ function Tag({ tag, isLinkable }: TagProps) {
     <Badge
       variant='outline'
       className={clsx(
-        'bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
+        'gap-0 bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
         isLinkable &&
           'transition-colors hover:bg-blue-50 hover:font-medium hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300',
       )}
@@ -34,7 +34,7 @@ interface TagLinkProps {
 export function TagLink({ tag }: TagLinkProps) {
   const isLinkable = hasTagPage(tag);
 
-  if (isLinkable) {
+  if (!isLinkable) {
     return <Tag tag={tag} isLinkable={isLinkable} />;
   }
 
