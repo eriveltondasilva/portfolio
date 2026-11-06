@@ -143,11 +143,6 @@
   }
 }
 
-/* Locks page scroll while a modal dialog is open */
-body:has(dialog[open]) {
-  overflow: hidden;
-}
-
 /* ================================== */
 
 /* Reading Progress  */

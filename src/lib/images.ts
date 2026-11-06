@@ -1,4 +1,4 @@
-import type { ImageProps, StaticImageData } from 'next/image';
+import type { ImageProps } from 'next/image';
 
 /**
  * Post content width: max-w-3xl (768px) minus md:px-8 on both sides.
@@ -28,9 +28,3 @@ const GRID_DESKTOP_WIDTH = Math.ceil(
 );
 
 export const GRID_IMAGE_SIZES = `(max-width: ${MOBILE_MAX_WIDTH}px) calc((100vw - ${MOBILE_GUTTER_REM}rem - ${GRID_GAP_REM}rem) / 2), ${GRID_DESKTOP_WIDTH}px`;
-
-export function isStaticImageData(
-  src: ImageProps['src'],
-): src is StaticImageData {
-  return typeof src === 'object' && 'width' in src;
-}
