@@ -22,15 +22,22 @@ export function CopyButton() {
   }, [copied]);
 
   async function handleCopy(event: MouseEvent<HTMLButtonElement>) {
-    // Reads from the DOM so the highlighted code never enters the client bundle
     const code = event.currentTarget
       .closest('[data-code-block]')
       ?.querySelector('code');
 
-    if (!code?.textContent) return;
+    if (!code) return;
+
+    const lines = code.querySelectorAll('[data-line]:not(.remove)');
+    const text =
+      lines.length > 0 ?
+        Array.from(lines, (line) => line.textContent).join('\n')
+      : code.textContent;
+
+    if (!text) return;
 
     try {
-      await navigator.clipboard.writeText(code.textContent);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
     } catch (error) {
       console.error('[CopyButton] Failed to copy to clipboard:', error);
@@ -43,8 +50,8 @@ export function CopyButton() {
         type='button'
         variant='outline'
         size='icon-sm'
-        onClick={handleCopy}
         aria-label='Copiar código'
+        onClick={handleCopy}
         className={cn(
           'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-[#282c34] text-zinc-400 transition-all',
           'opacity-0 focus-visible:opacity-100 pointer-coarse:opacity-100 [figure:hover_&]:opacity-100',
@@ -56,7 +63,6 @@ export function CopyButton() {
         <Icon iconNode={copied ? CheckIcon : CopyIcon} className='size-3.5' />
       </Button>
 
-      {/* Announces the result to screen readers without moving focus */}
       <span role='status' className='sr-only'>
         {copied ? 'Código copiado' : ''}
       </span>
