@@ -48,8 +48,8 @@ Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VER
 
 ## Onde configurar
 
-<Tabs tabs={['Local', 'Vercel']}>
-  <Tab value='Local'>
+<Tabs>
+  <Tab label='Local'>
     Crie o arquivo `.env.local` na raiz do projeto com os valores. O Next.js só lê o arquivo na
     inicialização, então reinicie o `bun dev` depois de qualquer alteração.
 
@@ -65,7 +65,7 @@ Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VER
     Em desenvolvimento, `GITHUB_TOKEN` pode ficar de fora, e `CRON_SECRET` só é necessário para testar a rota `/api/keepalive`.
 
   </Tab>
-  <Tab value='Vercel'>
+  <Tab label='Vercel'>
     Cadastre as seis variáveis em **Project Settings → Environment Variables** e faça um novo
     deploy. O `GITHUB_TOKEN` é opcional, mas recomendado. Use a URL de produção em `NEXT_PUBLIC_SITE_URL`.
 

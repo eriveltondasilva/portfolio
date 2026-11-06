@@ -141,6 +141,8 @@ Highlight, para destacar uma linha:
 
 ```ts
 const importante = 3; // [!code highlight]
+const naoImportante = 4;
+const outroImportante = 5;
 ```
 
 Focus, para dar foco a uma linha:
@@ -148,6 +150,7 @@ Focus, para dar foco a uma linha:
 ```ts
 console.log('focus');
 const importante = 3; // [!code focus]
+console.log('focus');
 ```
 
 | Notação                | Efeito           |
@@ -263,31 +266,31 @@ Salve com <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS ou <Kbd>Ctrl</Kbd> + <Kbd>S</Kb
 
 Conteúdo alternado em abas. Ideal para mostrar o mesmo conteúdo em múltiplas variações — gerenciadores de pacotes, linguagens, frameworks.
 
-A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve corresponder a um item do array `tabs`. Para mostrar código dentro de uma aba, use um bloco de código normal, com as cercas em linhas próprias.
+A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `label`. Para mostrar código dentro de uma aba, use um bloco de código normal, com as cercas em linhas próprias.
 
-<Tabs tabs={['npm', 'Yarn', 'pnpm', 'Bun']}>
-  <Tab value='npm'>
+<Tabs>
+  <Tab label='npm'>
 
     ```bash
     npm install react react-dom
     ```
 
   </Tab>
-  <Tab value='Yarn'>
+  <Tab label='Yarn'>
 
     ```bash
     yarn add react react-dom
     ```
 
   </Tab>
-  <Tab value='pnpm'>
+  <Tab label='pnpm'>
 
     ```bash
     pnpm add react react-dom
     ```
 
   </Tab>
-  <Tab value='Bun'>
+  <Tab label='Bun'>
 
     ```bash
     bun add react react-dom
@@ -299,18 +302,18 @@ A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `value` que deve co
 Use `defaultValue` para definir qual aba abre por padrão (padrão: primeira aba):
 
 ```mdx
-<Tabs tabs={['TypeScript', 'JavaScript']} defaultValue='JavaScript'>
-  <Tab value='TypeScript'>...</Tab>
-  <Tab value='JavaScript'>...</Tab>
+<Tabs defaultValue='JavaScript'>
+  <Tab label='TypeScript'>...</Tab>
+  <Tab label='JavaScript'>...</Tab>
 </Tabs>
 ```
 
 **Sintaxe completa:**
 
 ```mdx
-<Tabs tabs={['Aba 1', 'Aba 2']}>
-  <Tab value='Aba 1'>Conteúdo da aba 1</Tab>
-  <Tab value='Aba 2'>Conteúdo da aba 2</Tab>
+<Tabs>
+  <Tab label='Aba 1'>Conteúdo da aba 1</Tab>
+  <Tab label='Aba 2'>Conteúdo da aba 2</Tab>
 </Tabs>
 ```
 
@@ -470,16 +473,16 @@ Todas as imagens usadas no texto seguem as mesmas regras, conferidas no build (v
 - imagens acima de 1 MB e imagens que nenhum trecho do texto usa geram um aviso;
 - imagens remotas (`https://...`) não são suportadas, porque o `next.config.ts` não libera nenhum domínio.
 
-Este post não traz imagens próprias, então os exemplos abaixo aparecem só como código.
-
 ### Imagem inline (Markdown)
 
 Imagens inseridas diretamente no Markdown. O caminho é relativo ao `index.mdx` e o arquivo é importado automaticamente, sem `import` explícito.
 
+![Descrição da imagem](./images/javascript-logo.svg 'Legenda opcional')
+
 **Sintaxe:**
 
 ```mdx
-![Descrição da imagem](./images/nome-do-arquivo.jpg 'Legenda opcional')
+![Descrição da imagem](./images/javascript-logo.svg 'Legenda opcional')
 ```
 
 O texto entre colchetes é o texto alternativo, e o título entre aspas vira a legenda exibida abaixo da imagem. Ao clicar na imagem, ela é ampliada.
@@ -488,10 +491,18 @@ O texto entre colchetes é o texto alternativo, e o título entre aspas vira a l
 
 Para controlar as propriedades da imagem, use o componente `Image`. Ele exige que a imagem seja **importada**: passar o caminho como texto em `src` gera erro no build.
 
+import MinhaImagem from './images/javascript-logo.svg';
+
+<Image
+  src={MinhaImagem}
+  alt='Descrição acessível obrigatória'
+  caption='Legenda exibida abaixo da imagem. Opcional.'
+/>
+
 **Sintaxe:**
 
 ```mdx
-import MinhaImagem from './images/minha-imagem.jpg';
+import MinhaImagem from './images/javascript-logo.svg';
 
 <Image
   src={MinhaImagem}
@@ -512,6 +523,13 @@ import MinhaImagem from './images/minha-imagem.jpg';
 
 Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com imagens de tamanhos variados. Não tem zoom.
 
+<RatioImage
+  src={MinhaImagem}
+  alt='Descrição acessível'
+  ratio={16 / 9}
+  caption='Legenda opcional.'
+/>
+
 **Sintaxe:**
 
 ```mdx
@@ -529,13 +547,19 @@ Proporções comuns: `16 / 9` (padrão), `4 / 3`, `1` (quadrado), `21 / 9` (ultr
 
 Grade de imagens quadradas, cortadas com `object-cover`. O número de colunas é definido no `ImageGrid` e vale para todos os `GridImage` dentro dele.
 
+<ImageGrid columns={3}>
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 1' />
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 2' />
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 3' />
+</ImageGrid>
+
 **Sintaxe:**
 
 ```mdx
 <ImageGrid columns={3}>
-  <GridImage src={Imagem1} alt='...' caption='Legenda 1' />
-  <GridImage src={Imagem2} alt='...' caption='Legenda 2' />
-  <GridImage src={Imagem3} alt='...' caption='Legenda 3' />
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 1' />
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 2' />
+  <GridImage src={MinhaImagem} alt='...' caption='Legenda 3' />
 </ImageGrid>
 ```
 
@@ -577,12 +601,12 @@ Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` 
 **Sintaxe:**
 
 ```mdx
-<Tweet id='2026946487599697948' />
+<Tweet id='2113213103660032209' />
 ```
 
 **Exemplo:**
 
-<Tweet id='2026946487599697948' />
+<Tweet id='2113213103660032209' />
 
 ---
 

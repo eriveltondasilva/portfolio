@@ -85,8 +85,8 @@ O `GITHUB_TOKEN` é opcional. Sem ele, o script avisa que vai usar o limite de r
 
 Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens); para listar repositórios públicos não são necessárias permissões extras. Todas as variáveis do projeto estão reunidas em [Variáveis de ambiente e deploy](/blog/variaveis-de-ambiente-e-deploy).
 
-<Tabs tabs={['Local', 'Deploy']}>
-  <Tab value='Local'>
+<Tabs>
+  <Tab label='Local'>
     Adicione a variável ao arquivo `.env.local`:
 
     ```bash title=".env.local"
@@ -94,7 +94,7 @@ Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens)
     ```
 
   </Tab>
-  <Tab value='Deploy'>
+  <Tab label='Deploy'>
     Como o `build` executa o script automaticamente, cadastre `GITHUB_TOKEN` também nas variáveis de ambiente da plataforma de deploy.
   </Tab>
 </Tabs>
