@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 
 import type { ComponentProps } from 'react';
 
-function Link(props: ComponentProps<'a'>) {
+function ExternalLink(props: ComponentProps<'a'>) {
   return (
     <a
       target='_blank'
@@ -36,8 +36,10 @@ export function Footer() {
           </a>
         </p>
         <p className='text-center font-mono text-xs text-zinc-400 dark:text-zinc-500'>
-          Feito com <Link href='https://nextjs.org'>Next.js</Link>,&nbsp;
-          <Link href='https://vercel.com'>Vercel</Link> e muito café ☕
+          Feito com{' '}
+          <ExternalLink href='https://nextjs.org'>Next.js</ExternalLink>,&nbsp;
+          <ExternalLink href='https://vercel.com'>Vercel</ExternalLink> e muito
+          café ☕
         </p>
       </div>
     </footer>
