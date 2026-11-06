@@ -1,12 +1,7 @@
 import { join } from 'node:path';
 
-import { z } from 'zod';
-
 import { POST_META_FILE } from '@/lib/constants';
 import { POSTS_DIR } from '@/lib/paths';
-
-import { BuildError, formatZodError } from './errors';
-import { readYaml } from './files';
 
 import type { PostIndex } from '@/types';
 
@@ -28,9 +23,6 @@ function formatAvailable(noun: string, known: ReadonlySet<string>): string {
 
   return `\n  Available ${noun}: ${[...known].map((slug) => `"${slug}"`).join(', ')}`;
 }
-
-// Each check returns a list of error messages (empty when valid), so the caller
-// can combine them and report everything in a single failure.
 
 export function checkUniqueSlugs(entries: readonly Entry[]): string[] {
   const duplicates = findDuplicates(entries, (entry) => entry.slug);
@@ -106,28 +98,4 @@ export function checkAuthorsExist(
   return [
     `Non-existent authors referenced:\n${detail}${formatAvailable('authors', knownAuthors)}`,
   ];
-}
-
-//
-
-export function parseOrThrow<T extends z.ZodType>(
-  context: string,
-  source: string,
-  schema: T,
-  data: unknown,
-): z.output<T> {
-  const result = schema.safeParse(data);
-
-  if (!result.success)
-    throw new BuildError(context, [formatZodError(source, result.error)]);
-
-  return result.data;
-}
-
-export async function readValidatedYaml<T extends z.ZodType>(
-  context: string,
-  filePath: string,
-  schema: T,
-): Promise<z.output<T>> {
-  return parseOrThrow(context, filePath, schema, await readYaml(filePath));
 }

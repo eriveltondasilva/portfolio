@@ -15,7 +15,7 @@ const IMAGE_EXTENSION = /\.(?:png|jpe?g|webp|avif|gif|svg)$/i;
 const KEBAB_SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const KEBAB_FILE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+$/;
 
-const MAX_IMAGE_BYTES = 1024 * 1024;
+const MAX_IMAGE_BYTES = 1024 * 1024; // 1 MB
 const IMAGES_PREFIX = `./${POST_IMAGES_DIR}/`;
 const ALLOWED_ROOT_ENTRIES = new Set([
   POST_META_FILE,
@@ -27,7 +27,12 @@ const MARKDOWN_IMAGE = /!\[[^\]]*\]\(\s*<?([^)\s>]+)/g;
 const TAG_WITH_SRC = /<([A-Za-z][\w.]*)\b[^>]*?\bsrc=(?:"([^"]+)"|'([^']+)')/g;
 const IMAGE_IMPORT = /^import\s[^'"\n]*?from\s+['"]([^'"]+)['"]/gm;
 
-const FENCED_CODE_REGEX = /^(```|~~~)[\s\S]*?^\1/gm;
+/**
+ * A fence may be indented (e.g. inside a list) and is closed only by a fence of the same
+ * character with at least as many characters, so a 4-backtick block can wrap a 3-backtick one.
+ */
+const FENCED_CODE_REGEX =
+  /^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[`~]*[ \t]*$/gm;
 
 function stripFencedCode(content: string): string {
   return content.replace(FENCED_CODE_REGEX, '');
@@ -99,15 +104,23 @@ function listImageFiles(folderPath: string): string[] {
 
 function inspectRootEntries(entries: readonly string[]): AssetReport {
   const report: AssetReport = { errors: [], warnings: [] };
+  const covers = entries.filter((name) => COVER_FILE_NAME.test(name));
+
+  // The cover is the first glob match, and the scan order depends on the filesystem.
+  if (covers.length > 1) {
+    report.errors.push(
+      `more than one cover found (${covers.join(', ')}); keep only one.`,
+    );
+  }
 
   for (const name of entries) {
     if (name.startsWith('.')) continue;
     if (ALLOWED_ROOT_ENTRIES.has(name) || COVER_FILE_NAME.test(name)) continue;
 
     if (/^cover\./i.test(name)) {
-      // A wrong-case cover would silently not be found by the case-sensitive glob.
+      // A wrong-case or unsupported cover would silently not be found by the case-sensitive glob.
       report.errors.push(
-        `"${name}": the cover must be named like "cover.png" (lowercase).`,
+        `"${name}": the cover must match "${COVER_GLOB}" (lowercase).`,
       );
       continue;
     }
