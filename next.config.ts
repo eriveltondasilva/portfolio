@@ -47,14 +47,6 @@ const nextConfig: NextConfig = {
     qualities: [50, 75, 90],
     minimumCacheTTL: 60 * 60 * 24 * 30, // 30 dias
   },
-  turbopack: {
-    rules: {
-      '*.yml': {
-        loaders: ['yaml-loader'],
-        as: '*.js',
-      },
-    },
-  },
 };
 
 export default withMDX(nextConfig);
