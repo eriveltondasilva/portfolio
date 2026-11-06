@@ -1,3 +1,5 @@
+import { Children, isValidElement } from 'react';
+
 import {
   Tabs as TabsRoot,
   TabsContent,
@@ -6,43 +8,74 @@ import {
 } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 
-import type { ComponentProps } from 'react';
+import { RICH_TEXT_CLASSES } from './rich-text';
 
-export function Tab({
-  children,
-  ...props
-}: ComponentProps<typeof TabsContent>) {
-  return <TabsContent {...props}>{children}</TabsContent>;
+import type { ComponentProps, ReactNode } from 'react';
+
+function getTabLabels(children: ReactNode): string[] {
+  const labels = Children.toArray(children).flatMap((child) =>
+    (
+      isValidElement<{ label?: unknown }>(child) &&
+      typeof child.props.label === 'string'
+    ) ?
+      [child.props.label]
+    : [],
+  );
+
+  if (labels.length === 0) {
+    throw new Error('<Tabs> needs at least one <Tab label="...">.');
+  }
+
+  if (new Set(labels).size !== labels.length) {
+    throw new Error(`<Tabs> has duplicated tab labels: ${labels.join(', ')}`);
+  }
+
+  return labels;
 }
 
-// -------------------------------------
-
-interface TabsProps extends ComponentProps<typeof TabsRoot> {
-  tabs: string[];
-}
+// ─────────────────────────────────────
 
 export function Tabs({
-  tabs,
   className,
   defaultValue,
   children,
   ...props
-}: TabsProps) {
+}: ComponentProps<typeof TabsRoot>) {
+  const labels = getTabLabels(children);
+
   return (
     <TabsRoot
       className={cn('not-prose', className)}
-      defaultValue={defaultValue || tabs[0]}
+      defaultValue={defaultValue || labels[0]}
       {...props}
     >
       <TabsList>
-        {tabs.map((tab) => (
-          <TabsTrigger key={tab} value={tab}>
-            {tab}
+        {labels.map((label) => (
+          <TabsTrigger key={label} value={label}>
+            {label}
           </TabsTrigger>
         ))}
       </TabsList>
 
       {children}
     </TabsRoot>
+  );
+}
+
+// ─────────────────────────────────────
+
+interface TabProps extends Omit<ComponentProps<typeof TabsContent>, 'value'> {
+  label: string;
+}
+
+export function Tab({ label, className, children, ...props }: TabProps) {
+  return (
+    <TabsContent
+      value={label}
+      className={cn(RICH_TEXT_CLASSES, className)}
+      {...props}
+    >
+      {children}
+    </TabsContent>
   );
 }
