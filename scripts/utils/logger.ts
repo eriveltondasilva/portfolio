@@ -1,5 +1,7 @@
 import { styleText } from 'node:util';
 
+import { BuildError } from './errors';
+
 type FormatStyle = Parameters<typeof styleText>[0];
 
 class Logger {
@@ -34,7 +36,6 @@ class Logger {
     const errors = error instanceof AggregateError ? error.errors : [error];
 
     for (const item of errors) {
-      // BuildError is already formatted; anything else needs its stack and cause.
       console.error(item instanceof BuildError ? item.message : item, '\n');
     }
 
