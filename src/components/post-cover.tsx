@@ -16,7 +16,7 @@ export async function PostCover({ folder, coverFile }: PostCoverProps) {
   );
 
   return (
-    <div className='relative aspect-2/1 w-full overflow-hidden border border-zinc-200 dark:border-zinc-700/60'>
+    <div className='relative mt-6 aspect-2/1 w-full overflow-hidden border border-zinc-200 dark:border-zinc-700/60'>
       <Image
         src={coverImage}
         alt=''
