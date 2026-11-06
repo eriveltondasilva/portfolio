@@ -2,20 +2,31 @@ import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
 import { AUTHORS_SOURCE_FILE, SERIES_SOURCE_FILE } from '@/lib/paths';
 import { authorSchema, seriesSchema } from '@/lib/schemas';
 
-import { BuildError, throwIfErrors } from './errors';
-import { checkUniqueSlugs, readValidatedYaml } from './validations';
+import { BuildError, throwIfErrors, formatZodError } from './errors';
+import { checkUniqueSlugs } from './validations';
+import { readYaml } from './files';
 
 import type { Author, Series } from '@/types';
-
-// Build-time readers for the YAML sources. The app never reads these files:
-// it imports the JSON indexes generated from them, so scripts that need
-// authors or series must read the sources here instead of importing from src/lib/blog.
+import type { z } from 'zod';
 
 function toSlugEntries(items: readonly { slug: string }[], file: string) {
   return items.map(({ slug }, index) => ({
     slug,
     source: `${file}[${index}]`,
   }));
+}
+
+async function readValidatedYaml<T extends z.ZodType>(
+  context: string,
+  filePath: string,
+  schema: T,
+): Promise<z.output<T>> {
+  const result = schema.safeParse(await readYaml(filePath));
+
+  if (!result.success)
+    throw new BuildError(context, [formatZodError(filePath, result.error)]);
+
+  return result.data;
 }
 
 export async function readAuthors(): Promise<Author[]> {
