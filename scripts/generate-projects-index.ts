@@ -5,7 +5,7 @@ import { PROJECTS_INDEX_OUTPUT } from '@/lib/paths';
 import { getUrlPathname } from '@/lib/format';
 import { GithubTopic } from '@/lib/constants';
 
-import { runScript } from './utils';
+import { runScript } from './utils/run-script';
 import { readPrimaryAuthor } from './utils/content';
 import {
   filterProjectTags,
@@ -53,7 +53,7 @@ function toProject(repo: GithubRepo): Project {
   return {
     slug: toProjectSlug(repo.name),
     name: formatProjectName(repo.name),
-    description: repo.description ?? 'Sem descrição.',
+    description: repo.description || 'Sem descrição.',
     repository: repo.html_url,
     // GitHub may return an empty string when the homepage was cleared.
     url: repo.homepage || undefined,

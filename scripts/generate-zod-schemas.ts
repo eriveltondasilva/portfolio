@@ -7,7 +7,7 @@ import {
   SERIES_SCHEMA_OUTPUT,
 } from '@/lib/paths';
 
-import { runScript } from './utils';
+import { runScript } from './utils/run-script';
 import { log } from './utils/logger';
 import { writeJson } from './utils/files';
 

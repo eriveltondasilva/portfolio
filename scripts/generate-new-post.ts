@@ -14,10 +14,10 @@ import {
   PostStatus,
 } from '@/lib/constants';
 
-import { runScript } from './utils';
+import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
 import { readYaml } from './utils/files';
-import { BuildError, formatZodError } from './utils/errors';
+import { BuildError, formatZodError, resolveAll } from './utils/errors';
 import { log } from './utils/logger';
 
 const TEMPLATE_DIR = join(import.meta.dir, 'utils', 'templates', 'post');
@@ -85,17 +85,15 @@ function renderTemplate(
   template: string,
   values: Readonly<Record<string, string>>,
 ): string {
+  for (const [placeholder, key = ''] of template.matchAll(/\{\{(\w+)\}\}/g)) {
+    if (!Object.hasOwn(values, key))
+      throw new Error(`Template has an unknown placeholder: ${placeholder}`);
+  }
+
   const rendered = template
-    .replace(/\{\{(\w+)\}\}/g, (match, key: string) =>
-      Object.hasOwn(values, key) ? (values[key] ?? '') : match,
-    )
+    .replace(/\{\{(\w+)\}\}/g, (_, key: string) => values[key] ?? '')
     .replace(/\n{3,}/g, '\n\n')
     .trimEnd();
-
-  const leftover = rendered.match(/\{\{\w+\}\}/);
-
-  if (leftover)
-    throw new Error(`Template has an unknown placeholder: ${leftover[0]}`);
 
   return `${rendered}\n`;
 }
@@ -140,11 +138,11 @@ async function main(): Promise<void> {
     },
   });
 
-  const [authors, series, existing] = await Promise.all([
+  const [authors, series, existing] = await resolveAll(
     readAuthors(),
     readSeries(),
     readExistingPosts(),
-  ]);
+  );
 
   const authorSlugs = new Set(authors.map(({ slug }) => slug));
   const seriesSlugs = new Set(series.map(({ slug }) => slug));
@@ -237,7 +235,8 @@ async function main(): Promise<void> {
     let seriesSlug = '';
     let order: number | undefined;
 
-    if (seriesSlugs.size > 0) {
+    // A --series flag is validated even without defined series, instead of being ignored.
+    if (seriesSlugs.size > 0 || flags.series !== undefined) {
       seriesSlug = await ask({
         name: 'series',
         question: `Series (${[...seriesSlugs].join(', ')}; blank for none)`,
@@ -322,7 +321,7 @@ async function main(): Promise<void> {
     log.section('Created');
     log.ok('post:', folderPath);
     log.detail(
-      `Edit ${POST_META_FILE}, write the post and set "status: published" when ready.`,
+      `Edit ${POST_META_FILE}, write the post, then set "status: published" and update "publishedAt" to the publish date.`,
     );
   } finally {
     rl.close();

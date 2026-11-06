@@ -12,7 +12,7 @@ import {
 } from '@/lib/paths';
 import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
 
-import { runScript, sortByDateDesc } from './utils';
+import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
 import {
   formatZodError,
@@ -102,14 +102,17 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
   const result = postSchema.safeParse(meta);
 
   if (!result.success) throw new Error(formatZodError(metaPath, result.error));
-  if (result.data.status === PostStatus.DRAFT) return null;
 
+  // Drafts stay out of the index, but next build still compiles their index.mdx,
+  // so a broken image reference would fail there instead of here.
   const assets = await inspectPostAssets(folderPath, content);
 
   if (assets.errors.length > 0) {
     const lines = assets.errors.map((error) => `  - ${error}`).join('\n');
     throw new Error(`${folderPath}\n\n${lines}`);
   }
+
+  if (result.data.status === PostStatus.DRAFT) return null;
 
   const [coverFile = null] = new Bun.Glob(COVER_GLOB).scanSync({
     cwd: folderPath,
@@ -170,6 +173,18 @@ async function readPosts(): Promise<PostsData> {
 }
 
 // # Builders
+
+export function sortByDateDesc<T extends { publishedAt: string; slug: string }>(
+  items: readonly T[],
+): T[] {
+  // ISO dates sort lexicographically. The slug tiebreaker keeps the order
+  // independent of the filesystem scan order.
+  return items.toSorted(
+    (a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt) ||
+      a.slug.localeCompare(b.slug),
+  );
+}
 
 function buildSeriesIndex(
   series: readonly Series[],
@@ -239,9 +254,7 @@ async function main(): Promise<void> {
   ).length;
 
   if (linkedToSeries > 0) {
-    log.detail(
-      `${linkedToSeries} of ${stats.published} post(s) linked to series`,
-    );
+    log.detail(`${linkedToSeries} of ${posts.length} post(s) linked to series`);
   }
 
   // ---------------------------------------------------------------------------
