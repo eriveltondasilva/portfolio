@@ -1,38 +1,16 @@
 import { MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 
-import Github from '@/assets/github.svg';
-import Linkedin from '@/assets/linkedin.svg';
-import TwitterX from '@/assets/twitter-x.svg';
 import {
   getGitHubAvatarUrl,
   getNameInitials,
   getUrlPathname,
 } from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
+import { SOCIAL_LINKS } from '@/components/social-links';
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Icon } from './icon';
-
-import type { Author } from '@/types';
-
-const socialMap = [
-  {
-    key: 'github',
-    icon: Github,
-  },
-  {
-    key: 'linkedin',
-    icon: Linkedin,
-  },
-  {
-    key: 'twitter',
-    icon: TwitterX,
-  },
-] as const satisfies ReadonlyArray<{
-  key: keyof Author['socials'];
-  icon: string;
-}>;
 
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
@@ -75,7 +53,7 @@ export function ProfileSidebar() {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {socialMap.map(({ key, icon }) => {
+        {SOCIAL_LINKS.map(({ key, label, icon }) => {
           const href = author.socials[key];
 
           if (!href) return null;
@@ -88,7 +66,13 @@ export function ProfileSidebar() {
               rel='noopener noreferrer'
               className='flex items-center gap-2 px-0.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
             >
-              <Image src={icon} alt={key} width={14} height={14} unoptimized />
+              <Image
+                src={icon}
+                alt={label}
+                width={14}
+                height={14}
+                unoptimized
+              />
               <span className='truncate'>{getUrlPathname(href)}</span>
             </a>
           );

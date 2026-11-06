@@ -2,9 +2,6 @@
 
 import Image from 'next/image';
 
-import Github from '@/assets/github.svg';
-import Linkedin from '@/assets/linkedin.svg';
-import TwitterX from '@/assets/twitter-x.svg';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -18,31 +15,9 @@ import {
   getNameInitials,
   getUrlPathname,
 } from '@/lib/format';
+import { SOCIAL_LINKS } from '@/components/social-links';
 
-import type { LucideIcon } from 'lucide-react';
 import type { Author } from '@/types';
-
-const SOCIAL_ICONS = [
-  {
-    label: 'GitHub',
-    key: 'github',
-    icon: Github,
-  },
-  {
-    label: 'Linkedin',
-    key: 'linkedin',
-    icon: Linkedin,
-  },
-  {
-    label: 'Twitter',
-    key: 'twitter',
-    icon: TwitterX,
-  },
-] as const satisfies ReadonlyArray<{
-  key: keyof Author['socials'];
-  label: string;
-  icon: LucideIcon;
-}>;
 
 function AuthorHoverCard({ author }: { author: Author }) {
   const githubUsername = getUrlPathname(author.socials.github);
@@ -113,7 +88,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {SOCIAL_ICONS.map(({ key, label, icon }) => {
+          {SOCIAL_LINKS.map(({ key, label, icon }) => {
             const href = author.socials[key];
 
             if (!href) return null;
