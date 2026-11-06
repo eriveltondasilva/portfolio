@@ -164,14 +164,14 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
 
             {/* Title + share button */}
             <div className='mt-1 flex items-start justify-between gap-3'>
-              <h1 className='font-mono text-xl leading-tight font-bold tracking-tight text-balance text-zinc-900 text-shadow-xs sm:text-3xl dark:text-zinc-50'>
+              <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-4xl dark:text-zinc-50'>
                 {meta.title}
               </h1>
               <ShareButton title={meta.title} url={postUrl} />
             </div>
 
             {/* Meta info */}
-            <div className='mt-1 flex flex-wrap items-center gap-y-1.5 text-sm text-zinc-400 dark:text-zinc-500'>
+            <div className='flex flex-wrap items-center gap-y-1.5 text-sm text-zinc-400 dark:text-zinc-500'>
               <span>
                 {meta.updatedAt ? 'Atualizado em ' : 'Publicado em '}
                 <time dateTime={meta.updatedAt ?? meta.publishedAt}>
