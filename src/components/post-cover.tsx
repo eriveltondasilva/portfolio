@@ -2,18 +2,21 @@ import Image from 'next/image';
 
 import { DEFAULT_IMAGE_SIZES, getPlaceholder } from '@/lib/images';
 
-interface Props {
+interface PostCoverProps {
   folder: string;
   coverFile: string;
 }
 
-export async function PostCover({ folder, coverFile }: Props) {
+export async function PostCover({ folder, coverFile }: PostCoverProps) {
+  // Limiting the pattern to cover.<ext> keeps the bundler from pulling every file
+  // of the post folders (meta.yml, stray files) into the module graph.
+  const extension = coverFile.slice(coverFile.lastIndexOf('.') + 1);
   const { default: coverImage } = await import(
-    `@/content/posts/${folder}/${coverFile}`
+    `@/content/posts/${folder}/cover.${extension}`
   );
 
   return (
-    <div className='relative aspect-2/1 w-full overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-700/60'>
+    <div className='relative aspect-2/1 w-full overflow-hidden border border-zinc-200 dark:border-zinc-700/60'>
       <Image
         src={coverImage}
         alt=''
