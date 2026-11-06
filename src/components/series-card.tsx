@@ -1,4 +1,4 @@
-import { DotIcon, FolderBookmark } from 'lucide-react';
+import { DotIcon, FolderBookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { SERIES_STATUS_LABEL, SeriesStatus } from '@/lib/constants';
@@ -58,7 +58,7 @@ export function SeriesCard({
       {/* Header */}
       <div className='flex items-start justify-between gap-4'>
         <div className='flex items-center gap-2 text-orange-500 dark:text-orange-400'>
-          <Icon iconNode={FolderBookmark} />
+          <Icon iconNode={FolderBookmarkIcon} />
           <Link
             href={`/series/${series.slug}`}
             className='font-semibold text-balance hover:underline'

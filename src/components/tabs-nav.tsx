@@ -2,8 +2,8 @@
 
 import {
   FileTextIcon,
-  FolderGit2,
-  FolderBookmark,
+  FolderGit2Icon,
+  FolderBookmarkIcon,
   HashIcon,
   LayoutGridIcon,
 } from 'lucide-react';
@@ -19,8 +19,8 @@ import type { LucideIcon } from 'lucide-react';
 const tabs = [
   { label: 'Overview', href: '/', icon: LayoutGridIcon },
   { label: 'Blog', href: '/blog', icon: FileTextIcon },
-  { label: 'Séries', href: '/series', icon: FolderBookmark },
-  { label: 'Projetos', href: '/projects', icon: FolderGit2 },
+  { label: 'Séries', href: '/series', icon: FolderBookmarkIcon },
+  { label: 'Projetos', href: '/projects', icon: FolderGit2Icon },
   { label: 'Tags', href: '/tags', icon: HashIcon },
 ] as const satisfies ReadonlyArray<{
   label: string;
@@ -45,6 +45,7 @@ export function TabsNav() {
             <Link
               key={href}
               href={href}
+              aria-current={isActive ? 'page' : undefined}
               className={clsx(
                 'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                 isActive ?
