@@ -2,15 +2,15 @@ import { Tweet as ReactTweet } from 'react-tweet';
 
 import { cn } from '@/lib/utils';
 
-interface Props {
+interface TweetProps {
   id: string;
   className?: string;
 }
 
-export function Tweet({ id, className }: Props) {
+export function Tweet({ id, className }: TweetProps) {
   return (
     <div
-      data-theme='dark'
+      data-theme='light'
       className={cn('not-prose [&_.react-tweet-theme]:m-0!', className)}
     >
       <ReactTweet id={id} />
