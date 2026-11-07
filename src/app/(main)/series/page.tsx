@@ -42,8 +42,8 @@ export const metadata: Metadata = {
 
 export default function SeriesPage() {
   const series = getAllSeries();
-  const hasSeries = series.length > 0;
   const seriesCount = series.length;
+  const hasSeries = seriesCount > 0;
 
   return (
     <div className='space-y-6'>
@@ -58,6 +58,7 @@ export default function SeriesPage() {
         </div>
       )}
 
+      {/* Series */}
       {hasSeries && (
         <div className='space-y-3'>
           {series.map((item) => (
@@ -66,6 +67,7 @@ export default function SeriesPage() {
         </div>
       )}
 
+      {/* Empty state */}
       {!hasSeries && (
         <Empty>
           <EmptyHeader>

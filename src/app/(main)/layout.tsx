@@ -9,6 +9,7 @@ export default function MainLayout({ children }: LayoutProps<'/'>) {
 
         <main className='min-w-0 flex-1'>
           <TabsNav />
+
           <div className='py-6'>{children}</div>
         </main>
       </div>

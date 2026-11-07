@@ -54,7 +54,9 @@ export default function ProjectsPage() {
           <EmptyMedia variant='icon'>
             <FolderOpenIcon />
           </EmptyMedia>
+
           <EmptyTitle>Nenhum projeto cadastrado</EmptyTitle>
+
           <EmptyDescription>Os projetos aparecerão aqui.</EmptyDescription>
         </EmptyHeader>
       </Empty>

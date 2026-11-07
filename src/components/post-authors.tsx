@@ -21,6 +21,7 @@ import type { Author } from '@/types';
 
 function AuthorHoverCard({ author }: { author: Author }) {
   const githubUsername = getUrlPathname(author.socials.github);
+  const authorSkillsCount = author.skills.length;
 
   return (
     <HoverCard openDelay={300} closeDelay={100}>
@@ -43,6 +44,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
             <AvatarImage src={getGitHubAvatarUrl(author)} alt={author.name} />
+
             <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
               {getNameInitials(author.name)}
             </AvatarFallback>
@@ -52,6 +54,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
             <p className='text-sm leading-tight font-semibold text-zinc-900 dark:text-zinc-50'>
               {author.name}
             </p>
+
             <p className='text-xs text-zinc-500 dark:text-zinc-400'>
               @{githubUsername}
             </p>
@@ -64,7 +67,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         </p>
 
         {/* Skills */}
-        {author.skills.length > 0 && (
+        {authorSkillsCount > 0 && (
           <div className='mt-3 flex flex-wrap gap-1'>
             {author.skills.slice(0, 3).map((skill) => (
               <Badge
@@ -75,12 +78,12 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 {skill}
               </Badge>
             ))}
-            {author.skills.length > 3 && (
+            {authorSkillsCount > 3 && (
               <Badge
                 variant='secondary'
                 className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
               >
-                +{author.skills.length - 3}
+                +{authorSkillsCount - 3}
               </Badge>
             )}
           </div>

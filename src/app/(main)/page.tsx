@@ -71,6 +71,7 @@ export default function HomePage() {
             <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
               Posts recentes
             </h2>
+
             <Link
               href='/blog'
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'
@@ -95,6 +96,7 @@ export default function HomePage() {
             <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
               Séries em andamento
             </h2>
+
             <Link
               href='/series'
               className='flex items-center gap-1 text-xs text-blue-600 hover:underline dark:text-blue-400'

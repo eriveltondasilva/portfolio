@@ -42,8 +42,8 @@ export const metadata: Metadata = {
 
 export default function TagsPage() {
   const tagsWithCount = getTagsWithCount();
-  const hasTags = tagsWithCount.length > 0;
   const tagCount = tagsWithCount.length;
+  const hasTags = tagCount > 0;
 
   return (
     <div className='space-y-6'>
@@ -78,6 +78,7 @@ export default function TagsPage() {
         </div>
       )}
 
+      {/* Empty state */}
       {!hasTags && (
         <Empty>
           <EmptyHeader>

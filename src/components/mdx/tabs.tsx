@@ -22,11 +22,13 @@ function getTabLabels(children: ReactNode): string[] {
     : [],
   );
 
-  if (labels.length === 0) {
+  const labelCount = labels.length;
+
+  if (labelCount === 0) {
     throw new Error('<Tabs> needs at least one <Tab label="...">.');
   }
 
-  if (new Set(labels).size !== labels.length) {
+  if (new Set(labels).size !== labelCount) {
     throw new Error(`<Tabs> has duplicated tab labels: ${labels.join(', ')}`);
   }
 

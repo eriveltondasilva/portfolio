@@ -76,7 +76,7 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
         </p>
       </header>
 
-      {/* Posts */}
+      {/* Posts list */}
       <div className='space-y-3'>
         {posts.map((post) => (
           <PostCard key={post.slug} post={post} />
