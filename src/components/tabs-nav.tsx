@@ -16,17 +16,19 @@ import { Icon } from '@/components/icon';
 import type { Route } from 'next';
 import type { LucideIcon } from 'lucide-react';
 
+type Tab = {
+  label: string;
+  href: Route;
+  icon: LucideIcon;
+};
+
 const tabs = [
-  { label: 'Overview', href: '/', icon: LayoutGridIcon },
+  { label: 'Home', href: '/', icon: LayoutGridIcon },
   { label: 'Blog', href: '/blog', icon: FileTextIcon },
   { label: 'Séries', href: '/series', icon: FolderBookmarkIcon },
   { label: 'Projetos', href: '/projects', icon: FolderGit2Icon },
   { label: 'Tags', href: '/tags', icon: HashIcon },
-] as const satisfies ReadonlyArray<{
-  label: string;
-  href: Route;
-  icon: LucideIcon;
-}>;
+] as const satisfies ReadonlyArray<Tab>;
 
 export function TabsNav() {
   const pathname = usePathname();
