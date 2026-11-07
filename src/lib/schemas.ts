@@ -166,10 +166,10 @@ export const postSchema = z
     }
 
     // ISO dates (YYYY-MM-DD) compare correctly as strings.
-    if (updatedAt !== undefined && updatedAt < publishedAt) {
+    if (updatedAt !== undefined && updatedAt <= publishedAt) {
       ctx.addIssue({
         code: 'custom',
-        message: 'The "updatedAt" date cannot be earlier than "publishedAt".',
+        message: 'The "updatedAt" date must be later than "publishedAt".',
         path: ['updatedAt'],
       });
     }
