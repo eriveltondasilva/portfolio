@@ -1,12 +1,11 @@
 import { DotIcon, FolderBookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { SERIES_STATUS_LABEL, SeriesStatus } from '@/lib/constants';
 import { formatDate } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
-import { Badge } from './ui/badge';
+import { SeriesStatusBadge } from './series-status-badge';
 
 import type { SeriesIndex } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
@@ -16,35 +15,12 @@ interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
   showStatusBadge?: boolean;
 }
 
-interface BadgeStyle {
-  className: string;
-  dot: string;
-}
-
-const statusStyle: Record<SeriesStatus, BadgeStyle> = {
-  [SeriesStatus.PLANNED]: {
-    dot: 'bg-primary size-1.5 rounded-full',
-    className: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
-  },
-  [SeriesStatus.IN_PROGRESS]: {
-    dot: 'size-1.5 rounded-full bg-amber-500',
-    className:
-      'border-none bg-amber-600/10 text-amber-600 dark:bg-amber-400/10 dark:text-amber-400',
-  },
-  [SeriesStatus.COMPLETE]: {
-    dot: 'size-1.5 rounded-full bg-green-500',
-    className:
-      'border-none bg-green-600/10 text-green-600 dark:bg-green-400/10 dark:text-green-400',
-  },
-};
-
 export function SeriesCard({
   series,
   showStatusBadge = false,
   className,
   ...props
 }: SeriesCardProps) {
-  const status = statusStyle[series.status];
   const postCount = series.posts.length;
 
   return (
@@ -67,12 +43,7 @@ export function SeriesCard({
           </Link>
         </div>
 
-        {showStatusBadge && (
-          <Badge className={status.className}>
-            <span className={status.dot} aria-hidden='true' />
-            {SERIES_STATUS_LABEL[series.status]}
-          </Badge>
-        )}
+        {showStatusBadge && <SeriesStatusBadge status={series.status} />}
       </div>
 
       {/* Description */}

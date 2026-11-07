@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   CalendarIcon,
+  ClockIcon,
   FolderXIcon,
   LayersIcon,
 } from 'lucide-react';
@@ -10,7 +11,6 @@ import { notFound } from 'next/navigation';
 import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/post-card';
 import { Separator } from '@/components/separator';
-import { Badge } from '@/components/ui/badge';
 import {
   Empty,
   EmptyDescription,
@@ -20,27 +20,13 @@ import {
 } from '@/components/ui/empty';
 import { getSeriesPosts } from '@/lib/blog/posts';
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
-import {
-  OG_LOCALE,
-  SERIES_STATUS_LABEL,
-  SITE_NAME,
-  SeriesStatus,
-  TWITTER_HANDLE,
-} from '@/lib/constants';
-import { formatDate } from '@/lib/format';
+import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
+import { formatDate, formatReadingTime } from '@/lib/format';
+import { SeriesStatusBadge } from '@/components/series-status-badge';
 
 import type { Metadata } from 'next';
 
 export const dynamicParams = false;
-
-const statusColor = {
-  [SeriesStatus.PLANNED]:
-    'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
-  [SeriesStatus.IN_PROGRESS]:
-    'bg-yellow-50 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  [SeriesStatus.COMPLETE]:
-    'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-} as const satisfies Record<SeriesStatus, string>;
 
 export async function generateMetadata({
   params,
@@ -85,8 +71,13 @@ export default async function SeriesDetailPage({
   if (!series) notFound();
 
   const posts = getSeriesPosts(slug);
-  const hasPosts = posts.length > 0;
   const postCount = posts.length;
+  const hasPosts = postCount > 0;
+
+  const totalReadingTime = posts.reduce(
+    (total, post) => total + post.readingTime,
+    0,
+  );
 
   return (
     <div className='space-y-6'>
@@ -101,46 +92,56 @@ export default async function SeriesDetailPage({
 
       {/* Series header */}
       <header className='space-y-3'>
-        <div className='flex items-start justify-between gap-4'>
-          <h1 className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
-            {series.title}
-          </h1>
-          <Badge
-            variant='secondary'
-            className={`shrink-0 rounded-full text-xs ${statusColor[series.status]}`}
-          >
-            {SERIES_STATUS_LABEL[series.status]}
-          </Badge>
-        </div>
+        <SeriesStatusBadge status={series.status} size='lg' />
+
+        <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-4xl dark:text-zinc-50'>
+          {series.title}
+        </h1>
 
         <p className='text-zinc-600 dark:text-zinc-400'>{series.description}</p>
 
-        <div className='mt-3 flex items-center gap-4 text-sm text-zinc-500 dark:text-zinc-500'>
+        <div className='mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-zinc-500 dark:text-zinc-500'>
           <span className='flex items-center gap-1.5'>
             <Icon iconNode={LayersIcon} className='size-3.5' />
             {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
           </span>
 
+          {hasPosts && (
+            <span className='flex items-center gap-1.5'>
+              <Icon iconNode={ClockIcon} className='size-3.5' />
+              {formatReadingTime(totalReadingTime)} de leitura
+            </span>
+          )}
+
           <span className='flex items-center gap-1.5'>
             <Icon iconNode={CalendarIcon} className='size-3.5' />
-            <time dateTime={series.publishedAt}>
-              {formatDate(series.publishedAt, { dateStyle: 'long' })}
-            </time>
+            <span>
+              Publicada em&nbsp;
+              <time dateTime={series.publishedAt}>
+                {formatDate(series.publishedAt, { dateStyle: 'long' })}
+              </time>
+            </span>
           </span>
         </div>
       </header>
 
       <Separator />
 
-      {/* Posts */}
+      {/* Posts list */}
       {hasPosts && (
-        <div className='space-y-3'>
+        <ol className='space-y-3'>
           {posts.map((post) => (
-            <PostCard key={post.slug} post={post} />
+            <li key={post.slug} className='flex items-start gap-3'>
+              <span className='mt-5 w-6 shrink-0 text-right font-mono text-sm text-zinc-400 tabular-nums dark:text-zinc-500'>
+                {post.order}.
+              </span>
+              <PostCard post={post} className='min-w-0 flex-1' />
+            </li>
           ))}
-        </div>
+        </ol>
       )}
 
+      {/* Empty state */}
       {!hasPosts && (
         <Empty>
           <EmptyHeader>

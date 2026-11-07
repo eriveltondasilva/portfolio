@@ -41,6 +41,20 @@ export function createListFormatter() {
   });
 }
 
+// ── Reading Time Formatter ───────────
+
+const MINUTES_IN_AN_HOUR = 60;
+
+export function formatReadingTime(totalMinutes: number): string {
+  const hours = Math.floor(totalMinutes / MINUTES_IN_AN_HOUR);
+  const minutes = totalMinutes % MINUTES_IN_AN_HOUR;
+
+  if (hours === 0) return `${minutes} min`;
+  if (minutes === 0) return `${hours} h`;
+
+  return `${hours} h ${minutes} min`;
+}
+
 // ── Format Functions ─────────────────
 
 export function getNameInitials(name: string): string {
