@@ -1,10 +1,4 @@
-import {
-  ArrowLeftIcon,
-  CalendarIcon,
-  ClockIcon,
-  FolderXIcon,
-  LayersIcon,
-} from 'lucide-react';
+import { ArrowLeftIcon, DotIcon, FolderXIcon } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -91,7 +85,7 @@ export default async function SeriesDetailPage({
       </Link>
 
       {/* Series header */}
-      <header className='space-y-3'>
+      <header className='@container space-y-3'>
         <SeriesStatusBadge status={series.status} size='lg' />
 
         <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-4xl dark:text-zinc-50'>
@@ -100,29 +94,28 @@ export default async function SeriesDetailPage({
 
         <p className='text-zinc-600 dark:text-zinc-400'>{series.description}</p>
 
-        <div className='mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-zinc-500 dark:text-zinc-500'>
-          <span className='flex items-center gap-1.5'>
-            <Icon iconNode={LayersIcon} className='size-3.5' />
-            {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
-          </span>
+        <ul className='mt-3 flex flex-col gap-0.5 text-sm text-zinc-500 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
+          <li>
+            Publicada em{' '}
+            <time dateTime={series.publishedAt}>
+              {formatDate(series.publishedAt, { dateStyle: 'long' })}
+            </time>
+          </li>
+
+          <li className='flex items-center'>
+            <Icon iconNode={DotIcon} className='hidden @xl:block' />
+            <span>
+              {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
+            </span>
+          </li>
 
           {hasPosts && (
-            <span className='flex items-center gap-1.5'>
-              <Icon iconNode={ClockIcon} className='size-3.5' />
-              {formatReadingTime(totalReadingTime)} de leitura
-            </span>
+            <li className='flex items-center'>
+              <Icon iconNode={DotIcon} className='hidden @xl:block' />
+              <span>{formatReadingTime(totalReadingTime)} de leitura</span>
+            </li>
           )}
-
-          <span className='flex items-center gap-1.5'>
-            <Icon iconNode={CalendarIcon} className='size-3.5' />
-            <span>
-              Publicada em&nbsp;
-              <time dateTime={series.publishedAt}>
-                {formatDate(series.publishedAt, { dateStyle: 'long' })}
-              </time>
-            </span>
-          </span>
-        </div>
+        </ul>
       </header>
 
       <Separator />

@@ -35,19 +35,25 @@ export default function HomePage() {
       <JsonLd data={buildHomeJsonLd(author)} />
 
       {/* Hero README block */}
-      <section className='rounded-md border border-zinc-200 bg-zinc-50/80 p-6 dark:border-zinc-700/60 dark:bg-zinc-800/20'>
-        <div className='mb-3 flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-500'>
+      <section className='rounded-md border border-zinc-200 bg-zinc-50/80 p-4 sm:p-6 dark:border-zinc-700/60 dark:bg-zinc-800/20'>
+        <div className='mb-3 flex flex-wrap items-center gap-x-1.5 text-xs text-zinc-500 dark:text-zinc-400'>
           <span className='font-mono'>eriveltondasilva</span>
-          <span>/</span>
+          <span aria-hidden='true'>/</span>
           <span className='font-mono font-semibold text-zinc-700 dark:text-zinc-300'>
             README.md
           </span>
         </div>
 
         <div className='space-y-3'>
-          <h1 className='flex items-center gap-2 text-lg font-bold text-zinc-900 dark:text-zinc-50'>
-            <Icon iconNode={SparklesIcon} className='size-5 text-emerald-500' />
-            Olá, mundo! Sou Erivelton 👋
+          <h1 className='flex items-start gap-2 text-lg leading-snug font-bold text-zinc-900 sm:text-xl dark:text-zinc-50'>
+            {/* mt-1 centers the 20px icon on the first 28px title line */}
+            <Icon
+              iconNode={SparklesIcon}
+              className='mt-1 size-5 shrink-0 text-emerald-500'
+            />
+            <span className='min-w-0 text-balance'>
+              Olá, mundo! Sou Erivelton 👋
+            </span>
           </h1>
 
           <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
@@ -57,9 +63,11 @@ export default function HomePage() {
             uso no dia a dia.
           </p>
 
-          <div className='flex items-center gap-1 font-mono text-xs text-zinc-500 dark:text-zinc-500'>
-            <Icon iconNode={CheckIcon} className='text-emerald-500' />
-            Sempre aprendendo, sempre entregando
+          <div className='flex items-start gap-1.5 font-mono text-xs text-zinc-500 dark:text-zinc-400'>
+            <Icon iconNode={CheckIcon} className='shrink-0 text-emerald-500' />
+            <span className='min-w-0'>
+              Sempre aprendendo, sempre entregando
+            </span>
           </div>
         </div>
       </section>

@@ -66,10 +66,14 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
 
       {/* Header */}
       <header className='space-y-2'>
-        <h1 className='flex items-center gap-2 text-xl font-bold text-zinc-900 dark:text-zinc-50'>
-          <Icon iconNode={HashIcon} className='size-5 text-zinc-400' />
-          {slug}
+        <h1 className='flex items-start gap-2 text-xl font-bold text-zinc-900 dark:text-zinc-50'>
+          <Icon
+            iconNode={HashIcon}
+            className='mt-1 size-5 shrink-0 text-zinc-400'
+          />
+          <span className='min-w-0 wrap-break-word'>{slug}</span>
         </h1>
+
         <p className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           {postCount} {postCount === 1 ? 'post' : 'posts'}
