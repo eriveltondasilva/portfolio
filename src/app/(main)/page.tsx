@@ -81,6 +81,7 @@ export default function HomePage() {
             </Link>
           </div>
 
+          {/* Post list */}
           <div className='grid gap-3 sm:grid-cols-2'>
             {recentPosts.map((post) => (
               <PostCard key={post.slug} post={post} />
@@ -106,6 +107,7 @@ export default function HomePage() {
             </Link>
           </div>
 
+          {/* Post list */}
           <div className='grid gap-3 sm:grid-cols-2'>
             {inProgressSeries.map((series) => (
               <SeriesCard key={series.slug} series={series} />

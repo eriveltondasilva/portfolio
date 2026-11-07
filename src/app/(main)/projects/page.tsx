@@ -77,6 +77,7 @@ export default function ProjectsPage() {
           <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
             Em destaque
           </h2>
+
           <div className='grid gap-3 sm:grid-cols-2'>
             {featuredProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
@@ -93,6 +94,7 @@ export default function ProjectsPage() {
               Outros projetos
             </h2>
           )}
+
           <div className='grid gap-3 sm:grid-cols-2'>
             {otherProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
