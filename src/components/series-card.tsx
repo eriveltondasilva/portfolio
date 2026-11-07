@@ -26,18 +26,18 @@ export function SeriesCard({
   return (
     <article
       className={cn(
-        'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
+        'group @container flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
         className,
       )}
       {...props}
     >
       {/* Header */}
-      <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-2 text-orange-500 dark:text-orange-400'>
-          <Icon iconNode={FolderBookmarkIcon} />
+      <div className='flex flex-wrap items-start justify-between gap-x-4 gap-y-2'>
+        <div className='flex min-w-0 items-start gap-2 text-orange-500 dark:text-orange-400'>
+          <Icon iconNode={FolderBookmarkIcon} className='mt-1 shrink-0' />
           <Link
             href={`/series/${series.slug}`}
-            className='font-semibold text-balance hover:underline'
+            className='min-w-0 font-semibold text-balance wrap-break-word hover:underline'
           >
             {series.title}
           </Link>
@@ -47,23 +47,23 @@ export function SeriesCard({
       </div>
 
       {/* Description */}
-      <p className='mt-1 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
+      <p className='mt-1 text-sm text-zinc-600 dark:text-zinc-400'>
         {series.description}
       </p>
 
       {/* Meta info */}
-      <div className='mt-2 flex items-center text-xs text-zinc-500 dark:text-zinc-500'>
+      <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @md:flex-row @md:flex-wrap @md:items-center dark:text-zinc-500'>
         <span>
-          {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
-        </span>
-
-        <Icon iconNode={DotIcon} />
-
-        <span>
-          Publicada em&nbsp;
+          Publicada em{' '}
           <time dateTime={series.publishedAt}>
             {formatDate(series.publishedAt, { dateStyle: 'long' })}
           </time>
+        </span>
+
+        <Icon iconNode={DotIcon} className='hidden @md:block' />
+
+        <span>
+          {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
         </span>
       </div>
 
@@ -75,6 +75,7 @@ export function SeriesCard({
               <span className='min-w-5 text-center text-xs text-zinc-400'>
                 {post.order}.
               </span>
+
               <Link
                 href={`/blog/${post.slug}`}
                 className='truncate text-sm text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400'
@@ -83,6 +84,7 @@ export function SeriesCard({
               </Link>
             </li>
           ))}
+
           {postCount > 3 && (
             <li className='pl-6 text-xs text-zinc-400'>
               +{postCount - 3} mais

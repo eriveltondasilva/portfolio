@@ -18,7 +18,7 @@ export function PostCard({ post, className, ...props }: Props) {
   return (
     <article
       className={cn(
-        'group flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
+        'group @container flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
         className,
       )}
       {...props}
@@ -33,33 +33,35 @@ export function PostCard({ post, className, ...props }: Props) {
       )}
 
       {/* Header */}
-      <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-2 text-blue-500 dark:text-blue-400'>
-          <Icon iconNode={FileTextIcon} />
-          <Link
-            href={`/blog/${post.slug}`}
-            className='font-semibold text-balance hover:underline'
-          >
-            {post.title}
-          </Link>
-        </div>
+      <div className='flex items-start gap-2 text-blue-500 dark:text-blue-400'>
+        <Icon iconNode={FileTextIcon} className='mt-1 shrink-0' />
+
+        <Link
+          href={`/blog/${post.slug}`}
+          className='min-w-0 font-semibold text-balance hover:underline'
+        >
+          {post.title}
+        </Link>
       </div>
 
       {/* Description */}
-      <p className='mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
+      <p className='mt-2 text-sm text-zinc-600 dark:text-zinc-400'>
         {post.description}
       </p>
 
       {/* Meta */}
-      <div className='mt-2 flex items-center text-xs text-zinc-500 dark:text-zinc-500'>
+      {/* Stacked while the card is narrow; the dot only shows when both items fit on one line */}
+      <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @sm:flex-row @sm:flex-wrap @sm:items-center dark:text-zinc-500'>
         <span>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
           <time dateTime={post.updatedAt ?? post.publishedAt}>
-            {formatDate(post.updatedAt ?? post.publishedAt)}
+            {formatDate(post.updatedAt ?? post.publishedAt, {
+              dateStyle: 'long',
+            })}
           </time>
         </span>
 
-        <Icon iconNode={DotIcon} />
+        <Icon iconNode={DotIcon} className='hidden @md:block' />
 
         <span>{post.readingTime} min de leitura</span>
       </div>

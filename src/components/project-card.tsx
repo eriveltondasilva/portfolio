@@ -54,22 +54,24 @@ export function ProjectCard({ project, className, ...props }: Props) {
       {...props}
     >
       {/* Header */}
-      <div className='flex items-start justify-between gap-4'>
-        <div className='flex items-center gap-2'>
-          <Icon iconNode={FolderGit2Icon} />
+      <div className='flex flex-wrap items-start justify-between gap-x-4 gap-y-2'>
+        <div className='flex min-w-0 items-start gap-2'>
+          <Icon iconNode={FolderGit2Icon} className='mt-1 shrink-0' />
+
           <a
             href={project.repository}
             target='_blank'
             rel='noopener noreferrer'
-            className='font-semibold text-blue-600 hover:underline dark:text-blue-400'
+            className='min-w-0 font-semibold wrap-break-word text-blue-600 hover:underline dark:text-blue-400'
           >
             {project.name}
           </a>
+
           {project.featured && (
             <Icon
               iconNode={StarIcon}
               label='Em destaque'
-              className='size-3.5 fill-amber-400 text-amber-400'
+              className='mt-1.25 size-3.5 shrink-0 fill-amber-400 text-amber-400'
             />
           )}
         </div>
@@ -81,17 +83,17 @@ export function ProjectCard({ project, className, ...props }: Props) {
       </div>
 
       {/* Description */}
-      <p className='mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400'>
+      <p className='mt-2 text-sm text-zinc-600 dark:text-zinc-400'>
         {project.description}
       </p>
 
       {/* Tags */}
       {project.tags.length > 0 && (
-        <div className='mt-3 flex flex-wrap gap-1.5'>
+        <div className='mt-2 flex flex-wrap gap-1.5'>
           {project.tags.map((tag) => (
             <Badge
               key={tag}
-              variant='secondary'
+              variant='outline'
               className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
             >
               {tag}
@@ -101,7 +103,7 @@ export function ProjectCard({ project, className, ...props }: Props) {
       )}
 
       {/* Footer links */}
-      <div className='mt-4 flex items-center gap-4 text-xs'>
+      <div className='mt-4 flex flex-wrap items-center gap-4 text-xs'>
         <a
           href={project.repository}
           target='_blank'
