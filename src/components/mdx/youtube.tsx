@@ -1,19 +1,26 @@
 import { YouTubeEmbed } from '@next/third-parties/google';
 
+import { Figure } from './figure';
+
 interface Props {
   id: string;
   title?: string;
+  caption?: string;
   params?: string;
 }
 
-export function Youtube({ id, title, params = '' }: Props) {
+const DEFAULT_PLAY_LABEL = 'Reproduzir vídeo';
+
+export function Youtube({ id, title, caption, params = '' }: Props) {
   return (
-    <div className='my-6'>
+    <Figure caption={caption}>
       <YouTubeEmbed
         videoid={id}
         params={params}
-        playlabel={`Reproduzir vídeo: ${title}`}
+        playlabel={
+          title ? `${DEFAULT_PLAY_LABEL} ${title}` : DEFAULT_PLAY_LABEL
+        }
       />
-    </div>
+    </Figure>
   );
 }
