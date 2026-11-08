@@ -68,11 +68,6 @@ export default async function SeriesDetailPage({
   const postCount = posts.length;
   const hasPosts = postCount > 0;
 
-  const totalReadingTime = posts.reduce(
-    (total, post) => total + post.readingTime,
-    0,
-  );
-
   return (
     <div className='space-y-6'>
       {/* Back link */}
@@ -117,7 +112,7 @@ export default async function SeriesDetailPage({
           {hasPosts && (
             <li className='flex items-center'>
               <Icon iconNode={DotIcon} className='hidden @xl:block' />
-              <span>{formatReadingTime(totalReadingTime)} de leitura</span>
+              <span>{formatReadingTime(series.readingTime)} de leitura</span>
             </li>
           )}
         </ul>

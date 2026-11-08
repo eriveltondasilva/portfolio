@@ -23,6 +23,7 @@ export interface SeriesPostRef {
 }
 
 export interface SeriesIndex extends Series {
+  readingTime: number;
   posts: SeriesPostRef[];
 }
 

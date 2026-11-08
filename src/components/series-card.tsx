@@ -1,7 +1,7 @@
 import { DotIcon, FolderBookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import { formatDate } from '@/lib/format';
+import { formatDate, formatReadingTime } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
@@ -65,6 +65,13 @@ export function SeriesCard({
         <span>
           {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
         </span>
+
+        {postCount > 0 && (
+          <>
+            <Icon iconNode={DotIcon} className='hidden @md:block' />
+            <span>{formatReadingTime(series.readingTime)} de leitura</span>
+          </>
+        )}
       </div>
 
       {/* Posts list */}

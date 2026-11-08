@@ -194,14 +194,26 @@ function buildSeriesIndex(
     (post): post is SeriesPost =>
       post.series !== undefined && post.order !== undefined,
   );
-  const postsBySeries = Object.groupBy(seriesPosts, (post) => post.series);
+  const postsBySeries = Map.groupBy(seriesPosts, (post) => post.series);
 
-  return sortByDateDesc(series).map((item) => ({
-    ...item,
-    posts: (postsBySeries[item.slug] ?? [])
-      .toSorted((a, b) => a.order - b.order)
-      .map(({ slug, title, order }): SeriesPostRef => ({ slug, title, order })),
-  }));
+  return sortByDateDesc(series).map((item) => {
+    const orderedPosts = (postsBySeries.get(item.slug) ?? []).toSorted(
+      (a, b) => a.order - b.order,
+    );
+
+    return {
+      ...item,
+      readingTime: orderedPosts.reduce(
+        (total, post) => total + post.readingTime,
+        0,
+      ),
+      posts: orderedPosts.map(({ slug, title, order }): SeriesPostRef => ({
+        slug,
+        title,
+        order,
+      })),
+    };
+  });
 }
 
 // # Main
