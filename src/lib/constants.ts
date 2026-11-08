@@ -1,4 +1,3 @@
-// ── ENUMS ────────────────────────────
 export const PostStatus = {
   DRAFT: 'draft',
   PUBLISHED: 'published',
@@ -33,7 +32,7 @@ export const GithubTopic = {
 } as const;
 export type GithubTopic = (typeof GithubTopic)[keyof typeof GithubTopic];
 
-// ── CONSTANTS ────────────────────────
+// ─────────────────────────────────────
 
 export const SITE_NAME = "Erivelton's Portfolio";
 export const SITE_DESCRIPTION =

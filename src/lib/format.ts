@@ -2,7 +2,7 @@ import { LOCALE } from '@/lib/constants';
 
 import type { Author } from '@/types';
 
-// ── Date Formatter ───────────────────
+// ─────────────────────────────────────
 
 const DEFAULT_DATE_OPTIONS = {
   dateStyle: 'medium',
@@ -32,7 +32,7 @@ export function formatDate(
   }
 }
 
-// ── List Formatter ───────────────────
+// ─────────────────────────────────────
 
 export function createListFormatter() {
   return new Intl.ListFormat(LOCALE, {
@@ -41,7 +41,7 @@ export function createListFormatter() {
   });
 }
 
-// ── Reading Time Formatter ───────────
+// ─────────────────────────────────────
 
 const MINUTES_IN_AN_HOUR = 60;
 
@@ -55,7 +55,7 @@ export function formatReadingTime(totalMinutes: number): string {
   return `${hours} h ${minutes} min`;
 }
 
-// ── Format Functions ─────────────────
+// ─────────────────────────────────────
 
 export function getNameInitials(name: string): string {
   return name
