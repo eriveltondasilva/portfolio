@@ -11,11 +11,6 @@
   "author": "Erivelton Silva <eriveltondasilva13@gmail.com>",
   "type": "module",
   "scripts": {
-    "1xxx": "",
-    "2xxx": "",
-    "3xxx": "",
-    "4xxx": "",
-    "5xxx": "",
     "build": "bun run --bun next build",
     "build:blog": "bun run scripts/generate-blog-index.ts",
     "build:indexes": "bun run build:blog && bun run build:projects && bun run build:schemas",
