@@ -1,3 +1,5 @@
-src/components/ui/*
-generated/*
-scripts/utils/templates/*
+.next
+src/components/ui
+generated
+scripts/utils/templates
+content/posts/**/*.mdx

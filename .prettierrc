@@ -1,4 +1,5 @@
 {
+  $schema: https://json.schemastore.org/prettierrc,
   experimentalTernaries: true,
   jsxSingleQuote: true,
   singleQuote: true,
@@ -6,10 +7,10 @@
   printWidth: 80,
   plugins:
     [
-      prettier-plugin-tailwindcss,
       prettier-plugin-package,
       prettier-plugin-yaml,
+      prettier-plugin-tailwindcss,
     ],
   tailwindStylesheet: ./src/app/globals.css,
-  tailwindFunctions: [clsx, cn, twMerge, twJoin],
+  tailwindFunctions: [clsx, cn],
 }
