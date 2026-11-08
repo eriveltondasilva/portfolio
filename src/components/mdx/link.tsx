@@ -1,6 +1,5 @@
 import { ExternalLinkIcon } from 'lucide-react';
 import LinkNext from 'next/link';
-import { cn } from 'cn';
 
 import { Icon } from '../icon';
 
@@ -9,18 +8,13 @@ import type { ComponentProps } from 'react';
 
 const isHttpUrl = (str: string) => /^https?:\/\//.test(str);
 
-export function Link({
-  href = '',
-  className,
-  children,
-  ...props
-}: ComponentProps<'a'>) {
+export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
   if (!href) return children;
 
   // # Internal link
   if (href.startsWith('/') && !href.startsWith('//')) {
     return (
-      <LinkNext href={href as Route} className={className} {...props}>
+      <LinkNext href={href as Route} {...props}>
         {children}
       </LinkNext>
     );
@@ -29,25 +23,20 @@ export function Link({
   // # External link
   if (isHttpUrl(href)) {
     return (
-      <a
-        href={href}
-        target='_blank'
-        rel='noopener noreferrer'
-        className={cn(className, 'group')}
-        {...props}
-      >
+      <a href={href} target='_blank' rel='noopener noreferrer' {...props}>
         {children}
+
         <Icon
           iconNode={ExternalLinkIcon}
           label='(abre em nova aba)'
-          className='ml-1 inline size-3.5 align-text-top group-hover:animate-bounce'
+          className='ml-1 inline size-3.5 align-text-top'
         />
       </a>
     );
   }
 
   return (
-    <a href={href} className={className} {...props}>
+    <a href={href} {...props}>
       {children}
     </a>
   );
