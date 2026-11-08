@@ -7,8 +7,12 @@ import {
   FileTreeFile,
   FileTreeFolder,
 } from './components/mdx/file-tree';
-import { Image, RatioImage } from './components/mdx/image';
-import { GridImage, ImageGrid } from './components/mdx/image-grid';
+import {
+  Image,
+  ImageRatio,
+  GalleryImage,
+  Gallery,
+} from './components/mdx/images';
 import { Kbd } from './components/mdx/kbd';
 import { Link } from './components/mdx/link';
 import { Step, Steps } from './components/mdx/steps';
@@ -16,6 +20,7 @@ import { Table } from './components/mdx/table';
 import { Tab, Tabs } from './components/mdx/tabs';
 import { Tweet } from './components/mdx/tweet';
 import { Youtube } from './components/mdx/youtube';
+import { Mark } from './components/mdx/mark';
 
 import type { MDXComponents } from 'mdx/types';
 
@@ -29,9 +34,9 @@ const components: MDXComponents = {
   Accordion,
   AccordionItem,
   Image,
-  RatioImage,
-  ImageGrid,
-  GridImage,
+  ImageRatio,
+  Gallery,
+  GalleryImage,
   Tabs,
   Tab,
   Steps,
@@ -40,9 +45,10 @@ const components: MDXComponents = {
   FileTreeFolder,
   FileTreeFile,
   //
-  Callout,
   Badge,
+  Callout,
   Kbd,
+  Mark,
   Youtube,
   Tweet,
 };
