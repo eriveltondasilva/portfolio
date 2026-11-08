@@ -20,6 +20,14 @@ O Markdown padrão funciona normalmente. Todos os elementos abaixo não precisam
 
 > Blockquote para destacar citações ou trechos importantes de outras fontes.
 
+**Sintaxe:**
+
+```md
+**Negrito**, _itálico_, ~~tachado~~ e `código inline`.
+
+> Blockquote para destacar citações ou trechos importantes de outras fontes.
+```
+
 ### Âncoras em headings
 
 O título do post é o `h1` da página, então comece os títulos do texto em `##`.
@@ -79,6 +87,21 @@ Lista de tarefas (via remark-gfm):
 - [x] Tarefa concluída
 - [ ] Tarefa pendente
 
+**Sintaxe:**
+
+```md
+- Item simples
+- Item com **negrito**
+
+1. Primeiro passo
+2. Segundo passo
+
+- [x] Tarefa concluída
+- [ ] Tarefa pendente
+```
+
+Deixe uma linha em branco entre listas de tipos diferentes.
+
 ### Tabelas
 
 Suporte nativo via `remark-gfm`. Tabelas largas ganham rolagem horizontal em vez de estourar a página:
@@ -89,6 +112,64 @@ Suporte nativo via `remark-gfm`. Tabelas largas ganham rolagem horizontal em vez
 | `title`     |  `string`   | —        | Título opcional             |
 | `className` |  `string`   | —        | Classes CSS adicionais      |
 | `children`  | `ReactNode` | —        | Conteúdo interno            |
+
+**Sintaxe:**
+
+```md
+| Prop      |   Tipo   | Padrão   |
+| --------- | :------: | -------- |
+| `variant` | `string` | `'info'` |
+| `title`   | `string` | —        |
+```
+
+A segunda linha separa o cabeçalho do corpo e define o alinhamento de cada coluna com dois-pontos. Não é preciso alinhar os espaços à mão: o Prettier do projeto faz isso.
+
+| Separador | Alinhamento       |
+| --------- | ----------------- |
+| `---`     | esquerda (padrão) |
+| `:---`    | esquerda          |
+| `:---:`   | centro            |
+| `---:`    | direita           |
+
+### Separador e quebra de linha
+
+Três hifens numa linha própria desenham uma linha horizontal, como as que dividem as seções deste post. Deixe uma linha em branco antes: colado ao texto de cima, o `---` vira título. E não comece o `index.mdx` com `---`, porque o build lê isso como frontmatter e rejeita o arquivo (os metadados ficam no `meta.yml`).
+
+Uma quebra de linha simples no arquivo não quebra a linha na página. Para forçar a quebra, termine a linha com uma barra invertida ou use `<br />`:
+
+```md
+Primeira linha\
+Segunda linha
+```
+
+Resultado:
+
+Primeira linha\
+Segunda linha
+
+### Comentários
+
+Para deixar anotações que não aparecem no post, use o comentário de expressão do MDX:
+
+```mdx
+{/* Revisar este parágrafo antes de publicar */}
+```
+
+O comentário HTML (`<!-- -->`) não funciona no MDX e gera erro de compilação. Todo `index.mdx` novo já vem com um comentário assim no topo, lembrando as regras das imagens.
+
+### Escapando chaves e sinais de menor
+
+Complementa a dica do início desta seção. Fora de código, `{` abre uma expressão JavaScript e `<` abre uma tag JSX. Para exibi-los como texto, escape com barra invertida ou use código inline:
+
+```md
+Chave: \{ e sinal de menor: \<
+Em código inline não precisa escapar: `{ }` e `<div>`
+```
+
+Resultado:
+
+Chave: \{ e sinal de menor: \<
+Em código inline não precisa escapar: `{ }` e `<div>`
 
 ---
 
@@ -104,6 +185,16 @@ function greet(name: string): string {
 }
 ```
 
+**Sintaxe:** a linguagem vem logo depois das crases que abrem o bloco.
+
+````md
+```ts
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+````
+
 Com `title` e `caption`:
 
 ```ts title="utils/greet.ts" caption="Função utilitária de saudação."
@@ -111,6 +202,16 @@ function greet(name: string): string {
   return `Hello, ${name}!`;
 }
 ```
+
+**Sintaxe:**
+
+````md
+```ts title="utils/greet.ts" caption="Função utilitária de saudação."
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+```
+````
 
 Com `showLineNumbers`:
 
@@ -129,6 +230,24 @@ export function Button({
   );
 }
 ```
+
+**Sintaxe:**
+
+````md
+```tsx title="components/button.tsx" showLineNumbers
+interface ButtonProps extends React.ComponentProps<'button'> {
+  variant?: 'default' | 'outline' | 'ghost';
+}
+```
+````
+
+Essas três opções ficam na linha que abre o bloco, depois da linguagem. Use aspas duplas nos valores de texto:
+
+| Meta                 | Efeito                                                      |
+| -------------------- | ----------------------------------------------------------- |
+| `title="arquivo.ts"` | Título exibido como aba no canto superior esquerdo do bloco |
+| `caption="texto"`    | Legenda no rodapé do bloco                                  |
+| `showLineNumbers`    | Numera as linhas                                            |
 
 Linhas marcadas com um comentário especial no fim ganham tratamento próprio. Diff, para mostrar o que sai e o que entra:
 
@@ -152,6 +271,15 @@ console.log('focus');
 const importante = 3; // [!code focus]
 console.log('focus');
 ```
+
+**Sintaxe:** o comentário vai no fim da linha e some do resultado final. O `highlight` e o `focus` seguem o mesmo formato do diff. O comentário usa a sintaxe da linguagem do bloco (`#` em `bash` e `yaml`, por exemplo).
+
+````md
+```ts
+const old = 1; // [!code --]
+const novo = 2; // [!code ++]
+```
+````
 
 | Notação                | Efeito           |
 | ---------------------- | ---------------- |
@@ -181,6 +309,24 @@ Trecho destacado com `/nome/`:
 const nome = 'Ana';
 console.log(nome);
 ```
+
+As opções da cerca combinam entre si. Exemplo com título, números de linha e destaque na linha 2:
+
+```ts title="utils/soma.ts" showLineNumbers {2}
+const a = 1;
+const b = 2;
+const soma = a + b;
+```
+
+**Sintaxe:**
+
+````md
+```ts title="utils/soma.ts" showLineNumbers {2}
+const a = 1;
+const b = 2;
+const soma = a + b;
+```
+````
 
 Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
 
@@ -364,6 +510,34 @@ Use `defaultValue` para definir qual aba abre por padrão. O valor precisa ser i
 </Tabs>
 ```
 
+**Com código dentro de uma aba:**
+
+Deixe uma linha em branco antes e depois da cerca de código. Sem elas, o conteúdo vira texto corrido e a cerca não forma um bloco de código.
+
+````mdx
+<Tabs>
+  <Tab label='npm'>
+
+    ```bash
+    npm install react
+    ```
+
+  </Tab>
+  <Tab label='Bun'>
+
+    ```bash
+    bun add react
+    ```
+
+  </Tab>
+</Tabs>
+````
+
+| Prop           | Componente | Valores                        | Padrão       |
+| -------------- | ---------- | ------------------------------ | ------------ |
+| `defaultValue` | `Tabs`     | `label` de uma das abas        | primeira aba |
+| `label`        | `Tab`      | `string`, única dentro do Tabs | —            |
+
 ---
 
 ## Steps
@@ -413,6 +587,25 @@ Passo a passo numerado automaticamente. Ideal para tutoriais e guias de instala�
 </Steps>
 ```
 
+**Com código dentro de um passo:** mesma regra das abas, com linha em branco em volta da cerca.
+
+````mdx
+<Steps>
+  <Step title='Instale as dependências'>
+    Execute no terminal:
+
+    ```bash
+    bun add react
+    ```
+
+  </Step>
+</Steps>
+````
+
+| Prop    | Componente | Valores               | Padrão |
+| ------- | ---------- | --------------------- | ------ |
+| `title` | `Step`     | `string`, obrigatória | —      |
+
 ---
 
 ## Accordion
@@ -427,12 +620,10 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
     perguntas frequentes, detalhes avançados, ou explicações alternativas que
     interromperiam o fluxo do texto principal.
   </AccordionItem>
-
-<AccordionItem title='Posso colocar código dentro?'>
-  Sim. O `AccordionItem` aceita qualquer conteúdo MDX, incluindo blocos de
-  código, listas e outros componentes.
-</AccordionItem>
-
+  <AccordionItem title='Posso colocar código dentro?'>
+    Sim. O `AccordionItem` aceita qualquer conteúdo MDX, incluindo blocos de
+    código, listas e outros componentes.
+  </AccordionItem>
   <AccordionItem title='Qual a diferença entre type single e multiple?'>
     Com `single` (padrão), abrir um item fecha os demais. Com `multiple`, vários
     itens podem estar abertos ao mesmo tempo.
@@ -454,6 +645,21 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
 | `type` | `single` `multiple` | `single` |
 
 A prop `value` do `AccordionItem` é opcional — por padrão usa o próprio `title` como identificador.
+
+**Com código dentro de um item:**
+
+````mdx
+<Accordion>
+  <AccordionItem title='Como instalar?'>
+    Execute no terminal:
+
+    ```bash
+    bun add react
+    ```
+
+  </AccordionItem>
+</Accordion>
+````
 
 ---
 
@@ -655,6 +861,11 @@ Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` 
 ```mdx
 <Tweet id='2113213103660032209' />
 ```
+
+| Prop        | Valores  | Padrão | Descrição                    |
+| ----------- | -------- | ------ | ---------------------------- |
+| `id`        | `string` | —      | Código do tweet, obrigatório |
+| `className` | `string` | —      | Classes CSS adicionais       |
 
 **Exemplo:**
 
