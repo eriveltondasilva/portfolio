@@ -87,7 +87,7 @@ export default function BlogPage() {
       </div>
 
       {/* Posts list */}
-      <div className='space-y-3'>
+      <div className='space-y-6'>
         {posts.map((post) => (
           <PostCard key={post.slug} post={post} />
         ))}

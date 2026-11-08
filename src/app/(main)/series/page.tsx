@@ -60,7 +60,7 @@ export default function SeriesPage() {
 
       {/* Series */}
       {hasSeries && (
-        <div className='space-y-3'>
+        <div className='space-y-6'>
           {series.map((item) => (
             <SeriesCard key={item.slug} series={item} showStatusBadge />
           ))}

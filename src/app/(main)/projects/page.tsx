@@ -95,7 +95,7 @@ export default function ProjectsPage() {
             </h2>
           )}
 
-          <div className='grid gap-3 sm:grid-cols-2'>
+          <div className='space-y-6'>
             {otherProjects.map((project) => (
               <ProjectCard key={project.slug} project={project} />
             ))}
