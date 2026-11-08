@@ -52,7 +52,11 @@ O jeito mais curto é o script interativo:
 bun run new-post
 ```
 
-Ele pergunta título, slug, descrição, tags e autores. Se existirem séries, pergunta também a série e a posição do post nela (`order`). Cada resposta é validada pelo mesmo schema que o build usa.
+Ele pergunta, nesta ordem, título, slug, descrição, tags (separadas por vírgula) e autores. Se existirem séries, pergunta também a série e a posição do post nela (`order`). Cada resposta é validada pelo mesmo schema que o build usa, e os campos com valor sugerido aceitam Enter:
+
+- **slug**: sugerido a partir do título, sem acentos e em kebab-case;
+- **autores**: o autor principal, quando ele existe em `authors.yml`;
+- **`order`**: o próximo número livre na série.
 
 O script também aceita flags (`--title`, `--slug`, `--description`, `--tags`, `--authors`, `--series` e `--order`). Cada flag dispensa a pergunta correspondente, e uma flag inválida interrompe o script em vez de perguntar de novo:
 
@@ -62,11 +66,11 @@ bun run new-post --title "Meu primeiro post" --tags "react,nextjs"
 
 O resultado é a pasta `content/posts/slug-do-post/` com:
 
-- `meta.yml`, com a data de hoje em `publishedAt` e `status: 'draft'`;
+- `meta.yml`, com a data de hoje em `publishedAt` e `status: draft`;
 - `index.mdx`, com um modelo mínimo;
 - uma pasta `images/` vazia.
 
-O script usa o slug como nome da pasta. Se preferir um prefixo de data, como nos posts deste blog, renomeie a pasta depois. O Git não versiona pastas vazias, e um post sem `images/` é válido.
+O script usa o slug como nome da pasta. Se preferir um prefixo de data, como nos posts deste blog, renomeie a pasta depois e rode `bun run build:blog`: o nome da pasta fica gravado no índice e é por ele que o site encontra o texto, a capa e o link "Sugerir Edição". O Git não versiona pastas vazias, e um post sem `images/` é válido.
 
 Escreva o post e troque o `status` para `published` quando estiver pronto.
 
@@ -115,18 +119,18 @@ order: 1 # opcional, exige series
 
 Escreva as datas entre aspas, como o modelo gerado pelo script: o schema espera texto no formato `YYYY-MM-DD`.
 
-| Campo         | Obrigatório | Regra                                                                 |
-| ------------- | :---------: | --------------------------------------------------------------------- |
-| `slug`        |     ✅      | kebab-case, até 120 caracteres                                        |
-| `title`       |     ✅      | até 160 caracteres                                                    |
-| `description` |     ✅      | de 10 a 160 caracteres                                                |
-| `tags`        |     ✅      | de 1 a 10 itens, sem repetição, cada um em kebab-case                 |
-| `publishedAt` |     ✅      | data ISO (`YYYY-MM-DD`)                                               |
-| `authors`     |     ✅      | ao menos um slug de autor existente, sem repetição                    |
-| `status`      |             | `draft`, `published` ou `archived` (padrão: `draft`)                  |
-| `updatedAt`   |             | data ISO da última atualização; não pode ser anterior a `publishedAt` |
-| `series`      |             | slug de uma série existente; exige `order`                            |
-| `order`       |             | inteiro positivo; exige `series`                                      |
+| Campo         | Obrigatório | Regra                                                              |
+| ------------- | :---------: | ------------------------------------------------------------------ |
+| `slug`        |     ✅      | kebab-case, até 120 caracteres                                     |
+| `title`       |     ✅      | até 160 caracteres                                                 |
+| `description` |     ✅      | de 10 a 160 caracteres                                             |
+| `tags`        |     ✅      | de 1 a 10 itens, sem repetição, cada um em kebab-case              |
+| `publishedAt` |     ✅      | data ISO (`YYYY-MM-DD`)                                            |
+| `authors`     |     ✅      | ao menos um slug de autor existente, sem repetição                 |
+| `status`      |             | `draft`, `published` ou `archived` (padrão: `draft`)               |
+| `updatedAt`   |             | data ISO da última atualização; deve ser posterior a `publishedAt` |
+| `series`      |             | slug de uma série existente; exige `order`                         |
+| `order`       |             | inteiro positivo; exige `series`                                   |
 
 <Callout variant='warning' title='Atenção'>
   O schema é estrito: campos desconhecidos geram erro de build. E, como o
@@ -134,8 +138,8 @@ Escreva as datas entre aspas, como o modelo gerado pelo script: o schema espera 
 </Callout>
 
 <Callout variant='danger' title='Nada de metadados no MDX'>
-  Os metadados não ficam mais no começo do `index.mdx`. Se o arquivo começar com
-  `---`, o build falha e pede para mover esse bloco para o `meta.yml`.
+  Os metadados ficam só no `meta.yml`. Se o `index.mdx` começar com `---`, o
+  build falha e pede para mover esse bloco para o `meta.yml`.
 </Callout>
 
 ### Campo `status`
@@ -146,7 +150,7 @@ Escreva as datas entre aspas, como o modelo gerado pelo script: o schema espera 
 | `published` | Visível publicamente, presente nas listagens, nas páginas de tag, no sitemap e no RSS                  |
 | `archived`  | Fora das listagens, das páginas de tag, do sitemap, do RSS e dos posts relacionados, mas com URL ativa |
 
-Rascunhos passam só pela verificação de arquivos e do schema. Slug duplicado, série, autor e imagens só são conferidos quando o post deixa de ser rascunho.
+Rascunhos passam pela verificação de arquivos, de metadados no MDX, do schema e das imagens, então um erro de imagem em um rascunho também derruba o build. Slug duplicado, série, ordem e autor só são conferidos quando o post deixa de ser rascunho.
 
 Um post `archived` continua acessível pela URL, com estas diferenças:
 
@@ -157,7 +161,12 @@ Um post `archived` continua acessível pela URL, com estas diferenças:
 
 ### Campo `updatedAt`
 
-Quando informado, substitui o `publishedAt` nas datas exibidas e troca o rótulo para "Atualizado em" no cabeçalho do post. O mesmo valor vai para o RSS, o sitemap e os dados estruturados do post.
+Quando informado, a data de atualização aparece junto com a de publicação:
+
+- no cabeçalho do post, as duas datas são exibidas ("Publicado em" e "Atualizado em");
+- nos cards, nos posts relacionados e na imagem Open Graph, a data de atualização **substitui** a de publicação, e o card troca o rótulo para "Atualizado em".
+
+O mesmo valor vai para o RSS, o sitemap e os dados estruturados do post.
 
 ```yml
 publishedAt: 2026-01-15
@@ -172,7 +181,7 @@ A ordem das listagens continua seguindo o `publishedAt`.
 
 Para ter uma capa, coloque na pasta do post um arquivo chamado `cover`, **em minúsculas**, com uma das extensões `.jpg`, `.jpeg`, `.png`, `.webp` ou `.avif`. Nenhuma configuração é necessária: o script de índice detecta o arquivo e a capa aparece no cabeçalho do post, abaixo do título.
 
-Um nome como `Cover.png` é rejeitado pelo build, porque seria ignorado em sistemas de arquivos que diferenciam maiúsculas de minúsculas.
+Só pode haver uma capa por post. Um nome como `Cover.png` também é rejeitado pelo build, porque seria ignorado em sistemas de arquivos que diferenciam maiúsculas de minúsculas.
 
 <Callout variant='info' title='Capa e imagem de compartilhamento'>
   A imagem Open Graph (usada ao compartilhar o link em redes sociais) é gerada
@@ -222,7 +231,7 @@ Séries agrupam posts em uma sequência. Elas são definidas em `content/series.
 | `publishedAt` | `string` | data ISO (`YYYY-MM-DD`)            |     ✅      |
 | `status`      | `string` | `planned` `in-progress` `complete` |             |
 
-O `status` da série é `planned` por padrão. Séries `in-progress` aparecem automaticamente na seção **Séries em andamento** da home. Todas as séries têm página própria em `/series/slug-da-serie`, com a lista dos posts.
+O `status` da série é `planned` por padrão. A seção **Séries em andamento** da home mostra até 2 séries `in-progress`, as mais recentes pelo `publishedAt`. Todas as séries têm página própria em `/series/slug-da-serie`, com a lista dos posts.
 
 Para incluir um post na série, informe `series` e `order` no `meta.yml` do post. O banner da série aparece no final do post, com a lista de todos os posts e a posição atual destacada, e a ordem dos posts na lista segue o `order`.
 
@@ -258,13 +267,13 @@ Autores ficam em `content/authors.yml`:
 
 As redes sociais aceitam apenas URLs `https` dos domínios esperados:
 
-- `github`: `github.com`;
+- `github`: URL de perfil em `github.com`, como `https://github.com/usuario`, sem caminho extra;
 - `linkedin`: `linkedin.com` ou `www.linkedin.com`;
 - `twitter`: `x.com` ou `twitter.com`, com ou sem `www`.
 
-O nome do autor aparece no cabeçalho do post, com um cartão que mostra a bio, as principais habilidades e as redes. O avatar é buscado no GitHub, a partir do usuário da URL em `socials.github`.
+O nome do autor aparece no cabeçalho do post, com um cartão que mostra a bio, as três primeiras habilidades (mais um "+N" para as demais) e as redes. O avatar é buscado no GitHub, a partir do usuário da URL em `socials.github`.
 
-O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Ele alimenta a barra lateral, o rodapé e o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github). Se esse slug não existir no `authors.yml`, o build falha.
+O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Ele alimenta a barra lateral, a imagem Open Graph e os dados estruturados da home, e o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github). Se esse slug não existir no `authors.yml`, o `build:projects` falha e, com ele, o build.
 
 ---
 
@@ -284,6 +293,9 @@ Ao gerar os índices, o build confere o conteúdo e **para com uma mensagem deta
 | Imagens          | Uma imagem não está em `images/`, tem nome fora do kebab-case ou não existe |
 | Imagens em JSX   | Um componente JSX recebe `src` como texto em vez de uma imagem importada    |
 | Capa             | O arquivo de capa tem letras maiúsculas no nome, como `Cover.png`           |
+| Capa duplicada   | Há mais de um arquivo `cover.*` na pasta do post                            |
+
+Os erros de arquivos, de metadados no MDX, de schema e de imagens valem também para rascunhos. As demais verificações só valem para posts que não são rascunho.
 
 Alguns problemas não derrubam o build e aparecem como aviso no terminal:
 

@@ -54,9 +54,9 @@ As tags exibidas no card são os demais topics do repositório, excluindo os tr�
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | `slug`           | Nome do repositório em minúsculas e em kebab-case: `My_App` vira `my-app`                                                   |
 | `name`           | Nome do repositório, com hífens, underscores e pontos separando as palavras: `meu-projeto-legal` vira **Meu Projeto Legal** |
-| `description`    | Descrição do repositório, de 10 a 500 caracteres; sem ela, aparece "Sem descrição."                                         |
+| `description`    | Descrição do repositório, de 1 a 500 caracteres; sem ela, aparece "Sem descrição."                                          |
 | `repository`     | URL do repositório                                                                                                          |
-| `url`            | Campo **Website** do repositório, quando preenchido; precisa ser uma URL completa                                           |
+| `url`            | Campo **Website** do repositório, quando preenchido; precisa ser uma URL completa começando por `https://`                  |
 | `tags`           | Topics do repositório, menos os de controle                                                                                 |
 | `status`         | Veja a seção abaixo                                                                                                         |
 | `featured`       | `true` se o repositório tem o topic `featured`                                                                              |
@@ -134,14 +134,14 @@ Durante a execução, o script informa quantos repositórios públicos foram bus
 
 <AccordionItem title='O projeto não mostra link de demonstração'>
   O link vem do campo **Website** do repositório. Preencha-o na engrenagem ao
-  lado de **About**, com a URL completa (começando por `https://`), e regenere o
-  índice.
+  lado de **About**, com a URL completa começando por `https://` (um `http://`
+  não é aceito), e regenere o índice.
 </AccordionItem>
 
 <AccordionItem title='O build falha com erro de validação em um projeto'>
   A mensagem indica a URL do repositório e o campo com problema. As causas mais
-  comuns são descrição com menos de 10 caracteres, mais de 10 tags (sem contar
-  os topics de controle), **Website** que não é uma URL válida e dois
+  comuns são descrição com mais de 500 caracteres, mais de 10 tags (sem contar
+  os topics de controle), **Website** que não é uma URL `https://` válida e dois
   repositórios que geram o mesmo slug. Corrija no GitHub e rode `bun run
   build:projects` de novo.
 </AccordionItem>

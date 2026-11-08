@@ -14,7 +14,7 @@ O feed fica em `/feed.xml` e lista os posts `published`, do mais novo para o mai
 
 O feed leva só o resumo, não o texto completo do post. Ele é gerado no build, então só muda a cada deploy.
 
-Para os leitores de feed encontrarem o endereço sozinhos, todas as páginas o declaram no `<head>` (`<link rel="alternate">`), e há links "RSS" no rodapé e na página do blog.
+Para os leitores de feed encontrarem o endereço sozinhos, a home, o blog e cada post o declaram no `<head>` (`<link rel="alternate">`), e há links "RSS" no rodapé e na página do blog.
 
 ---
 
@@ -36,13 +36,15 @@ Cada post também embute dados estruturados (JSON-LD) com:
 - um `BlogPosting`: título, descrição, tags como palavras-chave, idioma, `datePublished`, `dateModified` (o `updatedAt`, quando existe) e os autores, com o link do GitHub;
 - um `BreadcrumbList` com o Blog e o post.
 
+A home também embute dados estruturados: um `WebSite` e um `Person`, com o nome, a bio, as habilidades e as redes do autor principal.
+
 ---
 
 ## Sitemap e robots
 
 O `/sitemap.xml` inclui:
 
-- a home, o blog, os projetos, as séries e as tags;
+- a home, o blog, a página de privacidade, os projetos, as séries e as tags;
 - uma entrada para cada série e para cada tag;
 - uma entrada para cada post `published`, com `lastModified` igual ao `updatedAt` ou ao `publishedAt`.
 
@@ -54,12 +56,13 @@ O `/robots.txt` libera o site inteiro, bloqueia `/api/` e aponta para o sitemap.
 
 ## Imagens de compartilhamento
 
-A imagem Open Graph, exibida quando o link é compartilhado, é gerada no build em 1200 × 630 pixels, com a fonte Geist, e serve também como imagem do Twitter. Ela existe para posts e para séries:
+A imagem Open Graph, exibida quando o link é compartilhado, é gerada no build em 1200 × 630 pixels, com a fonte Geist, e serve também como imagem do Twitter. Ela existe para a home, para posts e para séries:
 
-| Página | O que aparece na imagem                                                      |
-| ------ | ---------------------------------------------------------------------------- |
-| Post   | Domínio, título, descrição, até 4 tags, autores, data e tempo de leitura     |
-| Série  | Domínio, título, descrição, status, quantidade de posts e data de publicação |
+| Página | O que aparece na imagem                                                                                                      |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| Home   | Domínio, nome do autor principal, descrição do site, até 4 habilidades e o @ do Twitter                                      |
+| Post   | Domínio, título, descrição, até 4 tags, o primeiro nome de cada autor, data (a de atualização, se houver) e tempo de leitura |
+| Série  | Domínio, título, descrição, status, quantidade de posts e data de publicação                                                 |
 
 A imagem de um post **não usa** o arquivo de capa (veja [Imagem de capa](/blog/como-o-blog-funciona#imagem-de-capa)). Se você mudar o título, a descrição ou as tags, ela é regenerada no próximo build.
 
@@ -71,12 +74,12 @@ As tags do `meta.yml` viram páginas automaticamente:
 
 - `/tags` lista todas as tags dos posts publicados, com a quantidade de posts de cada uma, da mais usada para a menos usada (empates em ordem alfabética);
 - `/tags/nome-da-tag` lista os posts daquela tag, do mais novo para o mais antigo;
-- cada tag exibida nos cards e no cabeçalho do post é um link para a sua página.
+- cada tag exibida nos cards e no cabeçalho do post é um link para a sua página, quando ela existe; sem página, a tag aparece como texto simples.
 
-<Callout variant='warning' title='Tag usada só em posts arquivados'>
+<Callout variant='info' title='Tag usada só em posts arquivados'>
   Posts arquivados não contam para as páginas de tags. Se uma tag aparece apenas
-  em posts arquivados, ela não tem página, e o link no cabeçalho desses posts
-  leva a um erro 404.
+  em posts arquivados, ela não tem página e, nesses posts, é exibida como texto,
+  sem link.
 </Callout>
 
 ---
@@ -102,13 +105,14 @@ Os comentários usam o [Giscus](https://giscus.app), que guarda cada conversa co
 
 Cada post recebe, sem nenhuma configuração:
 
+- **Trilha de navegação** (Blog / título do post) no topo da página, com o título cortado em uma linha quando é longo.
 - **Índice "Neste post"**, montado com os títulos `##` e `###` (veja [Índice do post](/blog/mdx-reference#índice-do-post)). Em telas largas ele acompanha a leitura e destaca a seção em que você está.
-- **Barra de progresso** fina no topo da página.
+- **Barra de progresso** fina no topo da página. Ela depende de `animation-timeline`: em navegadores sem esse suporte, a barra não aparece.
 - **Botão de voltar ao topo**, que aparece quando o leitor sai do começo da página.
 - **Botão de compartilhar** no cabeçalho: em navegadores com compartilhamento nativo, como os de celular, abre o painel do sistema; nos demais, copia o link.
 - **Botão de copiar** em cada bloco de código.
 - **Posts relacionados**: até 3 posts publicados que têm tags em comum, com os de mais tags em comum primeiro e, nos empates, os mais novos.
-- **Anterior e próximo**, na ordem de `publishedAt`. A ordem da série tem o banner próprio, descrito em [Séries](/blog/como-o-blog-funciona#séries).
+- **Anterior e próximo**, na ordem de `publishedAt`: "anterior" é o post publicado logo antes e "próximo", o publicado logo depois. A ordem da série tem o banner próprio, descrito em [Séries](/blog/como-o-blog-funciona#séries).
 - **Reações** e o botão **Sugerir Edição**, que abre o `index.mdx` do post no GitHub.
 
 ---
@@ -128,6 +132,7 @@ Um post `archived` mantém a URL, mas perde parte desses recursos:
 | Reações                                |     ✅      | Só leitura |
 | Imagem de compartilhamento e JSON-LD   |     ✅      |     ✅     |
 | Índice "Neste post" e banner da série  |     ✅      |     ✅     |
+| Listas das séries                      |     ✅      |     ✅     |
 
 ---
 

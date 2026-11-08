@@ -42,13 +42,14 @@ O cookie e os dados guardados estão descritos na [política de privacidade](/pr
 
 ## Dados no Redis
 
-Cada post usa dois hashes, e as chaves levam o prefixo do ambiente (veja [Ambientes separados no Redis](/blog/variaveis-de-ambiente-e-deploy#ambientes-separados-no-redis)):
+Cada post usa dois hashes. As chaves das reações e do limite de requisições levam o prefixo do ambiente (veja [Ambientes separados no Redis](/blog/variaveis-de-ambiente-e-deploy#ambientes-separados-no-redis)); a do keepalive, não:
 
 | Chave                                   | Conteúdo                                                      |
 | --------------------------------------- | ------------------------------------------------------------- |
 | `production:reactions:meu-post:counts`  | Contagem de cada tipo de reação                               |
 | `production:reactions:meu-post:choices` | ID do visitante (o do cookie) e o tipo que ele escolheu       |
 | `production:rate-limit:...`             | Janelas do limite de requisições, indexadas por um hash do IP |
+| `keepalive:last_run`                    | Data da última execução do keepalive, sem prefixo de ambiente |
 
 O hash `choices` é a fonte da verdade, e o `counts` é derivado dele e pode ser reconstruído. Nenhum dos dois expira.
 
@@ -176,9 +177,16 @@ O `PostReactions` recebe o `slug` do post (e `readOnly`, para posts arquivados) 
 - Ao clicar, **atualiza a tela na hora** (atualização otimista) e só então envia a requisição: `PUT` para escolher ou trocar, `DELETE` ao clicar na reação já escolhida.
 - Se a requisição falhar, a tela volta sozinha ao estado anterior e aparece uma mensagem: uma específica para o limite de requisições e uma genérica para os outros erros.
 - Cliques enquanto uma requisição está em andamento são ignorados. Os botões não ficam desabilitados nesse intervalo.
+- Cliques também são ignorados enquanto as contagens não carregaram, ou se o carregamento falhou. Nesse período os botões recebem `aria-disabled`.
 - Em posts arquivados, os botões ficam desabilitados e só mostram as contagens.
 
 A escolha do visitante vem do servidor, então ela continua marcada ao recarregar a página ou voltar ao post depois.
+
+Sobre o layout e a acessibilidade:
+
+- em telas pequenas, o rótulo ("Gostei", "Aprendi", "Valeu!") aparece ao lado do emoji; a partir do breakpoint `md`, ele vira um tooltip;
+- cada botão informa se está selecionado (`aria-pressed`) e a contagem no `aria-label`;
+- as mensagens de erro ficam em uma área de status sempre presente na página, para os leitores de tela as anunciarem quando aparecem.
 
 <Callout variant='tip' title='Testando localmente'>
   Em desenvolvimento, as chaves levam o prefixo `local` e não afetam a produção.
@@ -261,7 +269,7 @@ A resposta esperada é um JSON com a chave e a data gravada:
   ignorado.
 </Callout>
 
-O que **não** é mais problema: a API só aceita `slug` de posts que existem, e a escrita é atômica, então requisições simultâneas não passam do limite de uma reação por visitante.
+O que está protegido: a API só aceita `slug` de posts que existem, e a escrita é atômica, então requisições simultâneas não passam do limite de uma reação por visitante.
 
 Para um blog pessoal, esse nível de proteção costuma ser suficiente. Se virar um problema, os caminhos naturais são exigir algum tipo de verificação para novos visitantes ou autenticar quem reage.
 

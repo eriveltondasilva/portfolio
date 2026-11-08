@@ -91,10 +91,23 @@ As chaves usadas pelas reações e pelo limite de requisições começam com o n
 
 ## Valores fixos no código
 
-Dois valores ficam em `lib/constants.ts` e não em variáveis de ambiente:
+Estes valores ficam em `lib/constants.ts`, e não em variáveis de ambiente. Ao reaproveitar o projeto, troque-os pelos seus:
 
-- **`PRIMARY_AUTHOR_SLUG`**: o autor principal do site (veja [Autores](/blog/como-o-blog-funciona#autores)).
-- **`GISCUS`**: `repo`, `repoId`, `category` e `categoryId` dos comentários. Ao reaproveitar o projeto, troque-os pelos valores do seu repositório, gerados em [giscus.app](https://giscus.app).
+| Constante                       | Para que serve                                                                                           |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `SITE_NAME`, `SITE_DESCRIPTION` | Título, descrição e metadados do site, e a imagem Open Graph da home                                     |
+| `AUTHOR_NAME`                   | Autor nos metadados do site                                                                              |
+| `TWITTER_HANDLE`                | Cartões do Twitter e imagem Open Graph da home                                                           |
+| `PRIMARY_AUTHOR_SLUG`           | O autor principal do site (veja [Autores](/blog/como-o-blog-funciona#autores))                           |
+| `LOCALE`                        | Idioma da página, formato de datas e listas e locale do Open Graph                                       |
+| `GITHUB_REPO`                   | Repositório do link "Sugerir Edição", que aponta para a branch `main`                                    |
+| `GISCUS`                        | `repo`, `repoId`, `category` e `categoryId` dos comentários, gerados em [giscus.app](https://giscus.app) |
+
+<Callout variant='info' title='Textos fixos nos componentes'>
+  Alguns textos ficam direto nos componentes, e não em `constants.ts`: a
+  localização e os pronomes da barra lateral (`profile-sidebar.tsx`), a
+  apresentação da home e o rodapé.
+</Callout>
 
 ---
 
@@ -118,6 +131,8 @@ O comando `bun run build` dispara o `prebuild` antes do `next build`. Isso signi
 </Steps>
 
 Por isso, qualquer erro de conteúdo ou de projeto, ou uma falha na API do GitHub, interrompe o deploy antes de a versão nova ir ao ar. É um comportamento desejado: o site publicado nunca fica com conteúdo inválido.
+
+O `vercel.json` define `bunVersion`, então a Vercel executa o projeto com Bun, e também guarda o agendamento do cron do keepalive (veja [Reações e Redis](/blog/reacoes-e-redis#keepalive-do-redis)).
 
 ---
 

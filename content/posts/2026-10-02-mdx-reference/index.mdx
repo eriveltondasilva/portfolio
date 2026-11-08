@@ -36,14 +36,14 @@ O `id` é o texto em minúsculas, com hífens no lugar dos espaços e mantendo o
 
 ### Índice do post
 
-Os títulos `##` e `###` formam o índice **Neste post**, montado automaticamente quando o post tem mais de um deles. Em telas largas ele fica fixo ao lado do texto e acompanha a leitura; em telas menores vira uma lista recolhível antes do conteúdo. Títulos `####` ganham âncora, mas não entram no índice.
+Os títulos `##` e `###` formam o índice **Neste post**, montado automaticamente quando o post tem mais de um deles. A partir do breakpoint `xl` (1280 px) ele fica fixo ao lado do texto e acompanha a leitura; em telas menores vira uma lista recolhível antes do conteúdo. Títulos `####` ganham âncora, mas não entram no índice.
 
 ### Links
 
 Links internos e externos são tratados automaticamente pelo componente `Link` da pasta `components/mdx/link.tsx`:
 
 - `[texto](/rota)` → link interno com Next.js, sem recarregar a página
-- `[texto](https://...)` ou `[texto](http://...)` → abre em nova aba (`target="_blank"` e `rel="noopener noreferrer"`) e mostra um ícone de link externo
+- `[texto](https://...)` ou `[texto](http://...)` → abre em nova aba (`target="_blank"` e `rel="noopener noreferrer"`) e mostra um ícone de link externo, com o aviso "(abre em nova aba)" para leitores de tela
 - `[texto](#secao)` e `mailto:` → `<a>` simples, sem tratamento especial
 
 O `remark-gfm` também transforma endereços soltos no texto em links:
@@ -81,7 +81,7 @@ Lista de tarefas (via remark-gfm):
 
 ### Tabelas
 
-Suporte nativo via `remark-gfm`:
+Suporte nativo via `remark-gfm`. Tabelas largas ganham rolagem horizontal em vez de estourar a página:
 
 | Prop        |    Tipo     | Padrão   | Descrição                   |
 | ----------- | :---------: | -------- | --------------------------- |
@@ -94,7 +94,7 @@ Suporte nativo via `remark-gfm`:
 
 ## Código
 
-O `rehype-pretty-code` processa os blocos de código com syntax highlight automático, usando o tema One Dark Pro. O componente `CodeBlock` adiciona o botão de copiar. Blocos sem linguagem são exibidos como texto simples, e o código inline não recebe highlight.
+O `rehype-pretty-code` processa os blocos de código com syntax highlight automático, usando o tema One Dark Pro. O componente `CodeBlock` adiciona o botão de copiar, que ignora as linhas marcadas como removidas (`// [!code --]`, descrito adiante). Blocos sem linguagem são exibidos como texto simples, e o código inline não recebe highlight.
 
 Bloco simples:
 
@@ -159,6 +159,28 @@ console.log('focus');
 | `// [!code --]`        | Linha removida   |
 | `// [!code highlight]` | Linha destacada  |
 | `// [!code focus]`     | Linha em foco    |
+
+Para destacar sem mexer no código, use a meta da cerca, logo depois da linguagem, na linha que abre o bloco:
+
+| Meta da cerca | Efeito                                           |
+| ------------- | ------------------------------------------------ |
+| `{2,4-5}`     | Destaca a linha 2 e as linhas de 4 a 5           |
+| `/texto/`     | Destaca o trecho `texto` em todas as ocorrências |
+
+Linhas destacadas com `{2}`:
+
+```ts {2}
+const primeira = 1;
+const segunda = 2;
+const terceira = 3;
+```
+
+Trecho destacado com `/nome/`:
+
+```ts /nome/
+const nome = 'Ana';
+console.log(nome);
+```
 
 Linguagens suportadas: `ts`, `tsx`, `js`, `jsx`, `bash`, `css`, `json`, `html`, `md`, `mdx`, `sql`, `yaml` e [muitas outras](https://shiki.style/languages).
 
@@ -262,11 +284,38 @@ Salve com <Kbd>⌘</Kbd> + <Kbd>S</Kbd> no macOS ou <Kbd>Ctrl</Kbd> + <Kbd>S</Kb
 
 ---
 
+## Mark
+
+Destaca um trecho dentro do texto, como um marca-texto. O componente usa o elemento `<mark>` nativo, então leitores de tela e ferramentas de leitura o reconhecem como texto destacado. O trecho pode conter negrito, itálico, código inline e links.
+
+Esta frase tem um <Mark>trecho destacado</Mark> no meio, e este destaque tem <Mark>**negrito**, `código` e um [link](/blog/mdx-reference)</Mark> dentro.
+
+**Variantes:**
+
+<Mark>default</Mark> <Mark variant='success'>success</Mark>
+<Mark variant='info'>info</Mark> <Mark variant='danger'>danger</Mark>
+
+Se o destaque quebrar em mais de uma linha, o arredondamento e o espaçamento se repetem em cada linha.
+
+**Sintaxe:**
+
+```mdx
+Um <Mark>trecho destacado</Mark> e um <Mark variant='success'>destaque verde</Mark>.
+```
+
+| Prop      | Valores                             | Padrão    |
+| --------- | ----------------------------------- | --------- |
+| `variant` | `default` `success` `info` `danger` | `default` |
+
+As variantes são só visuais: não use a cor como a única forma de passar um significado. A sintaxe `==texto==` não é suportada, e o GitHub também não a renderiza.
+
+---
+
 ## Tabs
 
 Conteúdo alternado em abas. Ideal para mostrar o mesmo conteúdo em múltiplas variações — gerenciadores de pacotes, linguagens, frameworks.
 
-A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `label`. Para mostrar código dentro de uma aba, use um bloco de código normal, com as cercas em linhas próprias.
+Cada `Tab` recebe um `label`, e é ele que dá nome à aba: o `Tabs` lê os rótulos dos filhos, sem prop própria para isso. Sem nenhum `Tab`, ou com rótulos repetidos, o build falha. Para mostrar código dentro de uma aba, use um bloco de código normal, com as cercas em linhas próprias.
 
 <Tabs>
   <Tab label='npm'>
@@ -299,7 +348,7 @@ A prop `tabs` define os nomes das abas. Cada `Tab` recebe um `label`. Para mostr
   </Tab>
 </Tabs>
 
-Use `defaultValue` para definir qual aba abre por padrão (padrão: primeira aba):
+Use `defaultValue` para definir qual aba abre por padrão. O valor precisa ser igual ao `label` de uma das abas (padrão: a primeira aba):
 
 ```mdx
 <Tabs defaultValue='JavaScript'>
@@ -382,7 +431,7 @@ Por padrão (`type='single'`), apenas um item fica aberto por vez. Com `type='mu
   </AccordionItem>
 
 <AccordionItem title='Posso colocar código dentro?'>
-  Sim. O `AccordionContent` aceita qualquer conteúdo MDX, incluindo blocos de
+  Sim. O `AccordionItem` aceita qualquer conteúdo MDX, incluindo blocos de
   código, listas e outros componentes.
 </AccordionItem>
 
@@ -485,7 +534,7 @@ Imagens inseridas diretamente no Markdown. O caminho é relativo ao `index.mdx` 
 ![Descrição da imagem](./images/javascript-logo.svg 'Legenda opcional')
 ```
 
-O texto entre colchetes é o texto alternativo, e o título entre aspas vira a legenda exibida abaixo da imagem. Ao clicar na imagem, ela é ampliada.
+O texto entre colchetes é o texto alternativo, e o título entre aspas vira a legenda exibida abaixo da imagem.
 
 ### Componente Image
 
@@ -511,19 +560,18 @@ import MinhaImagem from './images/javascript-logo.svg';
 />
 ```
 
-| Prop      | Valores          | Padrão | Descrição                                            |
-| --------- | ---------------- | ------ | ---------------------------------------------------- |
-| `src`     | imagem importada | —      | Obrigatória                                          |
-| `alt`     | `string`         | —      | Texto alternativo, obrigatório                       |
-| `caption` | `string`         | —      | Legenda exibida abaixo da imagem                     |
-| `title`   | `string`         | —      | Usado como legenda quando não há `caption`           |
-| `zoom`    | `boolean`        | `true` | Amplia a imagem ao clicar; use `false` para desligar |
+| Prop      | Valores          | Padrão | Descrição                                  |
+| --------- | ---------------- | ------ | ------------------------------------------ |
+| `src`     | imagem importada | —      | Obrigatória                                |
+| `alt`     | `string`         | —      | Texto alternativo, obrigatório             |
+| `caption` | `string`         | —      | Legenda exibida abaixo da imagem           |
+| `title`   | `string`         | —      | Usado como legenda quando não há `caption` |
 
-### RatioImage
+### ImageRatio
 
-Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com imagens de tamanhos variados. Não tem zoom.
+Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com imagens de tamanhos variados.
 
-<RatioImage
+<ImageRatio
   src={MinhaImagem}
   alt='Descrição acessível'
   ratio={16 / 9}
@@ -533,7 +581,7 @@ Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com 
 **Sintaxe:**
 
 ```mdx
-<RatioImage
+<ImageRatio
   src={MinhaImagem}
   alt='Descrição acessível'
   ratio={16 / 9}
@@ -543,30 +591,30 @@ Imagem com proporção fixa, cortada com `object-cover`. Evita layout shift com 
 
 Proporções comuns: `16 / 9` (padrão), `4 / 3`, `1` (quadrado), `21 / 9` (ultrawide).
 
-### ImageGrid
+### Gallery
 
-Grade de imagens quadradas, cortadas com `object-cover`. O número de colunas é definido no `ImageGrid` e vale para todos os `GridImage` dentro dele.
+Grade de imagens quadradas, cortadas com `object-cover`. O número de colunas é definido no `Gallery` e vale para todos os `GalleryImage` dentro dele.
 
-<ImageGrid columns={3}>
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 1' />
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 2' />
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 3' />
-</ImageGrid>
+<Gallery columns={3}>
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 1' />
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 2' />
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 3' />
+</Gallery>
 
 **Sintaxe:**
 
 ```mdx
-<ImageGrid columns={3}>
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 1' />
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 2' />
-  <GridImage src={MinhaImagem} alt='...' caption='Legenda 3' />
-</ImageGrid>
+<Gallery columns={3}>
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 1' />
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 2' />
+  <GalleryImage src={MinhaImagem} alt='...' caption='Legenda 3' />
+</Gallery>
 ```
 
-| Prop      | Componente  | Valores  | Padrão |
-| --------- | ----------- | -------- | ------ |
-| `columns` | `ImageGrid` | `2` `3`  | `3`    |
-| `caption` | `GridImage` | `string` | —      |
+| Prop      | Componente     | Valores  | Padrão |
+| --------- | -------------- | -------- | ------ |
+| `columns` | `Gallery`      | `2` `3`  | `3`    |
+| `caption` | `GalleryImage` | `string` | —      |
 
 Com `columns={3}`, a grade usa 3 colunas a partir de telas médias e 2 colunas em telas menores.
 
@@ -579,14 +627,20 @@ O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o
 **Sintaxe:**
 
 ```mdx
-<Youtube id='m3DJmtLdqhU' title='Rótulo do botão' params='controls=0' />
+<Youtube
+  id='m3DJmtLdqhU'
+  title='Título do vídeo'
+  caption='Legenda opcional.'
+  params='controls=0'
+/>
 ```
 
-| Prop     | Valores  | Padrão             | Descrição                               |
-| -------- | -------- | ------------------ | --------------------------------------- |
-| `id`     | `string` | —                  | Código do vídeo, obrigatório            |
-| `title`  | `string` | `Reproduzir vídeo` | Rótulo acessível do botão de reprodução |
-| `params` | `string` | vazio              | Parâmetros do player, como `controls=0` |
+| Prop      | Valores  | Padrão | Descrição                                                                                                           |
+| --------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------- |
+| `id`      | `string` | —      | Código do vídeo, obrigatório                                                                                        |
+| `title`   | `string` | —      | Título do vídeo, acrescentado ao rótulo acessível do botão de reprodução. Sem ele, o rótulo é só "Reproduzir vídeo" |
+| `caption` | `string` | —      | Legenda exibida abaixo do player                                                                                    |
+| `params`  | `string` | vazio  | Parâmetros do player, como `controls=0`                                                                             |
 
 **Exemplo:**
 
@@ -596,7 +650,7 @@ O `id` é o código na URL do YouTube — em `youtube.com/watch?v=dQw4w9WgXcQ` o
 
 ## Tweet
 
-Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` → id é `123456789`. O tweet é exibido sempre no tema escuro.
+Embed de um tweet pelo `id`. O `id` está na URL: `x.com/user/status/123456789` → id é `123456789`. O tweet é exibido sempre no tema claro.
 
 **Sintaxe:**
 
