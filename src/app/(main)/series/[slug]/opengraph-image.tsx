@@ -1,27 +1,26 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
-
-import { ImageResponse } from 'next/og';
-
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
 import {
   AUTHOR_NAME,
   SERIES_STATUS_LABEL,
   SeriesStatus,
 } from '@/lib/constants';
-import { BASE_URL } from '@/lib/base-url';
-import { formatDate } from '@/lib/format';
+import { formatDate, formatReadingTime } from '@/lib/format';
+import {
+  OG_CONTENT_TYPE,
+  OG_SIZE,
+  OgLayout,
+  OgPill,
+  OgPillRow,
+} from '@/lib/og/layout';
+import { renderOgImage, renderOgNotFound } from '@/lib/og/response';
 
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+import type { OgPillColors } from '@/lib/og/layout';
+
+export const size = OG_SIZE;
+export const contentType = OG_CONTENT_TYPE;
 export const alt = `${AUTHOR_NAME} — Séries`;
 
-const FONTS_DIR = join(process.cwd(), 'src', 'assets', 'fonts');
-
-const statusStyle: Record<
-  SeriesStatus,
-  { color: string; border: string; background: string }
-> = {
+const statusColors: Record<SeriesStatus, OgPillColors> = {
   [SeriesStatus.PLANNED]: {
     background: '#f9fafb',
     border: '#e5e7eb',
@@ -47,132 +46,30 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 
-  if (!series) {
-    return new ImageResponse(<div>Not found</div>, { ...size, status: 404 });
-  }
-
-  const [regularFont, semiBoldFont] = await Promise.all([
-    readFile(join(FONTS_DIR, 'Geist-Regular.otf')),
-    readFile(join(FONTS_DIR, 'Geist-SemiBold.otf')),
-  ]);
+  if (!series) return renderOgNotFound();
 
   const postCount = series.posts.length;
-  const style = statusStyle[series.status];
-  const displayDate = formatDate(series.publishedAt, { dateStyle: 'medium' });
+  const postsLabel = `${postCount} ${postCount === 1 ? 'post' : 'posts'}`;
+  const summaryLabel =
+    postCount > 0 ?
+      `${postsLabel} · ${formatReadingTime(series.readingTime)} de leitura`
+    : postsLabel;
+  const publishedDate = formatDate(series.publishedAt, { dateStyle: 'medium' });
 
-  return new ImageResponse(
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        height: '100%',
-        background: '#ffffff',
-        fontFamily: 'Geist',
-      }}
+  return renderOgImage(
+    <OgLayout
+      title={series.title}
+      description={series.description}
+      footerStart={summaryLabel}
+      footerEnd={`Publicada em ${publishedDate}`}
     >
-      <div
-        style={{
-          display: 'flex',
-          height: 12,
-          background: 'linear-gradient(to right, #f97316, #fbbf24, #ea580c)',
-        }}
-      />
-
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          padding: '48px 72px',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 32,
-            fontWeight: 600,
-            color: '#f97316',
-          }}
-        >
-          {new URL(BASE_URL).hostname}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 52,
-              fontWeight: 600,
-              lineHeight: 1.1,
-              letterSpacing: '-2px',
-              color: '#111827',
-            }}
-          >
-            {series.title}
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 32,
-              lineHeight: 1.4,
-              color: '#6b7280',
-            }}
-          >
-            {series.description}
-          </div>
-
-          <div style={{ display: 'flex' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                padding: '6px 18px',
-                borderRadius: 999,
-                border: `2px solid ${style.border}`,
-                background: style.background,
-                color: style.color,
-                fontSize: 28,
-              }}
-            >
-              <div
-                style={{
-                  display: 'flex',
-                  width: 12,
-                  height: 12,
-                  borderRadius: 999,
-                  background: style.color,
-                }}
-              />
-              {SERIES_STATUS_LABEL[series.status]}
-            </div>
-          </div>
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: 28,
-            color: '#4b5563',
-            borderTop: '3px solid #e5e7eb',
-            paddingTop: 24,
-          }}
-        >
-          <span>{`${postCount} ${postCount === 1 ? 'post' : 'posts'} nesta série`}</span>
-          <span>{`Publicada em ${displayDate}`}</span>
-        </div>
-      </div>
-    </div>,
-    {
-      ...size,
-      fonts: [
-        { name: 'Geist', data: regularFont, weight: 400, style: 'normal' },
-        { name: 'Geist', data: semiBoldFont, weight: 600, style: 'normal' },
-      ],
-    },
+      <OgPillRow>
+        <OgPill
+          label={SERIES_STATUS_LABEL[series.status]}
+          colors={statusColors[series.status]}
+          showDot
+        />
+      </OgPillRow>
+    </OgLayout>,
   );
 }
