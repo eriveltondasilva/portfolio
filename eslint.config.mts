@@ -63,6 +63,7 @@ const eslintConfig = defineConfig([
     // Custom ignores:
     'src/components/ui/**',
     'generated/**',
+    'scripts/utils/templates/**',
   ]),
 ]);
 

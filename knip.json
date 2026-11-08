@@ -1,5 +1,10 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "entry": ["src/lib/plugins/rehype-pretty-code.ts"],
-  "ignore": ["src/components/ui/**", "content/posts/**"]
+  "ignore": [
+    "src/components/ui/**",
+    "content/posts/**",
+    "generated/**",
+    "scripts/utils/templates/**"
+  ]
 }

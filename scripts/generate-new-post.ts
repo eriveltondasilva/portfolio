@@ -20,7 +20,7 @@ import { readYaml } from './utils/files';
 import { BuildError, formatZodError, resolveAll } from './utils/errors';
 import { log } from './utils/logger';
 
-const TEMPLATE_DIR = join(import.meta.dir, 'utils', 'templates', 'post');
+const TEMPLATE_DIR = join(import.meta.dir, 'utils', 'templates');
 
 type Validate = (value: string) => string | undefined;
 
