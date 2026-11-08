@@ -5,16 +5,19 @@ import {
   SeriesStatus,
 } from '@/lib/constants';
 import { formatDate, formatReadingTime } from '@/lib/format';
+import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';
 import {
-  OG_CONTENT_TYPE,
-  OG_SIZE,
-  OgLayout,
-  OgPill,
-  OgPillRow,
+  OgBrand,
+  OgContent,
+  OgDescription,
+  OgFooter,
+  OgFrame,
+  OgTitle,
 } from '@/lib/og/layout';
+import { OgPill, OgPillRow } from '@/lib/og/pill';
 import { renderOgImage, renderOgNotFound } from '@/lib/og/response';
 
-import type { OgPillColors } from '@/lib/og/layout';
+import type { OgPillColors } from '@/lib/og/pill';
 
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
@@ -57,19 +60,27 @@ export default async function OGImage({ params }: PageProps<'/series/[slug]'>) {
   const publishedDate = formatDate(series.publishedAt, { dateStyle: 'medium' });
 
   return renderOgImage(
-    <OgLayout
-      title={series.title}
-      description={series.description}
-      footerStart={summaryLabel}
-      footerEnd={`Publicada em ${publishedDate}`}
-    >
-      <OgPillRow>
-        <OgPill
-          label={SERIES_STATUS_LABEL[series.status]}
-          colors={statusColors[series.status]}
-          showDot
-        />
-      </OgPillRow>
-    </OgLayout>,
+    <OgFrame>
+      <OgBrand section='series' />
+
+      <OgContent>
+        <OgTitle>{series.title}</OgTitle>
+
+        <OgDescription>{series.description}</OgDescription>
+
+        <OgPillRow>
+          <OgPill
+            label={SERIES_STATUS_LABEL[series.status]}
+            colors={statusColors[series.status]}
+            showDot
+          />
+        </OgPillRow>
+      </OgContent>
+
+      <OgFooter>
+        <span>{summaryLabel}</span>
+        <span>{`Publicada em ${publishedDate}`}</span>
+      </OgFooter>
+    </OgFrame>,
   );
 }
