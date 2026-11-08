@@ -85,16 +85,21 @@ export default async function SeriesDetailPage({
       </Link>
 
       {/* Series header */}
-      <header className='@container space-y-3'>
+      <header className='@container'>
         <SeriesStatusBadge status={series.status} size='lg' />
 
+        {/* Title */}
         <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-4xl dark:text-zinc-50'>
           {series.title}
         </h1>
 
-        <p className='text-zinc-600 dark:text-zinc-400'>{series.description}</p>
+        {/* Description */}
+        <p className='mt-1 text-zinc-600 dark:text-zinc-400'>
+          {series.description}
+        </p>
 
-        <ul className='mt-3 flex flex-col gap-0.5 text-sm text-zinc-500 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
+        {/* Meta info */}
+        <ul className='mt-2 flex flex-col gap-0.5 text-sm text-zinc-400 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
           <li>
             Publicada em{' '}
             <time dateTime={series.publishedAt}>

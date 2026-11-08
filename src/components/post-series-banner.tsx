@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { getSeriesBySlug } from '@/lib/blog/series';
 import { Icon } from '@/components/icon';
 
+import { Separator } from './separator';
+
 interface Props {
   slug?: string;
   order?: number;
@@ -20,7 +22,9 @@ export function PostSeriesBanner({ slug, order }: Props) {
   const total = series.posts.length;
 
   return (
-    <section aria-label='Nesta série' className='mt-6'>
+    <section aria-label='Nesta série'>
+      <Separator />
+
       <h2 className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
         <Icon iconNode={LayersIcon} className='text-orange-500' />
         Nesta série

@@ -3,9 +3,9 @@ import { cn } from '@/lib/utils';
 
 import type { ComponentProps } from 'react';
 
-type Props = ComponentProps<typeof SeparatorBase>;
+type SeparatorProps = ComponentProps<typeof SeparatorBase>;
 
-export function Separator({ className, ...props }: Props) {
+export function Separator({ className, ...props }: SeparatorProps) {
   return (
     <SeparatorBase
       className={cn('my-10 dark:bg-zinc-700/60', className)}

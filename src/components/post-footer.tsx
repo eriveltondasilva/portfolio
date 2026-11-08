@@ -12,7 +12,7 @@ interface Props {
 
 export function PostFooter({ slug, editUrl, isArchived = false }: Props) {
   return (
-    <footer className='flex flex-wrap items-center justify-between gap-x-4 gap-y-2'>
+    <footer className='mt-6 flex flex-wrap items-center justify-between gap-x-4 gap-y-2'>
       <PostReactions slug={slug} readOnly={isArchived} />
 
       <Button variant='link' asChild>

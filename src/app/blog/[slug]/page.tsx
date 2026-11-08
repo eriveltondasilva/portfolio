@@ -12,7 +12,6 @@ import { PostToc } from '@/components/post-toc';
 import { PostTocMobile } from '@/components/post-toc-mobile';
 import { ReadingProgress } from '@/components/reading-progress';
 import { RelatedPosts } from '@/components/related-posts';
-import { Separator } from '@/components/separator';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -142,8 +141,6 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           <div className='prose max-w-none prose-zinc dark:prose-invert prose-headings:scroll-mt-24 prose-hr:my-10'>
             <Content />
           </div>
-
-          <Separator />
 
           <PostFooter slug={slug} editUrl={editUrl} isArchived={isArchived} />
         </article>
