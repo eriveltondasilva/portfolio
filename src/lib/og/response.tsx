@@ -3,7 +3,7 @@ import { join } from 'node:path';
 
 import { ImageResponse } from 'next/og';
 
-import { OG_SIZE } from './layout';
+import { OG_SIZE } from './config';
 
 import type { ReactElement } from 'react';
 
@@ -25,11 +25,16 @@ async function loadFonts(): Promise<OgFonts> {
   ];
 }
 
-// Read once per build instead of once per generated image
 let fontsPromise: Promise<OgFonts> | undefined;
 
 function getFonts(): Promise<OgFonts> {
-  return (fontsPromise ??= loadFonts());
+  // A rejected promise would otherwise stay cached until the process restarts
+  fontsPromise ??= loadFonts().catch((error: unknown) => {
+    fontsPromise = undefined;
+    throw error;
+  });
+
+  return fontsPromise;
 }
 
 export async function renderOgImage(element: ReactElement) {

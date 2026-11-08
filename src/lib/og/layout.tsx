@@ -6,47 +6,18 @@ import { BASE_URL } from '@/lib/base-url';
 
 import type { ReactNode } from 'react';
 
-export const OG_SIZE = { width: 1200, height: 630 };
-export const OG_CONTENT_TYPE = 'image/png';
-
 const HOSTNAME = new URL(BASE_URL).hostname;
 
 const TITLE_STYLES = {
-  default: { fontSize: 52, letterSpacing: '-2px' },
-  hero: { fontSize: 76, letterSpacing: '-3px' },
+  default: { fontSize: 52, letterSpacing: '-2px', lineClamp: 3 },
+  hero: { fontSize: 76, letterSpacing: '-3px', lineClamp: 2 },
 } as const;
 
-export interface OgPillColors {
-  color: string;
-  border: string;
-  background: string;
+interface WithChildren {
+  children: ReactNode;
 }
 
-const DEFAULT_PILL_COLORS: OgPillColors = {
-  color: '#ea580c',
-  border: '#fed7aa',
-  background: '#fff7ed',
-};
-
-// ─────────────────────────────────────
-
-interface OgLayoutProps {
-  title: string;
-  description: string;
-  footerStart: string;
-  footerEnd: string;
-  titleVariant?: keyof typeof TITLE_STYLES;
-  children?: ReactNode;
-}
-
-export function OgLayout({
-  title,
-  description,
-  footerStart,
-  footerEnd,
-  titleVariant = 'default',
-  children,
-}: OgLayoutProps) {
+export function OgFrame({ children }: WithChildren) {
   return (
     <div
       style={{
@@ -75,105 +46,89 @@ export function OgLayout({
           padding: '48px 72px',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            fontSize: 32,
-            fontWeight: 600,
-            color: '#f97316',
-          }}
-        >
-          {HOSTNAME}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <div
-            style={{
-              display: 'flex',
-              ...TITLE_STYLES[titleVariant],
-              fontWeight: 600,
-              lineHeight: 1.1,
-              color: '#111827',
-            }}
-          >
-            {title}
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 32,
-              lineHeight: 1.4,
-              color: '#6b7280',
-            }}
-          >
-            {description}
-          </div>
-
-          {children}
-        </div>
-
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: 28,
-            color: '#4b5563',
-            borderTop: '3px solid #e5e7eb',
-            paddingTop: 24,
-          }}
-        >
-          <span>{footerStart}</span>
-          <span>{footerEnd}</span>
-        </div>
+        {children}
       </div>
     </div>
   );
 }
 
-// ─────────────────────────────────────
-
-export function OgPillRow({ children }: { children: ReactNode }) {
-  return <div style={{ display: 'flex', gap: 12 }}>{children}</div>;
-}
-
-interface OgPillProps {
-  label: string;
-  colors?: OgPillColors;
-  showDot?: boolean;
-}
-
-export function OgPill({
-  label,
-  colors = DEFAULT_PILL_COLORS,
-  showDot = false,
-}: OgPillProps) {
+export function OgBrand({ section }: { section?: string }) {
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 12,
-        padding: '6px 18px',
-        borderRadius: 999,
-        border: `2px solid ${colors.border}`,
-        background: colors.background,
-        color: colors.color,
-        fontSize: 28,
+        fontSize: 32,
+        fontWeight: 600,
       }}
     >
-      {showDot && (
-        <div
-          style={{
-            display: 'flex',
-            width: 12,
-            height: 12,
-            borderRadius: 999,
-            background: colors.color,
-          }}
-        />
+      <span style={{ color: '#f97316' }}>{HOSTNAME}</span>
+      {section && (
+        <>
+          <span style={{ margin: '0 16px', color: '#d1d5db' }}>/</span>
+          <span style={{ color: '#6b7280' }}>{section}</span>
+        </>
       )}
-      {label}
+    </div>
+  );
+}
+
+export function OgContent({ children }: WithChildren) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {children}
+    </div>
+  );
+}
+
+export function OgTitle({
+  children,
+  variant = 'default',
+}: WithChildren & { variant?: keyof typeof TITLE_STYLES }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        ...TITLE_STYLES[variant],
+        fontWeight: 600,
+        lineHeight: 1.1,
+        color: '#111827',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function OgDescription({ children }: WithChildren) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        fontSize: 32,
+        lineHeight: 1.4,
+        lineClamp: 2,
+        color: '#6b7280',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function OgFooter({ children }: WithChildren) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: 28,
+        color: '#4b5563',
+        borderTop: '3px solid #e5e7eb',
+        paddingTop: 24,
+      }}
+    >
+      {children}
     </div>
   );
 }
