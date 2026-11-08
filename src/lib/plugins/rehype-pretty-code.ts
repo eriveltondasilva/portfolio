@@ -21,7 +21,7 @@ const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
 /**
  * Lives in its own file because Turbopack takes plugins by name with serializable options,
  * and `transformers` are functions.
- **/
+ */
 export default function rehypeCode() {
   return rehypePrettyCode(rehypePrettyCodeOptions);
 }

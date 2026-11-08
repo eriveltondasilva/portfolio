@@ -3,7 +3,7 @@
  * and this value depends on server-only env vars, so the client could resolve a different URL.
  */
 function resolveBaseUrl(): string {
-  const siteUrl = process.env['NEXT_PUBLIC_SITE_URL'];
+  const siteUrl = process.env['SITE_URL'];
   if (siteUrl) return siteUrl.replace(/\/+$/, '');
 
   const vercelUrl = process.env['VERCEL_PROJECT_PRODUCTION_URL'];
