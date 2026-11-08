@@ -12,6 +12,8 @@ import { RICH_TEXT_CLASSES } from './rich-text';
 
 import type { ComponentProps, ReactNode } from 'react';
 
+// ─────────────────────────────────────
+
 function getTabLabels(children: ReactNode): string[] {
   const labels = Children.toArray(children).flatMap((child) =>
     (

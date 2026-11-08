@@ -17,6 +17,8 @@ import { cn } from '@/lib/utils';
 import type { LucideIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';
 
+// ─────────────────────────────────────
+
 const FILE_ICON_GROUPS: ReadonlyArray<readonly [LucideIcon, string[]]> = [
   [FileImageIcon, ['png', 'jpg', 'jpeg', 'webp', 'avif', 'gif', 'svg']],
   [FileCodeIcon, ['ts', 'tsx', 'js', 'jsx', 'php', 'css', 'html']],
@@ -26,7 +28,7 @@ const FILE_ICON_GROUPS: ReadonlyArray<readonly [LucideIcon, string[]]> = [
   [FileTerminalIcon, ['sh']],
 ];
 
-// Map (not a plain object) so an extension like "constructor" cannot hit Object.prototype
+// ! Map (not a plain object) so an extension like "constructor" cannot hit Object.prototype
 const FILE_ICON_BY_EXTENSION = new Map(
   FILE_ICON_GROUPS.flatMap(([icon, extensions]) =>
     extensions.map((extension) => [extension, icon] as const),
@@ -61,6 +63,8 @@ export function FileTree({ className, children }: ComponentProps<'div'>) {
   );
 }
 
+// ─────────────────────────────────────
+
 interface FileTreeFolderProps extends ComponentProps<'li'> {
   name: string;
   defaultOpen?: boolean;
@@ -76,19 +80,21 @@ export function FileTreeFolder({
     <li {...props}>
       <details open={defaultOpen}>
         <summary className='flex cursor-pointer list-none items-center gap-1.5 py-0.5 text-sm text-foreground/80 transition-colors marker:hidden hover:text-foreground [&::-webkit-details-marker]:hidden'>
-          {/* The selector targets this folder's own details, so nested folders keep independent states */}
           <Icon
             iconNode={ChevronRightIcon}
             className='size-3.5 shrink-0 text-muted-foreground transition-transform duration-200 ease-out motion-reduce:transition-none [details[open]>summary_&]:rotate-90'
           />
+
           <Icon
             iconNode={FolderIcon}
             className='size-3.5 shrink-0 text-blue-400 [details[open]>summary_&]:hidden'
           />
+
           <Icon
             iconNode={FolderOpenIcon}
             className='hidden size-3.5 shrink-0 text-blue-400 [details[open]>summary_&]:block'
           />
+
           <span className='font-medium'>{name}</span>
         </summary>
 
@@ -97,6 +103,8 @@ export function FileTreeFolder({
     </li>
   );
 }
+
+// ─────────────────────────────────────
 
 interface FileTreeFileProps extends Omit<ComponentProps<'li'>, 'children'> {
   name: string;
@@ -110,7 +118,6 @@ export function FileTreeFile({
   ...props
 }: FileTreeFileProps) {
   return (
-    // pl-3.5 + px-1.5 = 20px: the icon stays in the same column as sibling folder icons
     <li className={cn('pl-3.5', className)} {...props}>
       <div
         className={cn(
@@ -121,7 +128,9 @@ export function FileTreeFile({
         )}
       >
         <Icon iconNode={getFileIcon(name)} className='size-3.5 shrink-0' />
+
         <span>{name}</span>
+
         {highlight && <span className='sr-only'>(destacado)</span>}
       </div>
     </li>

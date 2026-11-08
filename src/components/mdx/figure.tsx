@@ -15,6 +15,7 @@ export function Figure({
   return (
     <figure className={cn('not-prose my-6', className)} {...props}>
       {children}
+
       {caption && (
         <figcaption className='mt-2 text-center text-xs text-muted-foreground italic'>
           {caption}

@@ -4,6 +4,8 @@ import { RICH_TEXT_CLASSES } from './rich-text';
 
 import type { ComponentProps } from 'react';
 
+// ─────────────────────────────────────
+
 export function Steps({ className, children, ...props }: ComponentProps<'ol'>) {
   return (
     <ol
@@ -39,6 +41,7 @@ export function Step({ title, className, children, ...props }: StepProps) {
   return (
     <li className={cn('step', className)} {...props}>
       <p className='step-title'>{title}</p>
+
       <div className={RICH_TEXT_CLASSES}>{children}</div>
     </li>
   );

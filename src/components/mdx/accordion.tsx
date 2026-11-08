@@ -10,6 +10,8 @@ import { RICH_TEXT_CLASSES } from './rich-text';
 
 import type { ComponentProps } from 'react';
 
+// ─────────────────────────────────────
+
 interface AccordionBaseProps {
   className?: string;
   children: React.ReactNode;
@@ -60,6 +62,7 @@ export function AccordionItem({
   return (
     <AccordionItemRoot value={value ?? title} {...props}>
       <AccordionTrigger>{title}</AccordionTrigger>
+
       <AccordionContent>
         <div className={RICH_TEXT_CLASSES}>{children}</div>
       </AccordionContent>
