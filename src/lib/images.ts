@@ -4,7 +4,7 @@ import type { ImageProps } from 'next/image';
  * Post content width: max-w-3xl (768px) minus md:px-8 on both sides.
  * Keep in sync with the <main> in app/blog/[slug]/page.tsx.
  */
-export const POST_CONTENT_WIDTH = 704;
+const POST_CONTENT_WIDTH = 704;
 
 const MOBILE_MAX_WIDTH = 767; // below Tailwind's md breakpoint
 const MOBILE_GUTTER_REM = 2; // px-4 on both sides

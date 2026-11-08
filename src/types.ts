@@ -8,8 +8,9 @@ import type { Toc } from '@stefanprobst/rehype-extract-toc';
 import type { MDXContent, MDXModule } from 'mdx/types';
 import type { z } from 'zod';
 
+type Post = z.infer<typeof postSchema>;
+
 export type Series = z.infer<typeof seriesSchema>;
-export type Post = z.infer<typeof postSchema>;
 export type Author = z.infer<typeof authorSchema>;
 export type Project = z.infer<typeof projectSchema>;
 
