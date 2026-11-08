@@ -1,7 +1,7 @@
 import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
-import { AUTHORS_SOURCE_FILE, SERIES_SOURCE_FILE } from '@/lib/paths';
 import { authorSchema, seriesSchema } from '@/lib/schemas';
 
+import { AUTHORS_SOURCE_FILE, SERIES_SOURCE_FILE } from './paths';
 import { BuildError, throwIfErrors, formatZodError } from './errors';
 import { checkUniqueSlugs } from './validations';
 import { readYaml } from './files';

@@ -1,7 +1,8 @@
 import { join } from 'node:path';
 
 import { POST_META_FILE } from '@/lib/constants';
-import { POSTS_DIR } from '@/lib/paths';
+
+import { POSTS_DIR } from './paths';
 
 import type { PostIndex } from '@/types';
 

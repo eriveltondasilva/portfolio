@@ -1,12 +1,12 @@
 import { z } from 'zod';
 
 import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas';
+
 import {
   AUTHORS_SCHEMA_OUTPUT,
   POST_SCHEMA_OUTPUT,
   SERIES_SCHEMA_OUTPUT,
-} from '@/lib/paths';
-
+} from './utils/paths';
 import { runScript } from './utils/run-script';
 import { log } from './utils/logger';
 import { writeJson } from './utils/files';

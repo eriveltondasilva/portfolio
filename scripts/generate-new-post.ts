@@ -6,7 +6,6 @@ import { parseArgs } from 'node:util';
 import { z } from 'zod';
 
 import { postSchema } from '@/lib/schemas';
-import { POSTS_DIR } from '@/lib/paths';
 import {
   POST_IMAGES_DIR,
   POST_META_FILE,
@@ -14,6 +13,7 @@ import {
   PostStatus,
 } from '@/lib/constants';
 
+import { POSTS_DIR } from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
 import { readYaml } from './utils/files';

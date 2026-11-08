@@ -1,10 +1,10 @@
 import { Octokit } from '@octokit/rest';
 
 import { projectSchema } from '@/lib/schemas';
-import { PROJECTS_INDEX_OUTPUT } from '@/lib/paths';
 import { getUrlPathname } from '@/lib/format';
 import { GithubTopic } from '@/lib/constants';
 
+import { PROJECTS_INDEX_OUTPUT } from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readPrimaryAuthor } from './utils/content';
 import {

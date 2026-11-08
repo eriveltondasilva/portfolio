@@ -4,14 +4,14 @@ import { join } from 'node:path';
 import getReadingTime from 'reading-time';
 
 import { postSchema } from '@/lib/schemas';
+import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
+
 import {
   AUTHORS_INDEX_OUTPUT,
   POSTS_DIR,
   POSTS_INDEX_OUTPUT,
   SERIES_INDEX_OUTPUT,
-} from '@/lib/paths';
-import { POST_CONTENT_FILE, POST_META_FILE, PostStatus } from '@/lib/constants';
-
+} from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
 import {
