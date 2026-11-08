@@ -9,14 +9,17 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
 
-  // # Prettier desativa regras conflitantes
-  prettier,
-
   // # Custom rules
   {
     rules: {
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'react/no-unescaped-entities': 'off',
+      eqeqeq: ['error', 'always'],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+      ],
     },
   },
 
@@ -49,11 +52,12 @@ const eslintConfig = defineConfig([
 
       'import-x/no-duplicates': 'error',
       'import-x/newline-after-import': 'error',
-      'import-x/no-unresolved': 'error',
     },
   },
 
-  // # Global ignores
+  // # Prettier desativa regras conflitantes
+  prettier,
+
   globalIgnores([
     // Default ignores of eslint-config-next:
     '.next/**',
