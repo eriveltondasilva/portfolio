@@ -4,7 +4,6 @@
   "ignore": [
     "src/components/ui/**",
     "content/posts/**",
-    "generated/**",
     "scripts/utils/templates/**"
   ]
 }
