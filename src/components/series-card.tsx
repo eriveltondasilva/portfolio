@@ -52,7 +52,7 @@ export function SeriesCard({
       </p>
 
       {/* Meta info */}
-      <div className='mt-2 flex flex-col gap-0.5 text-sm text-zinc-400 @md:flex-row @md:flex-wrap @md:items-center dark:text-zinc-500'>
+      <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @md:flex-row @md:flex-wrap @md:items-center dark:text-zinc-500'>
         <span>
           Publicada em{' '}
           <time dateTime={series.publishedAt}>

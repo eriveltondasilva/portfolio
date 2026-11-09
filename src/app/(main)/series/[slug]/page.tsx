@@ -94,7 +94,7 @@ export default async function SeriesDetailPage({
         </p>
 
         {/* Meta info */}
-        <ul className='mt-2 flex flex-col gap-0.5 text-sm text-zinc-400 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
+        <ul className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
           <li>
             Publicada em{' '}
             <time dateTime={series.publishedAt}>

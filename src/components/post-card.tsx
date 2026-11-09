@@ -50,7 +50,6 @@ export function PostCard({ post, className, ...props }: Props) {
       </p>
 
       {/* Meta */}
-      {/* Stacked while the card is narrow; the dot only shows when both items fit on one line */}
       <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @sm:flex-row @sm:flex-wrap @sm:items-center dark:text-zinc-500'>
         <span>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
