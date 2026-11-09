@@ -35,12 +35,6 @@ export function PostHeader({ post, authors }: Props) {
         </h1>
 
         <div className='mt-3 min-w-0 space-y-1.5 text-sm text-zinc-500 sm:col-span-2 sm:row-start-2 dark:text-zinc-400'>
-          {authors.length > 0 && (
-            <p>
-              Por <PostAuthors authors={authors} />
-            </p>
-          )}
-
           <ul className='flex flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-center'>
             <li>
               Publicado em{' '}
@@ -66,6 +60,12 @@ export function PostHeader({ post, authors }: Props) {
               <span>{readingTime} min de leitura</span>
             </li>
           </ul>
+
+          {authors.length > 0 && (
+            <p>
+              Por <PostAuthors authors={authors} />
+            </p>
+          )}
         </div>
 
         <div className='mt-3 sm:col-start-2 sm:row-start-1 sm:mt-0'>
