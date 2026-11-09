@@ -1,10 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "bunVersion": "1.x",
-  "crons": [
-    {
+  "bunVersion": "1.4.x",
+  "framework": "nextjs",
+  "schedules": {
+    "keepalive": {
+      "schedule": "0 12 * * 1,4",
       "path": "/api/keepalive",
-      "schedule": "0 12 * * 1,4"
+      "requestMethod": "GET"
     }
-  ]
+  }
 }
