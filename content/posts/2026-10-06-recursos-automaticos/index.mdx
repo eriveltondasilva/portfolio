@@ -24,7 +24,7 @@ Cada post monta os metadados a partir do `meta.yml` e dos autores:
 
 - o título da aba é o título do post seguido do nome do site;
 - a `description` vira a descrição para buscadores, para o Open Graph e para o Twitter (daí o limite de 160 caracteres);
-- a URL canônica é `/blog/slug-do-post`, montada sobre a `NEXT_PUBLIC_SITE_URL`;
+- a URL canônica é `/blog/slug-do-post`, montada sobre a `SITE_URL`;
 - o Open Graph usa o tipo `article`, com as datas de publicação e de modificação, as tags e os autores;
 - o cartão do Twitter é o `summary_large_image`;
 - posts `archived` recebem `noindex, follow`, para os buscadores pararem de indexá-los sem deixar de seguir os links.

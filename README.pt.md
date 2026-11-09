@@ -44,7 +44,7 @@ O servidor de desenvolvimento não regenera os índices de conteúdo: rode `bun 
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Para as reações | Credenciais do Upstash Redis. O resto do site não usa Redis.                                               |
 | `RATE_LIMIT_SECRET`                                  | Para as reações | Chave usada para gerar o hash dos IPs antes de chegarem ao limitador. Gere uma com `openssl rand -hex 32`. |
 | `CRON_SECRET`                                        | Em produção     | Autoriza a chamada do cron em `/api/keepalive`.                                                            |
-| `NEXT_PUBLIC_SITE_URL`                               | Em produção     | URL pública do site (sitemap, RSS, Open Graph). Na Vercel, se faltar, usa o domínio de produção.           |
+| `SITE_URL`                                           | Em produção     | URL pública do site (sitemap, RSS, Open Graph). Na Vercel, se faltar, usa o domínio de produção.           |
 | `GITHUB_TOKEN`                                       | Não             | Aumenta o limite de requisições da API do GitHub ao gerar a lista de projetos.                             |
 
 ## Escrevendo um post

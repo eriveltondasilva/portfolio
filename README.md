@@ -44,7 +44,7 @@ The dev server does not regenerate the content indexes: run `bun run build:blog`
 | `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | For reactions | Upstash Redis credentials. The rest of the site does not use Redis.                                         |
 | `RATE_LIMIT_SECRET`                                  | For reactions | Key used to hash IP addresses before they reach the rate limiter. Generate one with `openssl rand -hex 32`. |
 | `CRON_SECRET`                                        | In production | Authorizes the `/api/keepalive` cron call.                                                                  |
-| `NEXT_PUBLIC_SITE_URL`                               | In production | Public site URL (sitemap, RSS, Open Graph). On Vercel it falls back to the production domain when missing.  |
+| `SITE_URL`                                           | In production | Public site URL (sitemap, RSS, Open Graph). On Vercel it falls back to the production domain when missing.  |
 | `GITHUB_TOKEN`                                       | No            | Raises the GitHub API rate limit when generating the project list.                                          |
 
 ## Writing a post

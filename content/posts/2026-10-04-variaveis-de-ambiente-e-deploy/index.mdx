@@ -12,7 +12,7 @@ GITHUB_TOKEN=
 CRON_SECRET=
 RATE_LIMIT_SECRET=
 
-NEXT_PUBLIC_SITE_URL=
+SITE_URL=
 
 UPSTASH_REDIS_REST_URL=
 UPSTASH_REDIS_REST_TOKEN=
@@ -21,7 +21,7 @@ UPSTASH_REDIS_REST_TOKEN=
 | Variável                   | Usada por                                                           | Lida em  | Sem ela                                                                                                              |
 | -------------------------- | ------------------------------------------------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------- |
 | `GITHUB_TOKEN`             | Script `build:projects`                                             | Build    | Opcional: o script usa o limite de requisições sem autenticação do GitHub                                            |
-| `NEXT_PUBLIC_SITE_URL`     | Metadados, sitemap, RSS, imagens Open Graph e botão de compartilhar | Build    | Usa `VERCEL_PROJECT_PRODUCTION_URL`; sem ela, `http://localhost:3000` em desenvolvimento e erro no build de produção |
+| `SITE_URL`     | Metadados, sitemap, RSS, imagens Open Graph e botão de compartilhar | Build    | Usa `VERCEL_PROJECT_PRODUCTION_URL`; sem ela, `http://localhost:3000` em desenvolvimento e erro no build de produção |
 | `UPSTASH_REDIS_REST_URL`   | Reações, limite de requisições e keepalive                          | Execução | Reações e keepalive deixam de funcionar                                                                              |
 | `UPSTASH_REDIS_REST_TOKEN` | Reações, limite de requisições e keepalive                          | Execução | Reações e keepalive deixam de funcionar                                                                              |
 | `RATE_LIMIT_SECRET`        | Limite de requisições das reações                                   | Execução | Salvar ou remover uma reação responde `500`; a leitura das contagens continua                                        |
@@ -35,14 +35,14 @@ openssl rand -hex 32
 
 Trocar o `RATE_LIMIT_SECRET` só reinicia os contadores do limite de requisições; as reações já registradas não são afetadas.
 
-<Callout variant='warning' title='NEXT_PUBLIC_SITE_URL precisa de protocolo'>
+<Callout variant='warning' title='SITE_URL precisa de protocolo'>
   O valor deve ser uma URL completa, como `https://meusite.com` (barras no final
   são removidas). Sem o `https://`, o Next.js lança `Invalid URL` ao montar os
   metadados. E, como variáveis com prefixo `NEXT_PUBLIC_` são embutidas no
   código durante o build, alterar o valor exige um novo build.
 </Callout>
 
-Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VERCEL_PROJECT_PRODUCTION_URL`, que traz o domínio de produção da Vercel. Se nenhuma das duas estiver definida, o desenvolvimento cai em `http://localhost:3000`, mas o build de produção falha com `NEXT_PUBLIC_SITE_URL is not set`. É de propósito: assim o sitemap e as imagens de compartilhamento nunca saem com links para localhost.
+Quando `SITE_URL` não existe, o projeto tenta usar a variável `VERCEL_PROJECT_PRODUCTION_URL`, que traz o domínio de produção da Vercel. Se nenhuma das duas estiver definida, o desenvolvimento cai em `http://localhost:3000`, mas o build de produção falha com `SITE_URL is not set`. É de propósito: assim o sitemap e as imagens de compartilhamento nunca saem com links para localhost.
 
 ---
 
@@ -55,7 +55,7 @@ Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VER
 
     ```bash title=".env.local"
     GITHUB_TOKEN=ghp_xxx
-    NEXT_PUBLIC_SITE_URL=http://localhost:3000
+    SITE_URL=http://localhost:3000
     UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
     UPSTASH_REDIS_REST_TOKEN=xxx
     RATE_LIMIT_SECRET=um-valor-longo-e-aleatorio
@@ -67,7 +67,7 @@ Quando `NEXT_PUBLIC_SITE_URL` não existe, o projeto tenta usar a variável `VER
   </Tab>
   <Tab label='Vercel'>
     Cadastre as seis variáveis em **Project Settings → Environment Variables** e faça um novo
-    deploy. O `GITHUB_TOKEN` é opcional, mas recomendado. Use a URL de produção em `NEXT_PUBLIC_SITE_URL`.
+    deploy. O `GITHUB_TOKEN` é opcional, mas recomendado. Use a URL de produção em `SITE_URL`.
 
     Quando `CRON_SECRET` existe no projeto, a Vercel envia automaticamente o cabeçalho
     `Authorization: Bearer` com esse valor em cada chamada do cron.
@@ -150,7 +150,7 @@ O `vercel.json` define `bunVersion`, então a Vercel executa o projeto com Bun, 
 ### Antes do primeiro deploy
 
 - [ ] As seis variáveis cadastradas na plataforma de deploy (`GITHUB_TOKEN` é opcional)
-- [ ] `NEXT_PUBLIC_SITE_URL` com `https://` e o domínio final
+- [ ] `SITE_URL` com `https://` e o domínio final
 - [ ] `RATE_LIMIT_SECRET` e `CRON_SECRET` com valores longos e aleatórios
 - [ ] Banco do Upstash criado e as duas variáveis copiadas do painel
 - [ ] Cron registrado no `vercel.json` (veja [Reações e Redis](/blog/reacoes-e-redis#keepalive-do-redis))
@@ -166,13 +166,13 @@ Troque o `status` para `archived` e, se fizer sentido, preencha `updatedAt`. O p
 
 <Accordion>
   <AccordionItem title='Invalid URL em layout.tsx'>
-    `NEXT_PUBLIC_SITE_URL` está sem protocolo ou veio vazia. Defina-a como uma URL completa e
+    `SITE_URL` está sem protocolo ou veio vazia. Defina-a como uma URL completa e
     reinicie o servidor.
   </AccordionItem>
 
-<AccordionItem title='O build de produção falha com NEXT_PUBLIC_SITE_URL is not set'>
-  Nem `NEXT_PUBLIC_SITE_URL` nem `VERCEL_PROJECT_PRODUCTION_URL` estão
-  definidas. Cadastre `NEXT_PUBLIC_SITE_URL` e faça um novo build.
+<AccordionItem title='O build de produção falha com SITE_URL is not set'>
+  Nem `SITE_URL` nem `VERCEL_PROJECT_PRODUCTION_URL` estão
+  definidas. Cadastre `SITE_URL` e faça um novo build.
 </AccordionItem>
 
 <AccordionItem title='O build falha antes de compilar o site'>
