@@ -34,7 +34,7 @@ export function PostHeader({ post, authors }: Props) {
           {title}
         </h1>
 
-        <div className='mt-3 min-w-0 space-y-1.5 text-sm text-zinc-500 sm:col-span-2 sm:row-start-2 dark:text-zinc-400'>
+        <div className='mt-2 min-w-0 space-y-1 text-sm text-zinc-500 sm:col-span-2 sm:row-start-2 dark:text-zinc-400'>
           <ul className='flex flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-center'>
             <li>
               Publicado em{' '}
