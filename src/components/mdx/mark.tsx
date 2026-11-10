@@ -21,8 +21,6 @@ export function Mark({ variant = 'default', className, ...props }: Props) {
   return (
     <mark
       className={cn(
-        // ! No `not-prose`: the highlighted text may hold links, bold and inline code that need the prose styles.
-        // `box-decoration-clone` repeats the padding and radius on each line when the highlight wraps.
         'rounded-sm box-decoration-clone px-1 py-0.5 text-foreground',
         variantClasses[variant],
         className,

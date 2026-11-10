@@ -3,7 +3,7 @@ import type { Options as RehypeAutolinkHeadingsOptions } from 'rehype-autolink-h
 import type { Options as RemarkGfmOptions } from 'remark-gfm';
 
 export const remarkGFMOptions: RemarkGfmOptions = {
-  // A lone "~" (e.g. "~10 min") must not become strikethrough.
+  // ! A lone "~" (e.g. "~10 min") must not become strikethrough.
   singleTilde: false,
 };
 

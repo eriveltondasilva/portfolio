@@ -38,7 +38,6 @@ interface ExistingPost {
   order?: number | undefined;
 }
 
-// Lenient on purpose: this script must work even if another post has invalid metadata.
 const existingPostSchema = z.object({
   slug: z.string().optional(),
   series: z.string().optional(),
@@ -47,7 +46,6 @@ const existingPostSchema = z.object({
 
 // # Helpers
 
-// JSON strings are valid YAML scalars, so quoting is safe for titles with ":" or numeric slugs.
 const yamlString = (value: string): string => JSON.stringify(value);
 const yamlList = (items: readonly string[]): string =>
   `[${items.map(yamlString).join(', ')}]`;
@@ -68,7 +66,6 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-// "sv-SE" formats as YYYY-MM-DD in the local time zone.
 const today = (): string => new Date().toLocaleDateString('sv-SE');
 
 function validateWith(
@@ -149,7 +146,6 @@ async function main(): Promise<void> {
 
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
-  // A flag skips its prompt; an invalid flag fails instead of re-asking.
   async function ask(field: Field): Promise<string> {
     const flagValue = flags[field.name as keyof typeof flags];
 
@@ -235,7 +231,6 @@ async function main(): Promise<void> {
     let seriesSlug = '';
     let order: number | undefined;
 
-    // A --series flag is validated even without defined series, instead of being ignored.
     if (seriesSlugs.size > 0 || flags.series !== undefined) {
       seriesSlug = await ask({
         name: 'series',
@@ -273,7 +268,6 @@ async function main(): Promise<void> {
 
     const publishedAt = today();
 
-    // Final safety net: the generated meta.yml must pass the same schema the build uses.
     const result = postSchema.safeParse({
       slug,
       title,

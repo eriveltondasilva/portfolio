@@ -28,7 +28,6 @@ async function loadFonts(): Promise<OgFonts> {
 let fontsPromise: Promise<OgFonts> | undefined;
 
 function getFonts(): Promise<OgFonts> {
-  // A rejected promise would otherwise stay cached until the process restarts
   fontsPromise ??= loadFonts().catch((error: unknown) => {
     fontsPromise = undefined;
     throw error;

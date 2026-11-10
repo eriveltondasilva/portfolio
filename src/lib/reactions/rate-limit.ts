@@ -13,15 +13,12 @@ const reactionWriteLimiter = new Ratelimit({
   prefix: namespaceKey('rate-limit:reactions'),
 });
 
-// Without a cookie every write creates a new identity, so limiting the request
-// rate alone does not cap how far a script can inflate the counts
 const newVisitorLimiter = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(NEW_VISITORS_PER_HOUR, '1 h'),
   prefix: namespaceKey('rate-limit:new-visitors'),
 });
 
-// Vercel overwrites x-forwarded-for, so the client cannot spoof its first entry
 function getClientIpAddress(request: Request): string {
   const forwardedFor = request.headers
     .get('x-forwarded-for')
@@ -31,7 +28,6 @@ function getClientIpAddress(request: Request): string {
   return forwardedFor || request.headers.get('x-real-ip') || 'unknown';
 }
 
-// Only a keyed hash reaches Redis, never the raw IP address
 function hashIpAddress(ipAddress: string): string {
   const secret = process.env['RATE_LIMIT_SECRET'];
 
@@ -51,7 +47,6 @@ async function isRateLimited(
 
     return !success;
   } catch (error) {
-    // Fail open: with Redis down, the write that follows fails on its own
     console.error('[rate-limit] Failed to check the limit:', error);
 
     return false;

@@ -21,8 +21,8 @@ export function Image({
   sizes,
   ...props
 }: ImageProps) {
-  // Markdown syntax `![alt](src "text")` only exposes `title`, so it doubles as the caption.
-  // It is intentionally not forwarded to the <img>: the native tooltip is poor for accessibility.
+  // ! Markdown syntax `![alt](src "text")` only exposes `title`, so it doubles as the caption.
+  // ! It is intentionally not forwarded to the <img>: the native tooltip is poor for accessibility.
   return (
     <Figure caption={caption ?? title}>
       <NextImage

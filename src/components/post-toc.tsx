@@ -28,12 +28,8 @@ interface RailProps {
   activeIndex: number;
 }
 
-// A heading becomes the current one once it crosses this distance from the viewport top.
-// Slightly above `prose-headings:scroll-mt-24` (96px) so a clicked anchor counts as reached.
 const ACTIVE_OFFSET_PX = 100;
 
-// Rail layout (px). The vertical padding of each item also insets its rail segment,
-// which leaves the gap where the curve between two depths is drawn.
 const TRACK_STROKE_PX = 1;
 const THUMB_STROKE_PX = 2;
 const INDENT_PX = 12;
@@ -45,7 +41,6 @@ function getRailX(level: number): number {
 }
 
 function getActiveId(ids: string[]): string | null {
-  // The last section can be too short for its heading to ever reach the offset
   const isAtBottom =
     window.scrollY > 0 &&
     window.innerHeight + window.scrollY >=
@@ -78,7 +73,6 @@ function getRailPath(levels: number[], segments: Segment[]): string {
     if (index === 0) {
       path += `M${x} ${top}`;
     } else {
-      // S-curve from the previous segment; a straight line when the depth is the same
       const middle = (previousBottom + top) / 2;
       path += ` C${previousX} ${middle} ${x} ${middle} ${x} ${top}`;
     }
@@ -97,7 +91,6 @@ function TocRail({ levels, geometry, activeIndex }: RailProps) {
   const path = getRailPath(levels, segments);
   const width = getRailX(Math.max(...levels)) + THUMB_STROKE_PX / 2;
 
-  // Without an active heading the highlight collapses onto the first item
   const firstTop = segments[0]?.top ?? 0;
   const thumb = segments[activeIndex] ?? { top: firstTop, bottom: firstTop };
   const clipPath = `inset(${thumb.top}px 0 ${height - thumb.bottom}px 0)`;
@@ -145,7 +138,6 @@ export function PostToc({ items }: Props) {
       setActiveId(getActiveId(ids));
     }
 
-    // At most one update per frame while scrolling
     function scheduleUpdate() {
       if (frame) return;
       frame = requestAnimationFrame(update);
@@ -167,7 +159,6 @@ export function PostToc({ items }: Props) {
 
     if (!list) return;
 
-    // Also fires once when observation starts, which gives the initial measurement
     const observer = new ResizeObserver(() => {
       const segments = Array.from(
         list.querySelectorAll('li'),

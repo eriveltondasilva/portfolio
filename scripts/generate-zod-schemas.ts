@@ -29,7 +29,6 @@ async function main(): Promise<void> {
   log.section('Generating schemas');
 
   const jsonSchemas = targets.map(({ name, schema, output }) => {
-    // These schemas validate what authors write, so fields with `.default()` must stay optional.
     const jsonSchema = z.toJSONSchema(schema, { io: 'input' });
     log.ok(`${name} schema`);
 

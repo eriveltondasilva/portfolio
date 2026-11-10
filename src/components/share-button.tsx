@@ -18,7 +18,6 @@ interface Props {
 
 const RESET_DELAY_MS = 3_000;
 
-// Reads a browser capability without effect + setState; the server snapshot keeps hydration consistent
 const subscribeNothing = () => () => {};
 const getCanNativeShare = () => typeof navigator.share === 'function';
 const getServerCanNativeShare = () => false;
@@ -43,7 +42,6 @@ export function ShareButton({ title, url }: Props) {
       try {
         await navigator.share({ title, url });
       } catch (error) {
-        // Closing the share sheet is not an error
         if (error instanceof DOMException && error.name === 'AbortError')
           return;
         console.error('[ShareButton] Failed to share:', error);

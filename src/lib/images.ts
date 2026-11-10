@@ -12,7 +12,6 @@ const GRID_GAP_REM = 0.75; // gap-3
 
 export const DEFAULT_IMAGE_SIZES = `(max-width: ${MOBILE_MAX_WIDTH}px) calc(100vw - ${MOBILE_GUTTER_REM}rem), ${POST_CONTENT_WIDTH}px`;
 
-// Blur needs a blurDataURL, which static imports of svg/gif do not have
 export function getPlaceholder(src: ImageProps['src']): 'blur' | 'empty' {
   return typeof src === 'object' && 'blurDataURL' in src && src.blurDataURL ?
       'blur'

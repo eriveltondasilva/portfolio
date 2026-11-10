@@ -1,4 +1,3 @@
-// Same reason as layout.tsx: Satori calls these components directly.
 'use no memo';
 
 import type { ReactNode } from 'react';

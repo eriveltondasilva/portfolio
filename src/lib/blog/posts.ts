@@ -3,7 +3,6 @@ import { PostStatus } from '@/lib/constants';
 
 import type { AdjacentPosts, PostIndex } from '@/types';
 
-// Resolved once per module instance instead of on every call.
 const allPosts = postsIndex as PostIndex[];
 const publishedPosts = allPosts.filter(
   (post) => post.status === PostStatus.PUBLISHED,
@@ -18,7 +17,6 @@ export function getAllPostSlugs(): Array<{ slug: string }> {
   return allPosts.map(({ slug }) => ({ slug }));
 }
 
-/** Includes archived posts, which stay reachable by URL but are not listed. */
 export function getPostBySlug(slug: string): PostIndex | null {
   return postsBySlug.get(slug) ?? null;
 }
@@ -31,7 +29,6 @@ export function getPostsByTag(tag: string): PostIndex[] {
   return publishedPosts.filter((post) => post.tags.includes(tag));
 }
 
-/** Posts of a series in reading order. Archived posts stay part of the series. */
 export function getSeriesPosts(seriesSlug: string): PostIndex[] {
   return allPosts
     .filter((post) => post.series === seriesSlug)
@@ -52,7 +49,7 @@ export function getRelatedPosts(slug: string, limit = 3): PostIndex[] {
       score: other.tags.filter((tag) => tags.has(tag)).length,
     }))
     .filter(({ score }) => score > 0)
-    .toSorted((a, b) => b.score - a.score) // stable: ties keep the newest-first order
+    .toSorted((a, b) => b.score - a.score)
     .slice(0, limit)
     .map(({ other }) => other);
 }

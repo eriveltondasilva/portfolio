@@ -29,7 +29,6 @@ function errorResponse(code: ReactionErrorCode, status: number) {
   return NextResponse.json({ error: code }, { status });
 }
 
-// Drafts are not public, so they behave as if they did not exist
 function findVisiblePost(slug: string) {
   const post = getPostBySlug(slug);
 
@@ -54,7 +53,6 @@ async function respondWithState(loadState: () => Promise<ReactionState>) {
   try {
     const state = await loadState();
 
-    // The payload mixes public counts with the visitor's private choice
     return NextResponse.json(state, {
       headers: { 'Cache-Control': 'no-store' },
     });
@@ -65,7 +63,6 @@ async function respondWithState(loadState: () => Promise<ReactionState>) {
   }
 }
 
-// Null means the new-visitor limit was hit; the cookie is only created when it was not
 async function registerNewVisitor(request: Request): Promise<string | null> {
   if (await isNewVisitorRateLimited(request)) return null;
 
@@ -109,7 +106,6 @@ export async function DELETE(request: Request, { params }: Context) {
   const rejection = await rejectInvalidWrite(request, slug);
   if (rejection) return rejection;
 
-  // Without a cookie there is nothing to remove, and no cookie should be created for it
   const visitorId = await getVisitorId();
 
   return respondWithState(() =>

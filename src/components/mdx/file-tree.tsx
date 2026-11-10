@@ -36,7 +36,7 @@ const FILE_ICON_BY_EXTENSION = new Map(
 );
 
 function getFileIcon(name: string): LucideIcon {
-  // lastIndexOf keeps ".env" working and ignores names without a dot ("Dockerfile", "sh")
+  // ! lastIndexOf keeps ".env" working and ignores names without a dot ("Dockerfile", "sh")
   const dotIndex = name.lastIndexOf('.');
 
   if (dotIndex === -1) return FileIcon;

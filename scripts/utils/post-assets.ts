@@ -7,7 +7,7 @@ import {
   POST_META_FILE,
 } from '@/lib/constants';
 
-// Keep in sync with COVER_FILE_NAME below.
+// ! Keep in sync with COVER_FILE_NAME below.
 export const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}';
 
 const COVER_FILE_NAME = /^cover\.(?:jpe?g|png|webp|avif)$/;
@@ -98,7 +98,7 @@ function listImageFiles(folderPath: string): string[] {
       .map((file) => file.replaceAll('\\', '/'))
       .toSorted();
   } catch {
-    return []; // the post has no images folder
+    return [];
   }
 }
 
@@ -106,7 +106,6 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
   const report: AssetReport = { errors: [], warnings: [] };
   const covers = entries.filter((name) => COVER_FILE_NAME.test(name));
 
-  // The cover is the first glob match, and the scan order depends on the filesystem.
   if (covers.length > 1) {
     report.errors.push(
       `more than one cover found (${covers.join(', ')}); keep only one.`,
@@ -118,7 +117,6 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
     if (ALLOWED_ROOT_ENTRIES.has(name) || COVER_FILE_NAME.test(name)) continue;
 
     if (/^cover\./i.test(name)) {
-      // A wrong-case or unsupported cover would silently not be found by the case-sensitive glob.
       report.errors.push(
         `"${name}": the cover must match "${COVER_GLOB}" (lowercase).`,
       );

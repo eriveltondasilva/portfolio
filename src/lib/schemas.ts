@@ -165,7 +165,6 @@ export const postSchema = z
       });
     }
 
-    // ISO dates (YYYY-MM-DD) compare correctly as strings.
     if (updatedAt !== undefined && updatedAt <= publishedAt) {
       ctx.addIssue({
         code: 'custom',

@@ -3,11 +3,9 @@ import { cookies } from 'next/headers';
 const VISITOR_COOKIE_NAME = 'visitor_id';
 const VISITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
 
-// crypto.randomUUID() always yields a v4 UUID
 const UUID_V4_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-// The cookie is client-controlled, so the value is validated before it becomes a Redis hash field
 export async function getVisitorId(): Promise<string | null> {
   const cookieStore = await cookies();
   const value = cookieStore.get(VISITOR_COOKIE_NAME)?.value;
@@ -15,7 +13,6 @@ export async function getVisitorId(): Promise<string | null> {
   return value && UUID_V4_REGEX.test(value) ? value : null;
 }
 
-// Only writes call this, so plain page reads never receive a Set-Cookie header
 export async function createVisitorId(): Promise<string> {
   const visitorId = crypto.randomUUID();
   const cookieStore = await cookies();

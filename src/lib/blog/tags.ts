@@ -2,7 +2,6 @@ import { getAllPosts } from './posts';
 
 import type { TagCount } from '@/types';
 
-/* A Map (not a plain object) so tags like "constructor" cannot collide with Object.prototype. */
 function buildTagCounts(): Map<string, number> {
   const counts = new Map<string, number>();
 
@@ -15,7 +14,6 @@ function buildTagCounts(): Map<string, number> {
   return counts;
 }
 
-// Resolved once per module instance: TagLink checks every tag it renders.
 const tagCounts = buildTagCounts();
 
 export function getAllTags(): string[] {

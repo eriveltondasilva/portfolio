@@ -35,6 +35,7 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
     );
   }
 
+  // # Relative link
   return (
     <a href={href} {...props}>
       {children}

@@ -63,13 +63,11 @@ async function listPostFolders(): Promise<string[]> {
     .toSorted();
 }
 
-/** Returns `null` for drafts, which are intentionally left out of the index. */
 async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
   const folderPath = join(POSTS_DIR, folder);
   const metaPath = join(folderPath, POST_META_FILE);
   const contentPath = join(folderPath, POST_CONTENT_FILE);
 
-  // A folder missing one of the files must fail loudly instead of silently vanishing from the site.
   const files = [
     { name: POST_META_FILE, path: metaPath },
     { name: POST_CONTENT_FILE, path: contentPath },
@@ -92,7 +90,6 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
     Bun.file(contentPath).text(),
   ]);
 
-  // Leftover from before the metadata moved out of the MDX; it would render as page content.
   if (content.trimStart().startsWith('---')) {
     throw new Error(
       `${contentPath}\n\n  Frontmatter found in MDX. Move it to ${POST_META_FILE}.`,
@@ -103,8 +100,6 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
 
   if (!result.success) throw new Error(formatZodError(metaPath, result.error));
 
-  // Drafts stay out of the index, but next build still compiles their index.mdx,
-  // so a broken image reference would fail there instead of here.
   const assets = await inspectPostAssets(folderPath, content);
 
   if (assets.errors.length > 0) {
@@ -177,8 +172,6 @@ async function readPosts(): Promise<PostsData> {
 export function sortByDateDesc<T extends { publishedAt: string; slug: string }>(
   items: readonly T[],
 ): T[] {
-  // ISO dates sort lexicographically. The slug tiebreaker keeps the order
-  // independent of the filesystem scan order.
   return items.toSorted(
     (a, b) =>
       b.publishedAt.localeCompare(a.publishedAt) ||
@@ -219,8 +212,6 @@ function buildSeriesIndex(
 // # Main
 
 async function main(): Promise<void> {
-  // ---------------------------------------------------------------------------
-
   log.section('Reading content');
 
   const [authors, series, { posts, warnings, stats }] = await resolveAll(
@@ -241,8 +232,6 @@ async function main(): Promise<void> {
       `${stats.published - stats.withCover} of ${stats.published} published post(s) without cover`,
     );
   }
-
-  // ---------------------------------------------------------------------------
 
   log.section('Validating');
 
@@ -268,8 +257,6 @@ async function main(): Promise<void> {
   if (linkedToSeries > 0) {
     log.detail(`${linkedToSeries} of ${posts.length} post(s) linked to series`);
   }
-
-  // ---------------------------------------------------------------------------
 
   log.section('Writing indices');
 

@@ -4,9 +4,11 @@ import { REACTION_TYPES, isReactionType } from './config';
 
 import type { ReactionCounts, ReactionState, ReactionType } from './config';
 
-// One script keeps the read-modify-write atomic: changing a reaction depends on
-// the previous choice, which a MULTI/EXEC transaction cannot branch on.
-// An empty desired type removes the reaction.
+/**
+ * One script keeps the read-modify-write atomic: changing a reaction depends on
+ * the previous choice, which a MULTI/EXEC transaction cannot branch on.
+ * An empty desired type removes the reaction.
+ */
 const applyReactionScript = redis.createScript<unknown[]>(`
   local countsKey = KEYS[1]
   local choicesKey = KEYS[2]
@@ -36,7 +38,6 @@ const applyReactionScript = redis.createScript<unknown[]>(`
   return redis.call('HGETALL', countsKey)
 `);
 
-// "choices" is the source of truth; "counts" is derived from it and can be rebuilt.
 function reactionCountsKey(slug: string): string {
   return namespaceKey(`reactions:${slug}:counts`);
 }
@@ -45,7 +46,6 @@ function reactionChoicesKey(slug: string): string {
   return namespaceKey(`reactions:${slug}:choices`);
 }
 
-// Fields of removed reaction types are ignored; missing fields count as zero.
 function toReactionCounts(
   rawCounts: Record<string, unknown> | null,
 ): ReactionCounts {
@@ -106,7 +106,6 @@ export async function readReactions(
 
   return {
     counts: toReactionCounts(rawCounts),
-    // A choice whose type was removed from the config counts as no reaction
     choice: isReactionType(rawChoice) ? rawChoice : null,
   };
 }

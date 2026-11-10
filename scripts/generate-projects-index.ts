@@ -26,7 +26,6 @@ import type { GithubRepo } from './utils/github';
 async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const token = process.env['GITHUB_TOKEN'];
 
-  // The token only raises the rate limit, so a missing one must not break local builds.
   if (!token)
     log.skip(
       'token:',
@@ -36,7 +35,6 @@ async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const octokit = new Octokit(token ? { auth: token } : {});
   log.detail(`Fetching repos for @${username}...`);
 
-  // listForUser only returns public repos; paginate avoids silently stopping at 100.
   return octokit.paginate(octokit.repos.listForUser, {
     username,
     per_page: 100,
@@ -55,7 +53,6 @@ function toProject(repo: GithubRepo): Project {
     name: formatProjectName(repo.name),
     description: repo.description || 'Sem descrição.',
     repository: repo.html_url,
-    // GitHub may return an empty string when the homepage was cleared.
     url: repo.homepage || undefined,
     tags: filterProjectTags(repo.topics),
     status: getProjectStatus(repo),
@@ -75,7 +72,6 @@ function validateProjects(candidates: readonly Project[]): Project[] {
     return [];
   });
 
-  // Slugs are derived from repo names, so "My_App" and "my-app" would collide.
   errors.push(
     ...checkUniqueSlugs(
       projects.map(({ slug, repository }) => ({ slug, source: repository })),
@@ -123,7 +119,6 @@ function logSelection(
 // # Main
 
 async function main(): Promise<void> {
-  // Read from the YAML source: the generated authors index may not exist yet at this point.
   const author = await readPrimaryAuthor();
   const username = getUrlPathname(author.socials.github);
 

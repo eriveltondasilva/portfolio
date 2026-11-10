@@ -23,10 +23,6 @@ export function throwIfErrors(
   if (errors.length > 0) throw new BuildError(context, errors);
 }
 
-/**
- * Like `Promise.all`, but waits for every task and reports all failures at once,
- * so a build surfaces every problem in a single run.
- */
 export async function resolveAll<Tasks extends readonly Promise<unknown>[]>(
   ...tasks: Tasks
 ): Promise<{ -readonly [K in keyof Tasks]: Awaited<Tasks[K]> }> {
@@ -38,7 +34,6 @@ export async function resolveAll<Tasks extends readonly Promise<unknown>[]>(
   if (reasons.length > 0)
     throw new AggregateError(reasons, `${reasons.length} task(s) failed`);
 
-  // Every task is already settled, so this resolves immediately and keeps the tuple types.
   return Promise.all(tasks);
 }
 

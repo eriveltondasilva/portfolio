@@ -1,5 +1,3 @@
-// Satori calls these components directly, outside React's render cycle,
-// so memoization from the React Compiler (useMemoCache) would throw.
 'use no memo';
 
 import { BASE_URL } from '@/lib/base-url';

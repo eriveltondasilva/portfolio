@@ -22,7 +22,6 @@ const RATE_LIMITED_MESSAGE =
   'Muitas reações em pouco tempo. Tente novamente em instantes.';
 const GENERIC_ERROR_MESSAGE = 'Não foi possível salvar sua reação.';
 
-// Idempotent on purpose: it is also applied over the server state, which may already hold the choice
 function withChoice(
   current: ReactionState,
   choice: ReactionType | null,
@@ -65,8 +64,6 @@ async function sendReaction(
   return response.json();
 }
 
-// Zero and the loading phase render nothing, so a new post does not read as "0 0 0"
-// and a skeleton would not flash and vanish on posts without reactions
 function ReactionCount({
   value,
   loadFailed,
@@ -89,7 +86,6 @@ export function PostReactions({ slug, readOnly = false }: Props) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Reverts by itself when the transition ends, so a failed request needs no manual rollback
   const [visibleState, applyOptimisticChoice] = useOptimistic(
     state,
     (current, choice: ReactionType | null) =>
@@ -122,7 +118,6 @@ export function PostReactions({ slug, readOnly = false }: Props) {
   }, [slug]);
 
   function handleReaction(type: ReactionType) {
-    // Clicks during a request are dropped instead of queued
     if (!state || readOnly || isPending) return;
 
     const nextChoice = state.choice === type ? null : type;
