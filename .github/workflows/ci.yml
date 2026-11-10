@@ -24,14 +24,10 @@ jobs:
 
       - run: bun install --frozen-lockfile
 
-      - run: bun run build:indexes
+      - run: bun run generate
         env:
           # The automatic token only raises the GitHub API rate limit
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Generates PageProps, RouteContext and the typed routes used in the code
-      - run: bun run typegen
-
-      - run: bun run typecheck
-      - run: bun run lint:check
-      - run: bun run fmt:check
+      # Runs typegen + tsc, eslint and prettier in sequence
+      - run: bun run check
