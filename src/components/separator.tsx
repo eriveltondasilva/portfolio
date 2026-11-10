@@ -1,5 +1,6 @@
+import { cn } from 'cn';
+
 import { Separator as SeparatorBase } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 
 import type { ComponentProps } from 'react';
 

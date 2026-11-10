@@ -1,6 +1,5 @@
 import { Tweet as ReactTweet } from 'react-tweet';
-
-import { cn } from '@/lib/utils';
+import { cn } from 'cn';
 
 interface TweetProps {
   id: string;

@@ -10,9 +10,9 @@ import {
   FolderIcon,
   FolderOpenIcon,
 } from 'lucide-react';
+import { cn } from 'cn';
 
 import { Icon } from '@/components/icon';
-import { cn } from '@/lib/utils';
 
 import type { LucideIcon } from 'lucide-react';
 import type { ComponentProps } from 'react';

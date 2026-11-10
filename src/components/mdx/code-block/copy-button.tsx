@@ -2,10 +2,10 @@
 
 import { CheckIcon, CopyIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { cn } from 'cn';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 import type { MouseEvent } from 'react';
 

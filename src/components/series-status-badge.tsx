@@ -1,5 +1,6 @@
+import { cn } from 'cn';
+
 import { SERIES_STATUS_LABEL, SeriesStatus } from '@/lib/constants';
-import { cn } from '@/lib/utils';
 
 import { Badge } from './ui/badge';
 

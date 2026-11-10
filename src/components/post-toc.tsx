@@ -2,9 +2,9 @@
 
 import { ListIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { cn } from 'cn';
 
 import { Icon } from '@/components/icon';
-import { cn } from '@/lib/utils';
 
 import type { TocItem } from '@/types';
 

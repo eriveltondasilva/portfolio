@@ -1,10 +1,11 @@
+import { cn } from 'cn';
+
 import {
   Accordion as AccordionRoot,
   AccordionItem as AccordionItemRoot,
   AccordionContent,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { cn } from '@/lib/utils';
 
 import { RICH_TEXT_CLASSES } from './rich-text';
 

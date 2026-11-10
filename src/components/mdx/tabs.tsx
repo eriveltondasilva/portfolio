@@ -1,4 +1,5 @@
 import { Children, isValidElement } from 'react';
+import { cn } from 'cn';
 
 import {
   Tabs as TabsRoot,
@@ -6,7 +7,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
 
 import { RICH_TEXT_CLASSES } from './rich-text';
 

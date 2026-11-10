@@ -1,8 +1,8 @@
 import { DotIcon, FolderBookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
+import { cn } from 'cn';
 
 import { formatDate, formatReadingTime } from '@/lib/format';
-import { cn } from '@/lib/utils';
 
 import { Icon } from './icon';
 import { SeriesStatusBadge } from './series-status-badge';

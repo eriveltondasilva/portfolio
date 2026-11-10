@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useOptimistic, useState, useTransition } from 'react';
+import { cn } from 'cn';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,7 +10,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { REACTION_CONFIG, REACTION_TYPES } from '@/lib/reactions/config';
-import { cn } from '@/lib/utils';
 
 import type { ReactionState, ReactionType } from '@/lib/reactions/config';
 
