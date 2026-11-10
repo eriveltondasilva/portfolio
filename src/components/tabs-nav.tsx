@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { clsx } from 'cn';
 
+import { SearchDialog } from '@/components/search-dialog';
 import { Icon } from '@/components/icon';
 
 import type { Route } from 'next';
@@ -35,10 +36,10 @@ export function TabsNav() {
 
   return (
     <nav
-      className='border-b border-zinc-200 dark:border-zinc-700/60'
+      className='flex items-center gap-3 border-b border-zinc-200 dark:border-zinc-700/60'
       aria-label='Navegação principal'
     >
-      <div className='-mb-px flex overflow-x-auto'>
+      <div className='-mb-px flex min-w-0 flex-1 overflow-x-auto'>
         {tabs.map(({ label, href, icon }) => {
           const isActive =
             href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -61,6 +62,8 @@ export function TabsNav() {
           );
         })}
       </div>
+
+      <SearchDialog />
     </nav>
   );
 }

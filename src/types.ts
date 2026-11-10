@@ -8,6 +8,8 @@ import type { Toc } from '@stefanprobst/rehype-extract-toc';
 import type { MDXContent, MDXModule } from 'mdx/types';
 import type { z } from 'zod';
 
+// ─────────────────────────────────────
+
 type Post = z.infer<typeof postSchema>;
 
 export type Series = z.infer<typeof seriesSchema>;
@@ -15,6 +17,8 @@ export type Author = z.infer<typeof authorSchema>;
 export type Project = z.infer<typeof projectSchema>;
 
 export type GridColumns = 2 | 3;
+
+// ─────────────────────────────────────
 
 export interface SeriesPostRef {
   slug: string;
@@ -26,6 +30,8 @@ export interface SeriesIndex extends Series {
   readingTime: number;
   posts: SeriesPostRef[];
 }
+
+// ─────────────────────────────────────
 
 export interface PostIndex extends Post {
   readingTime: number;
@@ -48,6 +54,8 @@ export interface PostModule extends MDXModule {
   toc: Toc;
 }
 
+// ─────────────────────────────────────
+
 export interface TocItem {
   id: string;
   title: string;
@@ -58,3 +66,8 @@ export interface TagCount {
   tag: string;
   count: number;
 }
+
+export type SearchEntry = Pick<
+  PostIndex,
+  'slug' | 'title' | 'description' | 'tags'
+>;
