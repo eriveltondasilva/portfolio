@@ -29,13 +29,13 @@ Requer o [Bun](https://bun.sh) 1.x. Os scripts e o build usam APIs do Bun, entã
 ```bash
 bun install
 cp .env.example .env.local
-bun run build:indexes
+bun run generate
 bun run dev
 ```
 
 Depois abra <http://localhost:3000>.
 
-O servidor de desenvolvimento não regenera os índices de conteúdo: rode `bun run build:blog` depois de alterar um `meta.yml`, `authors.yml` ou `series.yml`.
+O servidor de desenvolvimento não regenera os índices de conteúdo: rode `bun run generate:blog` depois de alterar um `meta.yml`, `authors.yml` ou `series.yml`.
 
 ### Variáveis de ambiente
 
@@ -51,7 +51,7 @@ O servidor de desenvolvimento não regenera os índices de conteúdo: rode `bun 
 
 1. Rode `bun run new-post`. O script pergunta os metadados e cria `content/posts/<slug>/` com `meta.yml`, `index.mdx` e a pasta `images/`, como rascunho.
 2. Escreva o post em `index.mdx`. As imagens ficam em `images/` (nomes em minúsculas, com hífen) e a capa opcional é `cover.<ext>` na pasta do post.
-3. Defina `status: published` e atualize `publishedAt` no `meta.yml`. Rode `bun run build:blog` para ver no servidor de desenvolvimento.
+3. Defina `status: published` e atualize `publishedAt` no `meta.yml`. Rode `bun run generate:blog` para ver no servidor de desenvolvimento.
 
 Um post pode ser `draft` (oculto), `published` ou `archived` (acessível pela URL, mas fora das listagens e fechado para novas reações).
 
@@ -61,11 +61,12 @@ Um post pode ser `draft` (oculto), `published` ou `archived` (acessível pela UR
 | ---------------------------------- | -------------------------------------------------------------------- |
 | `bun run dev`                      | Inicia o servidor de desenvolvimento.                                |
 | `bun run build`                    | Gera os índices do blog e dos projetos e depois faz o build do site. |
-| `bun run build:indexes`            | Gera todos os índices e os JSON Schemas.                             |
-| `bun run build:blog`               | Regenera os índices de posts, autores e séries.                      |
-| `bun run build:projects`           | Busca os projetos no GitHub.                                         |
+| `bun run generate`                 | Gera todos os índices e os JSON Schemas.                             |
+| `bun run generate:blog`            | Regenera os índices de posts, autores e séries.                      |
+| `bun run generate:projects`        | Busca os projetos no GitHub.                                         |
 | `bun run new-post`                 | Cria a estrutura de um post novo.                                    |
-| `bun run fix`                      | Checa tipos, aplica lint e formata, corrigindo o que for possível.   |
+| `bun run fix`                      | Aplica lint e formata, corrigindo o que for possível.                |
+| `bun run check`                    | Checa tipos, lint e formatação sem escrever em disco.                |
 | `bun run lint:check` / `fmt:check` | Verificações de lint e formatação que não escrevem em disco.         |
 | `bun run knip`                     | Encontra arquivos, exports e dependências sem uso.                   |
 

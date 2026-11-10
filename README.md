@@ -29,13 +29,13 @@ Requires [Bun](https://bun.sh) 1.x. The scripts and the build use Bun APIs, so N
 ```bash
 bun install
 cp .env.example .env.local
-bun run build:indexes
+bun run generate
 bun run dev
 ```
 
 Then open <http://localhost:3000>.
 
-The dev server does not regenerate the content indexes: run `bun run build:blog` after changing a `meta.yml`, `authors.yml` or `series.yml`.
+The dev server does not regenerate the content indexes: run `bun run generate:blog` after changing a `meta.yml`, `authors.yml` or `series.yml`.
 
 ### Environment variables
 
@@ -51,23 +51,24 @@ The dev server does not regenerate the content indexes: run `bun run build:blog`
 
 1. Run `bun run new-post`. It asks for the metadata and creates `content/posts/<slug>/` with `meta.yml`, `index.mdx` and an `images/` folder, as a draft.
 2. Write the post in `index.mdx`. Images go in `images/` (lowercase, hyphenated names) and an optional cover is `cover.<ext>` in the post folder.
-3. Set `status: published` and update `publishedAt` in `meta.yml`. Run `bun run build:blog` to see it in the dev server.
+3. Set `status: published` and update `publishedAt` in `meta.yml`. Run `bun run generate:blog` to see it in the dev server.
 
 A post can be `draft` (hidden), `published`, or `archived` (reachable by URL, but not listed and closed to new reactions).
 
 ## Scripts
 
-| Command                            | What it does                                                  |
-| ---------------------------------- | ------------------------------------------------------------- |
-| `bun run dev`                      | Starts the dev server.                                        |
-| `bun run build`                    | Generates the blog and project indexes, then builds the site. |
-| `bun run build:indexes`            | Generates every index and the JSON Schemas.                   |
-| `bun run build:blog`               | Regenerates the posts, authors and series indexes.            |
-| `bun run build:projects`           | Fetches the projects from GitHub.                             |
-| `bun run new-post`                 | Scaffolds a new post.                                         |
-| `bun run fix`                      | Type-checks, lints and formats, fixing what it can.           |
-| `bun run lint:check` / `fmt:check` | Lint and format checks that do not write to disk.             |
-| `bun run knip`                     | Finds unused files, exports and dependencies.                 |
+| Command                            | What it does                                                      |
+| ---------------------------------- | ----------------------------------------------------------------- |
+| `bun run dev`                      | Starts the dev server.                                            |
+| `bun run build`                    | Generates the blog and project indexes, then builds the site.     |
+| `bun run generate`                 | Generates every index and the JSON Schemas.                       |
+| `bun run generate:blog`            | Regenerates the posts, authors and series indexes.                |
+| `bun run generate:projects`        | Fetches the projects from GitHub.                                 |
+| `bun run new-post`                 | Scaffolds a new post.                                             |
+| `bun run fix`                      | Lints and formats, fixing what it can.                            |
+| `bun run check`                    | Type-checks, lints and checks formatting without writing to disk. |
+| `bun run lint:check` / `fmt:check` | Lint and format checks that do not write to disk.                 |
+| `bun run knip`                     | Finds unused files, exports and dependencies.                     |
 
 ## Project structure
 
