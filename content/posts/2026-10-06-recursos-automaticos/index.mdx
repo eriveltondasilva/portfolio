@@ -1,6 +1,6 @@
-Este é o sexto e último post da série **Manual do Blog**. Os posts anteriores mostram o que você escreve e configura; este reúne o que o blog faz sozinho a partir desse conteúdo: feed RSS, SEO, sitemap, imagens de compartilhamento, páginas de tags, comentários e os recursos de leitura de cada post.
+Este é o sexto e último post da série **Manual do Blog**. Os posts anteriores mostram o que você escreve e configura; este reúne o que o blog faz sozinho a partir desse conteúdo: feed RSS, SEO, sitemap, imagens de compartilhamento, páginas de tags, busca, comentários e os recursos de leitura de cada post.
 
-Quase tudo é gerado no build. Mudou um `meta.yml`, um texto ou uma tag? Rode `bun run build:blog` durante o desenvolvimento, ou publique uma nova versão, para o resultado aparecer. As rotas de post, série e tag só existem para o que está nos índices: qualquer outro endereço responde `404`.
+Quase tudo é gerado no build. Mudou um `meta.yml`, um texto ou uma tag? Rode `bun run generate:blog` durante o desenvolvimento, ou publique uma nova versão, para o resultado aparecer. As rotas de post, série e tag só existem para o que está nos índices: qualquer outro endereço responde `404`.
 
 ---
 
@@ -84,6 +84,29 @@ As tags do `meta.yml` viram páginas automaticamente:
 
 ---
 
+## Busca
+
+O botão **Buscar posts** fica à direita das abas de navegação e abre um diálogo de busca. O diálogo também abre e fecha com <Kbd>Ctrl</Kbd> + <Kbd>K</Kbd> (ou <Kbd>⌘</Kbd> + <Kbd>K</Kbd> no macOS). Em telas menores que o breakpoint `xl`, o botão mostra só o ícone, mas o atalho continua valendo.
+
+Como ela funciona:
+
+- A busca procura no **título** (peso 3), nas **tags** (peso 2) e na **descrição** (peso 1) dos posts `published`. Ela não olha o texto do post.
+- Ela usa o [Fuse.js](https://www.fusejs.io), ignora acentos e aceita pequenas diferenças de digitação.
+- Tudo roda no navegador: o que o leitor digita não é enviado a nenhum servidor.
+- O índice vem de `/api/search`, uma rota estática gerada no build com `slug`, título, descrição e tags de cada post publicado.
+- O Fuse.js e o índice só são baixados quando o leitor passa o mouse ou foca o botão, ou quando abre o diálogo, e ficam em memória até a página ser recarregada. Se o carregamento falhar, o diálogo avisa: feche e abra de novo para tentar outra vez.
+- O diálogo mostra até 8 resultados e, quando há mais, o total ("8 de 15"). As tags que bateram com a busca aparecem destacadas e na frente, e cada resultado exibe até 4 tags, mais um "+N" para as demais.
+- Pelo teclado, <Kbd>↑</Kbd> e <Kbd>↓</Kbd> movem a seleção, <Kbd>Enter</Kbd> abre o resultado selecionado e <Kbd>Esc</Kbd> fecha o diálogo. Passar o mouse sobre um resultado também o seleciona. Em telas de toque, a linha de dicas de teclado não aparece.
+
+<Callout variant='info' title='Posts novos e alterados'>
+  Como o índice é gerado no build, um post novo, ou uma mudança de título,
+  descrição ou tags, só aparece na busca depois de rodar `bun run generate:blog`
+  (durante o desenvolvimento) ou de publicar uma nova versão. Rascunhos e posts
+  arquivados nunca entram.
+</Callout>
+
+---
+
 ## Comentários
 
 Os comentários usam o [Giscus](https://giscus.app), que guarda cada conversa como uma **discussão** no repositório do GitHub. Quem comenta precisa entrar com a conta do GitHub, e a moderação é feita pelo próprio GitHub.
@@ -125,6 +148,7 @@ Um post `archived` mantém a URL, mas perde parte desses recursos:
 | -------------------------------------- | :---------: | :--------: |
 | Listagens (home, blog, tags)           |     ✅      |     ❌     |
 | Sitemap e RSS                          |     ✅      |     ❌     |
+| Busca                                  |     ✅      |     ❌     |
 | `noindex` para buscadores              |     ❌      |     ✅     |
 | Banner de aviso                        |     ❌      |     ✅     |
 | Posts relacionados, anterior e próximo |     ✅      |     ❌     |

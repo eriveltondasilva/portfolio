@@ -6,7 +6,7 @@ Este é o terceiro post da série **Manual do Blog**. Ao contrário dos posts, o
 
 <Steps>
   <Step title='Busca'>
-    O script `build:projects` consulta a API do GitHub (via `@octokit/rest`) e lista, com paginação, todos os repositórios públicos do autor principal.
+    O script `generate:projects` consulta a API do GitHub (via `@octokit/rest`) e lista, com paginação, todos os repositórios públicos do autor principal.
   </Step>
 
 <Step title='Filtro'>
@@ -109,15 +109,15 @@ Crie o token em [github.com/settings/tokens](https://github.com/settings/tokens)
 ## Regenerando a listagem
 
 ```bash
-bun run build:projects
+bun run generate:projects
 ```
 
-O comando roda automaticamente antes do `build` (pelo `prebuild`), mas **não** antes do `dev`. Em um clone novo, ou para atualizar a lista durante o desenvolvimento, rode-o manualmente ou use `bun run build:indexes`, que gera todos os índices. Os detalhes estão em [Do arquivo ao site](/blog/como-o-blog-funciona#do-arquivo-ao-site).
+O comando roda automaticamente antes do `build` (pelo `prebuild`), mas **não** antes do `dev`. Em um clone novo, ou para atualizar a lista durante o desenvolvimento, rode-o manualmente ou use `bun run generate`, que gera todos os índices e schemas. Os detalhes estão em [Do arquivo ao site](/blog/como-o-blog-funciona#do-arquivo-ao-site).
 
 <Callout variant='info' title='A lista é estática'>
   Os projetos são buscados em tempo de build. Mudar topics, descrição ou
   arquivar um repositório no GitHub só aparece no site depois de rodar
-  `build:projects` localmente ou de publicar uma nova versão.
+  `generate:projects` localmente ou de publicar uma nova versão.
 </Callout>
 
 Durante a execução, o script informa quantos repositórios públicos foram buscados e quantos entraram na listagem, quantos ficaram de fora por não terem o topic `portfolio` e a contagem de destaques, em progresso e arquivados.
@@ -129,7 +129,7 @@ Durante a execução, o script informa quantos repositórios públicos foram bus
 <Accordion>
   <AccordionItem title='Meu repositório não aparece'>
     Confira três pontos: o repositório é público, tem o topic `portfolio` e o índice foi
-    regenerado depois da alteração (`bun run build:projects`).
+    regenerado depois da alteração (`bun run generate:projects`).
   </AccordionItem>
 
 <AccordionItem title='O projeto não mostra link de demonstração'>
@@ -143,7 +143,7 @@ Durante a execução, o script informa quantos repositórios públicos foram bus
   comuns são descrição com mais de 500 caracteres, mais de 10 tags (sem contar
   os topics de controle), **Website** que não é uma URL `https://` válida e dois
   repositórios que geram o mesmo slug. Corrija no GitHub e rode `bun run
-  build:projects` de novo.
+  generate:projects` de novo.
 </AccordionItem>
 
   <AccordionItem title='O build falha por limite de requisições do GitHub'>

@@ -70,7 +70,7 @@ O resultado é a pasta `content/posts/slug-do-post/` com:
 - `index.mdx`, com um modelo mínimo;
 - uma pasta `images/` vazia.
 
-O script usa o slug como nome da pasta. Se preferir um prefixo de data, como nos posts deste blog, renomeie a pasta depois e rode `bun run build:blog`: o nome da pasta fica gravado no índice e é por ele que o site encontra o texto, a capa e o link "Sugerir Edição". O Git não versiona pastas vazias, e um post sem `images/` é válido.
+O script usa o slug como nome da pasta. Se preferir um prefixo de data, como nos posts deste blog, renomeie a pasta depois e rode `bun run generate:blog`: o nome da pasta fica gravado no índice e é por ele que o site encontra o texto, a capa e o link "Sugerir Edição". O Git não versiona pastas vazias, e um post sem `images/` é válido.
 
 Escreva o post e troque o `status` para `published` quando estiver pronto.
 
@@ -80,21 +80,22 @@ Escreva o post e troque o `status` para `published` quando estiver pronto.
 
 O site não lê os arquivos de conteúdo diretamente para listar posts. Em vez disso, scripts leem o conteúdo, validam e gravam índices em JSON que o Next.js importa. A exceção é o texto do `index.mdx`, que o Next.js importa direto.
 
-| Comando                  | O que faz                                                      |
-| ------------------------ | -------------------------------------------------------------- |
-| `bun run new-post`       | Cria a pasta de um post novo                                   |
-| `bun run build:blog`     | Valida o conteúdo e gera os índices de posts, autores e séries |
-| `bun run build:projects` | Gera o índice de projetos a partir do GitHub                   |
-| `bun run build:schemas`  | Gera JSON Schemas a partir dos schemas Zod                     |
-| `bun run build:indexes`  | Executa `build:blog`, `build:projects` e `build:schemas`       |
+| Comando                     | O que faz                                                         |
+| --------------------------- | ----------------------------------------------------------------- |
+| `bun run new-post`          | Cria a pasta de um post novo                                      |
+| `bun run generate:blog`     | Valida o conteúdo e gera os índices de posts, autores e séries    |
+| `bun run generate:projects` | Gera o índice de projetos a partir do GitHub                      |
+| `bun run generate:schemas`  | Gera JSON Schemas a partir dos schemas Zod                        |
+| `bun run generate`          | Executa `generate:blog`, `generate:projects` e `generate:schemas` |
 
-Antes do `build` roda o `prebuild`, que executa `build:blog` e `build:projects`. Já o `dev` não tem nenhum passo anterior.
+Antes do `build` roda o `prebuild`, que executa `generate:blog` e `generate:projects`. Antes do `dev` roda o `predev`, que executa apenas o `generate:blog`.
 
-<Callout variant='warning' title='O dev não gera os índices'>
-  Se a pasta `generated` não existir (um clone novo, por exemplo), rode `bun run
-  build:indexes` antes do primeiro `bun dev`. Depois, sempre que mudar o
+<Callout variant='warning' title='O dev só gera o índice do blog'>
+  O `predev` regenera os índices de posts, autores e séries ao iniciar o
+  servidor, mas não gera o de projetos nem os schemas. Em um clone novo, rode
+  `bun run generate` antes do primeiro `bun dev`. Depois, sempre que mudar o
   `meta.yml`, o `authors.yml` ou o `series.yml` com o servidor rodando, rode
-  `bun run build:blog` de novo: o texto do post atualiza sozinho, mas os
+  `bun run generate:blog` de novo: o texto do post atualiza sozinho, mas os
   metadados, o tempo de leitura e as séries vêm dos índices gerados.
 </Callout>
 
@@ -202,6 +203,7 @@ Sem nenhuma configuração extra, cada post recebe:
 - **Imagem Open Graph** própria, como descrito acima.
 - **Entrada no sitemap e no RSS** (`/feed.xml`), apenas para posts `published`.
 - **Página de tag** para cada tag, em `/tags/nome-da-tag`, com os posts publicados.
+- **Busca de posts**, aberta pelo botão ao lado das abas ou por `Ctrl + K` (`⌘ + K` no macOS), sobre título, tags e descrição dos posts `published`.
 - **Índice "Neste post"**, montado a partir dos títulos `##` e `###` quando o post tem mais de um.
 - **Posts relacionados**, ordenados por quantidade de tags em comum, e navegação para o post anterior e o próximo.
 - **Reações** e **comentários** (via Giscus), que não aparecem no mesmo formato em posts arquivados.
@@ -273,7 +275,7 @@ As redes sociais aceitam apenas URLs `https` dos domínios esperados:
 
 O nome do autor aparece no cabeçalho do post, com um cartão que mostra a bio, as três primeiras habilidades (mais um "+N" para as demais) e as redes. O avatar é buscado no GitHub, a partir do usuário da URL em `socials.github`.
 
-O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Ele alimenta a barra lateral, a imagem Open Graph e os dados estruturados da home, e o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github). Se esse slug não existir no `authors.yml`, o `build:projects` falha e, com ele, o build.
+O autor principal do site é definido por `PRIMARY_AUTHOR_SLUG` em `lib/constants.ts`. Ele alimenta a barra lateral, a imagem Open Graph e os dados estruturados da home, e o usuário do GitHub usado na [listagem de projetos](/blog/projetos-e-integracao-github). Se esse slug não existir no `authors.yml`, o `generate:projects` falha e, com ele, o build.
 
 ---
 
