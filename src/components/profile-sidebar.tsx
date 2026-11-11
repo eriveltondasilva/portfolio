@@ -7,7 +7,7 @@ import {
   getUrlPathname,
 } from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
-import { SOCIAL_LINKS } from '@/components/social-links';
+import { SOCIAL_LINKS } from '@/lib/social-links';
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Icon } from './icon';
@@ -20,7 +20,7 @@ export function ProfileSidebar() {
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
       <div className='relative'>
-        <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:h-full md:w-full md:rounded-full dark:border-zinc-700'>
+        <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:size-full dark:border-zinc-700'>
           <AvatarImage
             src={getGitHubAvatarUrl(author, 300)}
             alt={author.name}

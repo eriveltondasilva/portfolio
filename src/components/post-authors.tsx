@@ -15,7 +15,7 @@ import {
   getNameInitials,
   getUrlPathname,
 } from '@/lib/format';
-import { SOCIAL_LINKS } from '@/components/social-links';
+import { SOCIAL_LINKS } from '@/lib/social-links';
 
 import type { Author } from '@/types';
 
