@@ -1,7 +1,7 @@
 import { FolderXIcon, LayersIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { SeriesCard } from '@/components/series-card';
+import { SeriesCard } from '@/components/cards/series-card';
 import {
   Empty,
   EmptyDescription,

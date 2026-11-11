@@ -2,8 +2,8 @@ import { ArrowRightIcon, CheckIcon, SparklesIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { PostCard } from '@/components/post-card';
-import { SeriesCard } from '@/components/series-card';
+import { PostCard } from '@/components/cards/post-card';
+import { SeriesCard } from '@/components/cards/series-card';
 import { getRecentPosts } from '@/lib/blog/posts';
 import { getInProgressSeries } from '@/lib/blog/series';
 import { getPrimaryAuthor } from '@/lib/blog/authors';

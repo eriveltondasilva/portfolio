@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { Icon } from '@/components/icon';
-import { PostCard } from '@/components/post-card';
+import { PostCard } from '@/components/cards/post-card';
 import { Separator } from '@/components/separator';
 import {
   Empty,
@@ -16,7 +16,7 @@ import { getSeriesPosts } from '@/lib/blog/posts';
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 import { formatDate, formatReadingTime } from '@/lib/format';
-import { SeriesStatusBadge } from '@/components/series-status-badge';
+import { SeriesStatusBadge } from '@/components/cards/series-status-badge';
 
 import type { Metadata } from 'next';
 

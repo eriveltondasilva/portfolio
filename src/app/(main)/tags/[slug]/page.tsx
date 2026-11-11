@@ -2,7 +2,7 @@ import { ArrowLeftIcon, HashIcon, LayersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { PostCard } from '@/components/post-card';
+import { PostCard } from '@/components/cards/post-card';
 import { getPostsByTag } from '@/lib/blog/posts';
 import { getAllTags } from '@/lib/blog/tags';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';

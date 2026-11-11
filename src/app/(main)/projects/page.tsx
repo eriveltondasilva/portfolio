@@ -1,7 +1,7 @@
 import { FolderOpenIcon, LayersIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { ProjectCard } from '@/components/project-card';
+import { ProjectCard } from '@/components/cards/project-card';
 import {
   Empty,
   EmptyDescription,

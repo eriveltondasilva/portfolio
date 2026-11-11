@@ -1,7 +1,7 @@
 import { FileXIcon, LayersIcon, RssIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { PostCard } from '@/components/post-card';
+import { PostCard } from '@/components/cards/post-card';
 import {
   Empty,
   EmptyDescription,
