@@ -77,7 +77,7 @@ export function PostHeader({ post, authors }: Props) {
         <PostCover folder={post.folder} coverFile={post.coverFile} />
       )}
 
-      <Separator className='my-10' />
+      <Separator />
     </header>
   );
 }

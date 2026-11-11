@@ -52,7 +52,7 @@ export default function HomePage() {
               className='mt-1 size-5 shrink-0 text-emerald-500'
             />
             <span className='min-w-0 text-balance'>
-              Olá, mundo! Sou Erivelton 👋
+              Olá, mundo! Sou Erivelton
             </span>
           </h1>
 

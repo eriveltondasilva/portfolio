@@ -47,24 +47,11 @@ export default function ProjectsPage() {
   const projectCount = featuredProjects.length + otherProjects.length;
   const hasFeatured = featuredProjects.length > 0;
 
-  if (projectCount === 0) {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant='icon'>
-            <FolderOpenIcon />
-          </EmptyMedia>
-
-          <EmptyTitle>Nenhum projeto cadastrado</EmptyTitle>
-
-          <EmptyDescription>Os projetos aparecerão aqui.</EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
-
   return (
     <div className='space-y-6'>
+      {/* Page title */}
+      <h1 className='sr-only'>Projetos</h1>
+
       {/* Header */}
       <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
         <Icon iconNode={LayersIcon} className='size-3.5' />
@@ -101,6 +88,21 @@ export default function ProjectsPage() {
             ))}
           </div>
         </section>
+      )}
+
+      {/* Empty state */}
+      {projectCount === 0 && (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <FolderOpenIcon />
+            </EmptyMedia>
+
+            <EmptyTitle>Nenhum projeto cadastrado</EmptyTitle>
+
+            <EmptyDescription>Os projetos aparecerão aqui.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
     </div>
   );

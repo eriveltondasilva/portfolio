@@ -47,24 +47,6 @@ export default function BlogPage() {
   const posts = getAllPosts();
   const postCount = posts.length;
 
-  if (postCount === 0) {
-    return (
-      <Empty>
-        <EmptyHeader>
-          <EmptyMedia variant='icon'>
-            <FileXIcon />
-          </EmptyMedia>
-
-          <EmptyTitle>Nenhum post publicado</EmptyTitle>
-
-          <EmptyDescription>
-            Os artigos aparecerão aqui assim que forem publicados.
-          </EmptyDescription>
-        </EmptyHeader>
-      </Empty>
-    );
-  }
-
   return (
     <div className='space-y-6'>
       {/* Page title */}
@@ -92,6 +74,22 @@ export default function BlogPage() {
           <PostCard key={post.slug} post={post} />
         ))}
       </div>
+
+      {postCount === 0 && (
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant='icon'>
+              <FileXIcon />
+            </EmptyMedia>
+
+            <EmptyTitle>Nenhum post publicado</EmptyTitle>
+
+            <EmptyDescription>
+              Os artigos aparecerão aqui assim que forem publicados.
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
     </div>
   );
 }
