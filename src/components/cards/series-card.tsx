@@ -2,45 +2,45 @@ import { DotIcon, FolderBookmarkIcon } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from 'cn';
 
+import { Icon } from '@/components/icon';
 import { formatDate, formatReadingTime } from '@/lib/format';
 
-import { Icon } from './icon';
+import { ContentCard } from './content-card';
 import { SeriesStatusBadge } from './series-status-badge';
 
+import type { CardHeadingLevel } from './content-card';
 import type { SeriesIndex } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
+
+const MAX_LISTED_POSTS = 3;
 
 interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
   series: SeriesIndex;
   showStatusBadge?: boolean;
+  headingLevel?: CardHeadingLevel;
 }
 
 export function SeriesCard({
   series,
   showStatusBadge = false,
+  headingLevel: Heading = 'h2',
   className,
   ...props
 }: SeriesCardProps) {
   const postCount = series.posts.length;
 
   return (
-    <article
-      className={cn(
-        'group @container flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        className,
-      )}
-      {...props}
-    >
+    <ContentCard className={cn('@container', className)} {...props}>
       {/* Header */}
       <div className='flex flex-wrap items-start justify-between gap-x-4 gap-y-2'>
         <div className='flex min-w-0 items-start gap-2 text-orange-500 dark:text-orange-400'>
           <Icon iconNode={FolderBookmarkIcon} className='mt-1 shrink-0' />
-          <Link
-            href={`/series/${series.slug}`}
-            className='min-w-0 font-semibold text-balance wrap-break-word hover:underline'
-          >
-            {series.title}
-          </Link>
+
+          <Heading className='min-w-0 font-semibold text-balance wrap-break-word'>
+            <Link href={`/series/${series.slug}`} className='hover:underline'>
+              {series.title}
+            </Link>
+          </Heading>
         </div>
 
         {showStatusBadge && <SeriesStatusBadge status={series.status} />}
@@ -77,7 +77,7 @@ export function SeriesCard({
       {/* Posts list */}
       {postCount > 0 && (
         <ol className='mt-3 space-y-1 border-t-2 border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {series.posts.slice(0, 3).map((post) => (
+          {series.posts.slice(0, MAX_LISTED_POSTS).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
               <span className='min-w-5 text-center text-xs text-zinc-400'>
                 {post.order}.
@@ -92,13 +92,13 @@ export function SeriesCard({
             </li>
           ))}
 
-          {postCount > 3 && (
+          {postCount > MAX_LISTED_POSTS && (
             <li className='pl-6 text-xs text-zinc-400'>
-              +{postCount - 3} mais
+              +{postCount - MAX_LISTED_POSTS} mais
             </li>
           )}
         </ol>
       )}
-    </article>
+    </ContentCard>
   );
 }

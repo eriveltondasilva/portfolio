@@ -4,25 +4,29 @@ import { cn } from 'cn';
 
 import { formatDate } from '@/lib/format';
 
-import { Icon } from './icon';
-import { TagLink } from './tag-link';
+import { ContentCard } from './content-card';
+import { Icon } from '../icon';
+import { TagLink } from '../tag-link';
 
+import type { CardHeadingLevel } from './content-card';
 import type { PostIndex } from '@/types';
 import type { ComponentPropsWithoutRef } from 'react';
 
 interface Props extends ComponentPropsWithoutRef<'article'> {
   post: PostIndex;
+  headingLevel?: CardHeadingLevel;
 }
 
-export function PostCard({ post, className, ...props }: Props) {
+export function PostCard({
+  post,
+  headingLevel: Heading = 'h2',
+  className,
+  ...props
+}: Props) {
+  const displayDate = post.updatedAt ?? post.publishedAt;
+
   return (
-    <article
-      className={cn(
-        'group @container flex flex-col rounded-md border border-zinc-200 bg-white p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:border-zinc-700/60 dark:bg-zinc-900/30 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
-        className,
-      )}
-      {...props}
-    >
+    <ContentCard className={cn('@container', className)} {...props}>
       {/* Tags */}
       {post.tags.length > 0 && (
         <div className='mb-2 flex flex-wrap gap-1.5'>
@@ -36,12 +40,11 @@ export function PostCard({ post, className, ...props }: Props) {
       <div className='flex items-start gap-2 text-blue-500 dark:text-blue-400'>
         <Icon iconNode={FileTextIcon} className='mt-1 shrink-0' />
 
-        <Link
-          href={`/blog/${post.slug}`}
-          className='min-w-0 font-semibold text-balance hover:underline'
-        >
-          {post.title}
-        </Link>
+        <Heading className='min-w-0 font-semibold text-balance'>
+          <Link href={`/blog/${post.slug}`} className='hover:underline'>
+            {post.title}
+          </Link>
+        </Heading>
       </div>
 
       {/* Description */}
@@ -53,17 +56,15 @@ export function PostCard({ post, className, ...props }: Props) {
       <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @sm:flex-row @sm:flex-wrap @sm:items-center dark:text-zinc-500'>
         <span>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
-          <time dateTime={post.updatedAt ?? post.publishedAt}>
-            {formatDate(post.updatedAt ?? post.publishedAt, {
-              dateStyle: 'long',
-            })}
+          <time dateTime={displayDate}>
+            {formatDate(displayDate, { dateStyle: 'long' })}
           </time>
         </span>
 
-        <Icon iconNode={DotIcon} className='hidden @md:block' />
+        <Icon iconNode={DotIcon} className='hidden @sm:block' />
 
         <span>{post.readingTime} min de leitura</span>
       </div>
-    </article>
+    </ContentCard>
   );
 }
