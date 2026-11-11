@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -19,6 +17,8 @@ import { SOCIAL_LINKS } from '@/lib/social-links';
 
 import type { Author } from '@/types';
 
+const MAX_VISIBLE_SKILLS = 3;
+
 function AuthorHoverCard({ author }: { author: Author }) {
   const githubUsername = getUrlPathname(author.socials.github);
   const authorSkillsCount = author.skills.length;
@@ -26,12 +26,14 @@ function AuthorHoverCard({ author }: { author: Author }) {
   return (
     <HoverCard openDelay={300} closeDelay={100}>
       <HoverCardTrigger asChild>
-        <span
-          tabIndex={0}
-          className='cursor-default underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+        <a
+          href={author.socials.github}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
         >
           {author.name}
-        </span>
+        </a>
       </HoverCardTrigger>
 
       <HoverCardContent
@@ -43,7 +45,10 @@ function AuthorHoverCard({ author }: { author: Author }) {
         {/* Header */}
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
-            <AvatarImage src={getGitHubAvatarUrl(author)} alt={author.name} />
+            <AvatarImage
+              src={getGitHubAvatarUrl(author, 80)}
+              alt={author.name}
+            />
 
             <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
               {getNameInitials(author.name)}
@@ -69,7 +74,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         {/* Skills */}
         {authorSkillsCount > 0 && (
           <div className='mt-3 flex flex-wrap gap-1'>
-            {author.skills.slice(0, 3).map((skill) => (
+            {author.skills.slice(0, MAX_VISIBLE_SKILLS).map((skill) => (
               <Badge
                 key={skill}
                 variant='secondary'
@@ -78,12 +83,12 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 {skill}
               </Badge>
             ))}
-            {authorSkillsCount > 3 && (
+            {authorSkillsCount > MAX_VISIBLE_SKILLS && (
               <Badge
                 variant='secondary'
                 className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
               >
-                +{authorSkillsCount - 3}
+                +{authorSkillsCount - MAX_VISIBLE_SKILLS}
               </Badge>
             )}
           </div>

@@ -18,7 +18,7 @@ export function PostFooter({ slug, editUrl, isArchived = false }: Props) {
       <Button variant='link' asChild>
         <a href={editUrl} target='_blank' rel='noopener noreferrer'>
           <Icon iconNode={FilePenIcon} />
-          Sugerir Edição
+          Sugerir edição
         </a>
       </Button>
     </footer>
