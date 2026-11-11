@@ -1,25 +1,16 @@
 'use client';
 
 import { CheckIcon, CopyIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { cn } from 'cn';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 import type { MouseEvent } from 'react';
 
-const RESET_DELAY_MS = 3_000;
-
 export function CopyButton() {
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return;
-
-    const timeout = setTimeout(() => setCopied(false), RESET_DELAY_MS);
-    return () => clearTimeout(timeout);
-  }, [copied]);
+  const { copied, copy } = useCopyToClipboard();
 
   async function handleCopy(event: MouseEvent<HTMLButtonElement>) {
     const code = event.currentTarget
@@ -36,12 +27,7 @@ export function CopyButton() {
 
     if (!text) return;
 
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-    } catch (error) {
-      console.error('[CopyButton] Failed to copy to clipboard:', error);
-    }
+    await copy(text);
   }
 
   return (

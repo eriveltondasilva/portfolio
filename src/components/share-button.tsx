@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckIcon, Link2Icon, Share2Icon } from 'lucide-react';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
@@ -10,32 +10,24 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 interface Props {
   title: string;
   url: string;
 }
 
-const RESET_DELAY_MS = 3_000;
-
 const subscribeNothing = () => () => {};
 const getCanNativeShare = () => typeof navigator.share === 'function';
 const getServerCanNativeShare = () => false;
 
 export function ShareButton({ title, url }: Props) {
-  const [copied, setCopied] = useState(false);
+  const { copied, copy } = useCopyToClipboard();
   const canNativeShare = useSyncExternalStore(
     subscribeNothing,
     getCanNativeShare,
     getServerCanNativeShare,
   );
-
-  useEffect(() => {
-    if (!copied) return;
-
-    const timeout = setTimeout(() => setCopied(false), RESET_DELAY_MS);
-    return () => clearTimeout(timeout);
-  }, [copied]);
 
   async function handleShare() {
     if (canNativeShare) {
@@ -49,15 +41,12 @@ export function ShareButton({ title, url }: Props) {
       return;
     }
 
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-    } catch (error) {
-      console.error('[ShareButton] Failed to copy to clipboard:', error);
-    }
+    await copy(url);
   }
 
-  const label = copied ? 'Link copiado!' : 'Compartilhar post';
+  const idleLabel =
+    canNativeShare ? 'Compartilhar post' : 'Copiar link do post';
+  const label = copied ? 'Link copiado!' : idleLabel;
   const shareIcon = canNativeShare ? Share2Icon : Link2Icon;
   const icon = copied ? CheckIcon : shareIcon;
 
