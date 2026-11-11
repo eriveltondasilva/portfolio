@@ -95,7 +95,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         )}
 
         {/* Social info */}
-        <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
+        <div className='mt-3 flex items-center gap-x-1 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
           {SOCIAL_LINKS.map(({ key, label, icon }) => {
             const href = author.socials[key];
 
@@ -107,7 +107,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 href={href}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+                className='rounded-md px-2 py-1 text-zinc-400 transition-colors hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
               >
                 <Image
                   src={icon}
@@ -115,6 +115,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                   title={label}
                   width={16}
                   height={16}
+                  className='dark:invert'
                   unoptimized
                 />
               </a>

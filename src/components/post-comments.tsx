@@ -32,7 +32,6 @@ export function PostComments({ slug }: Props) {
         reactionsEnabled='0'
         emitMetadata='0'
         inputPosition='top'
-        theme='light'
         lang='pt'
         loading='lazy'
       />

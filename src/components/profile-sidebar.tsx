@@ -71,6 +71,7 @@ export function ProfileSidebar() {
                 alt={label}
                 width={14}
                 height={14}
+                className='dark:invert'
                 unoptimized
               />
               <span className='truncate'>{getUrlPathname(href)}</span>
