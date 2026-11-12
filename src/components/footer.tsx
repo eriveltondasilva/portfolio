@@ -1,4 +1,4 @@
-import { DotIcon } from 'lucide-react';
+import { CoffeeIcon, DotIcon } from 'lucide-react';
 import NextLink from 'next/link';
 
 import { Icon } from '@/components/icon';
@@ -49,7 +49,8 @@ export function Footer() {
           Feito com{' '}
           <ExternalLink href='https://nextjs.org'>Next.js</ExternalLink>,{' '}
           <ExternalLink href='https://vercel.com'>Vercel</ExternalLink> e muito
-          café ☕
+          café{' '}
+          <Icon iconNode={CoffeeIcon} className='inline align-text-bottom' />
         </p>
       </div>
     </footer>

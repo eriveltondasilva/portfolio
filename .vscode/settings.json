@@ -4,5 +4,15 @@
     "./generated/schemas/series.json": "content/series.yml",
     "./generated/schemas/post.json": "content/posts/*/meta.yml"
   },
-  "js/ts.tsdk.path": "node_modules\\typescript\\lib"
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+  "favorites.resources": [
+    {
+      "filePath": "src\\components",
+      "group": "Default"
+    },
+    {
+      "filePath": "src\\app",
+      "group": "Default"
+    }
+  ]
 }
