@@ -12,6 +12,8 @@ import { SOCIAL_LINKS } from '@/lib/social-links';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Icon } from './icon';
 
+const AVATAR_SIZE = 200;
+
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
   const githubUsername = getUrlPathname(author.socials.github);
@@ -22,7 +24,7 @@ export function ProfileSidebar() {
       <div className='relative'>
         <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:size-full dark:border-zinc-700'>
           <AvatarImage
-            src={getGitHubAvatarUrl(author, 300)}
+            src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
             alt={author.name}
           />
           <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>

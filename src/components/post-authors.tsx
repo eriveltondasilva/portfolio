@@ -18,6 +18,7 @@ import { SOCIAL_LINKS } from '@/lib/social-links';
 import type { Author } from '@/types';
 
 const MAX_VISIBLE_SKILLS = 3;
+const AVATAR_SIZE = 80;
 
 function AuthorHoverCard({ author }: { author: Author }) {
   const githubUsername = getUrlPathname(author.socials.github);
@@ -46,7 +47,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
             <AvatarImage
-              src={getGitHubAvatarUrl(author, 80)}
+              src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
               alt={author.name}
             />
 
