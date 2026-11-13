@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "build": "bun run --bun next build",
-    "check": "bun run typecheck && bun run lint:check && bun run fmt:check",
+    "check": "bun run typecheck && bun run lint:check && bun run fmt:check && bun run knip",
     "dev": "bun run --bun next dev",
     "fix": "bun run lint && bun run fmt",
     "fmt": "prettier . --write --cache",
