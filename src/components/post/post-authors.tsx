@@ -98,26 +98,24 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {authorSocialLinks.map(({ label, icon, href }) => {
-            return (
-              <a
-                key={label}
-                href={href}
-                target='_blank'
-                rel='noopener noreferrer'
-                className='opacity-60 transition-opacity hover:opacity-100'
-              >
-                <Image
-                  src={icon}
-                  alt={label}
-                  title={label}
-                  width={16}
-                  height={16}
-                  className='dark:invert'
-                />
-              </a>
-            );
-          })}
+          {authorSocialLinks.map(({ label, icon, href }) => (
+            <a
+              key={label}
+              href={href}
+              target='_blank'
+              rel='noopener noreferrer'
+              className='opacity-60 transition-opacity hover:opacity-100'
+            >
+              <Image
+                src={icon}
+                alt={label}
+                title={label}
+                width={16}
+                height={16}
+                className='dark:invert'
+              />
+            </a>
+          ))}
         </div>
       </HoverCardContent>
     </HoverCard>

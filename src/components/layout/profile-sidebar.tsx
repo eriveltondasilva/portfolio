@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Icon } from '@/components/icon';
 import { getAuthorSocialLinks } from '@/lib/social-links';
 
-const AVATAR_SIZE = 200;
+const AVATAR_SIZE = 400;
 
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
@@ -21,17 +21,15 @@ export function ProfileSidebar() {
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
-      <div className='relative'>
-        <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:size-full dark:border-zinc-700'>
-          <AvatarImage
-            src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
-            alt={author.name}
-          />
-          <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
-            {getNameInitials(author.name)}
-          </AvatarFallback>
-        </Avatar>
-      </div>
+      <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:size-full dark:border-zinc-700'>
+        <AvatarImage
+          src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
+          alt={author.name}
+        />
+        <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
+          {getNameInitials(author.name)}
+        </AvatarFallback>
+      </Avatar>
 
       {/* Name & username */}
       <div className='mt-4'>
@@ -55,26 +53,24 @@ export function ProfileSidebar() {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {authorSocialLinks.map(({ key, label, icon, href }) => {
-          return (
-            <a
-              key={key}
-              href={href}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='flex items-center gap-2 px-0.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
-            >
-              <Image
-                src={icon}
-                alt={label}
-                width={14}
-                height={14}
-                className='dark:invert'
-              />
-              <span className='truncate'>{getUrlPathname(href)}</span>
-            </a>
-          );
-        })}
+        {authorSocialLinks.map(({ key, label, icon, href }) => (
+          <a
+            key={key}
+            href={href}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='flex items-center gap-2 px-0.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+          >
+            <Image
+              src={icon}
+              alt={label}
+              width={14}
+              height={14}
+              className='dark:invert'
+            />
+            <span className='truncate'>{getUrlPathname(href)}</span>
+          </a>
+        ))}
       </div>
     </aside>
   );
