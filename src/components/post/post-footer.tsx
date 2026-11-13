@@ -1,8 +1,9 @@
 import { FilePenIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { PostReactions } from '@/components/post-reactions';
 import { Button } from '@/components/ui/button';
+
+import { PostReactions } from './post-reactions';
 
 interface Props {
   slug: string;

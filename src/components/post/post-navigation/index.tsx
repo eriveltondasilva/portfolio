@@ -1,5 +1,6 @@
-import { AdjacentPostCard } from '@/components/adjacent-post-card';
 import { Separator } from '@/components/separator';
+
+import { AdjacentPostCard } from './adjacent-post-card';
 
 import type { PostIndex } from '@/types';
 

@@ -1,13 +1,14 @@
 import { DotIcon } from 'lucide-react';
 
-import { PostAuthors } from '@/components/post-authors';
-import { PostCover } from '@/components/post-cover';
+import { Icon } from '@/components/icon';
 import { Separator } from '@/components/separator';
-import { ShareButton } from '@/components/share-button';
 import { TagLink } from '@/components/tag-link';
 import { BASE_URL } from '@/lib/base-url';
 import { formatDate } from '@/lib/format';
-import { Icon } from '@/components/icon';
+
+import { PostAuthors } from './post-authors';
+import { PostCover } from './post-cover';
+import { ShareButton } from './share-button';
 
 import type { Author, PostIndex } from '@/types';
 

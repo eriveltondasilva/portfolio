@@ -3,9 +3,8 @@ import { LayersIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { getSeriesBySlug } from '@/lib/blog/series';
-import { Icon } from '@/components/icon';
 
-import { Separator } from './separator';
+import { PostSection } from './post-section';
 
 interface Props {
   slug?: string;
@@ -22,14 +21,11 @@ export function PostSeriesBanner({ slug, order }: Props) {
   const total = series.posts.length;
 
   return (
-    <section aria-label='Nesta série'>
-      <Separator />
-
-      <h2 className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-        <Icon iconNode={LayersIcon} className='text-orange-500' />
-        Nesta série
-      </h2>
-
+    <PostSection
+      title='Nesta série'
+      icon={LayersIcon}
+      iconClassName='text-orange-500'
+    >
       <div className='rounded-md border border-orange-200/60 bg-orange-50/40 px-4 py-3 dark:border-orange-400/10 dark:bg-orange-400/5'>
         {/* Series label + title */}
         <div className='flex items-center justify-between gap-3'>
@@ -51,7 +47,11 @@ export function PostSeriesBanner({ slug, order }: Props) {
             const isCurrent = post.order === order;
 
             return (
-              <li key={post.slug} className='flex items-baseline gap-2'>
+              <li
+                key={post.slug}
+                aria-current={isCurrent ? 'page' : undefined}
+                className='flex items-baseline gap-2'
+              >
                 <span
                   className={cn(
                     'min-w-4 text-right text-xs tabular-nums',
@@ -81,6 +81,6 @@ export function PostSeriesBanner({ slug, order }: Props) {
           })}
         </ol>
       </div>
-    </section>
+    </PostSection>
   );
 }

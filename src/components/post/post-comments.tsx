@@ -3,9 +3,9 @@
 import Giscus from '@giscus/react';
 import { MessageSquareText } from 'lucide-react';
 
-import { Icon } from '@/components/icon';
-import { Separator } from '@/components/separator';
 import { GISCUS } from '@/lib/constants';
+
+import { PostSection } from './post-section';
 
 interface Props {
   slug: string;
@@ -13,14 +13,11 @@ interface Props {
 
 export function PostComments({ slug }: Props) {
   return (
-    <section aria-label='Comentários'>
-      <Separator />
-
-      <h2 className='mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'>
-        <Icon iconNode={MessageSquareText} className='text-orange-500' />
-        Comentários
-      </h2>
-
+    <PostSection
+      title='Comentários'
+      icon={MessageSquareText}
+      iconClassName='text-orange-500'
+    >
       <Giscus
         repo={GISCUS.repo}
         repoId={GISCUS.repoId}
@@ -32,9 +29,10 @@ export function PostComments({ slug }: Props) {
         reactionsEnabled='0'
         emitMetadata='0'
         inputPosition='top'
+        theme='preferred_color_scheme'
         lang='pt'
         loading='lazy'
       />
-    </section>
+    </PostSection>
   );
 }
