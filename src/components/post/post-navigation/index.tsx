@@ -1,4 +1,4 @@
-import { Separator } from '@/components/separator';
+import { SectionSeparator } from '@/components/section-separator';
 
 import { AdjacentPostCard } from './adjacent-post-card';
 
@@ -14,7 +14,7 @@ export function PostNavigation({ prevPost, nextPost }: Props) {
 
   return (
     <>
-      <Separator />
+      <SectionSeparator />
 
       <nav
         aria-label='Navegação entre posts'

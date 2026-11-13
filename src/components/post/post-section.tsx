@@ -1,7 +1,7 @@
 import { useId } from 'react';
 
 import { Icon } from '@/components/icon';
-import { Separator } from '@/components/separator';
+import { SectionSeparator } from '@/components/section-separator';
 
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
@@ -18,7 +18,7 @@ export function PostSection({ title, icon, iconClassName, children }: Props) {
 
   return (
     <section aria-labelledby={titleId}>
-      <Separator />
+      <SectionSeparator />
 
       <h2
         id={titleId}

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { Icon } from '@/components/icon';
 import { PostCard } from '@/components/cards/post-card';
-import { Separator } from '@/components/separator';
+import { SectionSeparator } from '@/components/section-separator';
 import {
   Empty,
   EmptyDescription,
@@ -118,7 +118,7 @@ export default async function SeriesDetailPage({
         </ul>
       </header>
 
-      <Separator />
+      <SectionSeparator />
 
       {/* Posts list */}
       {hasPosts && (

@@ -1,7 +1,7 @@
 import { DotIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { Separator } from '@/components/separator';
+import { SectionSeparator } from '@/components/section-separator';
 import { TagLink } from '@/components/tag-link';
 import { BASE_URL } from '@/lib/base-url';
 import { formatDate } from '@/lib/format';
@@ -78,7 +78,7 @@ export function PostHeader({ post, authors }: Props) {
         <PostCover folder={post.folder} coverFile={post.coverFile} />
       )}
 
-      <Separator />
+      <SectionSeparator />
     </header>
   );
 }
