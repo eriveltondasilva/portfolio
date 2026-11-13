@@ -1,7 +1,7 @@
 'use client';
 
 import Giscus from '@giscus/react';
-import { MessageSquareText } from 'lucide-react';
+import { MessageSquareTextIcon } from 'lucide-react';
 
 import { GISCUS } from '@/lib/constants';
 
@@ -15,7 +15,7 @@ export function PostComments({ slug }: Props) {
   return (
     <PostSection
       title='Comentários'
-      icon={MessageSquareText}
+      icon={MessageSquareTextIcon}
       iconClassName='text-orange-500'
     >
       <Giscus
