@@ -1,4 +1,4 @@
-import { MapPinIcon } from 'lucide-react';
+import { DotIcon, MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 
 import {
@@ -10,6 +10,7 @@ import { getPrimaryAuthor } from '@/lib/blog/authors';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Icon } from '@/components/icon';
 import { getAuthorSocialLinks } from '@/lib/social-links';
+import { AUTHOR_LOCATION, AUTHOR_PRONOUNS } from '@/lib/constants';
 
 const AVATAR_SIZE = 400;
 
@@ -37,7 +38,7 @@ export function ProfileSidebar() {
           {author.name}
         </p>
         <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
-          {githubUsername} • ele/dele
+          {githubUsername} <Icon iconNode={DotIcon} /> {AUTHOR_PRONOUNS}
         </p>
       </div>
 
@@ -50,7 +51,7 @@ export function ProfileSidebar() {
       <div className='mt-5 space-y-2 text-sm text-zinc-600 dark:text-zinc-400'>
         <div className='flex items-center gap-2'>
           <Icon iconNode={MapPinIcon} className='shrink-0' />
-          <span>Alagoas, Brasil</span>
+          <span>{AUTHOR_LOCATION}</span>
         </div>
 
         {authorSocialLinks.map(({ key, label, icon, href }) => (

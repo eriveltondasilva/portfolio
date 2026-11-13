@@ -39,8 +39,12 @@ export const SITE_DESCRIPTION =
   'Desenvolvedor Frontend apaixonado por React, Next.js e TypeScript. Artigos sobre frontend moderno e boas práticas.';
 
 export const AUTHOR_NAME = 'Erivelton Silva';
+export const AUTHOR_PRONOUNS = 'ele/dele';
+export const AUTHOR_LOCATION = 'Alagoas, Brasil';
+
 export const TWITTER_HANDLE = '@erivelton_silv4';
 export const PRIMARY_AUTHOR_SLUG = 'erivelton';
+
 export const GITHUB_REPO = 'https://github.com/eriveltondasilva/portfolio';
 
 export const LOCALE = 'pt-BR';
