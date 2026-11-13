@@ -1,7 +1,7 @@
-import { ExternalLinkIcon } from 'lucide-react';
+import { ArrowUpRightIcon } from 'lucide-react';
 import LinkNext from 'next/link';
 
-import { Icon } from '../icon';
+import { Icon } from '@/components/icon';
 
 import type { Route } from 'next';
 import type { ComponentProps } from 'react';
@@ -27,9 +27,9 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
         {children}
 
         <Icon
-          iconNode={ExternalLinkIcon}
+          iconNode={ArrowUpRightIcon}
           label='(abre em nova aba)'
-          className='ml-1 inline size-3.5 align-text-top'
+          className='inline size-3.5 align-text-top'
         />
       </a>
     );
