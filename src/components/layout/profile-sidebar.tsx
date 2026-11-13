@@ -7,10 +7,9 @@ import {
   getUrlPathname,
 } from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Icon } from '@/components/icon';
 import { SOCIAL_LINKS } from '@/lib/social-links';
-
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Icon } from './icon';
 
 const AVATAR_SIZE = 200;
 

@@ -1,10 +1,10 @@
 'use client';
 
 import { cn } from 'cn';
-import { ChevronUp } from 'lucide-react';
+import { ChevronUpIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { Icon } from './icon';
+import { Icon } from '@/components/icon';
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -57,7 +57,7 @@ export function BackToTop() {
           : 'pointer-events-none translate-y-4 opacity-0',
         )}
       >
-        <Icon iconNode={ChevronUp} />
+        <Icon iconNode={ChevronUpIcon} />
       </button>
     </>
   );

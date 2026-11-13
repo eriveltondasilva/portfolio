@@ -1,5 +1,5 @@
-import { ProfileSidebar } from '@/components/profile-sidebar';
-import { TabsNav } from '@/components/tabs-nav';
+import { ProfileSidebar } from '@/components/layout/profile-sidebar';
+import { TabsNav } from '@/components/layout/tabs-nav';
 
 export default function HomeLayout({ children }: LayoutProps<'/'>) {
   return (

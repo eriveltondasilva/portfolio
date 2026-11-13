@@ -1,8 +1,8 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 
-import { Footer } from '@/components/footer';
-import { TopBorder } from '@/components/top-border';
+import { Footer } from '@/components/layout/footer';
+import { TopBorder } from '@/components/layout/top-border';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   AUTHOR_NAME,
