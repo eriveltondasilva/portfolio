@@ -29,7 +29,7 @@ export function PostComments({ slug }: Props) {
         reactionsEnabled='0'
         emitMetadata='0'
         inputPosition='top'
-        theme='preferred_color_scheme'
+        theme='light'
         lang='pt'
         loading='lazy'
       />
