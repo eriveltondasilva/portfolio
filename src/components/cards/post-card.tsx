@@ -3,10 +3,10 @@ import Link from 'next/link';
 import { cn } from 'cn';
 
 import { formatDate } from '@/lib/format';
+import { Icon } from '@/components/icon';
+import { TagLink } from '@/components/tag-link';
 
 import { ContentCard } from './content-card';
-import { Icon } from '../icon';
-import { TagLink } from '../tag-link';
 
 import type { CardHeadingLevel } from './content-card';
 import type { PostIndex } from '@/types';
