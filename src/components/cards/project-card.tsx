@@ -4,13 +4,11 @@ import Image from 'next/image';
 import GithubIcon from '@/assets/github.svg';
 import { Icon } from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
-import { ProjectStatus } from '@/lib/constants';
 
 import { ContentCard } from './content-card';
-import { StatusBadge } from './status-badge';
+import { ProjectStatusBadge } from './project-status-badge';
 
 import type { CardHeadingLevel } from './content-card';
-import type { StatusTone } from './status-badge';
 import type { ComponentPropsWithoutRef } from 'react';
 import type { Project } from '@/types';
 
@@ -18,12 +16,6 @@ interface Props extends ComponentPropsWithoutRef<'article'> {
   project: Project;
   headingLevel?: CardHeadingLevel;
 }
-
-const statusBadge = {
-  [ProjectStatus.ARCHIVED]: { label: 'Arquivado', tone: 'neutral' },
-  [ProjectStatus.WIP]: { label: 'Em progresso', tone: 'warning' },
-  [ProjectStatus.ACTIVE]: { label: 'Ativo', tone: 'success' },
-} as const satisfies Record<ProjectStatus, { label: string; tone: StatusTone }>;
 
 export function ProjectCard({
   project,
@@ -50,7 +42,7 @@ export function ProjectCard({
           )}
         </div>
 
-        <StatusBadge {...statusBadge[project.status]} />
+        <ProjectStatusBadge status={project.status} />
       </div>
 
       {/* Description */}
