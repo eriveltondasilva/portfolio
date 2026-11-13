@@ -9,13 +9,14 @@ import {
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Icon } from '@/components/icon';
-import { SOCIAL_LINKS } from '@/lib/social-links';
+import { getAuthorSocialLinks } from '@/lib/social-links';
 
 const AVATAR_SIZE = 200;
 
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
   const githubUsername = getUrlPathname(author.socials.github);
+  const authorSocialLinks = getAuthorSocialLinks(author);
 
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
@@ -54,11 +55,7 @@ export function ProfileSidebar() {
           <span>Alagoas, Brasil</span>
         </div>
 
-        {SOCIAL_LINKS.map(({ key, label, icon }) => {
-          const href = author.socials[key];
-
-          if (!href) return null;
-
+        {authorSocialLinks.map(({ key, label, icon, href }) => {
           return (
             <a
               key={key}
@@ -73,7 +70,6 @@ export function ProfileSidebar() {
                 width={14}
                 height={14}
                 className='dark:invert'
-                unoptimized
               />
               <span className='truncate'>{getUrlPathname(href)}</span>
             </a>

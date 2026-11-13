@@ -9,8 +9,8 @@ interface PostCoverProps {
 
 export async function PostCover({ folder, coverFile }: PostCoverProps) {
   /**
-   * ! Limiting the pattern to cover.<ext> keeps the bundler from pulling every
-   * ! file of the post folders (meta.yml, stray files) into the module graph.
+   * Limiting the pattern to cover.<ext> keeps the bundler from pulling every
+   * file of the post folders (meta.yml, stray files) into the module graph.
    */
   const extension = coverFile.slice(coverFile.lastIndexOf('.') + 1);
   const { default: coverImage } = await import(

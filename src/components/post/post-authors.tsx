@@ -13,15 +13,17 @@ import {
   getNameInitials,
   getUrlPathname,
 } from '@/lib/format';
-import { SOCIAL_LINKS } from '@/lib/social-links';
+import { getAuthorSocialLinks } from '@/lib/social-links';
 
 import type { Author } from '@/types';
 
 const MAX_VISIBLE_SKILLS = 3;
+const AVATAR_SIZE = 80;
 
 function AuthorHoverCard({ author }: { author: Author }) {
   const githubUsername = getUrlPathname(author.socials.github);
   const authorSkillsCount = author.skills.length;
+  const authorSocialLinks = getAuthorSocialLinks(author);
 
   return (
     <HoverCard openDelay={300} closeDelay={100}>
@@ -46,7 +48,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
             <AvatarImage
-              src={getGitHubAvatarUrl(author, 80)}
+              src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
               alt={author.name}
             />
 
@@ -96,18 +98,14 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
-          {SOCIAL_LINKS.map(({ key, label, icon }) => {
-            const href = author.socials[key];
-
-            if (!href) return null;
-
+          {authorSocialLinks.map(({ label, icon, href }) => {
             return (
               <a
                 key={label}
                 href={href}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='text-zinc-400 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+                className='opacity-60 transition-opacity hover:opacity-100'
               >
                 <Image
                   src={icon}
@@ -115,7 +113,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                   title={label}
                   width={16}
                   height={16}
-                  unoptimized
+                  className='dark:invert'
                 />
               </a>
             );
@@ -128,13 +126,16 @@ function AuthorHoverCard({ author }: { author: Author }) {
 
 export function PostAuthors({ authors }: { authors: Author[] }) {
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
+
   const parts = createListFormatter().formatToParts(
     authors.map((author) => author.slug),
   );
+
   const authorNames = parts.map(({ type, value }, index) => {
     if (type === 'element') {
       const author = authorsBySlug.get(value);
       if (!author) return null;
+
       return <AuthorHoverCard key={index} author={author} />;
     }
 

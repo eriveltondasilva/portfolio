@@ -11,8 +11,16 @@ type SocialLink = {
   icon: string | StaticImageData;
 };
 
-export const SOCIAL_LINKS = [
+const SOCIAL_LINKS: ReadonlyArray<SocialLink> = [
   { key: 'github', label: 'GitHub', icon: Github },
   { key: 'linkedin', label: 'LinkedIn', icon: Linkedin },
   { key: 'twitter', label: 'Twitter', icon: TwitterX },
-] as const satisfies ReadonlyArray<SocialLink>;
+];
+
+export function getAuthorSocialLinks(author: Author) {
+  return SOCIAL_LINKS.flatMap((link) => {
+    const href = author.socials[link.key];
+
+    return href ? [{ ...link, href }] : [];
+  });
+}
