@@ -64,3 +64,11 @@ export function getAdjacentPosts(slug: string): AdjacentPosts {
     nextPost: publishedPosts[index - 1] ?? null,
   };
 }
+
+// ─────────────────────────────────────
+
+export function getPostDisplayDate(
+  post: Pick<PostIndex, 'publishedAt' | 'updatedAt'>,
+): string {
+  return post.updatedAt ?? post.publishedAt;
+}

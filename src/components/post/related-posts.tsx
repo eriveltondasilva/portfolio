@@ -2,7 +2,7 @@ import { ArrowRightIcon, DotIcon, FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { getRelatedPosts } from '@/lib/blog/posts';
+import { getPostDisplayDate, getRelatedPosts } from '@/lib/blog/posts';
 import { formatDate } from '@/lib/format';
 
 import { PostSection } from './post-section';
@@ -24,7 +24,7 @@ export function RelatedPosts({ slug }: Props) {
     >
       <ul className='divide-y divide-zinc-100 dark:divide-zinc-800'>
         {posts.map((post) => {
-          const displayDate = post.updatedAt ?? post.publishedAt;
+          const displayDate = getPostDisplayDate(post);
 
           return (
             <li key={post.slug} className='group py-3 first:pt-0'>

@@ -1,5 +1,9 @@
 import { getAuthorsBySlugs } from '@/lib/blog/authors';
-import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts';
+import {
+  getAllPostSlugs,
+  getPostBySlug,
+  getPostDisplayDate,
+} from '@/lib/blog/posts';
 import { SITE_NAME } from '@/lib/constants';
 import { createListFormatter, formatDate } from '@/lib/format';
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';
@@ -36,7 +40,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
     ),
   );
   const byline = authorNames ? `Por ${authorNames}` : SITE_NAME;
-  const displayDate = formatDate(post.updatedAt ?? post.publishedAt, {
+  const displayDate = formatDate(getPostDisplayDate(post), {
     dateStyle: 'medium',
   });
 

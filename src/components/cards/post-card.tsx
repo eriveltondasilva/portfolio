@@ -5,6 +5,7 @@ import { cn } from 'cn';
 import { formatDate } from '@/lib/format';
 import { Icon } from '@/components/icon';
 import { TagLink } from '@/components/tag-link';
+import { getPostDisplayDate } from '@/lib/blog/posts';
 
 import { ContentCard } from './content-card';
 
@@ -23,7 +24,7 @@ export function PostCard({
   className,
   ...props
 }: Props) {
-  const displayDate = post.updatedAt ?? post.publishedAt;
+  const displayDate = getPostDisplayDate(post);
 
   return (
     <ContentCard className={cn('@container', className)} {...props}>

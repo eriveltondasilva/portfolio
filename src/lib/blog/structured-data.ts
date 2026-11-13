@@ -1,6 +1,8 @@
 import { LOCALE, SITE_DESCRIPTION, SITE_NAME } from '@/lib/constants';
 import { BASE_URL } from '@/lib/base-url';
 
+import { getPostDisplayDate } from './posts';
+
 import type { Author, PostIndex } from '@/types';
 
 export function buildPostJsonLd(post: PostIndex, authors: Author[]) {
@@ -19,7 +21,7 @@ export function buildPostJsonLd(post: PostIndex, authors: Author[]) {
         keywords: post.tags,
         inLanguage: LOCALE,
         datePublished: post.publishedAt,
-        dateModified: post.updatedAt ?? post.publishedAt,
+        dateModified: getPostDisplayDate(post),
         author: authors.map((author) => ({
           '@type': 'Person',
           name: author.name,

@@ -1,4 +1,4 @@
-import { getAllPosts } from '@/lib/blog/posts';
+import { getAllPosts, getPostDisplayDate } from '@/lib/blog/posts';
 import { getAllSeries } from '@/lib/blog/series';
 import { getAllTags } from '@/lib/blog/tags';
 import { BASE_URL } from '@/lib/base-url';
@@ -9,7 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
 
   const lastPostChange = posts
-    .map((post) => post.updatedAt ?? post.publishedAt)
+    .map((post) => getPostDisplayDate(post))
     .toSorted()
     .at(-1);
 
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // # Posts
     ...posts.map((post) => ({
       url: `${BASE_URL}/blog/${post.slug}`,
-      lastModified: post.updatedAt ?? post.publishedAt,
+      lastModified: getPostDisplayDate(post),
     })),
   ];
 }
