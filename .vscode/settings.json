@@ -13,6 +13,10 @@
     {
       "filePath": "src\\app",
       "group": "Default"
+    },
+    {
+      "filePath": "src\\lib",
+      "group": "Default"
     }
   ]
 }
