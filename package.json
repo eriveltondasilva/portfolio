@@ -29,7 +29,7 @@
     "predev": "bun run generate:blog",
     "prepare": "husky",
     "start": "bun run --bun next start",
-    "typecheck": "bun run typegen && tsc --noEmit",
+    "typecheck": "bun run typegen && bun check --no-script",
     "typegen": "bun run --bun next typegen"
   },
   "keywords": [
