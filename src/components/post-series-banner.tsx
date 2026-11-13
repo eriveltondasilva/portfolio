@@ -1,4 +1,4 @@
-import { clsx } from 'cn';
+import { cn } from 'cn';
 import { LayersIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -53,7 +53,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
             return (
               <li key={post.slug} className='flex items-baseline gap-2'>
                 <span
-                  className={clsx(
+                  className={cn(
                     'min-w-4 text-right text-xs tabular-nums',
                     isCurrent ?
                       'text-orange-500 dark:text-orange-400'

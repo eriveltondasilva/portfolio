@@ -1,6 +1,6 @@
 import { HashIcon } from 'lucide-react';
 import Link from 'next/link';
-import { clsx } from 'cn';
+import { cn } from 'cn';
 
 import { Icon } from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +15,7 @@ function Tag({ tag, isLinkable }: TagProps) {
   return (
     <Badge
       variant='outline'
-      className={clsx(
+      className={cn(
         'gap-0 bg-zinc-100 px-2.5 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
         isLinkable &&
           'transition-colors hover:bg-blue-50 hover:font-medium hover:text-blue-700 dark:hover:bg-blue-900/30 dark:hover:text-blue-300',

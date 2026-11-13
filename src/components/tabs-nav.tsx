@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { clsx } from 'cn';
+import { cn } from 'cn';
 
 import { SearchDialog } from '@/components/search-dialog';
 import { Icon } from '@/components/icon';
@@ -49,7 +49,7 @@ export function TabsNav() {
               key={href}
               href={href}
               aria-current={isActive ? 'page' : undefined}
-              className={clsx(
+              className={cn(
                 'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                 isActive ?
                   'border-orange-500 text-zinc-900 dark:border-orange-400 dark:text-zinc-50'

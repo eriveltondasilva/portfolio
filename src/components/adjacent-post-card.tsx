@@ -1,4 +1,4 @@
-import { clsx } from 'cn';
+import { cn } from 'cn';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import Link from 'next/link';
 
@@ -18,14 +18,14 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className={clsx(
+      className={cn(
         'group flex min-w-0 flex-col gap-1 rounded-md border border-zinc-200 p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700/60 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
         !isPrev && 'text-right',
         className,
       )}
     >
       <span
-        className={clsx(
+        className={cn(
           'flex items-center gap-1.5 text-sm text-zinc-400 dark:text-zinc-500',
           !isPrev && 'justify-end',
         )}
@@ -35,7 +35,7 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
         {!isPrev && <Icon iconNode={ChevronRightIcon} />}
       </span>
       <span
-        className={clsx(
+        className={cn(
           'line-clamp-2 text-sm font-medium text-zinc-700 transition-colors group-hover:text-zinc-900 dark:text-zinc-300 dark:group-hover:text-zinc-50',
           !isPrev && 'text-right',
         )}
