@@ -9,7 +9,7 @@ import { PostFooter } from '@/components/post-footer';
 import { PostNavigation } from '@/components/post-navigation';
 import { PostSeriesBanner } from '@/components/post-series-banner';
 import { PostToc } from '@/components/post-toc';
-import { PostTocMobile } from '@/components/post-toc-mobile';
+import { PostTocMobile } from '@/components/post-toc/mobile';
 import { ReadingProgress } from '@/components/reading-progress';
 import { RelatedPosts } from '@/components/related-posts';
 import {
