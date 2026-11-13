@@ -1,17 +1,17 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-import { ArchivedBanner } from '@/components/archived-banner';
+import { ArchivedBanner } from '@/components/post/archived-banner';
 import { BackToTop } from '@/components/back-to-top';
 import { JsonLd } from '@/components/json-ld';
-import { PostComments } from '@/components/post-comments';
-import { PostFooter } from '@/components/post-footer';
-import { PostNavigation } from '@/components/post-navigation';
-import { PostSeriesBanner } from '@/components/post-series-banner';
-import { PostToc } from '@/components/post-toc';
-import { PostTocMobile } from '@/components/post-toc/mobile';
+import { PostComments } from '@/components/post/post-comments';
+import { PostFooter } from '@/components/post/post-footer';
+import { PostNavigation } from '@/components/post/post-navigation';
+import { PostSeriesBanner } from '@/components/post/post-series-banner';
+import { PostToc } from '@/components/post/post-toc';
+import { PostTocMobile } from '@/components/post/post-toc/mobile';
 import { ReadingProgress } from '@/components/reading-progress';
-import { RelatedPosts } from '@/components/related-posts';
+import { RelatedPosts } from '@/components/post/related-posts';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -36,7 +36,7 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '@/lib/constants';
-import { PostHeader } from '@/components/post-header';
+import { PostHeader } from '@/components/post/post-header';
 
 import type { Metadata } from 'next';
 
