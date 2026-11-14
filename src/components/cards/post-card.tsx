@@ -11,9 +11,9 @@ import { ContentCard } from './content-card';
 
 import type { CardHeadingLevel } from './content-card';
 import type { PostIndex } from '@/types';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentProps } from 'react';
 
-interface Props extends ComponentPropsWithoutRef<'article'> {
+interface Props extends ComponentProps<'article'> {
   post: PostIndex;
   headingLevel?: CardHeadingLevel;
 }

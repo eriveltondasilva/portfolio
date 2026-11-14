@@ -10,11 +10,11 @@ import { SeriesStatusBadge } from './series-status-badge';
 
 import type { CardHeadingLevel } from './content-card';
 import type { SeriesIndex } from '@/types';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentProps } from 'react';
 
 const MAX_LISTED_POSTS = 3;
 
-interface SeriesCardProps extends ComponentPropsWithoutRef<'article'> {
+interface SeriesCardProps extends ComponentProps<'article'> {
   series: SeriesIndex;
   showStatusBadge?: boolean;
   headingLevel?: CardHeadingLevel;

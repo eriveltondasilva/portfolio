@@ -9,10 +9,10 @@ import { ContentCard } from './content-card';
 import { ProjectStatusBadge } from './project-status-badge';
 
 import type { CardHeadingLevel } from './content-card';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentProps } from 'react';
 import type { Project } from '@/types';
 
-interface Props extends ComponentPropsWithoutRef<'article'> {
+interface Props extends ComponentProps<'article'> {
   project: Project;
   headingLevel?: CardHeadingLevel;
 }
