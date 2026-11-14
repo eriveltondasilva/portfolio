@@ -85,7 +85,7 @@ export function SeriesCard({
 
               <Link
                 href={`/blog/${post.slug}`}
-                className='truncate text-sm text-zinc-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-blue-400'
+                className='truncate text-sm text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400'
               >
                 {post.title}
               </Link>

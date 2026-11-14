@@ -29,7 +29,7 @@ export function ProjectCard({
         <div className='flex min-w-0 items-start gap-2'>
           <Icon iconNode={FolderGit2Icon} className='mt-1 shrink-0' />
 
-          <Heading className='min-w-0 font-semibold wrap-break-word text-zinc-900 dark:text-zinc-50'>
+          <Heading className='min-w-0 font-semibold text-balance wrap-break-word text-zinc-900 dark:text-zinc-50'>
             {project.name}
           </Heading>
 
