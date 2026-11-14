@@ -5,23 +5,34 @@ import { useTheme } from 'next-themes';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+
+const LABEL = 'Alternar tema';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const toggleTheme = () =>
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
 
   return (
-    <Button
-      type='button'
-      variant='outline'
-      size='icon-sm'
-      className='shrink-0 text-zinc-500 dark:text-zinc-400'
-      onClick={toggleTheme}
-    >
-      <Icon iconNode={SunIcon} className='hidden dark:block' />
-      <Icon iconNode={MoonIcon} className='dark:hidden' />
-      <span className='sr-only'>Alternar tema</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          type='button'
+          variant='outline'
+          size='icon-sm'
+          aria-label={LABEL}
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+          className='shrink-0 text-muted-foreground hover:text-foreground'
+        >
+          <Icon iconNode={SunIcon} className='hidden dark:block' />
+          <Icon iconNode={MoonIcon} className='dark:hidden' />
+        </Button>
+      </TooltipTrigger>
+
+      <TooltipContent>{LABEL}</TooltipContent>
+    </Tooltip>
   );
 }

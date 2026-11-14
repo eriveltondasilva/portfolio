@@ -59,7 +59,7 @@ export function ShareButton({ title, url }: Props) {
             size='icon-sm'
             onClick={handleShare}
             aria-label={label}
-            className='shrink-0 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200'
+            className='shrink-0 text-muted-foreground hover:text-foreground'
           >
             <Icon
               iconNode={icon}

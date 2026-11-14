@@ -38,6 +38,8 @@ import {
 } from '@/lib/constants';
 import { PostHeader } from '@/components/post/post-header';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
+import { ShareButton } from '@/components/post/share-button';
+import { BASE_URL } from '@/lib/base-url';
 
 import type { Metadata } from 'next';
 
@@ -130,7 +132,10 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <ThemeToggle />
+        <div className='flex shrink-0 items-center gap-2'>
+          <ShareButton title={meta.title} url={`${BASE_URL}/blog/${slug}`} />
+          <ThemeToggle />
+        </div>
       </div>
 
       {isArchived && <ArchivedBanner />}
