@@ -39,12 +39,12 @@ export function RelatedPosts({ slug }: Props) {
 
                   <div className='flex flex-wrap items-center text-xs text-zinc-400 dark:text-zinc-600'>
                     <time dateTime={displayDate}>
-                      {formatDate(displayDate)}
+                      {formatDate(displayDate, { dateStyle: 'long' })}
                     </time>
+
                     <Icon iconNode={DotIcon} className='size-5' />
-                    <span className='flex items-center gap-1'>
-                      {post.readingTime} min de leitura
-                    </span>
+
+                    <span>{post.readingTime} min de leitura</span>
                   </div>
                 </div>
 

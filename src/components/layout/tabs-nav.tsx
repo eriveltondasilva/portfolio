@@ -42,8 +42,7 @@ export function TabsNav() {
     >
       <div className='-mb-px flex min-w-0 flex-1 overflow-x-auto'>
         {tabs.map(({ label, href, icon }) => {
-          const isActive =
-            href === '/' ? pathname === '/' : pathname.startsWith(href);
+          const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
           return (
             <Link

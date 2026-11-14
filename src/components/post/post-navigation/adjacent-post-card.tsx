@@ -26,14 +26,15 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
     >
       <span
         className={cn(
-          'flex items-center gap-1.5 text-sm text-zinc-400 dark:text-zinc-500',
+          'flex items-center gap-1.5 text-sm text-muted-foreground uppercase',
           !isPrev && 'justify-end',
         )}
       >
         {isPrev && <Icon iconNode={ChevronLeftIcon} />}
-        {isPrev ? 'ANTERIOR' : 'PRÓXIMO'}
+        {isPrev ? 'Anterior' : 'Próximo'}
         {!isPrev && <Icon iconNode={ChevronRightIcon} />}
       </span>
+
       <span className='line-clamp-2 text-sm font-medium text-zinc-700 transition-colors group-hover:text-zinc-900 dark:text-zinc-300 dark:group-hover:text-zinc-50'>
         {post.title}
       </span>
