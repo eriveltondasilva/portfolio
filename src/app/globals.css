@@ -128,6 +128,11 @@
   html {
     @apply font-sans;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--color-orange-500);
+    outline-offset: 2px;
+  }
 }
 
 /* Reading Progress */
