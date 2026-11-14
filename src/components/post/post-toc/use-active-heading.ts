@@ -8,54 +8,35 @@ import type { TocItem } from '@/types';
  */
 const ACTIVE_OFFSET_PX = 100;
 
-function getActiveId(ids: string[]): string | null {
-  const isAtBottom =
-    window.scrollY > 0 &&
-    window.innerHeight + window.scrollY >=
-      document.documentElement.scrollHeight - 2;
-
-  if (isAtBottom) return ids.at(-1) ?? null;
-
-  let activeId: string | null = null;
-
-  for (const id of ids) {
-    const heading = document.getElementById(id);
-
-    if (!heading) continue;
-    if (heading.getBoundingClientRect().top > ACTIVE_OFFSET_PX) break;
-
-    activeId = id;
-  }
-
-  return activeId;
-}
-
 export function useActiveHeading(items: TocItem[]): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     const ids = items.map((item) => item.id);
-    let frame = 0;
+    const passed = new Set<string>();
 
-    function update() {
-      frame = 0;
-      setActiveId(getActiveId(ids));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const { target, boundingClientRect } of entries) {
+          if (boundingClientRect.top < ACTIVE_OFFSET_PX) passed.add(target.id);
+          else passed.delete(target.id);
+        }
+
+        setActiveId(ids.findLast((id) => passed.has(id)) ?? null);
+      },
+      {
+        rootMargin: `-${ACTIVE_OFFSET_PX}px 0px 0px 0px`,
+        threshold: [0, 1],
+      },
+    );
+
+    for (const id of ids) {
+      const heading = document.getElementById(id);
+
+      if (heading) observer.observe(heading);
     }
 
-    function scheduleUpdate() {
-      if (frame) return;
-      frame = requestAnimationFrame(update);
-    }
-
-    scheduleUpdate();
-    window.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener('scroll', scheduleUpdate);
-      window.removeEventListener('resize', scheduleUpdate);
-    };
+    return () => observer.disconnect();
   }, [items]);
 
   return activeId;
