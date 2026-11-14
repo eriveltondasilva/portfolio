@@ -1,18 +1,13 @@
 import { MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 
-import {
-  getGitHubAvatarUrl,
-  getNameInitials,
-  getUrlPathname,
-} from '@/lib/format';
+import { getUrlPathname } from '@/lib/format';
 import { getPrimaryAuthor } from '@/lib/blog/authors';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Icon } from '@/components/icon';
 import { getAuthorSocialLinks } from '@/lib/social-links';
 import { AUTHOR_LOCATION, AUTHOR_PRONOUNS } from '@/lib/constants';
-
-const AVATAR_SIZE = 400;
+import avatar from '@/assets/avatar.png';
+import { getPlaceholder } from '@/lib/images';
 
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
@@ -22,15 +17,14 @@ export function ProfileSidebar() {
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
       {/* Avatar */}
-      <Avatar className='size-20 rounded-full border-2 border-zinc-200 grayscale md:size-full dark:border-zinc-700'>
-        <AvatarImage
-          src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
-          alt={author.name}
-        />
-        <AvatarFallback className='bg-zinc-100 text-2xl font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
-          {getNameInitials(author.name)}
-        </AvatarFallback>
-      </Avatar>
+      <Image
+        src={avatar}
+        alt={author.name}
+        sizes='(min-width: 768px) 18rem, 5rem'
+        placeholder={getPlaceholder(avatar)}
+        className='aspect-square w-20 rounded-full border-2 border-border object-cover grayscale md:w-full'
+        priority
+      />
 
       {/* Name & username */}
       <div className='mt-4'>
