@@ -13,6 +13,7 @@ import { cn } from 'cn';
 
 import { SearchDialog } from '@/components/search-dialog';
 import { Icon } from '@/components/icon';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 
 import type { Route } from 'next';
 import type { LucideIcon } from 'lucide-react';
@@ -64,6 +65,7 @@ export function TabsNav() {
       </div>
 
       <SearchDialog />
+      <ThemeToggle />
     </nav>
   );
 }

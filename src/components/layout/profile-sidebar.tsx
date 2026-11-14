@@ -1,4 +1,4 @@
-import { DotIcon, MapPinIcon } from 'lucide-react';
+import { MapPinIcon } from 'lucide-react';
 import Image from 'next/image';
 
 import {
@@ -38,7 +38,7 @@ export function ProfileSidebar() {
           {author.name}
         </p>
         <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
-          {githubUsername} <Icon iconNode={DotIcon} /> {AUTHOR_PRONOUNS}
+          {githubUsername} • {AUTHOR_PRONOUNS}
         </p>
       </div>
 

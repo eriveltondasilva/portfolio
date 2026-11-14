@@ -8,10 +8,7 @@ interface TweetProps {
 
 export function Tweet({ id, className }: TweetProps) {
   return (
-    <div
-      data-theme='light'
-      className={cn('not-prose [&_.react-tweet-theme]:m-0!', className)}
-    >
+    <div className={cn('not-prose [&_.react-tweet-theme]:m-0!', className)}>
       <ReactTweet id={id} />
     </div>
   );

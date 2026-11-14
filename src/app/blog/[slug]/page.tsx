@@ -37,6 +37,7 @@ import {
   TWITTER_HANDLE,
 } from '@/lib/constants';
 import { PostHeader } from '@/components/post/post-header';
+import { ThemeToggle } from '@/components/theme/theme-toggle';
 
 import type { Metadata } from 'next';
 
@@ -112,21 +113,25 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
       <ReadingProgress />
       <BackToTop />
 
-      <Breadcrumb aria-label='Trilha de navegação' className='mb-6'>
-        <BreadcrumbList className='flex-nowrap'>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href='/blog'>Blog</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
+      <div className='mb-6 flex items-center justify-between gap-3'>
+        <Breadcrumb aria-label='Trilha de navegação' className='min-w-0'>
+          <BreadcrumbList className='flex-nowrap'>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href='/blog'>Blog</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
 
-          <BreadcrumbSeparator>/</BreadcrumbSeparator>
+            <BreadcrumbSeparator>/</BreadcrumbSeparator>
 
-          <BreadcrumbItem className='min-w-0'>
-            <BreadcrumbPage className='truncate'>{meta.title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+            <BreadcrumbItem className='min-w-0'>
+              <BreadcrumbPage className='truncate'>{meta.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <ThemeToggle />
+      </div>
 
       {isArchived && <ArchivedBanner />}
 

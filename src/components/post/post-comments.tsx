@@ -2,6 +2,7 @@
 
 import Giscus from '@giscus/react';
 import { MessageSquareTextIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 import { GISCUS } from '@/lib/constants';
 
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export function PostComments({ slug }: Props) {
+  const { resolvedTheme } = useTheme();
+
   return (
     <PostSection
       title='Comentários'
@@ -29,7 +32,7 @@ export function PostComments({ slug }: Props) {
         reactionsEnabled='0'
         emitMetadata='0'
         inputPosition='top'
-        theme='light'
+        theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
         lang='pt'
         loading='lazy'
       />

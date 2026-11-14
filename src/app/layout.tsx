@@ -13,6 +13,7 @@ import {
   TWITTER_HANDLE,
 } from '@/lib/constants';
 import { BASE_URL } from '@/lib/base-url';
+import { ThemeProvider } from '@/components/theme/theme-provider';
 
 import type { Metadata } from 'next';
 
@@ -49,15 +50,18 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang={LOCALE}
       className={`${GeistSans.variable} ${GeistMono.variable}`}
+      suppressHydrationWarning
     >
       <body className='flex min-h-dvh flex-col font-sans antialiased'>
-        <TopBorder />
+        <ThemeProvider>
+          <TopBorder />
 
-        <div className='flex-1'>
-          <TooltipProvider>{children}</TooltipProvider>
-        </div>
+          <div className='flex-1'>
+            <TooltipProvider>{children}</TooltipProvider>
+          </div>
 
-        <Footer />
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
