@@ -143,7 +143,7 @@ export default async function PostPage({ params }: PageProps<'/blog/[slug]'>) {
           {tocItems.length > 1 && <PostTocMobile items={tocItems} />}
 
           {/* Article Content */}
-          <div className='prose max-w-none prose-zinc dark:prose-invert prose-headings:scroll-mt-24 prose-hr:my-10'>
+          <div className='prose max-w-none prose-zinc dark:prose-invert prose-headings:scroll-mt-24 prose-hr:my-8'>
             <Content />
           </div>
 

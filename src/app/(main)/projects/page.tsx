@@ -67,7 +67,11 @@ export default function ProjectsPage() {
 
           <div className='grid gap-3 sm:grid-cols-2'>
             {featuredProjects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                headingLevel='h3'
+              />
             ))}
           </div>
         </section>
@@ -84,7 +88,11 @@ export default function ProjectsPage() {
 
           <div className='space-y-6'>
             {otherProjects.map((project) => (
-              <ProjectCard key={project.slug} project={project} />
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                headingLevel='h3'
+              />
             ))}
           </div>
         </section>

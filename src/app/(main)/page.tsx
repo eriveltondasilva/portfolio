@@ -92,7 +92,7 @@ export default function HomePage() {
           {/* Post list */}
           <div className='grid gap-3 sm:grid-cols-2'>
             {recentPosts.map((post) => (
-              <PostCard key={post.slug} post={post} />
+              <PostCard key={post.slug} post={post} headingLevel='h3' />
             ))}
           </div>
         </section>
@@ -118,7 +118,7 @@ export default function HomePage() {
           {/* Post list */}
           <div className='grid gap-3 sm:grid-cols-2'>
             {inProgressSeries.map((series) => (
-              <SeriesCard key={series.slug} series={series} />
+              <SeriesCard key={series.slug} series={series} headingLevel='h3' />
             ))}
           </div>
         </section>
