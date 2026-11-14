@@ -9,13 +9,13 @@ import {
 
 import { RICH_TEXT_CLASSES } from './rich-text';
 
-import type { ComponentProps } from 'react';
+import type { ComponentProps, ReactNode } from 'react';
 
 // ─────────────────────────────────────
 
 interface AccordionBaseProps {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 type AccordionProps =
