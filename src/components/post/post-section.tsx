@@ -22,7 +22,7 @@ export function PostSection({ title, icon, iconClassName, children }: Props) {
 
       <h2
         id={titleId}
-        className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'
+        className='mb-3 flex items-center gap-2 text-sm font-semibold text-foreground'
       >
         <Icon iconNode={icon} className={iconClassName} />
         {title}

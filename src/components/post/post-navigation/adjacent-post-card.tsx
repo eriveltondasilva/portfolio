@@ -19,7 +19,7 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
     <Link
       href={`/blog/${post.slug}`}
       className={cn(
-        'group flex min-w-0 flex-col gap-1 rounded-md border border-zinc-200 p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700/60 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
+        'group flex min-w-0 flex-col gap-1 rounded-md border p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
         !isPrev && 'text-right',
         className,
       )}
@@ -35,7 +35,7 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
         {!isPrev && <Icon iconNode={ChevronRightIcon} />}
       </span>
 
-      <span className='line-clamp-2 text-sm font-medium text-zinc-700 transition-colors group-hover:text-zinc-900 dark:text-zinc-300 dark:group-hover:text-zinc-50'>
+      <span className='line-clamp-2 text-sm font-medium text-foreground/80 transition-colors group-hover:text-zinc-900 dark:group-hover:text-zinc-50'>
         {post.title}
       </span>
     </Link>

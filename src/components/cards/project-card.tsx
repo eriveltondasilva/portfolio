@@ -29,7 +29,7 @@ export function ProjectCard({
         <div className='flex min-w-0 items-start gap-2'>
           <Icon iconNode={FolderGit2Icon} className='mt-1 shrink-0' />
 
-          <Heading className='min-w-0 font-semibold text-balance wrap-break-word text-zinc-900 dark:text-zinc-50'>
+          <Heading className='min-w-0 font-semibold text-balance wrap-break-word text-foreground'>
             {project.name}
           </Heading>
 
@@ -46,7 +46,7 @@ export function ProjectCard({
       </div>
 
       {/* Description */}
-      <p className='mt-2 text-sm text-zinc-600 dark:text-zinc-400'>
+      <p className='mt-2 text-sm text-muted-foreground'>
         {project.description}
       </p>
 
@@ -57,7 +57,7 @@ export function ProjectCard({
             <Badge
               key={tag}
               variant='outline'
-              className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+              className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-muted-foreground dark:bg-zinc-800'
             >
               {tag}
             </Badge>
@@ -71,7 +71,7 @@ export function ProjectCard({
           href={project.repository}
           target='_blank'
           rel='noopener noreferrer'
-          className='flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+          className='flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground'
         >
           <Image
             src={GithubIcon}
@@ -88,7 +88,7 @@ export function ProjectCard({
             href={project.url}
             target='_blank'
             rel='noopener noreferrer'
-            className='flex items-center gap-1 text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+            className='flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground'
           >
             <Icon iconNode={ExternalLinkIcon} className='size-3.5' />
             Ver projeto

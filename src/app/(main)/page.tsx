@@ -35,17 +35,17 @@ export default function HomePage() {
       <JsonLd data={buildHomeJsonLd(author)} />
 
       {/* Hero README block */}
-      <section className='rounded-md border border-zinc-200 bg-zinc-50/80 p-4 sm:p-6 dark:border-zinc-700/60 dark:bg-zinc-800/20'>
-        <div className='mb-3 flex flex-wrap items-center gap-x-1.5 text-xs text-zinc-500 dark:text-zinc-400'>
+      <section className='rounded-md border bg-muted/50 p-4 sm:p-6 dark:bg-zinc-800/20'>
+        <div className='mb-3 flex flex-wrap items-center gap-x-1.5 text-xs text-muted-foreground'>
           <span className='font-mono'>eriveltondasilva</span>
           <span aria-hidden='true'>/</span>
-          <span className='font-mono font-semibold text-zinc-700 dark:text-zinc-300'>
+          <span className='font-mono font-semibold text-foreground/80'>
             README.md
           </span>
         </div>
 
         <div className='space-y-3'>
-          <h1 className='flex items-start gap-2 text-lg leading-snug font-bold text-zinc-900 sm:text-xl dark:text-zinc-50'>
+          <h1 className='flex items-start gap-2 text-lg leading-snug font-bold text-foreground sm:text-xl'>
             {/* mt-1 centers the 20px icon on the first 28px title line */}
             <Icon
               iconNode={SparklesIcon}
@@ -56,14 +56,14 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className='text-sm leading-relaxed text-zinc-600 dark:text-zinc-400'>
+          <p className='text-sm leading-relaxed text-muted-foreground'>
             Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
             <Code>React</Code> e <Code>Next.js</Code>. Aqui compartilho o que
             aprendo sobre desenvolvimento web, boas práticas e tecnologias que
             uso no dia a dia.
           </p>
 
-          <div className='flex items-start gap-1.5 font-mono text-xs text-zinc-500 dark:text-zinc-400'>
+          <div className='flex items-start gap-1.5 font-mono text-xs text-muted-foreground'>
             <Icon iconNode={CheckIcon} className='shrink-0 text-emerald-500' />
             <span className='min-w-0'>
               Sempre aprendendo, sempre entregando
@@ -76,7 +76,7 @@ export default function HomePage() {
       {recentPosts.length > 0 && (
         <section>
           <div className='mb-3 flex items-center justify-between'>
-            <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
+            <h2 className='text-xs font-semibold tracking-widest text-muted-foreground uppercase'>
               Posts recentes
             </h2>
 
@@ -102,7 +102,7 @@ export default function HomePage() {
       {inProgressSeries.length > 0 && (
         <section>
           <div className='mb-3 flex items-center justify-between'>
-            <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
+            <h2 className='text-xs font-semibold tracking-widest text-muted-foreground uppercase'>
               Séries em andamento
             </h2>
 

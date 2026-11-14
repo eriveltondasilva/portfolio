@@ -39,7 +39,7 @@ export function CopyButton() {
         aria-label='Copiar código'
         onClick={handleCopy}
         className={cn(
-          'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-[#282c34] text-zinc-400 transition-all',
+          'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-[#282c34] text-muted-foreground transition-all',
           'opacity-0 focus-visible:opacity-100 pointer-coarse:opacity-100 [figure:hover_&]:opacity-100',
           'hover:border-white/20 hover:bg-[#343a45] hover:text-zinc-100',
           copied &&

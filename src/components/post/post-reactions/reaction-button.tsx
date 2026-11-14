@@ -61,7 +61,7 @@ export function ReactionButton({
           className={cn(
             'h-8 gap-1.5 px-2 text-xs',
             isSelected ?
-              'bg-zinc-100 font-semibold text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50'
+              'bg-zinc-100 font-semibold text-foreground dark:bg-zinc-800'
             : 'text-zinc-500 dark:text-zinc-400',
           )}
         >

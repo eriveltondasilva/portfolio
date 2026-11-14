@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 
 const toneStyle = {
   neutral: {
-    badge: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
+    badge: 'bg-zinc-100 text-foreground/80 dark:bg-zinc-800',
     dot: 'bg-zinc-400',
   },
   warning: {

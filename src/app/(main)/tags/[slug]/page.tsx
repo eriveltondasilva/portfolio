@@ -58,7 +58,7 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
       {/* Back link */}
       <Link
         href='/tags'
-        className='inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+        className='inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground'
       >
         <Icon iconNode={ArrowLeftIcon} />
         Todas as tags
@@ -66,15 +66,15 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
 
       {/* Header */}
       <header className='space-y-2'>
-        <h1 className='flex items-start gap-2 text-xl font-bold text-zinc-900 dark:text-zinc-50'>
+        <h1 className='flex items-start gap-2 text-xl font-bold text-foreground'>
           <Icon
             iconNode={HashIcon}
-            className='mt-1 size-5 shrink-0 text-zinc-400'
+            className='mt-1 size-5 shrink-0 text-muted-foreground'
           />
           <span className='min-w-0 wrap-break-word'>{slug}</span>
         </h1>
 
-        <p className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+        <p className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           {postCount} {postCount === 1 ? 'post' : 'posts'}
         </p>

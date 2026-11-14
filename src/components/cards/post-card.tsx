@@ -49,12 +49,10 @@ export function PostCard({
       </div>
 
       {/* Description */}
-      <p className='mt-2 text-sm text-zinc-600 dark:text-zinc-400'>
-        {post.description}
-      </p>
+      <p className='mt-2 text-sm text-muted-foreground'>{post.description}</p>
 
       {/* Meta */}
-      <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @sm:flex-row @sm:flex-wrap @sm:items-center dark:text-zinc-500'>
+      <div className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @sm:flex-row @sm:flex-wrap @sm:items-center'>
         <span>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
           <time dateTime={displayDate}>

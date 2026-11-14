@@ -37,7 +37,7 @@ export function TabsNav() {
 
   return (
     <nav
-      className='flex items-center gap-3 border-b border-zinc-200 dark:border-zinc-700/60'
+      className='flex items-center gap-3 border-b'
       aria-label='Navegação principal'
     >
       <div className='-mb-px flex min-w-0 flex-1 overflow-x-auto'>
@@ -52,8 +52,8 @@ export function TabsNav() {
               className={cn(
                 'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                 isActive ?
-                  'border-orange-500 text-zinc-900 dark:border-orange-400 dark:text-zinc-50'
-                : 'border-transparent text-zinc-600 hover:border-zinc-300 hover:text-zinc-900 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-200',
+                  'border-orange-500 text-foreground dark:border-orange-400'
+                : 'border-transparent text-muted-foreground hover:border-zinc-300 hover:text-foreground dark:hover:border-zinc-600',
               )}
             >
               <Icon iconNode={icon} />

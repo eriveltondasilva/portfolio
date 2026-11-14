@@ -33,7 +33,7 @@ export function PostToc({ items }: Props) {
       >
         <h2
           id='post-toc-title'
-          className='mb-3 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50'
+          className='mb-3 flex items-center gap-2 text-sm font-semibold text-foreground'
         >
           <Icon iconNode={ListIcon} className='text-orange-500' />
           Neste post
@@ -65,7 +65,7 @@ export function PostToc({ items }: Props) {
                       'block text-sm leading-snug transition-colors',
                       isActive ?
                         'text-orange-600 dark:text-orange-400'
-                      : 'text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100',
+                      : 'text-zinc-500 hover:text-foreground dark:text-zinc-400',
                     )}
                   >
                     {title}

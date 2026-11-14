@@ -53,7 +53,7 @@ export default function BlogPage() {
       <h1 className='sr-only'>Blog</h1>
 
       {/* Header */}
-      <div className='flex items-center justify-between gap-3 text-sm text-zinc-500 dark:text-zinc-400'>
+      <div className='flex items-center justify-between gap-3 text-sm text-muted-foreground'>
         <span className='flex items-center gap-1.5'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           {postCount} {postCount === 1 ? 'post publicado' : 'posts publicados'}
@@ -61,7 +61,7 @@ export default function BlogPage() {
 
         <a
           href='/feed.xml'
-          className='flex items-center gap-1.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+          className='flex items-center gap-1.5 transition-colors hover:text-foreground'
         >
           <Icon iconNode={RssIcon} className='size-3.5' />
           RSS

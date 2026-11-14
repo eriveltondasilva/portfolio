@@ -32,7 +32,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
           href={author.socials.github}
           target='_blank'
           rel='noopener noreferrer'
-          className='underline decoration-dotted underline-offset-2 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+          className='underline decoration-dotted underline-offset-2 transition-colors hover:text-foreground'
         >
           {author.name}
         </a>
@@ -46,30 +46,28 @@ function AuthorHoverCard({ author }: { author: Author }) {
       >
         {/* Header */}
         <div className='flex items-start gap-3'>
-          <Avatar className='size-10 shrink-0 rounded-full border border-zinc-200 dark:border-zinc-700'>
+          <Avatar className='size-10 shrink-0 rounded-full border'>
             <AvatarImage
               src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
               alt={author.name}
             />
 
-            <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300'>
+            <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-muted-foreground dark:bg-zinc-800'>
               {getNameInitials(author.name)}
             </AvatarFallback>
           </Avatar>
 
           <div className='min-w-0'>
-            <p className='text-sm leading-tight font-semibold text-zinc-900 dark:text-zinc-50'>
+            <p className='text-sm leading-tight font-semibold text-foreground'>
               {author.name}
             </p>
 
-            <p className='text-xs text-zinc-500 dark:text-zinc-400'>
-              @{githubUsername}
-            </p>
+            <p className='text-xs text-muted-foreground'>@{githubUsername}</p>
           </div>
         </div>
 
         {/* Bio */}
-        <p className='mt-3 line-clamp-3 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400'>
+        <p className='mt-3 line-clamp-3 text-xs leading-relaxed text-muted-foreground'>
           {author.bio}
         </p>
 
@@ -88,7 +86,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
             {authorSkillsCount > MAX_VISIBLE_SKILLS && (
               <Badge
                 variant='secondary'
-                className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400'
+                className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-muted-foreground dark:bg-zinc-800'
               >
                 +{authorSkillsCount - MAX_VISIBLE_SKILLS}
               </Badge>
@@ -97,7 +95,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         )}
 
         {/* Social info */}
-        <div className='mt-3 flex items-center gap-3 border-t border-zinc-100 pt-3 dark:border-zinc-700/60'>
+        <div className='mt-3 flex items-center gap-3 border-t pt-3'>
           {authorSocialLinks.map(({ label, icon, href }) => (
             <a
               key={label}

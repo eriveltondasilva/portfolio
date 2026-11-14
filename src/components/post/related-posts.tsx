@@ -22,7 +22,7 @@ export function RelatedPosts({ slug }: Props) {
       icon={FileTextIcon}
       iconClassName='text-blue-500'
     >
-      <ul className='divide-y divide-zinc-100 dark:divide-zinc-800'>
+      <ul className='divide-y divide-border'>
         {posts.map((post) => {
           const displayDate = getPostDisplayDate(post);
 
@@ -33,11 +33,11 @@ export function RelatedPosts({ slug }: Props) {
                 className='flex items-start justify-between gap-4'
               >
                 <div className='min-w-0 space-y-1.5'>
-                  <p className='truncate text-sm font-medium text-zinc-700 transition-colors group-hover:text-blue-600 dark:text-zinc-300 dark:group-hover:text-blue-400'>
+                  <p className='truncate text-sm font-medium text-foreground/80 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400'>
                     {post.title}
                   </p>
 
-                  <div className='flex flex-wrap items-center text-xs text-zinc-400 dark:text-zinc-600'>
+                  <div className='flex flex-wrap items-center text-xs text-muted-foreground'>
                     <time dateTime={displayDate}>
                       {formatDate(displayDate, { dateStyle: 'long' })}
                     </time>

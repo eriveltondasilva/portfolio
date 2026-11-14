@@ -28,21 +28,21 @@ export function ProfileSidebar() {
 
       {/* Name & username */}
       <div className='mt-4'>
-        <p className='text-2xl leading-tight font-bold text-zinc-900 dark:text-zinc-50'>
+        <p className='text-2xl leading-tight font-bold text-foreground'>
           {author.name}
         </p>
-        <p className='mt-0.5 text-xl font-light text-zinc-500 dark:text-zinc-400'>
+        <p className='mt-0.5 text-xl font-light text-muted-foreground'>
           {githubUsername} • {AUTHOR_PRONOUNS}
         </p>
       </div>
 
       {/* Bio */}
-      <p className='mt-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300'>
+      <p className='mt-4 text-sm leading-relaxed text-foreground/80'>
         {author.bio}
       </p>
 
       {/* Social Info */}
-      <div className='mt-5 space-y-2 text-sm text-zinc-600 dark:text-zinc-400'>
+      <div className='mt-5 space-y-2 text-sm text-muted-foreground'>
         <div className='flex items-center gap-2'>
           <Icon iconNode={MapPinIcon} className='shrink-0' />
           <span>{AUTHOR_LOCATION}</span>
@@ -54,7 +54,7 @@ export function ProfileSidebar() {
             href={href}
             target='_blank'
             rel='noopener noreferrer'
-            className='flex items-center gap-2 px-0.5 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100'
+            className='flex items-center gap-2 px-0.5 transition-colors hover:text-foreground'
           >
             <Image
               src={icon}

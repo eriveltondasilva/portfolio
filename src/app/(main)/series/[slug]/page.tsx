@@ -73,7 +73,7 @@ export default async function SeriesDetailPage({
       {/* Back link */}
       <Link
         href='/series'
-        className='inline-flex items-center gap-1.5 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200'
+        className='inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground'
       >
         <Icon iconNode={ArrowLeftIcon} />
         Todas as séries
@@ -84,17 +84,15 @@ export default async function SeriesDetailPage({
         <SeriesStatusBadge status={series.status} size='lg' />
 
         {/* Title */}
-        <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-zinc-900 sm:text-4xl dark:text-zinc-50'>
+        <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-foreground sm:text-4xl'>
           {series.title}
         </h1>
 
         {/* Description */}
-        <p className='mt-1 text-zinc-600 dark:text-zinc-400'>
-          {series.description}
-        </p>
+        <p className='mt-1 text-muted-foreground'>{series.description}</p>
 
         {/* Meta info */}
-        <ul className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @xl:flex-row @xl:flex-wrap @xl:items-center dark:text-zinc-400'>
+        <ul className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @xl:flex-row @xl:flex-wrap @xl:items-center'>
           <li>
             Publicada em{' '}
             <time dateTime={series.publishedAt}>
@@ -125,7 +123,7 @@ export default async function SeriesDetailPage({
         <ol className='space-y-3'>
           {posts.map((post) => (
             <li key={post.slug} className='flex items-start gap-3'>
-              <span className='mt-5 w-6 shrink-0 text-right font-mono text-sm text-zinc-400 tabular-nums dark:text-zinc-500'>
+              <span className='mt-5 w-6 shrink-0 text-right font-mono text-sm text-muted-foreground tabular-nums'>
                 {post.order}.
               </span>
               <PostCard post={post} className='min-w-0 flex-1' />

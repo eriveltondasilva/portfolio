@@ -53,7 +53,7 @@ export function TocRail({ levels, geometry, activeIndex }: Props) {
         aria-hidden='true'
         width={width}
         height={height}
-        className='pointer-events-none absolute top-0 left-0 fill-none stroke-zinc-200 dark:stroke-zinc-700/60'
+        className='pointer-events-none absolute top-0 left-0 fill-none stroke-border'
       >
         <path d={path} strokeWidth={TRACK_STROKE_PX} />
       </svg>

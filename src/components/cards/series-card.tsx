@@ -47,12 +47,10 @@ export function SeriesCard({
       </div>
 
       {/* Description */}
-      <p className='mt-1 text-sm text-zinc-600 dark:text-zinc-400'>
-        {series.description}
-      </p>
+      <p className='mt-1 text-sm text-muted-foreground'>{series.description}</p>
 
       {/* Meta info */}
-      <div className='mt-2 flex flex-col gap-0.5 text-xs text-zinc-400 @md:flex-row @md:flex-wrap @md:items-center dark:text-zinc-500'>
+      <div className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @md:flex-row @md:flex-wrap @md:items-center'>
         <span>
           Publicada em{' '}
           <time dateTime={series.publishedAt}>
@@ -76,10 +74,10 @@ export function SeriesCard({
 
       {/* Posts list */}
       {postCount > 0 && (
-        <ol className='mt-3 space-y-1 border-t-2 border-zinc-100 pt-3 dark:border-zinc-700/60'>
+        <ol className='mt-3 space-y-1 border-t-2 pt-3'>
           {series.posts.slice(0, MAX_LISTED_POSTS).map((post) => (
             <li key={post.slug} className='flex items-center gap-2'>
-              <span className='min-w-5 text-center text-xs text-zinc-400'>
+              <span className='min-w-5 text-center text-xs text-muted-foreground'>
                 {post.order}.
               </span>
 
@@ -93,7 +91,7 @@ export function SeriesCard({
           ))}
 
           {postCount > MAX_LISTED_POSTS && (
-            <li className='pl-6 text-xs text-zinc-400'>
+            <li className='pl-6 text-xs text-muted-foreground'>
               +{postCount - MAX_LISTED_POSTS} mais
             </li>
           )}

@@ -27,7 +27,7 @@ export function Footer() {
 
   return (
     <footer className='px-4 md:px-8 lg:px-12'>
-      <div className='mt-6 flex flex-col items-center gap-1 border-t border-zinc-100 pt-5 text-center font-mono text-xs text-zinc-500 lg:flex-row lg:justify-between dark:border-zinc-800 dark:text-zinc-400'>
+      <div className='mt-6 flex flex-col items-center gap-1 border-t pt-5 text-center font-mono text-xs text-muted-foreground lg:flex-row lg:justify-between'>
         <div className='flex flex-col items-center sm:flex-row'>
           <p className='flex items-center'>
             <span>&copy; {year}</span>

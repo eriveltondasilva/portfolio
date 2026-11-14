@@ -52,7 +52,7 @@ export default function TagsPage() {
 
       {/* Header */}
       {hasTags && (
-        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+        <div className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           {tagCount} {tagCount === 1 ? 'tag' : 'tags'}
         </div>
@@ -65,12 +65,12 @@ export default function TagsPage() {
             <Link
               key={tag}
               href={`/tags/${tag}`}
-              className='group flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm transition-colors hover:border-blue-300 hover:bg-blue-50 dark:border-zinc-700/60 dark:bg-zinc-800/40 dark:hover:border-blue-700 dark:hover:bg-blue-900/20'
+              className='group flex items-center gap-2 rounded-full border bg-muted px-4 py-2 text-sm transition-colors hover:border-blue-300 hover:bg-blue-50 dark:hover:border-blue-700 dark:hover:bg-blue-900/20'
             >
-              <span className='font-medium text-zinc-700 group-hover:text-blue-700 dark:text-zinc-300 dark:group-hover:text-blue-300'>
+              <span className='font-medium text-foreground/80 group-hover:text-blue-700 dark:group-hover:text-blue-300'>
                 {tag}
               </span>
-              <span className='rounded-full bg-zinc-200 px-1.5 py-0.5 text-xs font-medium text-zinc-600 group-hover:bg-blue-100 group-hover:text-blue-700 dark:bg-zinc-700 dark:text-zinc-400 dark:group-hover:bg-blue-900/50 dark:group-hover:text-blue-300'>
+              <span className='rounded-full bg-zinc-200 px-1.5 py-0.5 text-xs font-medium text-muted-foreground group-hover:bg-blue-100 group-hover:text-blue-700 dark:bg-zinc-700 dark:group-hover:bg-blue-900/50 dark:group-hover:text-blue-300'>
                 {count}
               </span>
             </Link>

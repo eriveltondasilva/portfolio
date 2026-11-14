@@ -24,7 +24,7 @@ function formatResultCount(shown: number, total: number): string {
 function KeyHint({ keys, label }: { keys: string; label: string }) {
   return (
     <span className='flex items-center gap-1.5'>
-      <kbd className='rounded border border-zinc-200 bg-zinc-50 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400'>
+      <kbd className='rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground'>
         {keys}
       </kbd>
       {label}
@@ -100,11 +100,11 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
         <Icon
           iconNode={SearchIcon}
           aria-hidden='true'
-          className='pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-zinc-400'
+          className='pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-muted-foreground'
         />
 
         <input
-          className='w-full border-b border-zinc-200 bg-transparent py-4 pr-12 pl-11 text-sm outline-none placeholder:text-zinc-400 dark:border-zinc-700/60 [&::-webkit-search-cancel-button]:appearance-none'
+          className='w-full border-b bg-transparent py-4 pr-12 pl-11 text-sm outline-none placeholder:text-zinc-400 [&::-webkit-search-cancel-button]:appearance-none'
           type='search'
           role='combobox'
           aria-expanded={hasResults}
@@ -127,7 +127,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
         role='status'
         className={
           hasResults ?
-            'flex items-center justify-between px-4 pt-3 text-xs text-zinc-400 dark:text-zinc-500'
+            'flex items-center justify-between px-4 pt-3 text-xs'
           : 'sr-only'
         }
       >
@@ -145,17 +145,14 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
 
       <div className='max-h-80 min-h-48 overflow-y-auto p-2'>
         {message ?
-          <p
-            role='status'
-            className='px-3 py-6 text-center text-sm text-zinc-500 dark:text-zinc-400'
-          >
+          <p role='status' className='px-3 py-6 text-center text-sm'>
             {message}
           </p>
         : <ul
             id={LISTBOX_ID}
             role='listbox'
             aria-label='Resultados da busca'
-            className='divide-y divide-zinc-100 dark:divide-zinc-800'
+            className='divide-y divide-border'
           >
             {results.map((result, index) => (
               <SearchResult
@@ -174,7 +171,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
       {hasResults && (
         <div
           aria-hidden='true'
-          className='flex items-center gap-4 border-t border-zinc-200 px-4 py-2 text-xs text-zinc-400 dark:border-zinc-700/60 dark:text-zinc-500 pointer-coarse:hidden'
+          className='flex items-center gap-4 border-t px-4 py-2 text-xs text-muted-foreground pointer-coarse:hidden'
         >
           <KeyHint keys='↑↓' label='navegar' />
           <KeyHint keys='↵' label='abrir' />

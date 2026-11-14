@@ -53,7 +53,7 @@ export default function ProjectsPage() {
       <h1 className='sr-only'>Projetos</h1>
 
       {/* Header */}
-      <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+      <div className='flex items-center gap-1.5 text-sm text-muted-foreground'>
         <Icon iconNode={LayersIcon} className='size-3.5' />
         {projectCount} {projectCount === 1 ? 'projeto' : 'projetos'}
       </div>
@@ -61,7 +61,7 @@ export default function ProjectsPage() {
       {/* Featured */}
       {hasFeatured && (
         <section className='space-y-3'>
-          <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
+          <h2 className='text-xs font-semibold tracking-widest text-muted-foreground uppercase'>
             Em destaque
           </h2>
 
@@ -81,7 +81,7 @@ export default function ProjectsPage() {
       {otherProjects.length > 0 && (
         <section className='space-y-3'>
           {hasFeatured && (
-            <h2 className='text-xs font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500'>
+            <h2 className='text-xs font-semibold tracking-widest text-muted-foreground uppercase'>
               Outros projetos
             </h2>
           )}

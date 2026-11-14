@@ -8,10 +8,5 @@ export function SectionSeparator({
   className,
   ...props
 }: ComponentProps<typeof Separator>) {
-  return (
-    <Separator
-      className={cn('my-8 dark:bg-zinc-700/60', className)}
-      {...props}
-    />
-  );
+  return <Separator className={cn('my-8', className)} {...props} />;
 }

@@ -52,7 +52,7 @@ export default function SeriesPage() {
 
       {/* Header */}
       {hasSeries && (
-        <div className='flex items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400'>
+        <div className='flex items-center gap-1.5 text-sm text-muted-foreground'>
           <Icon iconNode={LayersIcon} className='size-3.5' />
           {seriesCount} {seriesCount === 1 ? 'série' : 'séries'}
         </div>

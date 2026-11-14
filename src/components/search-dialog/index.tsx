@@ -49,11 +49,11 @@ export function SearchDialog() {
         onPointerEnter={preloadSearchIndex}
         onFocus={preloadSearchIndex}
         aria-keyshortcuts='Control+K Meta+K'
-        className='flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md border border-zinc-200 bg-zinc-50/80 px-2 text-sm text-zinc-500 transition-colors hover:border-zinc-300 hover:text-zinc-900 xl:pr-1.5 xl:pl-3 dark:border-zinc-700/60 dark:bg-zinc-800/40 dark:text-zinc-400 dark:hover:border-zinc-600 dark:hover:text-zinc-200'
+        className='flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md border bg-muted/50 px-2 text-sm text-muted-foreground transition-colors hover:border-zinc-300 hover:text-foreground xl:pr-1.5 xl:pl-3 dark:hover:border-zinc-600'
       >
         <Icon iconNode={SearchIcon} />
         <span className='max-xl:sr-only'>Buscar posts</span>
-        <kbd className='rounded border border-zinc-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-zinc-500 max-xl:hidden dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-400 pointer-coarse:hidden'>
+        <kbd className='rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground max-xl:hidden pointer-coarse:hidden'>
           {isMac ? '⌘K' : 'Ctrl K'}
         </kbd>
       </button>

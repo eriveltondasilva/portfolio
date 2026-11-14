@@ -36,7 +36,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
             {series.title}
           </Link>
 
-          <span className='shrink-0 text-xs text-zinc-400 dark:text-zinc-500'>
+          <span className='shrink-0 text-xs text-muted-foreground'>
             {order} de {total} {total > 1 ? 'posts' : 'post'}
           </span>
         </div>
@@ -64,14 +64,14 @@ export function PostSeriesBanner({ slug, order }: Props) {
                 </span>
 
                 {isCurrent && (
-                  <span className='text-sm font-medium text-zinc-900 dark:text-zinc-50'>
+                  <span className='text-sm font-medium text-foreground'>
                     {post.title}
                   </span>
                 )}
                 {!isCurrent && (
                   <Link
                     href={`/blog/${post.slug}`}
-                    className='text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
+                    className='text-sm text-muted-foreground transition-colors hover:text-foreground'
                   >
                     {post.title}
                   </Link>
