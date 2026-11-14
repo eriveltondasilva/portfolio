@@ -56,7 +56,7 @@ export function ShareButton({ title, url }: Props) {
         <TooltipTrigger asChild>
           <Button
             variant='outline'
-            size='icon'
+            size='icon-sm'
             onClick={handleShare}
             aria-label={label}
             className='shrink-0 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200'
