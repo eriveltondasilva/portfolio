@@ -2,6 +2,7 @@ import { FilePenIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
+import { ExternalLink } from '@/components/external-link';
 
 import { PostReactions } from './post-reactions';
 
@@ -17,10 +18,10 @@ export function PostFooter({ slug, editUrl, isArchived = false }: Props) {
       <PostReactions slug={slug} readOnly={isArchived} />
 
       <Button variant='link' asChild>
-        <a href={editUrl} target='_blank' rel='noopener noreferrer'>
+        <ExternalLink href={editUrl}>
           <Icon iconNode={FilePenIcon} />
           Sugerir edição
-        </a>
+        </ExternalLink>
       </Button>
     </footer>
   );

@@ -4,6 +4,8 @@ import Image from 'next/image';
 import GithubIcon from '@/assets/github.svg';
 import { Icon } from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
+import { ExternalLink } from '@/components/external-link';
+import { tw } from '@/lib/utils';
 
 import { ContentCard } from './content-card';
 import { ProjectStatusBadge } from './project-status-badge';
@@ -11,6 +13,8 @@ import { ProjectStatusBadge } from './project-status-badge';
 import type { CardHeadingLevel } from './content-card';
 import type { ComponentProps } from 'react';
 import type { Project } from '@/types';
+
+const LINK_CLASSES = tw`flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground`;
 
 interface Props extends ComponentProps<'article'> {
   project: Project;
@@ -67,12 +71,7 @@ export function ProjectCard({
 
       {/* Footer links */}
       <div className='mt-4 flex flex-wrap items-center gap-4 text-xs'>
-        <a
-          href={project.repository}
-          target='_blank'
-          rel='noopener noreferrer'
-          className='flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground'
-        >
+        <ExternalLink href={project.repository} className={LINK_CLASSES}>
           <Image
             src={GithubIcon}
             alt=''
@@ -81,18 +80,13 @@ export function ProjectCard({
             className='dark:invert'
           />
           Repositório
-        </a>
+        </ExternalLink>
 
         {project.url && (
-          <a
-            href={project.url}
-            target='_blank'
-            rel='noopener noreferrer'
-            className='flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground'
-          >
+          <ExternalLink href={project.url} className={LINK_CLASSES}>
             <Icon iconNode={ExternalLinkIcon} className='size-3.5' />
             Ver projeto
-          </a>
+          </ExternalLink>
         )}
       </div>
     </ContentCard>

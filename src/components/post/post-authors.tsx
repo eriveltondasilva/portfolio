@@ -14,6 +14,7 @@ import {
   getUrlPathname,
 } from '@/lib/format';
 import { getAuthorSocialLinks } from '@/lib/social-links';
+import { ExternalLink } from '@/components/external-link';
 
 import type { Author } from '@/types';
 
@@ -28,14 +29,12 @@ function AuthorHoverCard({ author }: { author: Author }) {
   return (
     <HoverCard openDelay={300} closeDelay={100}>
       <HoverCardTrigger asChild>
-        <a
+        <ExternalLink
           href={author.socials.github}
-          target='_blank'
-          rel='noopener noreferrer'
           className='underline decoration-dotted underline-offset-2 transition-colors hover:text-foreground'
         >
           {author.name}
-        </a>
+        </ExternalLink>
       </HoverCardTrigger>
 
       <HoverCardContent
@@ -97,11 +96,9 @@ function AuthorHoverCard({ author }: { author: Author }) {
         {/* Social info */}
         <div className='mt-3 flex items-center gap-3 border-t pt-3'>
           {authorSocialLinks.map(({ label, icon, href }) => (
-            <a
+            <ExternalLink
               key={label}
               href={href}
-              target='_blank'
-              rel='noopener noreferrer'
               className='opacity-60 transition-opacity hover:opacity-100'
             >
               <Image
@@ -112,7 +109,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
                 height={16}
                 className='dark:invert'
               />
-            </a>
+            </ExternalLink>
           ))}
         </div>
       </HoverCardContent>

@@ -8,6 +8,7 @@ import { getAuthorSocialLinks } from '@/lib/social-links';
 import { AUTHOR_LOCATION, AUTHOR_PRONOUNS } from '@/lib/constants';
 import avatar from '@/assets/avatar.png';
 import { getPlaceholder } from '@/lib/images';
+import { ExternalLink } from '@/components/external-link';
 
 export function ProfileSidebar() {
   const author = getPrimaryAuthor();
@@ -49,11 +50,9 @@ export function ProfileSidebar() {
         </div>
 
         {authorSocialLinks.map(({ key, label, icon, href }) => (
-          <a
+          <ExternalLink
             key={key}
             href={href}
-            target='_blank'
-            rel='noopener noreferrer'
             className='flex items-center gap-2 px-0.5 transition-colors hover:text-foreground'
           >
             <Image
@@ -64,7 +63,7 @@ export function ProfileSidebar() {
               className='dark:invert'
             />
             <span className='truncate'>{getUrlPathname(href)}</span>
-          </a>
+          </ExternalLink>
         ))}
       </div>
     </aside>

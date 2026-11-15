@@ -2,25 +2,12 @@ import { CoffeeIcon, DotIcon } from 'lucide-react';
 import NextLink from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { AUTHOR_NAME } from '@/lib/constants';
+import { ExternalLink } from '@/components/external-link';
+import { tw } from '@/lib/utils';
 
-import type { ComponentProps } from 'react';
+const BRAND_NAME = 'Erivelton';
 
-const BRAND_NAME = AUTHOR_NAME.split(/\s+/).at(0) ?? AUTHOR_NAME;
-
-const LINK_CLASSES =
-  'transition-colors hover:text-zinc-700 dark:hover:text-zinc-300';
-
-function ExternalLink(props: ComponentProps<'a'>) {
-  return (
-    <a
-      target='_blank'
-      rel='noopener noreferrer'
-      className={LINK_CLASSES}
-      {...props}
-    />
-  );
-}
+const LINK_CLASSES = tw`transition-colors hover:text-zinc-700 dark:hover:text-zinc-300`;
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -41,7 +28,9 @@ export function Footer() {
             <NextLink href='/privacy' className={LINK_CLASSES}>
               Privacidade
             </NextLink>
+
             <Icon iconNode={DotIcon} />
+
             <a href='/feed.xml' className={LINK_CLASSES}>
               RSS
             </a>
@@ -50,9 +39,14 @@ export function Footer() {
 
         <p>
           Feito com{' '}
-          <ExternalLink href='https://nextjs.org'>Next.js</ExternalLink>,{' '}
-          <ExternalLink href='https://vercel.com'>Vercel</ExternalLink> e muito
-          café{' '}
+          <ExternalLink href='https://nextjs.org' className={LINK_CLASSES}>
+            Next.js
+          </ExternalLink>
+          ,{' '}
+          <ExternalLink href='https://vercel.com' className={LINK_CLASSES}>
+            Vercel
+          </ExternalLink>{' '}
+          e muito café{' '}
           <Icon iconNode={CoffeeIcon} className='inline align-text-bottom' />
         </p>
       </div>
