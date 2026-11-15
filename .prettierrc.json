@@ -11,5 +11,5 @@
     "prettier-plugin-tailwindcss"
   ],
   "tailwindStylesheet": "./src/app/globals.css",
-  "tailwindFunctions": ["clsx", "cn"]
+  "tailwindFunctions": ["cva", "clsx", "cn", "tw"]
 }
