@@ -61,8 +61,8 @@ export function ReactionButton({
           className={cn(
             'h-8 gap-1.5 px-2 text-xs',
             isSelected ?
-              'bg-zinc-100 font-semibold text-foreground dark:bg-zinc-800'
-            : 'text-zinc-500 dark:text-zinc-400',
+              'bg-muted font-semibold text-foreground'
+            : 'text-muted-foreground',
           )}
         >
           <span className='text-sm leading-none' aria-hidden='true'>

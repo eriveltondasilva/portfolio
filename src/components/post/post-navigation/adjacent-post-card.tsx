@@ -35,7 +35,7 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
         {!isPrev && <Icon iconNode={ChevronRightIcon} />}
       </span>
 
-      <span className='line-clamp-2 text-sm font-medium text-foreground/80 transition-colors group-hover:text-zinc-900 dark:group-hover:text-zinc-50'>
+      <span className='line-clamp-2 text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground'>
         {post.title}
       </span>
     </Link>

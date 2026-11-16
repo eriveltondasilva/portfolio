@@ -41,7 +41,7 @@ export function PostReactions({ slug, readOnly = false }: Props) {
       <p
         role='status'
         className={cn(
-          'text-xs text-red-600 dark:text-red-400',
+          'text-xs text-destructive',
           errorMessage ? 'mt-1' : 'sr-only',
         )}
       >

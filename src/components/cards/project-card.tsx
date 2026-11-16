@@ -61,7 +61,7 @@ export function ProjectCard({
             <Badge
               key={tag}
               variant='outline'
-              className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-muted-foreground dark:bg-zinc-800'
+              className='rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground'
             >
               {tag}
             </Badge>

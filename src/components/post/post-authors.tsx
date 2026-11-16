@@ -51,7 +51,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
               alt={author.name}
             />
 
-            <AvatarFallback className='bg-zinc-100 text-sm font-semibold text-muted-foreground dark:bg-zinc-800'>
+            <AvatarFallback className='bg-muted text-sm font-semibold text-muted-foreground'>
               {getNameInitials(author.name)}
             </AvatarFallback>
           </Avatar>
@@ -85,7 +85,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
             {authorSkillsCount > MAX_VISIBLE_SKILLS && (
               <Badge
                 variant='secondary'
-                className='rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-muted-foreground dark:bg-zinc-800'
+                className='rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground'
               >
                 +{authorSkillsCount - MAX_VISIBLE_SKILLS}
               </Badge>

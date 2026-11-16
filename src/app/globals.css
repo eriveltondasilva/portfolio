@@ -49,6 +49,22 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Must match the Shiki theme (one-dark-pro) so title and caption blend with the code */
+@theme {
+  --color-code: #282c34;
+  --color-code-tab: #3e4451;
+  --color-code-hover: #343a45;
+}
+
+@utility bg-brand-gradient {
+  background-image: linear-gradient(
+    to right,
+    var(--color-orange-500),
+    var(--color-amber-400),
+    var(--color-orange-600)
+  );
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -141,6 +157,8 @@
   }
 }
 
+/* ================================== */
+
 /* Reading Progress */
 .reading-progress {
   transform: scaleX(0);
@@ -182,11 +200,11 @@
 /* Code Block */
 figure[data-rehype-pretty-code-figure] {
   /* Background must match the Shiki theme (one-dark-pro) so title and caption blend with the code */
-  @apply relative my-6 overflow-hidden rounded-md border border-white/10 bg-[#282c34];
+  @apply relative my-6 overflow-hidden rounded-md border border-white/10 bg-code;
 
   /* Title as a solid tab attached to the top-left corner of the block */
   & > [data-rehype-pretty-code-title] {
-    @apply m-0 w-fit rounded-br-md bg-[#3e4451] px-3 py-1 font-mono text-xs font-semibold text-zinc-200;
+    @apply m-0 w-fit rounded-br-md bg-code-tab px-3 py-1 font-mono text-xs font-semibold text-zinc-200;
   }
 
   /* Caption as a footer inside the block */

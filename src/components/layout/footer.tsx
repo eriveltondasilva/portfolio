@@ -7,7 +7,7 @@ import { tw } from '@/lib/utils';
 
 const BRAND_NAME = 'Erivelton';
 
-const LINK_CLASSES = tw`transition-colors hover:text-zinc-700 dark:hover:text-zinc-300`;
+const LINK_CLASSES = tw`transition-colors hover:text-foreground`;
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -56,7 +56,7 @@ export function Footer() {
         aria-hidden='true'
         className='@container mt-8 overflow-hidden select-none'
       >
-        <p className='mb-[-0.15em] bg-linear-to-r from-orange-500 via-amber-400 to-orange-600 bg-clip-text text-[26cqw] leading-none font-semibold tracking-tighter whitespace-nowrap text-transparent'>
+        <p className='mb-[-0.15em] bg-brand-gradient bg-clip-text text-[26cqw] leading-none font-semibold tracking-tighter whitespace-nowrap text-transparent'>
           {BRAND_NAME}
         </p>
       </div>

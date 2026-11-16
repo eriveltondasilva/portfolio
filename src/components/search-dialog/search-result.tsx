@@ -41,7 +41,7 @@ function ResultTags({
             'inline-flex items-center rounded-full px-2 py-0.5 text-xs',
             isMatch ?
               'bg-blue-50 font-medium text-blue-700 group-aria-selected:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:group-aria-selected:bg-blue-900/50'
-            : 'bg-zinc-100 text-muted-foreground group-aria-selected:bg-zinc-200 dark:bg-zinc-800 dark:group-aria-selected:bg-zinc-700',
+            : 'bg-muted text-muted-foreground group-aria-selected:bg-zinc-200 dark:group-aria-selected:bg-zinc-700',
           )}
         >
           <Icon iconNode={HashIcon} className='size-3' />
@@ -86,7 +86,7 @@ export function SearchResult({
         href={`/blog/${item.slug}`}
         onClick={onNavigate}
         onMouseMove={onHover}
-        className='group block rounded-md px-3 py-2.5 transition-colors aria-selected:bg-zinc-100 dark:aria-selected:bg-zinc-800'
+        className='group block rounded-md px-3 py-2.5 transition-colors aria-selected:bg-muted'
       >
         <span className='block truncate text-sm font-medium text-foreground'>
           {item.title}

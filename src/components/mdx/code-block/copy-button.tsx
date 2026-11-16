@@ -39,9 +39,9 @@ export function CopyButton() {
         aria-label='Copiar código'
         onClick={handleCopy}
         className={cn(
-          'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-[#282c34] text-zinc-400 transition-all',
+          'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-code text-zinc-400 transition-all',
           'opacity-0 focus-visible:opacity-100 pointer-coarse:opacity-100 [figure:hover_&]:opacity-100',
-          'hover:border-white/20 hover:bg-[#343a45] hover:text-zinc-100',
+          'hover:border-white/20 hover:bg-code-hover hover:text-zinc-100',
           copied &&
             'border-green-500/50 text-green-400 opacity-100 hover:text-green-400',
         )}
