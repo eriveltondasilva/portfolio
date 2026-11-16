@@ -31,13 +31,13 @@ export function PostSeriesBanner({ slug, order }: Props) {
         <div className='flex items-center justify-between gap-3'>
           <Link
             href={`/series/${series.slug}`}
-            className='flex items-center gap-1.5 text-xs font-semibold text-orange-600 hover:underline dark:text-orange-400'
+            className='flex items-center gap-1.5 text-xs font-semibold text-orange-700 hover:underline dark:text-orange-400'
           >
             {series.title}
           </Link>
 
           <span className='shrink-0 text-xs text-muted-foreground'>
-            {order} de {total} {total > 1 ? 'posts' : 'post'}
+            {order} de {total} {total === 1 ? 'post' : 'posts'}
           </span>
         </div>
 
@@ -56,8 +56,8 @@ export function PostSeriesBanner({ slug, order }: Props) {
                   className={cn(
                     'min-w-4 text-right text-xs tabular-nums',
                     isCurrent ?
-                      'text-orange-500 dark:text-orange-400'
-                    : 'text-zinc-400 dark:text-zinc-600',
+                      'text-orange-700 dark:text-orange-400'
+                    : 'text-muted-foreground',
                   )}
                 >
                   {post.order}.
@@ -68,6 +68,7 @@ export function PostSeriesBanner({ slug, order }: Props) {
                     {post.title}
                   </span>
                 )}
+
                 {!isCurrent && (
                   <Link
                     href={`/blog/${post.slug}`}

@@ -133,6 +133,12 @@
     outline: 2px solid var(--color-orange-500);
     outline-offset: 2px;
   }
+
+  button:not(:disabled),
+  [role='button']:not(:disabled),
+  summary {
+    cursor: pointer;
+  }
 }
 
 /* Reading Progress */
@@ -165,7 +171,7 @@
   @apply relative;
 
   & .anchor {
-    @apply absolute -left-3.5 -translate-x-full no-underline opacity-0 transition-all;
+    @apply absolute -left-3.5 -translate-x-full no-underline opacity-0 transition-all motion-reduce:transition-none;
   }
 
   &:hover .anchor {

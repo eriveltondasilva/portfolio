@@ -64,7 +64,7 @@ export function PostToc({ items }: Props) {
                     className={cn(
                       'block text-sm leading-snug transition-colors',
                       isActive ?
-                        'text-orange-600 dark:text-orange-400'
+                        'text-orange-700 dark:text-orange-400'
                       : 'text-zinc-500 hover:text-foreground dark:text-zinc-400',
                     )}
                   >

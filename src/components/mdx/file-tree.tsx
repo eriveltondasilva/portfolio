@@ -79,7 +79,7 @@ export function FileTreeFolder({
   return (
     <li {...props}>
       <details open={defaultOpen}>
-        <summary className='flex cursor-pointer list-none items-center gap-1.5 py-0.5 text-sm text-foreground/80 transition-colors marker:hidden hover:text-foreground'>
+        <summary className='flex list-none items-center gap-1.5 py-0.5 text-sm text-foreground/80 transition-colors marker:hidden hover:text-foreground'>
           <Icon
             iconNode={ChevronRightIcon}
             className='size-3.5 shrink-0 text-muted-foreground transition-transform duration-200 ease-out motion-reduce:transition-none [details[open]>summary_&]:rotate-90'

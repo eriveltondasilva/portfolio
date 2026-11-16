@@ -15,12 +15,12 @@ export function PostTocMobile({ items }: Props) {
 
   return (
     <details className='group mb-6 rounded-md border xl:hidden'>
-      <summary className='flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-semibold text-foreground select-none [&::-webkit-details-marker]:hidden'>
+      <summary className='flex list-none items-center gap-2 px-4 py-3 text-sm font-semibold text-foreground select-none [&::-webkit-details-marker]:hidden'>
         <Icon iconNode={ListIcon} className='text-orange-500' />
         Neste post
         <Icon
           iconNode={ChevronDownIcon}
-          className='ml-auto text-muted-foreground transition-transform group-open:rotate-180'
+          className='ml-auto text-muted-foreground transition-transform group-open:rotate-180 motion-reduce:transition-none'
         />
       </summary>
 

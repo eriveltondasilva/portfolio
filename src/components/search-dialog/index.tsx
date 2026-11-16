@@ -49,7 +49,7 @@ export function SearchDialog() {
         onPointerEnter={preloadSearchIndex}
         onFocus={preloadSearchIndex}
         aria-keyshortcuts='Control+K Meta+K'
-        className='flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-md border bg-muted/50 px-2 text-sm text-muted-foreground transition-colors hover:border-zinc-300 hover:text-foreground xl:pr-1.5 xl:pl-3 dark:hover:border-zinc-600'
+        className='flex h-8 shrink-0 items-center gap-2 rounded-md border bg-muted/50 px-2 text-sm text-muted-foreground transition-colors hover:border-zinc-300 hover:text-foreground xl:pr-1.5 xl:pl-3 dark:hover:border-zinc-600'
       >
         <Icon iconNode={SearchIcon} />
         <span className='max-xl:sr-only'>Buscar posts</span>

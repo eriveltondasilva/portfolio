@@ -32,12 +32,15 @@ export function SeriesCard({
   return (
     <ContentCard className={cn('@container', className)} {...props}>
       {/* Header */}
-      <div className='flex flex-wrap items-start justify-between gap-x-4 gap-y-2'>
-        <div className='flex min-w-0 items-start gap-2 text-orange-500 dark:text-orange-400'>
+      <div className='flex items-start justify-between gap-x-4 gap-y-2'>
+        <div className='flex min-w-0 items-start gap-2 text-blue-600 dark:text-blue-400'>
           <Icon iconNode={FolderBookmarkIcon} className='mt-1 shrink-0' />
 
-          <Heading className='min-w-0 font-semibold text-balance wrap-break-word'>
-            <Link href={`/series/${series.slug}`} className='hover:underline'>
+          <Heading className='min-w-0 font-semibold text-balance'>
+            <Link
+              href={`/series/${series.slug}`}
+              className='hover:underline hover:decoration-dashed hover:decoration-2 hover:underline-offset-2'
+            >
               {series.title}
             </Link>
           </Heading>

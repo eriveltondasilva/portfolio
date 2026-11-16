@@ -38,11 +38,14 @@ export function PostCard({
       )}
 
       {/* Header */}
-      <div className='flex items-start gap-2 text-blue-500 dark:text-blue-400'>
+      <div className='flex items-start gap-2 text-blue-600 dark:text-blue-400'>
         <Icon iconNode={FileTextIcon} className='mt-1 shrink-0' />
 
         <Heading className='min-w-0 font-semibold text-balance'>
-          <Link href={`/blog/${post.slug}`} className='hover:underline'>
+          <Link
+            href={`/blog/${post.slug}`}
+            className='hover:underline hover:decoration-dashed hover:decoration-2 hover:underline-offset-2'
+          >
             {post.title}
           </Link>
         </Heading>
