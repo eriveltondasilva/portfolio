@@ -52,7 +52,7 @@ export function BackToTop() {
         inert={!visible}
         aria-label='Voltar ao topo'
         className={cn(
-          'fixed right-8 bottom-6 z-50 flex size-10 items-center justify-center rounded-full border bg-background text-muted-foreground shadow-sm transition-all duration-200 hover:border-zinc-300 hover:text-foreground motion-safe:hover:scale-120 motion-reduce:transition-none dark:hover:border-zinc-600',
+          'fixed right-8 bottom-6 z-50 flex size-10 items-center justify-center rounded-full border bg-background text-muted-foreground shadow-sm transition-all duration-200 hover:border-border-strong hover:text-foreground motion-safe:hover:scale-120 motion-reduce:transition-none',
           visible ?
             'translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-4 opacity-0',

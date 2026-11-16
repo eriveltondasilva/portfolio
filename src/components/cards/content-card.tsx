@@ -11,7 +11,7 @@ export function ContentCard({
   return (
     <article
       className={cn(
-        'flex flex-col rounded-md border bg-background p-5 transition-colors hover:border-zinc-300 hover:bg-zinc-50/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
+        'flex flex-col rounded-md border bg-background p-5 transition-colors hover:border-border-strong hover:bg-muted/40',
         className,
       )}
       {...props}

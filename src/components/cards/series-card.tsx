@@ -36,7 +36,7 @@ export function SeriesCard({
         <div className='flex min-w-0 items-start gap-2 text-blue-600 dark:text-blue-400'>
           <Icon iconNode={FolderBookmarkIcon} className='mt-1 shrink-0' />
 
-          <Heading className='min-w-0 font-semibold text-balance'>
+          <Heading className='min-w-0 font-semibold text-balance wrap-break-word'>
             <Link
               href={`/series/${series.slug}`}
               className='hover:underline hover:decoration-dashed hover:decoration-2 hover:underline-offset-2'

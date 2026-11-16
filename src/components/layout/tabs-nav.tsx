@@ -53,7 +53,7 @@ export function TabsNav() {
                 'flex items-center gap-2 border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors',
                 isActive ?
                   'border-orange-500 text-foreground dark:border-orange-400'
-                : 'border-transparent text-muted-foreground hover:border-zinc-300 hover:text-foreground dark:hover:border-zinc-600',
+                : 'border-transparent text-muted-foreground hover:border-border-strong hover:text-foreground',
               )}
             >
               <Icon iconNode={icon} />

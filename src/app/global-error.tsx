@@ -28,7 +28,7 @@ export default function GlobalError({ error, reset }: Props) {
 
   return (
     <html lang={LOCALE}>
-      <body className='font-sans antialiased'>
+      <body>
         <main className='flex min-h-dvh items-center justify-center'>
           <Empty>
             <EmptyHeader>

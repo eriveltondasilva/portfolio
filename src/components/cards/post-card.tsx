@@ -41,7 +41,7 @@ export function PostCard({
       <div className='flex items-start gap-2 text-blue-600 dark:text-blue-400'>
         <Icon iconNode={FileTextIcon} className='mt-1 shrink-0' />
 
-        <Heading className='min-w-0 font-semibold text-balance'>
+        <Heading className='min-w-0 font-semibold text-balance wrap-break-word'>
           <Link
             href={`/blog/${post.slug}`}
             className='hover:underline hover:decoration-dashed hover:decoration-2 hover:underline-offset-2'

@@ -1,3 +1,4 @@
+import { PROSE_CLASSES } from '@/components/mdx/rich-text';
 import Privacy from '@/content/pages/privacy.mdx';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className='mx-auto max-w-3xl px-4 py-8 md:px-8'>
-      <article className='prose max-w-none prose-zinc dark:prose-invert'>
+      <article className={PROSE_CLASSES}>
         <Privacy />
       </article>
     </main>

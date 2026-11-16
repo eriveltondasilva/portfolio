@@ -9,12 +9,12 @@ const toneStyle = {
   },
   warning: {
     badge:
-      'bg-amber-600/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
+      'bg-amber-500/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
     dot: 'bg-amber-500',
   },
   success: {
     badge:
-      'bg-green-600/10 text-green-700 dark:bg-green-400/10 dark:text-green-400',
+      'bg-green-500/10 text-green-700 dark:bg-green-400/10 dark:text-green-400',
     dot: 'bg-green-500',
   },
 } as const;

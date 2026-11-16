@@ -19,7 +19,7 @@ export function AdjacentPostCard({ post, direction, className }: Props) {
     <Link
       href={`/blog/${post.slug}`}
       className={cn(
-        'group flex min-w-0 flex-col gap-1 rounded-md border p-4 transition-colors hover:border-zinc-300 hover:bg-zinc-50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800/30',
+        'group flex min-w-0 flex-col gap-1 rounded-md border p-4 transition-colors hover:border-border-strong hover:bg-muted/40',
         !isPrev && 'text-right',
         className,
       )}

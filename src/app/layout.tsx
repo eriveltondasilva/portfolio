@@ -52,7 +52,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       className={`${GeistSans.variable} ${GeistMono.variable}`}
       suppressHydrationWarning
     >
-      <body className='flex min-h-dvh flex-col font-sans antialiased'>
+      <body className='flex min-h-dvh flex-col'>
         <ThemeProvider>
           <TopBorder />
 
