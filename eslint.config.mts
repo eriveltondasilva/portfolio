@@ -2,6 +2,8 @@ import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';
 import prettier from 'eslint-config-prettier/flat';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
+import betterTailwindcss from 'eslint-plugin-better-tailwindcss';
+import { getDefaultSelectors } from 'eslint-plugin-better-tailwindcss/defaults';
 import importXPlugin from 'eslint-plugin-import-x';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
@@ -52,6 +54,28 @@ const eslintConfig = defineConfig([
 
       'import-x/no-duplicates': 'error',
       'import-x/newline-after-import': 'error',
+    },
+  },
+
+  // # Tailwind plugin
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'better-tailwindcss': betterTailwindcss },
+    settings: {
+      'better-tailwindcss': {
+        entryPoint: 'src/app/globals.css',
+        selectors: [...getDefaultSelectors(), { kind: 'tag', path: '^tw$' }],
+      },
+    },
+    rules: {
+      ...betterTailwindcss.configs['correctness-error'].rules,
+      'better-tailwindcss/no-unknown-classes': [
+        'error',
+        { ignore: ['not-prose', 'reading-progress'] },
+      ],
+      'better-tailwindcss/no-duplicate-classes': 'error',
+      'better-tailwindcss/no-deprecated-classes': 'error',
+      'better-tailwindcss/enforce-canonical-classes': 'error',
     },
   },
 
