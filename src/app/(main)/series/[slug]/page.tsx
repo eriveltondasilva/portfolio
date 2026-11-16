@@ -84,7 +84,7 @@ export default async function SeriesDetailPage({
         <SeriesStatusBadge status={series.status} size='lg' />
 
         {/* Title */}
-        <h1 className='font-mono text-3xl leading-tight font-bold tracking-tight text-balance text-foreground sm:text-4xl'>
+        <h1 className='font-mono text-3xl/tight font-bold tracking-tight text-balance text-foreground sm:text-4xl'>
           {series.title}
         </h1>
 

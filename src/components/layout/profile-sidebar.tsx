@@ -29,7 +29,7 @@ export function ProfileSidebar() {
 
       {/* Name & username */}
       <div className='mt-4'>
-        <p className='text-2xl leading-tight font-bold text-foreground'>
+        <p className='text-2xl/tight font-bold text-foreground'>
           {author.name}
         </p>
         <p className='mt-0.5 text-xl font-light text-muted-foreground'>
@@ -38,9 +38,7 @@ export function ProfileSidebar() {
       </div>
 
       {/* Bio */}
-      <p className='mt-4 text-sm leading-relaxed text-foreground/80'>
-        {author.bio}
-      </p>
+      <p className='mt-4 text-sm/relaxed text-foreground/80'>{author.bio}</p>
 
       {/* Social Info */}
       <div className='mt-5 space-y-2 text-sm text-muted-foreground'>

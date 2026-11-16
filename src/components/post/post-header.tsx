@@ -26,7 +26,7 @@ export function PostHeader({ post, authors }: Props) {
         ))}
       </div>
 
-      <h1 className='mt-1 font-mono text-2xl leading-tight font-bold tracking-tight text-pretty wrap-break-word text-foreground sm:text-3xl md:text-4xl'>
+      <h1 className='mt-1 font-mono text-2xl/tight font-bold tracking-tight text-pretty wrap-break-word text-foreground sm:text-3xl md:text-4xl'>
         {title}
       </h1>
 

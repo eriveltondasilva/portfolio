@@ -62,7 +62,7 @@ export function PostToc({ items }: Props) {
                       paddingLeft: getRailX(levels[index] ?? 0) + TEXT_GAP_PX,
                     }}
                     className={cn(
-                      'block text-sm leading-snug transition-colors',
+                      'block text-sm/snug transition-colors',
                       isActive ?
                         'text-orange-700 dark:text-orange-400'
                       : 'text-muted-foreground hover:text-foreground',

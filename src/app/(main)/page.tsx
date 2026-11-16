@@ -45,7 +45,7 @@ export default function HomePage() {
         </div>
 
         <div className='space-y-3'>
-          <h1 className='flex items-start gap-2 text-lg leading-snug font-bold text-foreground sm:text-xl'>
+          <h1 className='flex items-start gap-2 text-lg/snug font-bold text-foreground sm:text-xl'>
             {/* mt-1 centers the 20px icon on the first 28px title line */}
             <Icon
               iconNode={SparklesIcon}
@@ -56,7 +56,7 @@ export default function HomePage() {
             </span>
           </h1>
 
-          <p className='text-sm leading-relaxed text-muted-foreground'>
+          <p className='text-sm/relaxed text-muted-foreground'>
             Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
             <Code>React</Code> e <Code>Next.js</Code>. Aqui compartilho o que
             aprendo sobre desenvolvimento web, boas práticas e tecnologias que

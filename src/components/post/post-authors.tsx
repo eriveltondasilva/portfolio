@@ -57,7 +57,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
           </Avatar>
 
           <div className='min-w-0'>
-            <p className='text-sm leading-tight font-semibold text-foreground'>
+            <p className='text-sm/tight font-semibold text-foreground'>
               {author.name}
             </p>
 
@@ -66,7 +66,7 @@ function AuthorHoverCard({ author }: { author: Author }) {
         </div>
 
         {/* Bio */}
-        <p className='mt-3 line-clamp-3 text-xs leading-relaxed text-muted-foreground'>
+        <p className='mt-3 line-clamp-3 text-xs/relaxed text-muted-foreground'>
           {author.bio}
         </p>
 
