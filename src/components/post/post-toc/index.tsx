@@ -7,6 +7,7 @@ import { Icon } from '@/components/icon';
 
 import { TocRail, getRailX } from './toc-rail';
 import { useActiveHeading } from './use-active-heading';
+import { useKeepActiveLinkVisible } from './use-keep-active-link-visible';
 import { ITEM_PADDING_Y_PX, useRailGeometry } from './use-rail-geometry';
 
 import type { TocItem } from '@/types';
@@ -19,6 +20,7 @@ const TEXT_GAP_PX = 14;
 
 export function PostToc({ items }: Props) {
   const activeId = useActiveHeading(items);
+  const navRef = useKeepActiveLinkVisible(activeId);
   const { listRef, geometry } = useRailGeometry(items);
 
   const baseDepth = Math.min(...items.map((item) => item.depth));
@@ -28,6 +30,7 @@ export function PostToc({ items }: Props) {
   return (
     <aside className='absolute inset-y-0 left-full hidden w-60 pl-8 xl:block'>
       <nav
+        ref={navRef}
         aria-labelledby='post-toc-title'
         className='sticky top-8 max-h-[calc(100dvh-4rem)] overflow-y-auto'
       >
