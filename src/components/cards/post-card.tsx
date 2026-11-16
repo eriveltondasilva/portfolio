@@ -29,13 +29,13 @@ export function PostCard({
   return (
     <ContentCard className={cn('@container', className)} {...props}>
       {/* Tags */}
-      {post.tags.length > 0 && (
-        <div className='mb-2 flex flex-wrap gap-1.5'>
-          {post.tags.map((tag) => (
-            <TagLink key={tag} tag={tag} />
-          ))}
-        </div>
-      )}
+      <ul aria-label='Tags' className='mb-2 flex flex-wrap gap-2'>
+        {post.tags.map((tag) => (
+          <li key={tag}>
+            <TagLink tag={tag} />
+          </li>
+        ))}
+      </ul>
 
       {/* Header */}
       <div className='flex items-start gap-2 text-blue-600 dark:text-blue-400'>
@@ -55,18 +55,19 @@ export function PostCard({
       <p className='mt-2 text-sm text-muted-foreground'>{post.description}</p>
 
       {/* Meta */}
-      <div className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @sm:flex-row @sm:flex-wrap @sm:items-center'>
-        <span>
+      <ul className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @sm:flex-row @sm:flex-wrap @sm:items-center'>
+        <li>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
           <time dateTime={displayDate}>
             {formatDate(displayDate, { dateStyle: 'long' })}
           </time>
-        </span>
+        </li>
 
-        <Icon iconNode={DotIcon} className='hidden @sm:block' />
-
-        <span>{post.readingTime} min de leitura</span>
-      </div>
+        <li className='flex items-center'>
+          <Icon iconNode={DotIcon} className='hidden @sm:block' />
+          <span>{post.readingTime} min de leitura</span>
+        </li>
+      </ul>
     </ContentCard>
   );
 }

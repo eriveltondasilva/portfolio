@@ -53,27 +53,26 @@ export function SeriesCard({
       <p className='mt-1 text-sm text-muted-foreground'>{series.description}</p>
 
       {/* Meta info */}
-      <div className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @md:flex-row @md:flex-wrap @md:items-center'>
-        <span>
+      <ul className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @md:flex-row @md:flex-wrap @md:items-center'>
+        <li>
           Publicada em{' '}
           <time dateTime={series.publishedAt}>
             {formatDate(series.publishedAt, { dateStyle: 'long' })}
           </time>
-        </span>
+        </li>
 
-        <Icon iconNode={DotIcon} className='hidden @md:block' />
-
-        <span>
+        <li>
+          <Icon iconNode={DotIcon} className='hidden @md:block' />
           {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
-        </span>
+        </li>
 
         {postCount > 0 && (
-          <>
+          <li>
             <Icon iconNode={DotIcon} className='hidden @md:block' />
             <span>{formatReadingTime(series.readingTime)} de leitura</span>
-          </>
+          </li>
         )}
-      </div>
+      </ul>
 
       {/* Posts list */}
       {postCount > 0 && (

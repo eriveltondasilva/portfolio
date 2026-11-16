@@ -20,18 +20,23 @@ export function PostHeader({ post, authors }: Props) {
 
   return (
     <header>
-      <div className='flex flex-wrap gap-1.5'>
+      {/* Tags */}
+      <ul aria-label='Tags' className='flex flex-wrap gap-2'>
         {tags.map((tag) => (
-          <TagLink key={tag} tag={tag} />
+          <li key={tag}>
+            <TagLink tag={tag} />
+          </li>
         ))}
-      </div>
+      </ul>
 
+      {/* Title */}
       <h1 className='mt-1 font-mono text-2xl/tight font-bold tracking-tight text-pretty wrap-break-word text-foreground sm:text-3xl md:text-4xl'>
         {title}
       </h1>
 
-      <div className='mt-2 space-y-1 text-sm text-muted-foreground'>
-        <ul className='flex flex-col gap-0.5 sm:flex-row sm:flex-wrap sm:items-center'>
+      {/* Meta info */}
+      <div className='mt-2 text-sm text-muted-foreground'>
+        <ul className='flex flex-col sm:flex-row sm:flex-wrap sm:items-center'>
           <li>
             Publicado em{' '}
             <time dateTime={publishedAt}>

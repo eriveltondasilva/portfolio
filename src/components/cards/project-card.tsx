@@ -56,17 +56,18 @@ export function ProjectCard({
 
       {/* Tags */}
       {project.tags.length > 0 && (
-        <div className='mt-2 flex flex-wrap gap-1.5'>
+        <ul aria-label='Tags' className='mt-2 flex flex-wrap gap-2'>
           {project.tags.map((tag) => (
-            <Badge
-              key={tag}
-              variant='outline'
-              className='rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground'
-            >
-              {tag}
-            </Badge>
+            <li key={tag}>
+              <Badge
+                variant='outline'
+                className='rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground'
+              >
+                {tag}
+              </Badge>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {/* Footer links */}
@@ -79,13 +80,13 @@ export function ProjectCard({
             height={14}
             className='dark:invert'
           />
-          Repositório
+          Repositório<span className='sr-only'> de {project.name}</span>
         </ExternalLink>
 
         {project.url && (
           <ExternalLink href={project.url} className={LINK_CLASSES}>
             <Icon iconNode={ExternalLinkIcon} className='size-3.5' />
-            Ver projeto
+            Ver projeto<span className='sr-only'> {project.name}</span>
           </ExternalLink>
         )}
       </div>
