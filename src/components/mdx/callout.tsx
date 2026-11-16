@@ -31,7 +31,7 @@ const calloutConfig = {
     label: 'Atenção',
     icon: AlertTriangleIcon,
     classes:
-      'border-yellow-500/30 bg-yellow-500/10 text-yellow-700 dark:text-yellow-300',
+      'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300',
   },
   danger: {
     label: 'Perigo',

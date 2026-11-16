@@ -76,7 +76,7 @@ export function SearchResult({
   const { item } = result;
 
   return (
-    <li role='presentation'>
+    <li role='presentation' className='py-2'>
       <Link
         id={id}
         role='option'

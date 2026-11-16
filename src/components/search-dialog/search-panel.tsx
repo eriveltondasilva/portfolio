@@ -104,7 +104,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
         />
 
         <input
-          className='w-full border-b bg-transparent py-4 pr-12 pl-11 text-sm outline-none placeholder:text-zinc-400 [&::-webkit-search-cancel-button]:appearance-none'
+          className='w-full border-b bg-transparent py-4 pr-12 pl-11 text-sm outline-hidden placeholder:text-zinc-400 focus-visible:border-orange-500 dark:focus-visible:border-orange-400 [&::-webkit-search-cancel-button]:appearance-none'
           type='search'
           role='combobox'
           aria-expanded={hasResults}
