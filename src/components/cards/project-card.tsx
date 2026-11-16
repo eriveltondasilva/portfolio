@@ -5,7 +5,7 @@ import GithubIcon from '@/assets/github.svg';
 import { Icon } from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
 import { ExternalLink } from '@/components/external-link';
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 import { ContentCard } from './content-card';
 import { ProjectStatusBadge } from './project-status-badge';

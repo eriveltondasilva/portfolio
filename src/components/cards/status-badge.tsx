@@ -1,7 +1,7 @@
 import { cn } from 'cn';
 
 import { Badge } from '@/components/ui/badge';
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 const toneStyle = {
   neutral: {

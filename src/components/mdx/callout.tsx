@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 import { PROSE_RESET_CLASSES } from './prose';
 

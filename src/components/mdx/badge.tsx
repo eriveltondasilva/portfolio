@@ -1,6 +1,6 @@
 import { cn } from 'cn';
 
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 import type { ComponentProps } from 'react';
 

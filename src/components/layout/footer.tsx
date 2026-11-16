@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 
 import { Icon } from '@/components/icon';
 import { ExternalLink } from '@/components/external-link';
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 const BRAND_NAME = 'Erivelton';
 const LINK_CLASSES = tw`transition-colors hover:text-foreground`;

@@ -4,6 +4,7 @@
   "ignore": [
     "src/components/ui/**",
     "content/posts/**",
-    "scripts/utils/templates/**"
+    "scripts/utils/templates/**",
+    "src/lib/utils.ts"
   ]
 }

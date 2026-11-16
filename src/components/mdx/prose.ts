@@ -1,4 +1,4 @@
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 
 /**
  * Components wrapped in "not-prose" lose the typography styles, and Tailwind's reset

@@ -2,7 +2,7 @@ import { cn } from 'cn';
 import NextImage from 'next/image';
 
 import { GRID_IMAGE_SIZES, getPlaceholder } from '@/lib/images';
-import { tw } from '@/lib/utils';
+import { tw } from '@/lib/tw';
 import { Figure } from '@/components/mdx/figure';
 
 import type { GridColumns } from '@/types';
