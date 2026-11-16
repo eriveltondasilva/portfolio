@@ -53,7 +53,7 @@ export function SearchDialog() {
       >
         <Icon iconNode={SearchIcon} />
         <span className='max-xl:sr-only'>Buscar posts</span>
-        <kbd className='rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground max-xl:hidden pointer-coarse:hidden'>
+        <kbd className='rounded-sm border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground max-xl:hidden pointer-coarse:hidden'>
           {isMac ? '⌘K' : 'Ctrl K'}
         </kbd>
       </button>

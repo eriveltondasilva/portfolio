@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 function Code({ children }: { children: ReactNode }) {
   return (
-    <code className='rounded bg-zinc-200 px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200'>
+    <code className='rounded-sm bg-zinc-200 px-1.5 py-0.5 font-mono text-xs text-zinc-800 dark:bg-zinc-700 dark:text-zinc-200'>
       {children}
     </code>
   );

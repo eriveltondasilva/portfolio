@@ -9,21 +9,7 @@ import type { ComponentProps } from 'react';
 export function Steps({ className, children, ...props }: ComponentProps<'ol'>) {
   return (
     <ol
-      className={cn(
-        'not-prose list-none',
-        '[counter-reset:step]',
-        '[&_.step]:relative [&_.step]:border-l [&_.step]:border-border [&_.step]:pb-8 [&_.step]:pl-8 [&_.step:last-child]:pb-0',
-        '[&_.step]:before:absolute [&_.step]:before:-left-4 [&_.step]:before:flex [&_.step]:before:size-8',
-        '[&_.step]:before:items-center [&_.step]:before:justify-center [&_.step]:before:rounded-full',
-        '[&_.step]:before:border [&_.step]:before:border-border [&_.step]:before:bg-background',
-        '[&_.step]:before:text-sm [&_.step]:before:font-semibold [&_.step]:before:text-muted-foreground',
-        '[&_.step]:[counter-increment:step] [&_.step]:before:[content:counter(step)]',
-        '[&_.step-title]:mb-2 [&_.step-title]:font-semibold [&_.step-title]:text-foreground',
-        '[&_.step>div]:text-sm [&_.step>div]:text-muted-foreground',
-        '[&_.step_figure]:my-3!',
-        '[&_.step_a]:underline',
-        className,
-      )}
+      className={cn('not-prose list-none [counter-reset:step]', className)}
       {...props}
     >
       {children}
@@ -39,10 +25,26 @@ interface StepProps extends ComponentProps<'li'> {
 
 export function Step({ title, className, children, ...props }: StepProps) {
   return (
-    <li className={cn('step', className)} {...props}>
-      <p className='step-title'>{title}</p>
+    <li
+      className={cn(
+        'relative border-l border-border pb-8 pl-8 [counter-increment:step] last:pb-0',
+        'before:absolute before:-left-4 before:flex before:size-8 before:items-center before:justify-center',
+        'before:rounded-full before:border before:border-border before:bg-background',
+        'before:text-sm before:font-semibold before:text-muted-foreground before:content-[counter(step)]',
+        className,
+      )}
+      {...props}
+    >
+      <p className='mb-2 font-semibold text-foreground'>{title}</p>
 
-      <div className={RICH_TEXT_CLASSES}>{children}</div>
+      <div
+        className={cn(
+          'text-sm text-muted-foreground [&_a]:underline [&_figure]:my-3!',
+          RICH_TEXT_CLASSES,
+        )}
+      >
+        {children}
+      </div>
     </li>
   );
 }

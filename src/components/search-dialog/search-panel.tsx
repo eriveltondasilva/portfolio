@@ -24,7 +24,7 @@ function formatResultCount(shown: number, total: number): string {
 function KeyHint({ keys, label }: { keys: string; label: string }) {
   return (
     <span className='flex items-center gap-1.5'>
-      <kbd className='rounded border bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground'>
+      <kbd className='rounded-sm border bg-muted px-1.5 py-0.5 font-mono text-2xs text-muted-foreground'>
         {keys}
       </kbd>
       {label}

@@ -52,6 +52,7 @@
 
 /* Must match the Shiki theme (one-dark-pro) so title and caption blend with the code */
 @theme {
+  --text-2xs: 0.625rem;
   --color-code: #282c34;
   --color-code-tab: #3e4451;
   --color-code-hover: #343a45;
@@ -217,9 +218,7 @@ figure[data-rehype-pretty-code-figure] {
 
   /* The pre is wrapped by CodeBlock's div, so prose margins must be reset here */
   & pre {
-    @apply my-0 overflow-x-auto rounded-none px-0 py-4;
-    scrollbar-width: thin;
-    scrollbar-color: rgb(255 255 255 / 0.2) transparent;
+    @apply my-0 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent overflow-x-auto rounded-none px-0 py-4;
   }
 
   /* Grid makes each line a block, so highlights span the full scroll width */
