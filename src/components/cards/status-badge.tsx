@@ -1,27 +1,26 @@
 import { cn } from 'cn';
 
 import { Badge } from '@/components/ui/badge';
+import { tw } from '@/lib/utils';
 
 const toneStyle = {
   neutral: {
-    badge: 'bg-muted text-foreground/80',
-    dot: 'bg-zinc-400',
+    badge: tw`bg-muted text-foreground/80`,
+    dot: tw`bg-zinc-400`,
   },
   warning: {
-    badge:
-      'bg-amber-500/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
-    dot: 'bg-amber-500',
+    badge: tw`bg-amber-500/10 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400`,
+    dot: tw`bg-amber-500`,
   },
   success: {
-    badge:
-      'bg-green-500/10 text-green-700 dark:bg-green-400/10 dark:text-green-400',
-    dot: 'bg-green-500',
+    badge: tw`bg-green-500/10 text-green-700 dark:bg-green-400/10 dark:text-green-400`,
+    dot: tw`bg-green-500`,
   },
 } as const;
 
 const sizeStyle = {
-  sm: { badge: 'text-xs', dot: 'size-1.5' },
-  lg: { badge: 'gap-2 px-3 py-1 text-sm', dot: 'size-2' },
+  sm: { badge: tw`text-xs`, dot: tw`size-1.5` },
+  lg: { badge: tw`gap-2 px-3 py-1 text-sm`, dot: tw`size-2` },
 } as const;
 
 export type StatusTone = keyof typeof toneStyle;

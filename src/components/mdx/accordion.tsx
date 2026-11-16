@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 
-import { RICH_TEXT_CLASSES } from './rich-text';
+import { PROSE_RESET_CLASSES } from './prose';
 
 import type { ComponentProps, ReactNode } from 'react';
 
@@ -65,7 +65,7 @@ export function AccordionItem({
       <AccordionTrigger>{title}</AccordionTrigger>
 
       <AccordionContent>
-        <div className={RICH_TEXT_CLASSES}>{children}</div>
+        <div className={PROSE_RESET_CLASSES}>{children}</div>
       </AccordionContent>
     </AccordionItemRoot>
   );

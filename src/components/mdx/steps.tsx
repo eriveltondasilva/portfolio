@@ -1,6 +1,6 @@
 import { cn } from 'cn';
 
-import { RICH_TEXT_CLASSES } from './rich-text';
+import { PROSE_RESET_CLASSES } from './prose';
 
 import type { ComponentProps } from 'react';
 
@@ -40,7 +40,7 @@ export function Step({ title, className, children, ...props }: StepProps) {
       <div
         className={cn(
           'text-sm text-muted-foreground [&_a]:underline [&_figure]:my-3!',
-          RICH_TEXT_CLASSES,
+          PROSE_RESET_CLASSES,
         )}
       >
         {children}

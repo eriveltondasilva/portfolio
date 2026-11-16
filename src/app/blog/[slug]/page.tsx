@@ -40,7 +40,7 @@ import { PostHeader } from '@/components/post/post-header';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { ShareButton } from '@/components/post/share-button';
 import { BASE_URL } from '@/lib/base-url';
-import { PROSE_CLASSES } from '@/components/mdx/rich-text';
+import { PROSE_CLASSES } from '@/components/mdx/prose';
 
 import type { Metadata } from 'next';
 

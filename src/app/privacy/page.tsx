@@ -1,4 +1,4 @@
-import { PROSE_CLASSES } from '@/components/mdx/rich-text';
+import { PROSE_CLASSES } from '@/components/mdx/prose';
 import Privacy from '@/content/pages/privacy.mdx';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 

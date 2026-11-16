@@ -6,7 +6,6 @@ import { ExternalLink } from '@/components/external-link';
 import { tw } from '@/lib/utils';
 
 const BRAND_NAME = 'Erivelton';
-
 const LINK_CLASSES = tw`transition-colors hover:text-foreground`;
 
 export function Footer() {

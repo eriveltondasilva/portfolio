@@ -1,24 +1,24 @@
 import { cn } from 'cn';
 
+import { tw } from '@/lib/utils';
+
 import type { ComponentProps } from 'react';
 
 // ─────────────────────────────────────
 
 const variantClasses = {
-  default: 'border-border bg-muted text-muted-foreground',
-  primary: 'border-primary/50 bg-primary/10 text-primary',
-  success:
-    'border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400',
-  warning:
-    'border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400',
-  danger: 'border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400',
-  info: 'border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400',
+  default: tw`border-border bg-muted text-muted-foreground`,
+  primary: tw`border-primary/50 bg-primary/10 text-primary`,
+  success: tw`border-green-500/50 bg-green-500/10 text-green-700 dark:text-green-400`,
+  warning: tw`border-amber-500/50 bg-amber-500/10 text-amber-700 dark:text-amber-400`,
+  danger: tw`border-red-500/50 bg-red-500/10 text-red-700 dark:text-red-400`,
+  info: tw`border-blue-500/50 bg-blue-500/10 text-blue-700 dark:text-blue-400`,
 } as const;
 
 const sizeClasses = {
-  sm: 'px-1 py-px text-2xs',
-  md: 'px-1.5 py-0.5 text-xs',
-  lg: 'px-2 py-1 text-sm',
+  sm: tw`px-1 py-px text-2xs`,
+  md: tw`px-1.5 py-0.5 text-xs`,
+  lg: tw`px-2 py-1 text-sm`,
 } as const;
 
 // ─────────────────────────────────────

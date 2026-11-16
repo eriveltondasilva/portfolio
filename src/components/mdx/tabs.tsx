@@ -8,7 +8,7 @@ import {
   TabsTrigger,
 } from '@/components/ui/tabs';
 
-import { RICH_TEXT_CLASSES } from './rich-text';
+import { PROSE_RESET_CLASSES } from './prose';
 
 import type { ComponentProps, ReactNode } from 'react';
 
@@ -76,7 +76,7 @@ export function Tab({ label, className, children, ...props }: TabProps) {
   return (
     <TabsContent
       value={label}
-      className={cn(RICH_TEXT_CLASSES, className)}
+      className={cn(PROSE_RESET_CLASSES, className)}
       {...props}
     >
       {children}

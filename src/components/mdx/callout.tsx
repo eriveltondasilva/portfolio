@@ -7,8 +7,9 @@ import {
 } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
+import { tw } from '@/lib/utils';
 
-import { RICH_TEXT_CLASSES } from './rich-text';
+import { PROSE_RESET_CLASSES } from './prose';
 
 import type { ReactNode } from 'react';
 
@@ -18,25 +19,22 @@ const calloutConfig = {
   info: {
     label: 'Informação',
     icon: InfoIcon,
-    classes:
-      'border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300',
+    classes: tw`border-blue-500/30 bg-blue-500/10 text-blue-700 dark:text-blue-300`,
   },
   tip: {
     label: 'Dica',
     icon: CheckCircleIcon,
-    classes:
-      'border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300',
+    classes: tw`border-green-500/30 bg-green-500/10 text-green-700 dark:text-green-300`,
   },
   warning: {
     label: 'Atenção',
     icon: AlertTriangleIcon,
-    classes:
-      'border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300',
+    classes: tw`border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300`,
   },
   danger: {
     label: 'Perigo',
     icon: XCircleIcon,
-    classes: 'border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300',
+    classes: tw`border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300`,
   },
 } as const;
 
@@ -74,7 +72,7 @@ export function Callout({
       <div className='flex flex-col gap-1'>
         {title && <p className='font-semibold'>{title}</p>}
 
-        <div className={cn('[&_p]:leading-relaxed', RICH_TEXT_CLASSES)}>
+        <div className={cn('[&_p]:leading-relaxed', PROSE_RESET_CLASSES)}>
           {children}
         </div>
       </div>

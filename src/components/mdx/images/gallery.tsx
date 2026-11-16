@@ -2,8 +2,8 @@ import { cn } from 'cn';
 import NextImage from 'next/image';
 
 import { GRID_IMAGE_SIZES, getPlaceholder } from '@/lib/images';
-
-import { Figure } from '../figure';
+import { tw } from '@/lib/utils';
+import { Figure } from '@/components/mdx/figure';
 
 import type { GridColumns } from '@/types';
 import type { ImageProps as NextImageProps } from 'next/image';
@@ -12,8 +12,8 @@ import type { ComponentProps } from 'react';
 // ─────────────────────────────────────
 
 const gridCols = {
-  2: 'grid-cols-2',
-  3: 'grid-cols-2 md:grid-cols-3',
+  2: tw`grid-cols-2`,
+  3: tw`grid-cols-2 md:grid-cols-3`,
 } as const satisfies Record<GridColumns, string>;
 
 interface GalleryProps extends ComponentProps<'div'> {
