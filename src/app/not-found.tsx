@@ -1,4 +1,4 @@
-import { FileQuestion } from 'lucide-react';
+import { FileQuestionIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -23,7 +23,7 @@ export default function NotFound() {
       <Empty>
         <EmptyHeader>
           <EmptyMedia variant='icon'>
-            <FileQuestion />
+            <FileQuestionIcon />
           </EmptyMedia>
 
           <EmptyTitle role='heading' aria-level={1}>

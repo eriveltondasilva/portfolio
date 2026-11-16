@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangleIcon } from 'lucide-react';
 import { useEffect } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ export default function GlobalError({ error, reset }: Props) {
           <Empty>
             <EmptyHeader>
               <EmptyMedia variant='icon'>
-                <AlertTriangle />
+                <AlertTriangleIcon />
               </EmptyMedia>
 
               <EmptyTitle role='heading' aria-level={1}>
