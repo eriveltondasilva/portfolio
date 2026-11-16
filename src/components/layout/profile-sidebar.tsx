@@ -17,11 +17,11 @@ export function ProfileSidebar() {
 
   return (
     <aside className='w-full shrink-0 md:w-64 lg:w-72'>
-      {/* Avatar */}
+      {/* Avatar. sizes must follow the aside widths: md:w-64 = 16rem, lg:w-72 = 18rem */}
       <Image
         src={avatar}
         alt={author.name}
-        sizes='(min-width: 768px) 18rem, 5rem'
+        sizes='(min-width: 1024px) 18rem, (min-width: 768px) 16rem, 5rem'
         placeholder={getPlaceholder(avatar)}
         className='aspect-square w-20 rounded-full border-2 border-border object-cover grayscale md:w-full'
         priority
