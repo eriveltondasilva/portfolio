@@ -94,12 +94,12 @@ function AuthorHoverCard({ author }: { author: Author }) {
         )}
 
         {/* Social info */}
-        <div className='mt-3 flex items-center gap-3 border-t pt-3'>
+        <div className='mt-3 flex items-center space-x-1 border-t pt-2'>
           {authorSocialLinks.map(({ label, icon, href }) => (
             <ExternalLink
               key={label}
               href={href}
-              className='opacity-60 transition-opacity hover:opacity-100'
+              className='rounded-sm px-2 py-1 opacity-60 transition-opacity hover:opacity-100'
             >
               <Image
                 src={icon}

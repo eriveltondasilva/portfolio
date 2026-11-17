@@ -61,13 +61,13 @@ export function SeriesCard({
           </time>
         </li>
 
-        <li>
+        <li className='flex'>
           <Icon iconNode={DotIcon} className='hidden @md:block' />
           {postCount} {postCount === 1 ? 'post' : 'posts'} nesta série
         </li>
 
         {postCount > 0 && (
-          <li>
+          <li className='flex'>
             <Icon iconNode={DotIcon} className='hidden @md:block' />
             <span>{formatReadingTime(series.readingTime)} de leitura</span>
           </li>
