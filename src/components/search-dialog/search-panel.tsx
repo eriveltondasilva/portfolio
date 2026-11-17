@@ -1,20 +1,15 @@
 import { SearchIcon, XIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 import { Icon } from '@/components/icon';
 import { DialogClose } from '@/components/ui/dialog';
 
 import { SearchResult } from './search-result';
+import { getOptionId, useSearchPanel } from './use-search-panel';
 
 import type { default as Fuse } from 'fuse.js';
-import type { ChangeEvent, KeyboardEvent } from 'react';
 import type { SearchEntry } from '@/types';
 
-const MAX_RESULTS = 8;
 const LISTBOX_ID = 'search-results';
-
-const getOptionId = (index: number) => `search-result-${index}`;
 
 function formatResultCount(shown: number, total: number): string {
   if (total > shown) return `${shown} de ${total}`;
@@ -40,60 +35,18 @@ interface Props {
 }
 
 export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
-  const router = useRouter();
-  const [query, setQuery] = useState('');
-  const [activeIndex, setActiveIndex] = useState(0);
+  const {
+    query,
+    results,
+    totalResults,
+    activeIndex,
+    message,
+    setActiveIndex,
+    handleQueryChange,
+    handleKeyDown,
+  } = useSearchPanel({ fuse, loadFailed, onNavigate });
 
-  const trimmedQuery = query.trim();
-  const allResults = fuse && trimmedQuery ? fuse.search(trimmedQuery) : [];
-  const results = allResults.slice(0, MAX_RESULTS);
   const hasResults = results.length > 0;
-
-  let message: string | null = null;
-
-  if (!fuse) {
-    message =
-      loadFailed ?
-        'Não foi possível carregar a busca. Feche e tente novamente.'
-      : 'Carregando…';
-  } else if (!trimmedQuery) {
-    message = 'Digite para buscar nos posts.';
-  } else if (!hasResults) {
-    message = `Nenhum post encontrado para “${trimmedQuery}”.`;
-  }
-
-  function handleQueryChange(event: ChangeEvent<HTMLInputElement>) {
-    setQuery(event.target.value);
-    setActiveIndex(0);
-  }
-
-  function moveActiveIndex(step: 1 | -1) {
-    const nextIndex = (activeIndex + step + results.length) % results.length;
-
-    setActiveIndex(nextIndex);
-    document
-      .getElementById(getOptionId(nextIndex))
-      ?.scrollIntoView({ block: 'nearest' });
-  }
-
-  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
-    if (!hasResults) return;
-
-    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      event.preventDefault();
-      moveActiveIndex(event.key === 'ArrowDown' ? 1 : -1);
-      return;
-    }
-
-    if (event.key === 'Enter') {
-      const activeResult = results[activeIndex];
-
-      if (!activeResult) return;
-
-      router.push(`/blog/${activeResult.item.slug}`);
-      onNavigate();
-    }
-  }
 
   return (
     <>
@@ -145,13 +98,14 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
               Posts
             </span>
             <span className='tabular-nums'>
-              {formatResultCount(results.length, allResults.length)}
+              {formatResultCount(results.length, totalResults)}
             </span>
           </>
         )}
       </div>
 
-      <div className='max-h-80 min-h-48 overflow-y-auto p-2'>
+      <div className='max-h-80 min-h-48 scroll-py-2 overflow-y-auto p-2'>
+        {/* Always mounted so screen readers announce the message when it appears */}
         <p
           role='status'
           className={message ? 'px-3 py-6 text-center text-sm' : 'sr-only'}

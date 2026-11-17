@@ -1,7 +1,7 @@
 'use client';
 
 import { SearchIcon } from 'lucide-react';
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 import { Icon } from '@/components/icon';
 import {
@@ -13,6 +13,7 @@ import {
 
 import { SearchPanel } from './search-panel';
 import { preloadSearchIndex, useSearchIndex } from './use-search-index';
+import { useSearchShortcut } from './use-search-shortcut';
 
 const subscribeNothing = () => () => {};
 const getIsMac = () => /Mac/.test(navigator.userAgent);
@@ -27,24 +28,7 @@ export function SearchDialog() {
     getServerIsMac,
   );
 
-  useEffect(() => {
-    function handleKeyDown(event: globalThis.KeyboardEvent) {
-      if (
-        event.key.toLowerCase() !== 'k' ||
-        !(event.metaKey || event.ctrlKey)
-      ) {
-        return;
-      }
-
-      event.preventDefault();
-
-      if (!event.repeat) setIsOpen((current) => !current);
-    }
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  useSearchShortcut(() => setIsOpen((current) => !current));
 
   return (
     <>
