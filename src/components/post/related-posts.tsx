@@ -2,7 +2,8 @@ import { ArrowRightIcon, DotIcon, FileTextIcon } from 'lucide-react';
 import Link from 'next/link';
 
 import { Icon } from '@/components/icon';
-import { getPostDisplayDate, getRelatedPosts } from '@/lib/blog/posts';
+import { getRelatedPosts } from '@/lib/blog/posts';
+import { getPostDisplayDate } from '@/lib/blog';
 import { formatDate } from '@/lib/format';
 
 import { PostSection } from './post-section';

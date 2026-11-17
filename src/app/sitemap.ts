@@ -1,4 +1,5 @@
-import { getAllPosts, getPostDisplayDate } from '@/lib/blog/posts';
+import { getAllPosts } from '@/lib/blog/posts';
+import { getPostDisplayDate } from '@/lib/blog';
 import { getAllSeries } from '@/lib/blog/series';
 import { getAllTags } from '@/lib/blog/tags';
 import { BASE_URL } from '@/lib/base-url';

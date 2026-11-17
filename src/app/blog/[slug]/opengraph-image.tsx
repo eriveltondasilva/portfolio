@@ -1,9 +1,6 @@
 import { getAuthorsBySlugs } from '@/lib/blog/authors';
-import {
-  getAllPostSlugs,
-  getPostBySlug,
-  getPostDisplayDate,
-} from '@/lib/blog/posts';
+import { getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts';
+import { getPostDisplayDate } from '@/lib/blog';
 import { SITE_NAME } from '@/lib/constants';
 import { createListFormatter, formatDate } from '@/lib/format';
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';

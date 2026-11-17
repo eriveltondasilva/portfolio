@@ -6,7 +6,6 @@ export function useSearchShortcut(onToggle: () => void) {
       if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey))
         return;
 
-      // ! preventDefault also runs on repeats, so the browser never grabs the address bar
       event.preventDefault();
 
       if (!event.repeat) onToggle();

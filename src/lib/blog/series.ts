@@ -14,7 +14,6 @@ export function getSeriesBySlug(slug: string): SeriesIndex | null {
   return seriesBySlug.get(slug) ?? null;
 }
 
-/** Series with IN_PROGRESS status, shown on the home page. */
 export function getInProgressSeries(limit = 2): SeriesIndex[] {
   return allSeries
     .filter((series) => series.status === SeriesStatus.IN_PROGRESS)

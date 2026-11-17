@@ -5,7 +5,7 @@ import { cn } from 'cn';
 import { formatDate } from '@/lib/format';
 import { Icon } from '@/components/icon';
 import { TagLink } from '@/components/tag-link';
-import { getPostDisplayDate } from '@/lib/blog/posts';
+import { getPostDisplayDate } from '@/lib/blog';
 
 import { ContentCard } from './content-card';
 
