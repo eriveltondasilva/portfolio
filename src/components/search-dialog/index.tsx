@@ -29,11 +29,16 @@ export function SearchDialog() {
 
   useEffect(() => {
     function handleKeyDown(event: globalThis.KeyboardEvent) {
-      if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey))
+      if (
+        event.key.toLowerCase() !== 'k' ||
+        !(event.metaKey || event.ctrlKey)
+      ) {
         return;
+      }
 
       event.preventDefault();
-      setIsOpen((current) => !current);
+
+      if (!event.repeat) setIsOpen((current) => !current);
     }
 
     window.addEventListener('keydown', handleKeyDown);
@@ -56,7 +61,7 @@ export function SearchDialog() {
         <span className='max-xl:sr-only'>Buscar posts</span>
 
         <kbd className='rounded-sm border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground max-xl:hidden pointer-coarse:hidden'>
-          {isMac ? '⌘K' : 'Ctrl K'}
+          {isMac ? '⌘K' : 'Ctrl+K'}
         </kbd>
       </button>
 

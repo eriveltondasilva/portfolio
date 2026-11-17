@@ -105,7 +105,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
         />
 
         <input
-          className='w-full border-b bg-transparent py-4 pr-12 pl-11 text-sm outline-hidden placeholder:text-muted-foreground focus-visible:border-orange-500 dark:focus-visible:border-orange-400 [&::-webkit-search-cancel-button]:appearance-none'
+          className='w-full border-b bg-transparent py-4 pr-12 pl-11 text-base outline-hidden placeholder:text-muted-foreground focus-visible:border-orange-500 md:text-sm dark:focus-visible:border-orange-400 [&::-webkit-search-cancel-button]:appearance-none'
           type='search'
           role='combobox'
           aria-expanded={hasResults}
@@ -152,11 +152,15 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
       </div>
 
       <div className='max-h-80 min-h-48 overflow-y-auto p-2'>
-        {message ?
-          <p role='status' className='px-3 py-6 text-center text-sm'>
-            {message}
-          </p>
-        : <ul
+        <p
+          role='status'
+          className={message ? 'px-3 py-6 text-center text-sm' : 'sr-only'}
+        >
+          {message}
+        </p>
+
+        {!message && (
+          <ul
             id={LISTBOX_ID}
             role='listbox'
             aria-label='Resultados da busca'
@@ -173,7 +177,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
               />
             ))}
           </ul>
-        }
+        )}
       </div>
 
       {hasResults && (
