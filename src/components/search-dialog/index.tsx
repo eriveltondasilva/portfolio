@@ -52,15 +52,18 @@ export function SearchDialog() {
         className='flex h-8 shrink-0 items-center gap-2 rounded-md border bg-muted/50 px-2 text-sm text-muted-foreground transition-colors hover:border-border-strong hover:text-foreground xl:pr-1.5 xl:pl-3'
       >
         <Icon iconNode={SearchIcon} />
+
         <span className='max-xl:sr-only'>Buscar posts</span>
+
         <kbd className='rounded-sm border bg-background px-1.5 py-0.5 font-mono text-2xs text-muted-foreground max-xl:hidden pointer-coarse:hidden'>
           {isMac ? '⌘K' : 'Ctrl K'}
         </kbd>
       </button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className='gap-0 p-0'>
+        <DialogContent className='gap-0 p-0' showCloseButton={false}>
           <DialogTitle className='sr-only'>Buscar posts</DialogTitle>
+
           <DialogDescription className='sr-only'>
             Busque posts por título, descrição ou tag.
           </DialogDescription>

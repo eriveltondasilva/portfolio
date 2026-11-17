@@ -1,8 +1,9 @@
-import { SearchIcon } from 'lucide-react';
+import { SearchIcon, XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { Icon } from '@/components/icon';
+import { DialogClose } from '@/components/ui/dialog';
 
 import { SearchResult } from './search-result';
 
@@ -121,6 +122,13 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
           autoComplete='off'
           spellCheck={false}
         />
+
+        <DialogClose
+          aria-label='Fechar busca'
+          className='absolute top-1/2 right-3 flex size-7 -translate-y-1/2 items-center justify-center rounded-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground'
+        >
+          <Icon iconNode={XIcon} />
+        </DialogClose>
       </div>
 
       <div
