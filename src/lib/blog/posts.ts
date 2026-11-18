@@ -5,39 +5,50 @@ import { PostStatus } from '@/lib/constants';
 
 import type { AdjacentPosts, PostIndex } from '@/types';
 
+function groupPostsByTag(posts: PostIndex[]): Map<string, PostIndex[]> {
+  const grouped = new Map<string, PostIndex[]>();
+
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      grouped.getOrInsert(tag, []).push(post);
+    }
+  }
+
+  return grouped;
+}
+
+function groupPostsBySeries(posts: PostIndex[]): Map<string, PostIndex[]> {
+  const grouped = new Map<string, PostIndex[]>();
+
+  for (const post of posts) {
+    if (post.series) {
+      grouped.getOrInsert(post.series, []).push(post);
+    }
+  }
+
+  for (const seriesPosts of grouped.values()) {
+    seriesPosts.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  }
+
+  return grouped;
+}
+
+// ─────────────────────────────────────
+
 const allPosts = postsIndex as PostIndex[];
 const publishedPosts = allPosts.filter(
   (post) => post.status === PostStatus.PUBLISHED,
 );
+
 const postsBySlug = new Map(allPosts.map((post) => [post.slug, post]));
 const publishedIndexBySlug = new Map(
   publishedPosts.map((post, index) => [post.slug, index]),
 );
 
-// ─────────────────────────────────────
-
-const postsByTag = new Map<string, PostIndex[]>();
-
-for (const post of publishedPosts) {
-  for (const tag of post.tags) {
-    postsByTag.getOrInsertComputed(tag, () => []).push(post);
-  }
-}
+const postsByTag = groupPostsByTag(publishedPosts);
+const postsBySeries = groupPostsBySeries(allPosts);
 
 const publishedTags: readonly string[] = [...postsByTag.keys()];
-
-const postsBySeries = new Map<string, PostIndex[]>();
-
-for (const post of allPosts) {
-  if (post.series) {
-    postsBySeries.getOrInsertComputed(post.series, () => []).push(post);
-  }
-}
-
-// ! In place on purpose: sort() mutates the array.
-for (const seriesPosts of postsBySeries.values()) {
-  seriesPosts.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-}
 
 // ─────────────────────────────────────
 
@@ -49,7 +60,7 @@ interface PostSlug {
   slug: string;
 }
 
-export function getAllPostSlugs(): ReadonlyArray<PostSlug> {
+export function getAllPostSlugs(): PostSlug[] {
   return allPosts.map((post) => ({ slug: post.slug }));
 }
 

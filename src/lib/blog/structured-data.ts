@@ -5,7 +5,10 @@ import { getPostDisplayDate } from '.';
 
 import type { Author, PostIndex } from '@/types';
 
-export function buildPostJsonLd(post: PostIndex, authors: Author[]) {
+export function buildPostJsonLd(
+  post: PostIndex,
+  authors: ReadonlyArray<Author>,
+) {
   const postUrl = `${BASE_URL}/blog/${post.slug}`;
 
   return {

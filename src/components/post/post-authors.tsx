@@ -21,7 +21,7 @@ import type { Author } from '@/types';
 const MAX_VISIBLE_SKILLS = 3;
 const AVATAR_SIZE = 80;
 
-function AuthorHoverCard({ author }: { author: Author }) {
+function AuthorHoverCard({ author }: { author: Readonly<Author> }) {
   const githubUsername = getUrlPathname(author.socials.github);
   const authorSkillsCount = author.skills.length;
   const authorSocialLinks = getAuthorSocialLinks(author);
@@ -117,7 +117,11 @@ function AuthorHoverCard({ author }: { author: Author }) {
   );
 }
 
-export function PostAuthors({ authors }: { authors: Author[] }) {
+interface PostAuthorsProps {
+  authors: ReadonlyArray<Author>;
+}
+
+export function PostAuthors({ authors }: PostAuthorsProps) {
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
 
   const parts = createListFormatter().formatToParts(

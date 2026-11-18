@@ -12,7 +12,7 @@ import type { Author, PostIndex } from '@/types';
 
 interface Props {
   post: PostIndex;
-  authors: Author[];
+  authors: ReadonlyArray<Author>;
 }
 
 export function PostHeader({ post, authors }: Props) {

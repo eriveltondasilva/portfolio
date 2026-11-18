@@ -5,19 +5,11 @@ import type { Toc } from '@stefanprobst/rehype-extract-toc';
 const MIN_DEPTH = 2;
 const MAX_DEPTH = 3;
 
-export function flattenToc(
-  toc: Toc,
-  items: TocItem[] = [],
-): ReadonlyArray<TocItem> {
-  for (const entry of toc) {
-    const isInRange = entry.depth >= MIN_DEPTH && entry.depth <= MAX_DEPTH;
+export function flattenToc(toc: Toc): TocItem[] {
+  return toc.flatMap(({ id, value, depth, children = [] }) => {
+    const isInRange = depth >= MIN_DEPTH && depth <= MAX_DEPTH;
+    const current = id && isInRange ? [{ id, title: value, depth }] : [];
 
-    if (entry.id && isInRange) {
-      items.push({ id: entry.id, title: entry.value, depth: entry.depth });
-    }
-
-    if (entry.children) flattenToc(entry.children, items);
-  }
-
-  return items;
+    return [...current, ...flattenToc(children)];
+  });
 }

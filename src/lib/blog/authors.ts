@@ -1,7 +1,7 @@
+import 'server-only';
+
 import authorsIndex from '@/generated/indexes/authors.json';
 import { PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
-
-import 'server-only';
 
 import type { Author } from '@/types';
 
