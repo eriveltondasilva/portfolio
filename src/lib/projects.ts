@@ -1,3 +1,5 @@
+import 'server-only';
+
 import projectsIndex from '@/generated/indexes/projects.json';
 
 import type { Project } from '@/types';

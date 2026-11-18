@@ -1,3 +1,5 @@
+import 'server-only';
+
 import seriesIndex from '@/generated/indexes/series.json';
 import { SeriesStatus } from '@/lib/constants';
 

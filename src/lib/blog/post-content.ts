@@ -1,3 +1,5 @@
+import 'server-only';
+
 import { getPostBySlug } from './posts';
 
 import type { PostModule, PostWithContent } from '@/types';

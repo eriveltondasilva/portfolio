@@ -1,3 +1,5 @@
+import 'server-only';
+
 import postsIndex from '@/generated/indexes/posts.json';
 import { PostStatus } from '@/lib/constants';
 
