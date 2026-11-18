@@ -2,6 +2,7 @@ import { ArrowUpRightIcon } from 'lucide-react';
 import LinkNext from 'next/link';
 
 import { Icon } from '@/components/icon';
+import { ExternalLink } from '@/components/external-link';
 
 import type { Route } from 'next';
 import type { ComponentProps } from 'react';
@@ -23,15 +24,13 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
   // # External link
   if (isHttpUrl(href)) {
     return (
-      <a href={href} target='_blank' rel='noopener noreferrer' {...props}>
+      <ExternalLink href={href} {...props}>
         {children}
-
         <Icon
           iconNode={ArrowUpRightIcon}
-          label='(abre em nova aba)'
-          className='inline size-3.5 align-text-top'
+          className='inline size-3 align-text-top'
         />
-      </a>
+      </ExternalLink>
     );
   }
 
