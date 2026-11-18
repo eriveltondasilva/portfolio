@@ -208,7 +208,12 @@ figure[data-rehype-pretty-code-figure] {
 
   /* Title as a solid tab attached to the top-left corner of the block */
   & > [data-rehype-pretty-code-title] {
-    @apply m-0 w-fit rounded-br-md bg-code-tab px-3 py-1 font-mono text-xs font-semibold text-zinc-200;
+    @apply m-0 w-fit max-w-full overflow-x-auto rounded-br-md bg-code-tab px-3 py-1 font-mono text-xs font-semibold whitespace-nowrap text-zinc-200;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   /* Caption as a footer inside the block */

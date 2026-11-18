@@ -7,12 +7,8 @@ import {
   FileTreeFile,
   FileTreeFolder,
 } from './components/mdx/file-tree';
-import {
-  Image,
-  ImageRatio,
-  GalleryImage,
-  Gallery,
-} from './components/mdx/images';
+import { GalleryImage, Gallery } from './components/mdx/images/gallery';
+import { Image, ImageRatio } from './components/mdx/images/image';
 import { Kbd } from './components/mdx/kbd';
 import { Link } from './components/mdx/link';
 import { Step, Steps } from './components/mdx/steps';
