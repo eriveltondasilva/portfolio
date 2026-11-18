@@ -68,14 +68,16 @@ const eslintConfig = defineConfig([
       },
     },
     rules: {
-      ...betterTailwindcss.configs['correctness-error'].rules,
+      ...betterTailwindcss.configs['recommended-error'].rules,
+
+      // Prettier (prettier-plugin-tailwindcss) já cuida de ordem e quebra de linha
+      'better-tailwindcss/enforce-consistent-class-order': 'off',
+      'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
+
       'better-tailwindcss/no-unknown-classes': [
         'error',
         { ignore: ['not-prose', 'reading-progress'] },
       ],
-      'better-tailwindcss/no-duplicate-classes': 'error',
-      'better-tailwindcss/no-deprecated-classes': 'error',
-      'better-tailwindcss/enforce-canonical-classes': 'error',
     },
   },
 
@@ -89,8 +91,8 @@ const eslintConfig = defineConfig([
     'build/**',
     'next-env.d.ts',
     // Custom ignores:
-    'src/components/ui/**',
     'generated/**',
+    'src/components/ui/**',
     'scripts/utils/templates/**',
   ]),
 ]);
