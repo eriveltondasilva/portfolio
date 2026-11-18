@@ -1,27 +1,39 @@
-import { NextResponse } from 'next/server';
+import { timingSafeEqual } from 'node:crypto';
 
-import { redis } from '@/lib/redis';
+import { redis, namespaceKey } from '@/lib/redis';
 
 export const dynamic = 'force-dynamic';
 
-const KEEPALIVE_KEY = 'keepalive:last_run';
+const KEEPALIVE_KEY = namespaceKey('keepalive:last_run');
+
+function isAuthorized(request: Request): boolean {
+  const cronSecret = process.env['CRON_SECRET'];
+
+  if (!cronSecret) return false;
+
+  const expected = Buffer.from(`Bearer ${cronSecret}`);
+  const received = Buffer.from(request.headers.get('authorization') ?? '');
+
+  return (
+    expected.length === received.length && timingSafeEqual(expected, received)
+  );
+}
 
 export async function GET(request: Request) {
-  const cronSecret = process.env['CRON_SECRET'];
-  const authorizationHeader = request.headers.get('authorization');
-
-  if (!cronSecret || authorizationHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!isAuthorized(request)) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    await redis.set(KEEPALIVE_KEY, new Date().toISOString());
-    const storedValue = await redis.get<string>(KEEPALIVE_KEY);
+    const value = new Date().toISOString();
 
-    return NextResponse.json({ key: KEEPALIVE_KEY, value: storedValue });
+    await redis.set(KEEPALIVE_KEY, value);
+
+    return Response.json({ key: KEEPALIVE_KEY, value });
   } catch (error) {
     console.error('Keepalive failed:', error);
-    return NextResponse.json(
+
+    return Response.json(
       { error: 'Keepalive failed. Check the server logs.' },
       { status: 500 },
     );

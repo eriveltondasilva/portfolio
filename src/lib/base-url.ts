@@ -10,7 +10,7 @@ function resolveBaseUrl(): string {
   if (vercelUrl) return `https://${vercelUrl}`;
 
   if (process.env['NODE_ENV'] === 'production') {
-    throw new Error('NEXT_PUBLIC_SITE_URL is not set.');
+    throw new Error('SITE_URL is not set.');
   }
 
   return 'http://localhost:3000';

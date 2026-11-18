@@ -1,5 +1,3 @@
-import { NextResponse } from 'next/server';
-
 import { getPostBySlug } from '@/lib/blog/posts';
 import { PostStatus } from '@/lib/constants';
 import { isReactionType } from '@/lib/reactions/config';
@@ -26,7 +24,7 @@ type ReactionErrorCode =
   | 'store-unavailable';
 
 function errorResponse(code: ReactionErrorCode, status: number) {
-  return NextResponse.json({ error: code }, { status });
+  return Response.json({ error: code }, { status });
 }
 
 function findVisiblePost(slug: string) {
@@ -53,7 +51,7 @@ async function respondWithState(loadState: () => Promise<ReactionState>) {
   try {
     const state = await loadState();
 
-    return NextResponse.json(state, {
+    return Response.json(state, {
       headers: { 'Cache-Control': 'no-store' },
     });
   } catch (error) {
