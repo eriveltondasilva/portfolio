@@ -6,11 +6,17 @@ import type { Author } from '@/types';
 const authors = authorsIndex as Author[];
 const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
 
-function getAuthorBySlug(slug: string): Author | null {
+// ─────────────────────────────────────
+
+function getAuthorBySlug(slug: string): Readonly<Author> | null {
   return authorsBySlug.get(slug) ?? null;
 }
 
-export function getPrimaryAuthor(): Author {
+export function getAuthorsBySlugs(slugs: string[]): ReadonlyArray<Author> {
+  return slugs.flatMap((slug) => authorsBySlug.get(slug) ?? []);
+}
+
+export function getPrimaryAuthor(): Readonly<Author> {
   const author = getAuthorBySlug(PRIMARY_AUTHOR_SLUG);
 
   if (!author) {
@@ -18,8 +24,4 @@ export function getPrimaryAuthor(): Author {
   }
 
   return author;
-}
-
-export function getAuthorsBySlugs(slugs: string[]): Author[] {
-  return slugs.flatMap((slug) => authorsBySlug.get(slug) ?? []);
 }

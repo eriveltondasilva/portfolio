@@ -1,31 +1,23 @@
-import { getAllPosts } from './posts';
+import { getPostsByTag, getPublishedTags } from './posts';
 
 import type { TagCount } from '@/types';
 
-function buildTagCounts(): Map<string, number> {
-  const counts = new Map<string, number>();
+const sortedTags = getPublishedTags().toSorted();
+const tagSet = new Set(sortedTags);
+const sortedTagsWithCount: TagCount[] = sortedTags
+  .map((tag) => ({ tag, count: getPostsByTag(tag).length }))
+  .toSorted((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
 
-  for (const post of getAllPosts()) {
-    for (const tag of post.tags) {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1);
-    }
-  }
+// ─────────────────────────────────────
 
-  return counts;
+export function getAllTags(): ReadonlyArray<string> {
+  return sortedTags;
 }
 
-const tagCounts = buildTagCounts();
-
-export function getAllTags(): string[] {
-  return [...tagCounts.keys()].toSorted();
-}
-
-export function getTagsWithCount(): TagCount[] {
-  return [...tagCounts]
-    .map(([tag, count]) => ({ tag, count }))
-    .toSorted((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+export function getTagsWithCount(): ReadonlyArray<TagCount> {
+  return sortedTagsWithCount;
 }
 
 export function hasTagPage(tag: string): boolean {
-  return tagCounts.has(tag);
+  return tagSet.has(tag);
 }

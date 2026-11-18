@@ -4,7 +4,7 @@ import type { PostModule, PostWithContent } from '@/types';
 
 export async function getPostWithContent(
   slug: string,
-): Promise<PostWithContent | null> {
+): Promise<Readonly<PostWithContent> | null> {
   const post = getPostBySlug(slug);
 
   if (!post) return null;

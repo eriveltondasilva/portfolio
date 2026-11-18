@@ -9,7 +9,11 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import { getFeaturedProjects, getOtherProjects } from '@/lib/blog/projects';
+import {
+  getFeaturedProjects,
+  getOtherProjects,
+  projectCount,
+} from '@/lib/projects';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
@@ -44,7 +48,6 @@ export default function ProjectsPage() {
   const featuredProjects = getFeaturedProjects();
   const otherProjects = getOtherProjects();
 
-  const projectCount = featuredProjects.length + otherProjects.length;
   const hasFeatured = featuredProjects.length > 0;
 
   return (
@@ -58,7 +61,7 @@ export default function ProjectsPage() {
         {projectCount} {projectCount === 1 ? 'projeto' : 'projetos'}
       </div>
 
-      {/* Featured */}
+      {/* Featured projects */}
       {hasFeatured && (
         <section className='space-y-3'>
           <h2 className='text-xs font-semibold tracking-widest text-muted-foreground uppercase'>
@@ -91,7 +94,7 @@ export default function ProjectsPage() {
               <ProjectCard
                 key={project.slug}
                 project={project}
-                headingLevel='h3'
+                headingLevel={hasFeatured ? 'h3' : 'h2'}
               />
             ))}
           </div>

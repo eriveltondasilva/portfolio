@@ -5,7 +5,10 @@ import type { Toc } from '@stefanprobst/rehype-extract-toc';
 const MIN_DEPTH = 2;
 const MAX_DEPTH = 3;
 
-export function flattenToc(toc: Toc, items: TocItem[] = []): TocItem[] {
+export function flattenToc(
+  toc: Toc,
+  items: TocItem[] = [],
+): ReadonlyArray<TocItem> {
   for (const entry of toc) {
     const isInRange = entry.depth >= MIN_DEPTH && entry.depth <= MAX_DEPTH;
 
