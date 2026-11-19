@@ -15,12 +15,27 @@ import { readYaml } from './utils/files';
 import { BuildError, formatZodError, resolveAll } from './utils/errors';
 import { log } from './utils/logger';
 
+import type { Interface } from 'node:readline/promises';
+
 const TEMPLATE_DIR = join(import.meta.dir, 'utils', 'templates');
 
+const FLAG_OPTIONS = {
+  title: { type: 'string' },
+  slug: { type: 'string' },
+  description: { type: 'string' },
+  tags: { type: 'string' },
+  authors: { type: 'string' },
+  series: { type: 'string' },
+  order: { type: 'string' },
+} as const;
+
+type FlagName = keyof typeof FLAG_OPTIONS;
+type Flags = Partial<Record<FlagName, string | undefined>>;
 type Validate = (value: string) => string | undefined;
+type Ask = (field: Field) => Promise<string>;
 
 interface Field {
-  name: string;
+  name: FlagName;
   question: string;
   validate: Validate;
   defaultValue?: string;
@@ -31,6 +46,21 @@ interface ExistingPost {
   slug?: string | undefined;
   series?: string | undefined;
   order?: number | undefined;
+}
+
+interface PostContext {
+  authorSlugs: ReadonlySet<string>;
+  seriesSlugs: ReadonlySet<string>;
+  existing: readonly ExistingPost[];
+}
+
+interface PostInput {
+  title: string;
+  slug: string;
+  description: string;
+  tags: string[];
+  authors: string[];
+  series: { slug: string; order: number } | null;
 }
 
 const existingPostSchema = z.object({
@@ -60,6 +90,7 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// 'sv-SE' yields YYYY-MM-DD in local time; toISOString() is UTC and would return tomorrow's date after 21h in Brazil.
 const today = (): string => new Date().toLocaleDateString('sv-SE');
 
 function validateWith(schema: z.ZodType, parse: (value: string) => unknown = (v) => v): Validate {
@@ -106,34 +137,11 @@ async function readExistingPosts(): Promise<ExistingPost[]> {
   );
 }
 
-// # Main
+// # Prompts
 
-async function main(): Promise<void> {
-  const { values: flags } = parseArgs({
-    options: {
-      title: { type: 'string' },
-      slug: { type: 'string' },
-      description: { type: 'string' },
-      tags: { type: 'string' },
-      authors: { type: 'string' },
-      series: { type: 'string' },
-      order: { type: 'string' },
-    },
-  });
-
-  const [authors, series, existing] = await resolveAll(
-    readAuthors(),
-    readSeries(),
-    readExistingPosts(),
-  );
-
-  const authorSlugs = new Set(authors.map(({ slug }) => slug));
-  const seriesSlugs = new Set(series.map(({ slug }) => slug));
-
-  const rl = createInterface({ input: process.stdin, output: process.stdout });
-
-  async function ask(field: Field): Promise<string> {
-    const flagValue = flags[field.name as keyof typeof flags];
+function createAsker(rl: Interface, flags: Flags): Ask {
+  return async function ask(field) {
+    const flagValue = flags[field.name];
 
     if (flagValue !== undefined) {
       const error = field.validate(flagValue);
@@ -154,131 +162,199 @@ async function main(): Promise<void> {
 
       console.error(`  ✖ ${error}`);
     }
+  };
+}
+
+async function askSeries(
+  ask: Ask,
+  flags: Flags,
+  { seriesSlugs, existing }: PostContext,
+): Promise<PostInput['series']> {
+  let seriesSlug = '';
+
+  if (seriesSlugs.size > 0 || flags.series !== undefined) {
+    seriesSlug = await ask({
+      name: 'series',
+      question: `Series (${[...seriesSlugs].join(', ')}; blank for none)`,
+      validate: (value) =>
+        value === '' || seriesSlugs.has(value) ? undefined : `Unknown series: "${value}".`,
+    });
   }
+
+  if (!seriesSlug) {
+    if (flags.order !== undefined) {
+      throw new BuildError('new-post', ['--order: requires a series. Pass --series as well.']);
+    }
+
+    return null;
+  }
+
+  const takenOrders = existing
+    .filter((post) => post.series === seriesSlug)
+    .map((post) => post.order ?? 0);
+
+  const order = Number(
+    await ask({
+      name: 'order',
+      question: 'Order in the series',
+      defaultValue: String(Math.max(0, ...takenOrders) + 1),
+      validate: (value) => {
+        const parsed = Number(value);
+
+        if (!Number.isInteger(parsed) || parsed < 1) return 'Order must be a positive integer.';
+
+        return takenOrders.includes(parsed) ? `Order ${parsed} is already used.` : undefined;
+      },
+    }),
+  );
+
+  return { slug: seriesSlug, order };
+}
+
+async function collectPostInput(ask: Ask, flags: Flags, context: PostContext): Promise<PostInput> {
+  const { authorSlugs, existing } = context;
+
+  const title = await ask({
+    name: 'title',
+    question: 'Title',
+    validate: validateWith(postSchema.shape.title),
+  });
+
+  const validateSlug = validateWith(postSchema.shape.slug);
+  const slug = await ask({
+    name: 'slug',
+    question: 'Slug (also the folder name)',
+    defaultValue: slugify(title),
+    validate: (value) =>
+      validateSlug(value) ??
+      (existing.some((post) => post.folder === value || post.slug === value) ?
+        'A post with this slug or folder already exists.'
+      : undefined),
+  });
+
+  const description = await ask({
+    name: 'description',
+    question: 'Description',
+    validate: validateWith(postSchema.shape.description),
+  });
+
+  const tags = splitList(
+    await ask({
+      name: 'tags',
+      question: 'Tags (comma separated, kebab-case)',
+      validate: validateWith(postSchema.shape.tags, splitList),
+    }),
+  );
+
+  const validateAuthors = validateWith(postSchema.shape.authors, splitList);
+  const authors = splitList(
+    await ask({
+      name: 'authors',
+      question: `Authors (${[...authorSlugs].join(', ')})`,
+      defaultValue: authorSlugs.has(PRIMARY_AUTHOR_SLUG) ? PRIMARY_AUTHOR_SLUG : undefined,
+      validate: (value) => {
+        const unknown = splitList(value).find((author) => !authorSlugs.has(author));
+
+        return validateAuthors(value) ?? (unknown ? `Unknown author: "${unknown}".` : undefined);
+      },
+    }),
+  );
+
+  const series = await askSeries(ask, flags, context);
+
+  return { title, slug, description, tags, authors, series };
+}
+
+// # Scaffold
+
+function validatePostInput(input: PostInput, publishedAt: string): void {
+  const { series, ...rest } = input;
+
+  const result = postSchema.safeParse({
+    ...rest,
+    publishedAt,
+    status: PostStatus.DRAFT,
+    ...(series ? { series: series.slug, order: series.order } : {}),
+  });
+
+  if (!result.success) {
+    throw new BuildError('new-post', [formatZodError('generated metadata', result.error)]);
+  }
+}
+
+function toTemplateValues(
+  { title, slug, description, tags, authors, series }: PostInput,
+  publishedAt: string,
+): Record<string, string> {
+  return {
+    slug: yamlString(slug),
+    title: yamlString(title),
+    description: yamlString(description),
+    tags: yamlList(tags),
+    authors: yamlList(authors),
+    publishedAt: yamlString(publishedAt),
+    series: series ? `series: ${yamlString(series.slug)}\norder: ${series.order}` : '',
+  };
+}
+
+async function scaffoldPost(
+  slug: string,
+  values: Readonly<Record<string, string>>,
+): Promise<string> {
+  const templateFiles = Array.from(
+    new Bun.Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
+  );
+
+  if (templateFiles.length === 0) throw new Error(`No template files in ${TEMPLATE_DIR}`);
+
+  // Render everything before writing: a template error must not leave a half-created folder,
+  // since an existing folder blocks the slug on the next run.
+  const rendered = await Promise.all(
+    templateFiles.map(async (file) => ({
+      file,
+      content: renderTemplate(await Bun.file(join(TEMPLATE_DIR, file)).text(), values),
+    })),
+  );
+
+  const folderPath = join(POSTS_DIR, slug);
+
+  for (const { file, content } of rendered) {
+    await Bun.write(join(folderPath, file), content);
+  }
+
+  await mkdir(join(folderPath, POST_IMAGES_DIR), { recursive: true });
+
+  return folderPath;
+}
+
+// # Main
+
+async function main(): Promise<void> {
+  const { values: flags } = parseArgs({ options: FLAG_OPTIONS });
+
+  const [authors, series, existing] = await resolveAll(
+    readAuthors(),
+    readSeries(),
+    readExistingPosts(),
+  );
+
+  const context: PostContext = {
+    authorSlugs: new Set(authors.map(({ slug }) => slug)),
+    seriesSlugs: new Set(series.map(({ slug }) => slug)),
+    existing,
+  };
+
+  const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
     log.section('New post');
 
-    const title = await ask({
-      name: 'title',
-      question: 'Title',
-      validate: validateWith(postSchema.shape.title),
-    });
-
-    const validateSlug = validateWith(postSchema.shape.slug);
-    const slug = await ask({
-      name: 'slug',
-      question: 'Slug (also the folder name)',
-      defaultValue: slugify(title),
-      validate: (value) =>
-        validateSlug(value) ??
-        (existing.some((post) => post.folder === value || post.slug === value) ?
-          'A post with this slug or folder already exists.'
-        : undefined),
-    });
-
-    const description = await ask({
-      name: 'description',
-      question: 'Description',
-      validate: validateWith(postSchema.shape.description),
-    });
-
-    const tags = splitList(
-      await ask({
-        name: 'tags',
-        question: 'Tags (comma separated, kebab-case)',
-        validate: validateWith(postSchema.shape.tags, splitList),
-      }),
-    );
-
-    const validateAuthors = validateWith(postSchema.shape.authors, splitList);
-    const postAuthors = splitList(
-      await ask({
-        name: 'authors',
-        question: `Authors (${[...authorSlugs].join(', ')})`,
-        defaultValue: authorSlugs.has(PRIMARY_AUTHOR_SLUG) ? PRIMARY_AUTHOR_SLUG : undefined,
-        validate: (value) => {
-          const unknown = splitList(value).find((author) => !authorSlugs.has(author));
-
-          return validateAuthors(value) ?? (unknown ? `Unknown author: "${unknown}".` : undefined);
-        },
-      }),
-    );
-
-    let seriesSlug = '';
-    let order: number | undefined;
-
-    if (seriesSlugs.size > 0 || flags.series !== undefined) {
-      seriesSlug = await ask({
-        name: 'series',
-        question: `Series (${[...seriesSlugs].join(', ')}; blank for none)`,
-        validate: (value) =>
-          value === '' || seriesSlugs.has(value) ? undefined : `Unknown series: "${value}".`,
-      });
-    }
-
-    if (seriesSlug) {
-      const takenOrders = existing
-        .filter((post) => post.series === seriesSlug)
-        .map((post) => post.order ?? 0);
-
-      order = Number(
-        await ask({
-          name: 'order',
-          question: 'Order in the series',
-          defaultValue: String(Math.max(0, ...takenOrders) + 1),
-          validate: (value) => {
-            const parsed = Number(value);
-
-            if (!Number.isInteger(parsed) || parsed < 1) return 'Order must be a positive integer.';
-
-            return takenOrders.includes(parsed) ? `Order ${parsed} is already used.` : undefined;
-          },
-        }),
-      );
-    }
-
+    const input = await collectPostInput(createAsker(rl, flags), flags, context);
     const publishedAt = today();
 
-    const result = postSchema.safeParse({
-      slug,
-      title,
-      description,
-      tags,
-      authors: postAuthors,
-      publishedAt,
-      status: PostStatus.DRAFT,
-      ...(seriesSlug ? { series: seriesSlug, order } : {}),
-    });
+    validatePostInput(input, publishedAt);
 
-    if (!result.success) {
-      throw new BuildError('new-post', [formatZodError('generated metadata', result.error)]);
-    }
-
-    const values = {
-      slug: yamlString(slug),
-      title: yamlString(title),
-      description: yamlString(description),
-      tags: yamlList(tags),
-      authors: yamlList(postAuthors),
-      publishedAt: yamlString(publishedAt),
-      series: seriesSlug ? `series: ${yamlString(seriesSlug)}\norder: ${order}` : '',
-    };
-
-    const templateFiles = Array.from(
-      new Bun.Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
-    );
-
-    if (templateFiles.length === 0) throw new Error(`No template files in ${TEMPLATE_DIR}`);
-
-    const folderPath = join(POSTS_DIR, slug);
-
-    for (const file of templateFiles) {
-      const template = await Bun.file(join(TEMPLATE_DIR, file)).text();
-      await Bun.write(join(folderPath, file), renderTemplate(template, values));
-    }
-
-    await mkdir(join(folderPath, POST_IMAGES_DIR), { recursive: true });
+    const folderPath = await scaffoldPost(input.slug, toTemplateValues(input, publishedAt));
 
     log.section('Created');
     log.ok('post:', folderPath);
