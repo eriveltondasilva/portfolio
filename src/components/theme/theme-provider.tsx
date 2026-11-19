@@ -11,8 +11,8 @@ export function ThemeProvider({
     <NextThemesProvider
       attribute={['class', 'data-theme']}
       defaultTheme='system'
-      enableSystem
       disableTransitionOnChange
+      enableSystem
     >
       {children}
     </NextThemesProvider>
