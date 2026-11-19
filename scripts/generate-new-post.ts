@@ -93,6 +93,8 @@ function slugify(text: string): string {
 // 'sv-SE' yields YYYY-MM-DD in local time; toISOString() is UTC and would return tomorrow's date after 21h in Brazil.
 const today = (): string => new Date().toLocaleDateString('sv-SE');
 
+const formatPostFolderName = (date: string, slug: string): string => `${date}-${slug}`;
+
 function validateWith(schema: z.ZodType, parse: (value: string) => unknown = (v) => v): Validate {
   return (value) => {
     const result = schema.safeParse(parse(value));
@@ -211,7 +213,12 @@ async function askSeries(
   return { slug: seriesSlug, order };
 }
 
-async function collectPostInput(ask: Ask, flags: Flags, context: PostContext): Promise<PostInput> {
+async function collectPostInput(
+  ask: Ask,
+  flags: Flags,
+  context: PostContext,
+  createdAt: string,
+): Promise<PostInput> {
   const { authorSlugs, existing } = context;
 
   const title = await ask({
@@ -223,13 +230,19 @@ async function collectPostInput(ask: Ask, flags: Flags, context: PostContext): P
   const validateSlug = validateWith(postSchema.shape.slug);
   const slug = await ask({
     name: 'slug',
-    question: 'Slug (also the folder name)',
+    question: 'Slug (used for metadata and folder name)',
     defaultValue: slugify(title),
-    validate: (value) =>
-      validateSlug(value) ??
-      (existing.some((post) => post.folder === value || post.slug === value) ?
-        'A post with this slug or folder already exists.'
-      : undefined),
+    validate: (value) => {
+      const formatError = validateSlug(value);
+      if (formatError) return formatError;
+
+      const targetFolder = formatPostFolderName(createdAt, value);
+      const alreadyExists = existing.some(
+        (post) => post.folder === targetFolder || post.folder === value || post.slug === value,
+      );
+
+      return alreadyExists ? 'A post with this slug or folder already exists.' : undefined;
+    },
   });
 
   const description = await ask({
@@ -298,7 +311,7 @@ function toTemplateValues(
 }
 
 async function scaffoldPost(
-  slug: string,
+  folderName: string,
   values: Readonly<Record<string, string>>,
 ): Promise<string> {
   const templateFiles = Array.from(
@@ -316,7 +329,7 @@ async function scaffoldPost(
     })),
   );
 
-  const folderPath = join(POSTS_DIR, slug);
+  const folderPath = join(POSTS_DIR, folderName);
 
   for (const { file, content } of rendered) {
     await Bun.write(join(folderPath, file), content);
@@ -349,14 +362,15 @@ async function main(): Promise<void> {
   try {
     log.section('New post');
 
+    const createdAt = today();
     const ask = createAsker(rl, flags);
-    const input = await collectPostInput(ask, flags, context);
-    const publishedAt = today();
+    const input = await collectPostInput(ask, flags, context, createdAt);
 
-    validatePostInput(input, publishedAt);
+    validatePostInput(input, createdAt);
 
-    const templateValues = toTemplateValues(input, publishedAt);
-    const folderPath = await scaffoldPost(input.slug, templateValues);
+    const templateValues = toTemplateValues(input, createdAt);
+    const folderName = formatPostFolderName(createdAt, input.slug);
+    const folderPath = await scaffoldPost(folderName, templateValues);
 
     log.section('Created');
     log.ok('post:', folderPath);
