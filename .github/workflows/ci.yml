@@ -18,16 +18,25 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout
+        uses: actions/checkout@v7
 
-      - uses: oven-sh/setup-bun@v2
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
 
-      - run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-      - run: bun run generate
+      - name: Generate blog
+        run: bun run generate:blog
+
+      - name: Generate projects
+        run: bun run generate:projects
         env:
           # The automatic token only raises the GitHub API rate limit
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Runs typegen + tsc, eslint and prettier in sequence
-      - run: bun run check
+      - name: Run checks
+        run: bun run check

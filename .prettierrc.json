@@ -4,12 +4,8 @@
   "jsxSingleQuote": true,
   "singleQuote": true,
   "semi": true,
-  "printWidth": 80,
-  "plugins": [
-    "prettier-plugin-package",
-    "prettier-plugin-yaml",
-    "prettier-plugin-tailwindcss"
-  ],
+  "printWidth": 100,
+  "plugins": ["prettier-plugin-packagejson", "prettier-plugin-tailwindcss"],
   "tailwindStylesheet": "./src/app/globals.css",
   "tailwindFunctions": ["cva", "clsx", "cn", "tw"]
 }
