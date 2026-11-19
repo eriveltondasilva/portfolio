@@ -2,8 +2,6 @@ import { Fragment } from 'react';
 
 import type { Key, ReactNode } from 'react';
 
-// ─────────────────────────────────────
-
 type ShowProps<T> = {
   when: T | null | undefined | false;
   fallback?: ReactNode;
@@ -11,13 +9,9 @@ type ShowProps<T> = {
 };
 
 export function Show<T>({ when, fallback = null, children }: ShowProps<T>) {
-  if (!when) {
-    return fallback;
-  }
+  if (!when) return fallback;
 
-  return typeof children === 'function' ?
-      children(when as NonNullable<T>)
-    : children;
+  return typeof children === 'function' ? children(when) : children;
 }
 
 // ─────────────────────────────────────
@@ -35,9 +29,7 @@ export function For<T>({
   fallback = null,
   children,
 }: ForProps<T>) {
-  if (!each?.length) {
-    return fallback;
-  }
+  if (!each?.length) return fallback;
 
   return (
     <>
