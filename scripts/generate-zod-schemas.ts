@@ -7,6 +7,7 @@ import { runScript } from './utils/run-script';
 import { log } from './utils/logger';
 import { writeJson } from './utils/files';
 
+type 
 const targets = [
   {
     name: 'series',

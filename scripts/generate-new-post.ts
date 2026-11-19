@@ -349,12 +349,14 @@ async function main(): Promise<void> {
   try {
     log.section('New post');
 
-    const input = await collectPostInput(createAsker(rl, flags), flags, context);
+    const ask = createAsker(rl, flags);
+    const input = await collectPostInput(ask, flags, context);
     const publishedAt = today();
 
     validatePostInput(input, publishedAt);
 
-    const folderPath = await scaffoldPost(input.slug, toTemplateValues(input, publishedAt));
+    const templateValues = toTemplateValues(input, publishedAt);
+    const folderPath = await scaffoldPost(input.slug, templateValues);
 
     log.section('Created');
     log.ok('post:', folderPath);
