@@ -19,7 +19,5 @@ export function getSeriesBySlug(slug: string): Readonly<SeriesIndex> | null {
 }
 
 export function getInProgressSeries(limit = 2): ReadonlyArray<SeriesIndex> {
-  return allSeries
-    .filter((series) => series.status === SeriesStatus.IN_PROGRESS)
-    .slice(0, limit);
+  return allSeries.filter((series) => series.status === SeriesStatus.IN_PROGRESS).slice(0, limit);
 }

@@ -13,8 +13,7 @@ import type { NextConfig } from 'next';
 
 // ─────────────────────────────────────
 
-const mdxPluginPath = (fileName: string) =>
-  join(cwd(), 'src', 'lib', 'plugins', fileName + '.ts');
+const mdxPluginPath = (fileName: string) => join(cwd(), 'src', 'lib', 'plugins', fileName + '.ts');
 
 const withMDX = createMDX({
   extension: /\.mdx?$/,

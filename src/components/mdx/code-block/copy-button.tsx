@@ -13,9 +13,7 @@ export function CopyButton() {
   const { copied, copy } = useCopyToClipboard();
 
   async function handleCopy(event: MouseEvent<HTMLButtonElement>) {
-    const code = event.currentTarget
-      .closest('[data-code-block]')
-      ?.querySelector('code');
+    const code = event.currentTarget.closest('[data-code-block]')?.querySelector('code');
 
     if (!code) return;
 
@@ -42,8 +40,7 @@ export function CopyButton() {
           'absolute top-3.5 right-3 size-7 rounded-sm border-white/10 bg-code text-zinc-400 transition-all',
           'opacity-0 focus-visible:opacity-100 pointer-coarse:opacity-100 [figure:hover_&]:opacity-100',
           'hover:border-white/20 hover:bg-code-hover hover:text-zinc-100',
-          copied &&
-            'border-green-500/50 text-green-400 opacity-100 hover:text-green-400',
+          copied && 'border-green-500/50 text-green-400 opacity-100 hover:text-green-400',
         )}
       >
         <Icon iconNode={copied ? CheckIcon : CopyIcon} className='size-3.5' />

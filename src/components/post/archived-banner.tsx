@@ -14,12 +14,9 @@ export function ArchivedBanner() {
         className='mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400'
       />
       <div className='text-sm'>
-        <p className='font-semibold text-amber-800 dark:text-amber-400'>
-          Post arquivado
-        </p>
+        <p className='font-semibold text-amber-800 dark:text-amber-400'>Post arquivado</p>
         <p className='mt-0.5 text-amber-700 dark:text-amber-500'>
-          Este post não é mais mantido ativamente e pode conter informações
-          desatualizadas.
+          Este post não é mais mantido ativamente e pode conter informações desatualizadas.
         </p>
       </div>
     </div>

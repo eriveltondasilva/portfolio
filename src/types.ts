@@ -1,9 +1,4 @@
-import type {
-  authorSchema,
-  postSchema,
-  projectSchema,
-  seriesSchema,
-} from '@/lib/schemas';
+import type { authorSchema, postSchema, projectSchema, seriesSchema } from '@/lib/schemas';
 import type { Toc } from '@stefanprobst/rehype-extract-toc';
 import type { MDXContent, MDXModule } from 'mdx/types';
 import type { z } from 'zod';
@@ -67,7 +62,4 @@ export interface TagCount {
   count: number;
 }
 
-export type SearchEntry = Pick<
-  PostIndex,
-  'slug' | 'title' | 'description' | 'tags'
->;
+export type SearchEntry = Pick<PostIndex, 'slug' | 'title' | 'description' | 'tags'>;

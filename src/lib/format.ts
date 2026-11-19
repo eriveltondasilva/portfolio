@@ -11,20 +11,14 @@ const DEFAULT_DATE_OPTIONS = {
 
 const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
-function getDateFormatter(
-  options?: Intl.DateTimeFormatOptions,
-): Intl.DateTimeFormat {
+function getDateFormatter(options?: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
   const key = JSON.stringify(options ?? {});
-  const callback = () =>
-    new Intl.DateTimeFormat(LOCALE, { ...DEFAULT_DATE_OPTIONS, ...options });
+  const callback = () => new Intl.DateTimeFormat(LOCALE, { ...DEFAULT_DATE_OPTIONS, ...options });
 
   return dateFormatters.getOrInsertComputed(key, callback);
 }
 
-export function formatDate(
-  date: string,
-  options?: Intl.DateTimeFormatOptions,
-): string {
+export function formatDate(date: string, options?: Intl.DateTimeFormatOptions): string {
   try {
     return getDateFormatter(options).format(new Date(date));
   } catch {

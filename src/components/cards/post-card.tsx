@@ -18,12 +18,7 @@ interface Props extends ComponentProps<'article'> {
   headingLevel?: CardHeadingLevel;
 }
 
-export function PostCard({
-  post,
-  headingLevel: Heading = 'h2',
-  className,
-  ...props
-}: Props) {
+export function PostCard({ post, headingLevel: Heading = 'h2', className, ...props }: Props) {
   const displayDate = getPostDisplayDate(post);
 
   return (
@@ -58,9 +53,7 @@ export function PostCard({
       <ul className='mt-2 flex flex-col gap-0.5 text-xs text-muted-foreground @sm:flex-row @sm:flex-wrap @sm:items-center'>
         <li>
           {post.updatedAt ? 'Atualizado em ' : 'Publicado em '}
-          <time dateTime={displayDate}>
-            {formatDate(displayDate, { dateStyle: 'long' })}
-          </time>
+          <time dateTime={displayDate}>{formatDate(displayDate, { dateStyle: 'long' })}</time>
         </li>
 
         <li className='flex items-center'>

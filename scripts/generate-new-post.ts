@@ -6,12 +6,7 @@ import { parseArgs } from 'node:util';
 import { z } from 'zod';
 
 import { postSchema } from '@/lib/schemas';
-import {
-  POST_IMAGES_DIR,
-  POST_META_FILE,
-  PRIMARY_AUTHOR_SLUG,
-  PostStatus,
-} from '@/lib/constants';
+import { POST_IMAGES_DIR, POST_META_FILE, PRIMARY_AUTHOR_SLUG, PostStatus } from '@/lib/constants';
 
 import { POSTS_DIR } from './utils/paths';
 import { runScript } from './utils/run-script';
@@ -47,8 +42,7 @@ const existingPostSchema = z.object({
 // # Helpers
 
 const yamlString = (value: string): string => JSON.stringify(value);
-const yamlList = (items: readonly string[]): string =>
-  `[${items.map(yamlString).join(', ')}]`;
+const yamlList = (items: readonly string[]): string => `[${items.map(yamlString).join(', ')}]`;
 
 const splitList = (value: string): string[] =>
   value
@@ -68,20 +62,14 @@ function slugify(text: string): string {
 
 const today = (): string => new Date().toLocaleDateString('sv-SE');
 
-function validateWith(
-  schema: z.ZodType,
-  parse: (value: string) => unknown = (v) => v,
-): Validate {
+function validateWith(schema: z.ZodType, parse: (value: string) => unknown = (v) => v): Validate {
   return (value) => {
     const result = schema.safeParse(parse(value));
     return result.success ? undefined : result.error.issues[0]?.message;
   };
 }
 
-function renderTemplate(
-  template: string,
-  values: Readonly<Record<string, string>>,
-): string {
+function renderTemplate(template: string, values: Readonly<Record<string, string>>): string {
   for (const [placeholder, key = ''] of template.matchAll(/\{\{(\w+)\}\}/g)) {
     if (!Object.hasOwn(values, key))
       throw new Error(`Template has an unknown placeholder: ${placeholder}`);
@@ -98,9 +86,7 @@ function renderTemplate(
 // # Existing posts
 
 async function readExistingPosts(): Promise<ExistingPost[]> {
-  const entries = await readdir(POSTS_DIR, { withFileTypes: true }).catch(
-    () => [],
-  );
+  const entries = await readdir(POSTS_DIR, { withFileTypes: true }).catch(() => []);
   const folders = entries
     .filter((entry) => entry.isDirectory() && !entry.name.startsWith('.'))
     .map((entry) => entry.name);
@@ -152,8 +138,7 @@ async function main(): Promise<void> {
     if (flagValue !== undefined) {
       const error = field.validate(flagValue);
 
-      if (error)
-        throw new BuildError('new-post', [`--${field.name}: ${error}`]);
+      if (error) throw new BuildError('new-post', [`--${field.name}: ${error}`]);
 
       return flagValue;
     }
@@ -211,19 +196,11 @@ async function main(): Promise<void> {
       await ask({
         name: 'authors',
         question: `Authors (${[...authorSlugs].join(', ')})`,
-        defaultValue:
-          authorSlugs.has(PRIMARY_AUTHOR_SLUG) ? PRIMARY_AUTHOR_SLUG : (
-            undefined
-          ),
+        defaultValue: authorSlugs.has(PRIMARY_AUTHOR_SLUG) ? PRIMARY_AUTHOR_SLUG : undefined,
         validate: (value) => {
-          const unknown = splitList(value).find(
-            (author) => !authorSlugs.has(author),
-          );
+          const unknown = splitList(value).find((author) => !authorSlugs.has(author));
 
-          return (
-            validateAuthors(value) ??
-            (unknown ? `Unknown author: "${unknown}".` : undefined)
-          );
+          return validateAuthors(value) ?? (unknown ? `Unknown author: "${unknown}".` : undefined);
         },
       }),
     );
@@ -236,9 +213,7 @@ async function main(): Promise<void> {
         name: 'series',
         question: `Series (${[...seriesSlugs].join(', ')}; blank for none)`,
         validate: (value) =>
-          value === '' || seriesSlugs.has(value) ?
-            undefined
-          : `Unknown series: "${value}".`,
+          value === '' || seriesSlugs.has(value) ? undefined : `Unknown series: "${value}".`,
       });
     }
 
@@ -255,12 +230,9 @@ async function main(): Promise<void> {
           validate: (value) => {
             const parsed = Number(value);
 
-            if (!Number.isInteger(parsed) || parsed < 1)
-              return 'Order must be a positive integer.';
+            if (!Number.isInteger(parsed) || parsed < 1) return 'Order must be a positive integer.';
 
-            return takenOrders.includes(parsed) ?
-                `Order ${parsed} is already used.`
-              : undefined;
+            return takenOrders.includes(parsed) ? `Order ${parsed} is already used.` : undefined;
           },
         }),
       );
@@ -280,9 +252,7 @@ async function main(): Promise<void> {
     });
 
     if (!result.success) {
-      throw new BuildError('new-post', [
-        formatZodError('generated metadata', result.error),
-      ]);
+      throw new BuildError('new-post', [formatZodError('generated metadata', result.error)]);
     }
 
     const values = {
@@ -292,16 +262,14 @@ async function main(): Promise<void> {
       tags: yamlList(tags),
       authors: yamlList(postAuthors),
       publishedAt: yamlString(publishedAt),
-      series:
-        seriesSlug ? `series: ${yamlString(seriesSlug)}\norder: ${order}` : '',
+      series: seriesSlug ? `series: ${yamlString(seriesSlug)}\norder: ${order}` : '',
     };
 
     const templateFiles = Array.from(
       new Bun.Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
     );
 
-    if (templateFiles.length === 0)
-      throw new Error(`No template files in ${TEMPLATE_DIR}`);
+    if (templateFiles.length === 0) throw new Error(`No template files in ${TEMPLATE_DIR}`);
 
     const folderPath = join(POSTS_DIR, slug);
 

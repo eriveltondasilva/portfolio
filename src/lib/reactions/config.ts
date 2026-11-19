@@ -15,8 +15,5 @@ export const REACTION_CONFIG = {
 } as const satisfies Record<ReactionType, { emoji: string; label: string }>;
 
 export function isReactionType(value: unknown): value is ReactionType {
-  return (
-    typeof value === 'string' &&
-    (REACTION_TYPES as readonly string[]).includes(value)
-  );
+  return typeof value === 'string' && (REACTION_TYPES as readonly string[]).includes(value);
 }

@@ -39,35 +39,25 @@ export default function HomePage() {
         <div className='mb-3 flex flex-wrap items-center gap-x-1.5 text-xs text-muted-foreground'>
           <span className='font-mono'>eriveltondasilva</span>
           <span aria-hidden='true'>/</span>
-          <span className='font-mono font-semibold text-foreground/80'>
-            README.md
-          </span>
+          <span className='font-mono font-semibold text-foreground/80'>README.md</span>
         </div>
 
         <div className='space-y-3'>
           <h1 className='flex items-start gap-2 text-lg/snug font-bold text-foreground sm:text-xl'>
             {/* mt-1 centers the 20px icon on the first 28px title line */}
-            <Icon
-              iconNode={SparklesIcon}
-              className='mt-1 size-5 shrink-0 text-emerald-500'
-            />
-            <span className='min-w-0 text-balance'>
-              Olá, mundo! Sou Erivelton
-            </span>
+            <Icon iconNode={SparklesIcon} className='mt-1 size-5 shrink-0 text-emerald-500' />
+            <span className='min-w-0 text-balance'>Olá, mundo! Sou Erivelton</span>
           </h1>
 
           <p className='text-sm/relaxed text-muted-foreground'>
-            Desenvolvedor Frontend focado em criar interfaces modernas com{' '}
-            <Code>React</Code> e <Code>Next.js</Code>. Aqui compartilho o que
-            aprendo sobre desenvolvimento web, boas práticas e tecnologias que
-            uso no dia a dia.
+            Desenvolvedor Frontend focado em criar interfaces modernas com <Code>React</Code> e{' '}
+            <Code>Next.js</Code>. Aqui compartilho o que aprendo sobre desenvolvimento web, boas
+            práticas e tecnologias que uso no dia a dia.
           </p>
 
           <div className='flex items-start gap-1.5 font-mono text-xs text-muted-foreground'>
             <Icon iconNode={CheckIcon} className='shrink-0 text-emerald-500' />
-            <span className='min-w-0'>
-              Sempre aprendendo, sempre entregando
-            </span>
+            <span className='min-w-0'>Sempre aprendendo, sempre entregando</span>
           </div>
         </div>
       </section>

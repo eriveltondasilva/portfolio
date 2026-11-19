@@ -36,14 +36,10 @@ function groupPostsBySeries(posts: PostIndex[]): Map<string, PostIndex[]> {
 // ─────────────────────────────────────
 
 const allPosts = postsIndex as PostIndex[];
-const publishedPosts = allPosts.filter(
-  (post) => post.status === PostStatus.PUBLISHED,
-);
+const publishedPosts = allPosts.filter((post) => post.status === PostStatus.PUBLISHED);
 
 const postsBySlug = new Map(allPosts.map((post) => [post.slug, post]));
-const publishedIndexBySlug = new Map(
-  publishedPosts.map((post, index) => [post.slug, index]),
-);
+const publishedIndexBySlug = new Map(publishedPosts.map((post, index) => [post.slug, index]));
 
 const postsByTag = groupPostsByTag(publishedPosts);
 const postsBySeries = groupPostsBySeries(allPosts);
@@ -84,10 +80,7 @@ export function getSeriesPosts(seriesSlug: string): ReadonlyArray<PostIndex> {
   return postsBySeries.get(seriesSlug) ?? [];
 }
 
-export function getRelatedPosts(
-  slug: string,
-  limit = 3,
-): ReadonlyArray<PostIndex> {
+export function getRelatedPosts(slug: string, limit = 3): ReadonlyArray<PostIndex> {
   const post = postsBySlug.get(slug);
 
   if (!post) return [];
@@ -107,8 +100,7 @@ export function getRelatedPosts(
     .toSorted(([a, scoreA], [b, scoreB]) => {
       return (
         scoreB - scoreA ||
-        (publishedIndexBySlug.get(a.slug) ?? 0) -
-          (publishedIndexBySlug.get(b.slug) ?? 0)
+        (publishedIndexBySlug.get(a.slug) ?? 0) - (publishedIndexBySlug.get(b.slug) ?? 0)
       );
     })
     .slice(0, limit)

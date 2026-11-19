@@ -45,16 +45,12 @@ export function Footer() {
           <ExternalLink href='https://vercel.com' className={LINK_CLASSES}>
             Vercel
           </ExternalLink>{' '}
-          e muito café{' '}
-          <Icon iconNode={CoffeeIcon} className='inline align-text-bottom' />
+          e muito café <Icon iconNode={CoffeeIcon} className='inline align-text-bottom' />
         </p>
       </div>
 
       {/* Decorative: the name already appears elsewhere on the site */}
-      <div
-        aria-hidden='true'
-        className='@container mt-8 overflow-hidden select-none'
-      >
+      <div aria-hidden='true' className='@container mt-8 overflow-hidden select-none'>
         <p className='mb-[-0.15em] bg-brand-gradient bg-clip-text text-[26cqw] leading-none font-semibold tracking-tighter whitespace-nowrap text-transparent'>
           {BRAND_NAME}
         </p>

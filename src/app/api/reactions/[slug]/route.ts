@@ -1,15 +1,8 @@
 import { getPostBySlug } from '@/lib/blog/posts';
 import { PostStatus } from '@/lib/constants';
 import { isReactionType } from '@/lib/reactions/config';
-import {
-  isNewVisitorRateLimited,
-  isReactionRateLimited,
-} from '@/lib/reactions/rate-limit';
-import {
-  readReactions,
-  removeReaction,
-  setReaction,
-} from '@/lib/reactions/store';
+import { isNewVisitorRateLimited, isReactionRateLimited } from '@/lib/reactions/rate-limit';
+import { readReactions, removeReaction, setReaction } from '@/lib/reactions/store';
 import { createVisitorId, getVisitorId } from '@/lib/reactions/visitor';
 
 import type { ReactionState } from '@/lib/reactions/config';
@@ -72,9 +65,7 @@ export async function GET(_request: Request, { params }: Context) {
 
   if (!findVisiblePost(slug)) return errorResponse('post-not-found', 404);
 
-  return respondWithState(async () =>
-    readReactions(slug, await getVisitorId()),
-  );
+  return respondWithState(async () => readReactions(slug, await getVisitorId()));
 }
 
 export async function PUT(request: Request, { params }: Context) {
@@ -83,15 +74,12 @@ export async function PUT(request: Request, { params }: Context) {
   const rejection = await rejectInvalidWrite(request, slug);
   if (rejection) return rejection;
 
-  const body: { type?: unknown } | null = await request
-    .json()
-    .catch(() => null);
+  const body: { type?: unknown } | null = await request.json().catch(() => null);
   const type = body?.type;
 
   if (!isReactionType(type)) return errorResponse('invalid-reaction-type', 400);
 
-  const visitorId =
-    (await getVisitorId()) ?? (await registerNewVisitor(request));
+  const visitorId = (await getVisitorId()) ?? (await registerNewVisitor(request));
 
   if (!visitorId) return errorResponse('rate-limited', 429);
 

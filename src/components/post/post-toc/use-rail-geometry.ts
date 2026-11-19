@@ -24,13 +24,10 @@ export function useRailGeometry(items: TocItem[]) {
     if (!list) return;
 
     const observer = new ResizeObserver(() => {
-      const segments = Array.from(
-        list.querySelectorAll('li'),
-        ({ offsetTop, offsetHeight }) => ({
-          top: offsetTop + ITEM_PADDING_Y_PX,
-          bottom: offsetTop + offsetHeight - ITEM_PADDING_Y_PX,
-        }),
-      );
+      const segments = Array.from(list.querySelectorAll('li'), ({ offsetTop, offsetHeight }) => ({
+        top: offsetTop + ITEM_PADDING_Y_PX,
+        bottom: offsetTop + offsetHeight - ITEM_PADDING_Y_PX,
+      }));
 
       setGeometry({ segments, height: list.offsetHeight });
     });

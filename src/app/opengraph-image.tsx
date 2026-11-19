@@ -1,14 +1,7 @@
 import { getPrimaryAuthor } from '@/lib/blog/authors';
 import { SITE_DESCRIPTION, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';
-import {
-  OgBrand,
-  OgContent,
-  OgDescription,
-  OgFooter,
-  OgFrame,
-  OgTitle,
-} from '@/lib/og/layout';
+import { OgBrand, OgContent, OgDescription, OgFooter, OgFrame, OgTitle } from '@/lib/og/layout';
 import { OgPill, OgPillRow } from '@/lib/og/pill';
 import { renderOgImage } from '@/lib/og/response';
 

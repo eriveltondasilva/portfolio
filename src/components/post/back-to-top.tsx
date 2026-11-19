@@ -15,12 +15,9 @@ export function BackToTop() {
 
     if (!sentinel) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(!entry?.isIntersecting),
-      {
-        threshold: 0,
-      },
-    );
+    const observer = new IntersectionObserver(([entry]) => setVisible(!entry?.isIntersecting), {
+      threshold: 0,
+    });
 
     observer.observe(sentinel);
 
@@ -28,9 +25,7 @@ export function BackToTop() {
   }, []);
 
   const scrollToTop = () => {
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)',
-    ).matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     window.scrollTo({
       top: 0,
@@ -53,9 +48,7 @@ export function BackToTop() {
         aria-label='Voltar ao topo'
         className={cn(
           'fixed right-8 bottom-6 z-50 flex size-10 items-center justify-center rounded-full border bg-background text-muted-foreground shadow-sm transition-all duration-200 hover:scale-120 hover:border-border-strong hover:text-foreground',
-          visible ?
-            'translate-y-0 opacity-100'
-          : 'pointer-events-none translate-y-4 opacity-0',
+          visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-4 opacity-0',
         )}
       >
         <Icon iconNode={ChevronUpIcon} />

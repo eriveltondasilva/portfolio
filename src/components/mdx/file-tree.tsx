@@ -111,20 +111,13 @@ interface FileTreeFileProps extends Omit<ComponentProps<'li'>, 'children'> {
   highlight?: boolean;
 }
 
-export function FileTreeFile({
-  name,
-  highlight,
-  className,
-  ...props
-}: FileTreeFileProps) {
+export function FileTreeFile({ name, highlight, className, ...props }: FileTreeFileProps) {
   return (
     <li className={cn('pl-3.5', className)} {...props}>
       <div
         className={cn(
           'flex w-fit items-center gap-1.5 rounded-sm px-1.5 py-0.5 text-sm',
-          highlight ?
-            'bg-zinc-500/10 font-medium text-foreground'
-          : 'text-muted-foreground',
+          highlight ? 'bg-zinc-500/10 font-medium text-foreground' : 'text-muted-foreground',
         )}
       >
         <Icon iconNode={getFileIcon(name)} className='size-3.5 shrink-0' />

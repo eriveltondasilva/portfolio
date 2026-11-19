@@ -43,13 +43,7 @@ export function PostToc({ items }: Props) {
         </h2>
 
         <div className='relative'>
-          {geometry && (
-            <TocRail
-              levels={levels}
-              geometry={geometry}
-              activeIndex={activeIndex}
-            />
-          )}
+          {geometry && <TocRail levels={levels} geometry={geometry} activeIndex={activeIndex} />}
 
           <ul ref={listRef}>
             {items.map(({ id, title }, index) => {

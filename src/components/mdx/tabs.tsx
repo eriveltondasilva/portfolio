@@ -1,12 +1,7 @@
 import { Children, isValidElement } from 'react';
 import { cn } from 'cn';
 
-import {
-  Tabs as TabsRoot,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/components/ui/tabs';
+import { Tabs as TabsRoot, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { PROSE_RESET_CLASSES } from './prose';
 
@@ -16,10 +11,7 @@ import type { ComponentProps, ReactNode } from 'react';
 
 function getTabLabels(children: ReactNode): string[] {
   const labels = Children.toArray(children).flatMap((child) =>
-    (
-      isValidElement<{ label?: unknown }>(child) &&
-      typeof child.props.label === 'string'
-    ) ?
+    isValidElement<{ label?: unknown }>(child) && typeof child.props.label === 'string' ?
       [child.props.label]
     : [],
   );
@@ -74,11 +66,7 @@ interface TabProps extends Omit<ComponentProps<typeof TabsContent>, 'value'> {
 
 export function Tab({ label, className, children, ...props }: TabProps) {
   return (
-    <TabsContent
-      value={label}
-      className={cn(PROSE_RESET_CLASSES, className)}
-      {...props}
-    >
+    <TabsContent value={label} className={cn(PROSE_RESET_CLASSES, className)} {...props}>
       {children}
     </TabsContent>
   );

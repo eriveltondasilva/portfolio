@@ -26,10 +26,7 @@ export function Link({ href = '', children, ...props }: ComponentProps<'a'>) {
     return (
       <ExternalLink href={href} {...props}>
         {children}
-        <Icon
-          iconNode={ArrowUpRightIcon}
-          className='inline size-3 align-text-top'
-        />
+        <Icon iconNode={ArrowUpRightIcon} className='inline size-3 align-text-top' />
       </ExternalLink>
     );
   }

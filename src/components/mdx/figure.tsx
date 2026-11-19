@@ -6,12 +6,7 @@ interface FigureProps extends ComponentProps<'figure'> {
   caption?: string;
 }
 
-export function Figure({
-  caption,
-  className,
-  children,
-  ...props
-}: FigureProps) {
+export function Figure({ caption, className, children, ...props }: FigureProps) {
   return (
     <figure className={cn('not-prose my-6', className)} {...props}>
       {children}

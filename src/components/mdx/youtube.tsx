@@ -17,9 +17,7 @@ export function Youtube({ id, title, caption, params = '' }: Props) {
       <YouTubeEmbed
         videoid={id}
         params={params}
-        playlabel={
-          title ? `${DEFAULT_PLAY_LABEL} ${title}` : DEFAULT_PLAY_LABEL
-        }
+        playlabel={title ? `${DEFAULT_PLAY_LABEL} ${title}` : DEFAULT_PLAY_LABEL}
       />
     </Figure>
   );

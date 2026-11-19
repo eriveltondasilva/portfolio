@@ -39,18 +39,11 @@ export function checkUniqueSlugs(entries: readonly Entry[]): string[] {
 }
 
 export function checkUniqueSeriesOrder(posts: readonly PostIndex[]): string[] {
-  const seriesPosts = posts.filter(
-    (post) => post.series !== undefined && post.order !== undefined,
-  );
-  const duplicates = findDuplicates(
-    seriesPosts,
-    (post) => `${post.series}#${post.order}`,
-  );
+  const seriesPosts = posts.filter((post) => post.series !== undefined && post.order !== undefined);
+  const duplicates = findDuplicates(seriesPosts, (post) => `${post.series}#${post.order}`);
 
   return duplicates.map(([key, group]) => {
-    const files = group
-      .map((post) => `\n    - ${getPostMetaPath(post)}`)
-      .join('');
+    const files = group.map((post) => `\n    - ${getPostMetaPath(post)}`).join('');
     return `Duplicate "order" in series (series#order) "${key}":${files}`;
   });
 }
@@ -66,15 +59,10 @@ export function checkSeriesExist(
   if (invalidPosts.length === 0) return [];
 
   const detail = invalidPosts
-    .map(
-      (post) =>
-        `  - "${post.slug}" -> series "${post.series}"\n    ${getPostMetaPath(post)}`,
-    )
+    .map((post) => `  - "${post.slug}" -> series "${post.series}"\n    ${getPostMetaPath(post)}`)
     .join('\n');
 
-  return [
-    `Non-existent series referenced:\n${detail}${formatAvailable('series', knownSeries)}`,
-  ];
+  return [`Non-existent series referenced:\n${detail}${formatAvailable('series', knownSeries)}`];
 }
 
 export function checkAuthorsExist(
@@ -82,9 +70,7 @@ export function checkAuthorsExist(
   knownAuthors: ReadonlySet<string>,
 ): string[] {
   const missing = posts.flatMap((post) =>
-    post.authors
-      .filter((author) => !knownAuthors.has(author))
-      .map((author) => ({ author, post })),
+    post.authors.filter((author) => !knownAuthors.has(author)).map((author) => ({ author, post })),
   );
 
   if (missing.length === 0) return [];
@@ -96,7 +82,5 @@ export function checkAuthorsExist(
     )
     .join('\n');
 
-  return [
-    `Non-existent authors referenced:\n${detail}${formatAvailable('authors', knownAuthors)}`,
-  ];
+  return [`Non-existent authors referenced:\n${detail}${formatAvailable('authors', knownAuthors)}`];
 }

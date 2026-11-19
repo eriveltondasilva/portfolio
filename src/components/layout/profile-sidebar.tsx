@@ -29,9 +29,7 @@ export function ProfileSidebar() {
 
       {/* Name & username */}
       <div className='mt-4'>
-        <p className='text-2xl/tight font-bold text-foreground'>
-          {author.name}
-        </p>
+        <p className='text-2xl/tight font-bold text-foreground'>{author.name}</p>
         <p className='mt-0.5 text-xl font-light text-muted-foreground'>
           {githubUsername} • {AUTHOR_PRONOUNS}
         </p>
@@ -53,13 +51,7 @@ export function ProfileSidebar() {
             href={href}
             className='flex items-center gap-2 px-0.5 transition-colors hover:text-foreground'
           >
-            <Image
-              src={icon}
-              alt={label}
-              width={14}
-              height={14}
-              className='dark:invert'
-            />
+            <Image src={icon} alt={label} width={14} height={14} className='dark:invert' />
             <span className='truncate'>{getUrlPathname(href)}</span>
           </ExternalLink>
         ))}

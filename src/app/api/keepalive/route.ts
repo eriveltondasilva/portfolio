@@ -14,9 +14,7 @@ function isAuthorized(request: Request): boolean {
   const expected = Buffer.from(`Bearer ${cronSecret}`);
   const received = Buffer.from(request.headers.get('authorization') ?? '');
 
-  return (
-    expected.length === received.length && timingSafeEqual(expected, received)
-  );
+  return expected.length === received.length && timingSafeEqual(expected, received);
 }
 
 export async function GET(request: Request) {
@@ -33,9 +31,6 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Keepalive failed:', error);
 
-    return Response.json(
-      { error: 'Keepalive failed. Check the server logs.' },
-      { status: 500 },
-    );
+    return Response.json({ error: 'Keepalive failed. Check the server logs.' }, { status: 500 });
   }
 }

@@ -28,9 +28,7 @@ export function useSearchPanel({ fuse, loadFailed, onNavigate }: Options) {
 
   if (!fuse) {
     message =
-      loadFailed ?
-        'Não foi possível carregar a busca. Feche e tente novamente.'
-      : 'Carregando…';
+      loadFailed ? 'Não foi possível carregar a busca. Feche e tente novamente.' : 'Carregando…';
   } else if (!trimmedQuery) {
     message = 'Digite para buscar nos posts.';
   } else if (results.length === 0) {
@@ -46,9 +44,7 @@ export function useSearchPanel({ fuse, loadFailed, onNavigate }: Options) {
     const nextIndex = (activeIndex + step + results.length) % results.length;
 
     setActiveIndex(nextIndex);
-    document
-      .getElementById(getOptionId(nextIndex))
-      ?.scrollIntoView({ block: 'nearest' });
+    document.getElementById(getOptionId(nextIndex))?.scrollIntoView({ block: 'nearest' });
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {

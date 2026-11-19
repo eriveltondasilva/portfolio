@@ -4,12 +4,7 @@ import { SearchIcon } from 'lucide-react';
 import { useState, useSyncExternalStore } from 'react';
 
 import { Icon } from '@/components/icon';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 
 import { SearchPanel } from './search-panel';
 import { preloadSearchIndex, useSearchIndex } from './use-search-index';
@@ -22,11 +17,7 @@ const getServerIsMac = () => false;
 export function SearchDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const { fuse, loadFailed } = useSearchIndex(isOpen);
-  const isMac = useSyncExternalStore(
-    subscribeNothing,
-    getIsMac,
-    getServerIsMac,
-  );
+  const isMac = useSyncExternalStore(subscribeNothing, getIsMac, getServerIsMac);
 
   useSearchShortcut(() => setIsOpen((current) => !current));
 
@@ -57,11 +48,7 @@ export function SearchDialog() {
             Busque posts por título, descrição ou tag.
           </DialogDescription>
 
-          <SearchPanel
-            fuse={fuse}
-            loadFailed={loadFailed}
-            onNavigate={() => setIsOpen(false)}
-          />
+          <SearchPanel fuse={fuse} loadFailed={loadFailed} onNavigate={() => setIsOpen(false)} />
         </DialogContent>
       </Dialog>
     </>

@@ -5,8 +5,7 @@ import { cookies } from 'next/headers';
 const VISITOR_COOKIE_NAME = 'visitor_id';
 const VISITOR_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365; // 1 year
 
-const UUID_V4_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function sign(visitorId: string): string {
   const secret = process.env['RATE_LIMIT_SECRET'];
@@ -20,9 +19,7 @@ function hasValidSignature(visitorId: string, signature: string): boolean {
   const expected = Buffer.from(sign(visitorId));
   const received = Buffer.from(signature);
 
-  return (
-    expected.length === received.length && timingSafeEqual(expected, received)
-  );
+  return expected.length === received.length && timingSafeEqual(expected, received);
 }
 
 export async function getVisitorId(): Promise<string | null> {

@@ -46,9 +46,7 @@ function reactionChoicesKey(slug: string): string {
   return namespaceKey(`reactions:${slug}:choices`);
 }
 
-function toReactionCounts(
-  rawCounts: Record<string, unknown> | null,
-): ReactionCounts {
+function toReactionCounts(rawCounts: Record<string, unknown> | null): ReactionCounts {
   return Object.fromEntries(
     REACTION_TYPES.map((type) => [type, Number(rawCounts?.[type] ?? 0)]),
   ) as ReactionCounts;
@@ -88,10 +86,7 @@ export function setReaction(
   return applyReaction(slug, visitorId, type);
 }
 
-export function removeReaction(
-  slug: string,
-  visitorId: string,
-): Promise<ReactionState> {
+export function removeReaction(slug: string, visitorId: string): Promise<ReactionState> {
   return applyReaction(slug, visitorId, null);
 }
 

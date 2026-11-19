@@ -1,19 +1,8 @@
 import { getAllSeries, getSeriesBySlug } from '@/lib/blog/series';
-import {
-  AUTHOR_NAME,
-  SERIES_STATUS_LABEL,
-  SeriesStatus,
-} from '@/lib/constants';
+import { AUTHOR_NAME, SERIES_STATUS_LABEL, SeriesStatus } from '@/lib/constants';
 import { formatDate, formatReadingTime } from '@/lib/format';
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';
-import {
-  OgBrand,
-  OgContent,
-  OgDescription,
-  OgFooter,
-  OgFrame,
-  OgTitle,
-} from '@/lib/og/layout';
+import { OgBrand, OgContent, OgDescription, OgFooter, OgFrame, OgTitle } from '@/lib/og/layout';
 import { OgPill, OgPillRow } from '@/lib/og/pill';
 import { renderOgImage, renderOgNotFound } from '@/lib/og/response';
 

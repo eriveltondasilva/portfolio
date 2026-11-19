@@ -39,9 +39,7 @@ export function PostHeader({ post, authors }: Props) {
         <ul className='flex flex-col sm:flex-row sm:flex-wrap sm:items-center'>
           <li>
             Publicado em{' '}
-            <time dateTime={publishedAt}>
-              {formatDate(publishedAt, { dateStyle: 'long' })}
-            </time>
+            <time dateTime={publishedAt}>{formatDate(publishedAt, { dateStyle: 'long' })}</time>
           </li>
 
           {updatedAt && (
@@ -49,9 +47,7 @@ export function PostHeader({ post, authors }: Props) {
               <Icon iconNode={DotIcon} className='hidden sm:block' />
               <span>
                 Atualizado em{' '}
-                <time dateTime={updatedAt}>
-                  {formatDate(updatedAt, { dateStyle: 'long' })}
-                </time>
+                <time dateTime={updatedAt}>{formatDate(updatedAt, { dateStyle: 'long' })}</time>
               </span>
             </li>
           )}
@@ -69,9 +65,7 @@ export function PostHeader({ post, authors }: Props) {
         )}
       </div>
 
-      {post.coverFile && (
-        <PostCover folder={post.folder} coverFile={post.coverFile} />
-      )}
+      {post.coverFile && <PostCover folder={post.folder} coverFile={post.coverFile} />}
 
       <SectionSeparator className='my-10' />
     </header>

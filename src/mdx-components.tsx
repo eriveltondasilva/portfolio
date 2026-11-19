@@ -2,11 +2,7 @@ import { Accordion, AccordionItem } from './components/mdx/accordion';
 import { Badge } from './components/mdx/badge';
 import { Callout } from './components/mdx/callout';
 import { CodeBlock } from './components/mdx/code-block';
-import {
-  FileTree,
-  FileTreeFile,
-  FileTreeFolder,
-} from './components/mdx/file-tree';
+import { FileTree, FileTreeFile, FileTreeFolder } from './components/mdx/file-tree';
 import { GalleryImage, Gallery } from './components/mdx/images/gallery';
 import { Image, ImageRatio } from './components/mdx/images/image';
 import { Kbd } from './components/mdx/kbd';

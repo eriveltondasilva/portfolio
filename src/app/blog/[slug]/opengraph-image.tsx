@@ -4,14 +4,7 @@ import { getPostDisplayDate } from '@/lib/blog';
 import { SITE_NAME } from '@/lib/constants';
 import { createListFormatter, formatDate } from '@/lib/format';
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og/config';
-import {
-  OgBrand,
-  OgContent,
-  OgDescription,
-  OgFooter,
-  OgFrame,
-  OgTitle,
-} from '@/lib/og/layout';
+import { OgBrand, OgContent, OgDescription, OgFooter, OgFrame, OgTitle } from '@/lib/og/layout';
 import { OgPill, OgPillRow } from '@/lib/og/pill';
 import { renderOgImage, renderOgNotFound } from '@/lib/og/response';
 
@@ -32,9 +25,7 @@ export default async function OGImage({ params }: PageProps<'/blog/[slug]'>) {
   if (!post) return renderOgNotFound();
 
   const authorNames = createListFormatter().format(
-    getAuthorsBySlugs(post.authors).map(
-      (author) => author.name.split(/\s+/).at(0) ?? '',
-    ),
+    getAuthorsBySlugs(post.authors).map((author) => author.name.split(/\s+/).at(0) ?? ''),
   );
   const byline = authorNames ? `Por ${authorNames}` : SITE_NAME;
   const displayDate = formatDate(getPostDisplayDate(post), {

@@ -13,16 +13,11 @@ interface Props {
 }
 
 export function PostReactions({ slug, readOnly = false }: Props) {
-  const { visibleState, isLoaded, loadFailed, errorMessage, toggleReaction } =
-    useReactions(slug);
+  const { visibleState, isLoaded, loadFailed, errorMessage, toggleReaction } = useReactions(slug);
 
   return (
     <div>
-      <div
-        role='group'
-        aria-label='Reações'
-        className='flex items-center gap-1'
-      >
+      <div role='group' aria-label='Reações' className='flex items-center gap-1'>
         {REACTION_TYPES.map((type) => (
           <ReactionButton
             key={type}
@@ -40,10 +35,7 @@ export function PostReactions({ slug, readOnly = false }: Props) {
       {/* Always mounted so screen readers announce the message when it appears */}
       <p
         role='status'
-        className={cn(
-          'text-xs text-destructive',
-          errorMessage ? 'mt-1' : 'sr-only',
-        )}
+        className={cn('text-xs text-destructive', errorMessage ? 'mt-1' : 'sr-only')}
       >
         {errorMessage}
       </p>

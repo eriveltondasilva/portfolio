@@ -36,10 +36,7 @@ export function TabsNav() {
   const pathname = usePathname();
 
   return (
-    <nav
-      className='flex items-center gap-3 border-b'
-      aria-label='Navegação principal'
-    >
+    <nav className='flex items-center gap-3 border-b' aria-label='Navegação principal'>
       <div className='-mb-px flex min-w-0 flex-1 overflow-x-auto'>
         {tabs.map(({ label, href, icon }) => {
           const isActive = pathname === href || pathname.startsWith(`${href}/`);

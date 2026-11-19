@@ -26,10 +26,7 @@ export function PostTocMobile({ items }: Props) {
 
       <ul className='space-y-0.5 border-t px-4 py-3'>
         {items.map(({ id, title, depth }) => (
-          <li
-            key={id}
-            style={{ paddingLeft: `${(depth - baseDepth) * INDENT_REM}rem` }}
-          >
+          <li key={id} style={{ paddingLeft: `${(depth - baseDepth) * INDENT_REM}rem` }}>
             <a
               href={`#${id}`}
               className='block py-1 text-sm text-muted-foreground transition-colors hover:text-foreground'

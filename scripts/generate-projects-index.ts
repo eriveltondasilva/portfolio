@@ -26,11 +26,7 @@ import type { GithubRepo } from './utils/github';
 async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const token = process.env['GITHUB_TOKEN'];
 
-  if (!token)
-    log.skip(
-      'token:',
-      'GITHUB_TOKEN not set, using the unauthenticated rate limit',
-    );
+  if (!token) log.skip('token:', 'GITHUB_TOKEN not set, using the unauthenticated rate limit');
 
   const octokit = new Octokit(token ? { auth: token } : {});
   log.detail(`Fetching repos for @${username}...`);
@@ -73,9 +69,7 @@ function validateProjects(candidates: readonly Project[]): Project[] {
   });
 
   errors.push(
-    ...checkUniqueSlugs(
-      projects.map(({ slug, repository }) => ({ slug, source: repository })),
-    ),
+    ...checkUniqueSlugs(projects.map(({ slug, repository }) => ({ slug, source: repository }))),
   );
 
   throwIfErrors('projects', errors);
@@ -85,35 +79,23 @@ function validateProjects(candidates: readonly Project[]): Project[] {
 
 // # Logging
 
-function logSelection(
-  repos: readonly GithubRepo[],
-  portfolioRepos: readonly GithubRepo[],
-): void {
-  log.ok(
-    'repos fetched:',
-    `${repos.length} public - ${portfolioRepos.length} included`,
-  );
+function logSelection(repos: readonly GithubRepo[], portfolioRepos: readonly GithubRepo[]): void {
+  log.ok('repos fetched:', `${repos.length} public - ${portfolioRepos.length} included`);
 
   const withoutTopic = repos.length - portfolioRepos.length;
   if (withoutTopic > 0) {
-    log.skip(
-      'no topic:',
-      `${withoutTopic} excluded (missing "${GithubTopic.INCLUDE}")`,
-    );
+    log.skip('no topic:', `${withoutTopic} excluded (missing "${GithubTopic.INCLUDE}")`);
   }
 
   const featuredCount = portfolioRepos.filter((repo) =>
     repo.topics?.includes(GithubTopic.FEATURED),
   ).length;
-  const wipCount = portfolioRepos.filter((repo) =>
-    repo.topics?.includes(GithubTopic.WIP),
-  ).length;
+  const wipCount = portfolioRepos.filter((repo) => repo.topics?.includes(GithubTopic.WIP)).length;
   const archivedCount = portfolioRepos.filter((repo) => repo.archived).length;
 
   if (featuredCount > 0) log.detail(`${featuredCount} featured`);
   if (wipCount > 0) log.detail(`${wipCount} wip`);
-  if (archivedCount > 0)
-    log.detail(`${archivedCount} archived (kept with archived status)`);
+  if (archivedCount > 0) log.detail(`${archivedCount} archived (kept with archived status)`);
 }
 
 // # Main

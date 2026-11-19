@@ -5,10 +5,7 @@ import { StatusBadge } from './status-badge';
 import type { StatusTone } from './status-badge';
 import type { ComponentProps } from 'react';
 
-interface Props extends Omit<
-  ComponentProps<typeof StatusBadge>,
-  'label' | 'tone'
-> {
+interface Props extends Omit<ComponentProps<typeof StatusBadge>, 'label' | 'tone'> {
   status: SeriesStatus;
 }
 
@@ -19,11 +16,5 @@ const statusTone = {
 } as const satisfies Record<SeriesStatus, StatusTone>;
 
 export function SeriesStatusBadge({ status, ...props }: Props) {
-  return (
-    <StatusBadge
-      label={SERIES_STATUS_LABEL[status]}
-      tone={statusTone[status]}
-      {...props}
-    />
-  );
+  return <StatusBadge label={SERIES_STATUS_LABEL[status]} tone={statusTone[status]} {...props} />;
 }

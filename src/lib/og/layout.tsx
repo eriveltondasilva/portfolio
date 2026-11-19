@@ -72,11 +72,7 @@ export function OgBrand({ section }: { section?: string }) {
 }
 
 export function OgContent({ children }: WithChildren) {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-      {children}
-    </div>
-  );
+  return <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>{children}</div>;
 }
 
 export function OgTitle({

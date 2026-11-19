@@ -40,9 +40,7 @@ export default function GlobalError({ error, reset }: Props) {
                 Algo deu errado
               </EmptyTitle>
 
-              <EmptyDescription>
-                Ocorreu um erro inesperado. Tente novamente.
-              </EmptyDescription>
+              <EmptyDescription>Ocorreu um erro inesperado. Tente novamente.</EmptyDescription>
             </EmptyHeader>
 
             <EmptyContent>

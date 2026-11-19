@@ -20,17 +20,9 @@ interface GalleryProps extends ComponentProps<'div'> {
   columns?: GridColumns;
 }
 
-export function Gallery({
-  columns = 3,
-  className,
-  children,
-  ...props
-}: GalleryProps) {
+export function Gallery({ columns = 3, className, children, ...props }: GalleryProps) {
   return (
-    <div
-      className={cn('not-prose my-6 grid gap-3', gridCols[columns], className)}
-      {...props}
-    >
+    <div className={cn('not-prose my-6 grid gap-3', gridCols[columns], className)} {...props}>
       {children}
     </div>
   );
@@ -42,12 +34,7 @@ interface GalleryImageProps extends Omit<NextImageProps, 'fill' | 'sizes'> {
   caption?: string;
 }
 
-export function GalleryImage({
-  src,
-  caption,
-  className,
-  ...props
-}: GalleryImageProps) {
+export function GalleryImage({ src, caption, className, ...props }: GalleryImageProps) {
   return (
     <Figure caption={caption} className='m-0'>
       <div className='relative aspect-square overflow-hidden rounded-md'>

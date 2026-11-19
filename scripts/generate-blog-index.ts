@@ -14,12 +14,7 @@ import {
 } from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
-import {
-  formatZodError,
-  getErrMessage,
-  resolveAll,
-  throwIfErrors,
-} from './utils/errors';
+import { formatZodError, getErrMessage, resolveAll, throwIfErrors } from './utils/errors';
 import { log } from './utils/logger';
 import { COVER_GLOB, inspectPostAssets } from './utils/post-assets';
 import {
@@ -72,28 +67,17 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
     { name: POST_META_FILE, path: metaPath },
     { name: POST_CONTENT_FILE, path: contentPath },
   ];
-  const exists = await Promise.all(
-    files.map(({ path }) => Bun.file(path).exists()),
-  );
-  const missing = files
-    .filter((_, index) => !exists[index])
-    .map(({ name }) => name);
+  const exists = await Promise.all(files.map(({ path }) => Bun.file(path).exists()));
+  const missing = files.filter((_, index) => !exists[index]).map(({ name }) => name);
 
   if (missing.length > 0) {
-    throw new Error(
-      `${folderPath}\n\n  Missing file(s): ${missing.join(', ')}`,
-    );
+    throw new Error(`${folderPath}\n\n  Missing file(s): ${missing.join(', ')}`);
   }
 
-  const [meta, content] = await Promise.all([
-    readYaml(metaPath),
-    Bun.file(contentPath).text(),
-  ]);
+  const [meta, content] = await Promise.all([readYaml(metaPath), Bun.file(contentPath).text()]);
 
   if (content.trimStart().startsWith('---')) {
-    throw new Error(
-      `${contentPath}\n\n  Frontmatter found in MDX. Move it to ${POST_META_FILE}.`,
-    );
+    throw new Error(`${contentPath}\n\n  Frontmatter found in MDX. Move it to ${POST_META_FILE}.`);
   }
 
   const result = postSchema.safeParse(meta);
@@ -126,9 +110,7 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
 
 async function readPosts(): Promise<PostsData> {
   const folders = await listPostFolders();
-  const results = await Promise.allSettled(
-    folders.map((folder) => parsePostFolder(folder)),
-  );
+  const results = await Promise.allSettled(folders.map((folder) => parsePostFolder(folder)));
 
   throwIfErrors(
     'posts',
@@ -144,14 +126,10 @@ async function readPosts(): Promise<PostsData> {
 
   throwIfErrors(
     'posts',
-    checkUniqueSlugs(
-      posts.map((post) => ({ slug: post.slug, source: getPostMetaPath(post) })),
-    ),
+    checkUniqueSlugs(posts.map((post) => ({ slug: post.slug, source: getPostMetaPath(post) }))),
   );
 
-  const published = posts.filter(
-    (post) => post.status === PostStatus.PUBLISHED,
-  );
+  const published = posts.filter((post) => post.status === PostStatus.PUBLISHED);
 
   return {
     posts,
@@ -159,8 +137,7 @@ async function readPosts(): Promise<PostsData> {
     stats: {
       scanned: folders.length,
       published: published.length,
-      archived: posts.filter((post) => post.status === PostStatus.ARCHIVED)
-        .length,
+      archived: posts.filter((post) => post.status === PostStatus.ARCHIVED).length,
       drafts: folders.length - posts.length,
       withCover: published.filter((post) => post.coverFile !== null).length,
     },
@@ -173,33 +150,22 @@ export function sortByDateDesc<T extends { publishedAt: string; slug: string }>(
   items: readonly T[],
 ): T[] {
   return items.toSorted(
-    (a, b) =>
-      b.publishedAt.localeCompare(a.publishedAt) ||
-      a.slug.localeCompare(b.slug),
+    (a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.slug.localeCompare(b.slug),
   );
 }
 
-function buildSeriesIndex(
-  series: readonly Series[],
-  posts: readonly PostIndex[],
-): SeriesIndex[] {
+function buildSeriesIndex(series: readonly Series[], posts: readonly PostIndex[]): SeriesIndex[] {
   const seriesPosts = posts.filter(
-    (post): post is SeriesPost =>
-      post.series !== undefined && post.order !== undefined,
+    (post): post is SeriesPost => post.series !== undefined && post.order !== undefined,
   );
   const postsBySeries = Map.groupBy(seriesPosts, (post) => post.series);
 
   return sortByDateDesc(series).map((item) => {
-    const orderedPosts = (postsBySeries.get(item.slug) ?? []).toSorted(
-      (a, b) => a.order - b.order,
-    );
+    const orderedPosts = (postsBySeries.get(item.slug) ?? []).toSorted((a, b) => a.order - b.order);
 
     return {
       ...item,
-      readingTime: orderedPosts.reduce(
-        (total, post) => total + post.readingTime,
-        0,
-      ),
+      readingTime: orderedPosts.reduce((total, post) => total + post.readingTime, 0),
       posts: orderedPosts.map(({ slug, title, order }): SeriesPostRef => ({
         slug,
         title,
@@ -241,18 +207,14 @@ async function main(): Promise<void> {
     ...checkAuthorsExist(posts, new Set(authors.map(({ slug }) => slug))),
   ]);
 
-  if (series.length > 0)
-    log.ok('series exist:', 'all referenced series are defined');
+  if (series.length > 0) log.ok('series exist:', 'all referenced series are defined');
   if (series.length > 0) log.ok('series order:', 'all posts have unique order');
-  if (authors.length > 0)
-    log.ok('authors exist:', 'all referenced authors are defined');
+  if (authors.length > 0) log.ok('authors exist:', 'all referenced authors are defined');
   log.ok('assets:', 'folder structure, image names and references are valid');
 
   for (const warning of warnings) log.skip('warning:', warning);
 
-  const linkedToSeries = posts.filter(
-    (post) => post.series !== undefined,
-  ).length;
+  const linkedToSeries = posts.filter((post) => post.series !== undefined).length;
 
   if (linkedToSeries > 0) {
     log.detail(`${linkedToSeries} of ${posts.length} post(s) linked to series`);

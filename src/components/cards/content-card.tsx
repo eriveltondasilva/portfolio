@@ -4,10 +4,7 @@ import type { ComponentProps } from 'react';
 
 export type CardHeadingLevel = 'h2' | 'h3';
 
-export function ContentCard({
-  className,
-  ...props
-}: ComponentProps<'article'>) {
+export function ContentCard({ className, ...props }: ComponentProps<'article'>) {
   return (
     <article
       className={cn(

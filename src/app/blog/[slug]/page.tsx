@@ -22,20 +22,10 @@ import {
 } from '@/components/ui/breadcrumb';
 import { getAuthorsBySlugs } from '@/lib/blog/authors';
 import { getPostWithContent } from '@/lib/blog/post-content';
-import {
-  getAdjacentPosts,
-  getAllPostSlugs,
-  getPostBySlug,
-} from '@/lib/blog/posts';
+import { getAdjacentPosts, getAllPostSlugs, getPostBySlug } from '@/lib/blog/posts';
 import { buildPostJsonLd } from '@/lib/blog/structured-data';
 import { flattenToc } from '@/lib/blog/toc';
-import {
-  GITHUB_REPO,
-  OG_LOCALE,
-  PostStatus,
-  SITE_NAME,
-  TWITTER_HANDLE,
-} from '@/lib/constants';
+import { GITHUB_REPO, OG_LOCALE, PostStatus, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 import { PostHeader } from '@/components/post/post-header';
 import { ThemeToggle } from '@/components/theme/theme-toggle';
 import { ShareButton } from '@/components/post/share-button';
@@ -46,9 +36,7 @@ import type { Metadata } from 'next';
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: PageProps<'/blog/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
   const post = getPostBySlug(slug);
 

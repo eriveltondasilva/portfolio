@@ -1,11 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
-import {
-  POST_CONTENT_FILE,
-  POST_IMAGES_DIR,
-  POST_META_FILE,
-} from '@/lib/constants';
+import { POST_CONTENT_FILE, POST_IMAGES_DIR, POST_META_FILE } from '@/lib/constants';
 
 // ! Keep in sync with COVER_FILE_NAME below.
 export const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}';
@@ -17,11 +13,7 @@ const KEBAB_FILE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+$/;
 
 const MAX_IMAGE_BYTES = 1024 * 1024; // 1 MB
 const IMAGES_PREFIX = `./${POST_IMAGES_DIR}/`;
-const ALLOWED_ROOT_ENTRIES = new Set([
-  POST_META_FILE,
-  POST_CONTENT_FILE,
-  POST_IMAGES_DIR,
-]);
+const ALLOWED_ROOT_ENTRIES = new Set([POST_META_FILE, POST_CONTENT_FILE, POST_IMAGES_DIR]);
 
 const MARKDOWN_IMAGE = /!\[[^\]]*\]\(\s*<?([^)\s>]+)/g;
 const TAG_WITH_SRC = /<([A-Za-z][\w.]*)\b[^>]*?\bsrc=(?:"([^"]+)"|'([^']+)')/g;
@@ -31,8 +23,7 @@ const IMAGE_IMPORT = /^import\s[^'"\n]*?from\s+['"]([^'"]+)['"]/gm;
  * A fence may be indented (e.g. inside a list) and is closed only by a fence of the same
  * character with at least as many characters, so a 4-backtick block can wrap a 3-backtick one.
  */
-const FENCED_CODE_REGEX =
-  /^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[`~]*[ \t]*$/gm;
+const FENCED_CODE_REGEX = /^[ \t]*(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]*\1[`~]*[ \t]*$/gm;
 
 function stripFencedCode(content: string): string {
   return content.replace(FENCED_CODE_REGEX, '');
@@ -68,9 +59,7 @@ function collectImageReferences(content: string): ImageReference[] {
     references.push({ kind: 'markdown', path });
   }
 
-  for (const [, tag = '', doubleQuoted, singleQuoted] of source.matchAll(
-    TAG_WITH_SRC,
-  )) {
+  for (const [, tag = '', doubleQuoted, singleQuoted] of source.matchAll(TAG_WITH_SRC)) {
     references.push({
       kind: /^[A-Z]/.test(tag) ? 'jsx' : 'html',
       path: doubleQuoted ?? singleQuoted ?? '',
@@ -107,9 +96,7 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
   const covers = entries.filter((name) => COVER_FILE_NAME.test(name));
 
   if (covers.length > 1) {
-    report.errors.push(
-      `more than one cover found (${covers.join(', ')}); keep only one.`,
-    );
+    report.errors.push(`more than one cover found (${covers.join(', ')}); keep only one.`);
   }
 
   for (const name of entries) {
@@ -117,16 +104,12 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
     if (ALLOWED_ROOT_ENTRIES.has(name) || COVER_FILE_NAME.test(name)) continue;
 
     if (/^cover\./i.test(name)) {
-      report.errors.push(
-        `"${name}": the cover must match "${COVER_GLOB}" (lowercase).`,
-      );
+      report.errors.push(`"${name}": the cover must match "${COVER_GLOB}" (lowercase).`);
       continue;
     }
 
     const allowed = [...ALLOWED_ROOT_ENTRIES, 'cover.<ext>'].join(', ');
-    report.warnings.push(
-      `unexpected entry "${name}" in the post folder (allowed: ${allowed}).`,
-    );
+    report.warnings.push(`unexpected entry "${name}" in the post folder (allowed: ${allowed}).`);
   }
 
   return report;
@@ -141,10 +124,7 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
  * rehype-mdx-import-media imports every relative path and has no folder option,
  * so the pattern is enforced here, before the Next.js build.
  */
-export async function inspectPostAssets(
-  folderPath: string,
-  content: string,
-): Promise<AssetReport> {
+export async function inspectPostAssets(folderPath: string, content: string): Promise<AssetReport> {
   const { errors, warnings } = inspectRootEntries(await readdir(folderPath));
 
   const files = listImageFiles(folderPath);
@@ -154,8 +134,7 @@ export async function inspectPostAssets(
     const segments = file.split('/');
     const name = segments.at(-1) ?? '';
     const isValidName =
-      KEBAB_FILE_NAME.test(name) &&
-      segments.slice(0, -1).every((part) => KEBAB_SEGMENT.test(part));
+      KEBAB_FILE_NAME.test(name) && segments.slice(0, -1).every((part) => KEBAB_SEGMENT.test(part));
 
     if (!isValidName) {
       errors.push(
@@ -194,15 +173,11 @@ export async function inspectPostAssets(
     const relativePath = path.slice(2);
 
     if (imagePaths.has(relativePath)) used.add(relativePath);
-    else
-      errors.push(
-        `${path}: file not found (names are case-sensitive on Linux).`,
-      );
+    else errors.push(`${path}: file not found (names are case-sensitive on Linux).`);
   }
 
   for (const path of imagePaths) {
-    if (!used.has(path))
-      warnings.push(`${path}: not referenced in ${POST_CONTENT_FILE}.`);
+    if (!used.has(path)) warnings.push(`${path}: not referenced in ${POST_CONTENT_FILE}.`);
   }
 
   return { errors, warnings };

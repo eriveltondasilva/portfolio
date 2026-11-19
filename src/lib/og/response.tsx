@@ -7,9 +7,7 @@ import { OG_SIZE } from './config';
 
 import type { ReactElement } from 'react';
 
-type OgFonts = NonNullable<
-  NonNullable<ConstructorParameters<typeof ImageResponse>[1]>['fonts']
->;
+type OgFonts = NonNullable<NonNullable<ConstructorParameters<typeof ImageResponse>[1]>['fonts']>;
 
 const FONTS_DIR = join(process.cwd(), 'src', 'assets', 'fonts');
 

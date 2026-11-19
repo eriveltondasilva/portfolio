@@ -13,14 +13,7 @@ interface ImageProps extends Omit<NextImageProps, 'fill'> {
   caption?: string;
 }
 
-export function Image({
-  src,
-  className,
-  caption,
-  title,
-  sizes,
-  ...props
-}: ImageProps) {
+export function Image({ src, className, caption, title, sizes, ...props }: ImageProps) {
   // ! Markdown syntax `![alt](src "text")` only exposes `title`, so it doubles as the caption.
   // ! It is intentionally not forwarded to the <img>: the native tooltip is poor for accessibility.
   return (
@@ -53,10 +46,7 @@ export function ImageRatio({
 }: ImageRatioProps) {
   return (
     <Figure caption={caption}>
-      <div
-        className='relative overflow-hidden rounded-md bg-muted'
-        style={{ aspectRatio: ratio }}
-      >
+      <div className='relative overflow-hidden rounded-md bg-muted' style={{ aspectRatio: ratio }}>
         <NextImage
           src={src}
           className={cn('object-cover', className)}

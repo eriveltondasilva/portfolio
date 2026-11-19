@@ -13,9 +13,7 @@ export async function PostCover({ folder, coverFile }: PostCoverProps) {
    * file of the post folders (meta.yml, stray files) into the module graph.
    */
   const extension = coverFile.slice(coverFile.lastIndexOf('.') + 1);
-  const { default: coverImage } = await import(
-    `@/content/posts/${folder}/cover.${extension}`
-  );
+  const { default: coverImage } = await import(`@/content/posts/${folder}/cover.${extension}`);
 
   return (
     <div className='relative mt-6 aspect-2/1 w-full overflow-hidden border'>

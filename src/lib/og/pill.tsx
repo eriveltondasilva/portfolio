@@ -24,11 +24,7 @@ interface OgPillProps {
   showDot?: boolean;
 }
 
-export function OgPill({
-  label,
-  colors = DEFAULT_PILL_COLORS,
-  showDot = false,
-}: OgPillProps) {
+export function OgPill({ label, colors = DEFAULT_PILL_COLORS, showDot = false }: OgPillProps) {
   return (
     <div
       style={{

@@ -21,11 +21,7 @@ interface Props extends ComponentProps<'article'> {
   headingLevel?: CardHeadingLevel;
 }
 
-export function ProjectCard({
-  project,
-  headingLevel: Heading = 'h2',
-  ...props
-}: Props) {
+export function ProjectCard({ project, headingLevel: Heading = 'h2', ...props }: Props) {
   return (
     <ContentCard {...props}>
       {/* Header */}
@@ -50,9 +46,7 @@ export function ProjectCard({
       </div>
 
       {/* Description */}
-      <p className='mt-2 text-sm text-muted-foreground'>
-        {project.description}
-      </p>
+      <p className='mt-2 text-sm text-muted-foreground'>{project.description}</p>
 
       {/* Tags */}
       {project.tags.length > 0 && (
@@ -73,13 +67,7 @@ export function ProjectCard({
       {/* Footer links */}
       <div className='mt-4 flex flex-wrap items-center gap-4 text-xs'>
         <ExternalLink href={project.repository} className={LINK_CLASSES}>
-          <Image
-            src={GithubIcon}
-            alt=''
-            width={14}
-            height={14}
-            className='dark:invert'
-          />
+          <Image src={GithubIcon} alt='' width={14} height={14} className='dark:invert' />
           Repositório<span className='sr-only'> de {project.name}</span>
         </ExternalLink>
 

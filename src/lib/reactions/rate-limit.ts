@@ -20,10 +20,7 @@ const newVisitorLimiter = new Ratelimit({
 });
 
 function getClientIpAddress(request: Request): string {
-  const forwardedFor = request.headers
-    .get('x-forwarded-for')
-    ?.split(',')[0]
-    ?.trim();
+  const forwardedFor = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
 
   return forwardedFor || request.headers.get('x-real-ip') || 'unknown';
 }
@@ -36,10 +33,7 @@ function hashIpAddress(ipAddress: string): string {
   return createHmac('sha256', secret).update(ipAddress).digest('hex');
 }
 
-async function isRateLimited(
-  limiter: Ratelimit,
-  request: Request,
-): Promise<boolean> {
+async function isRateLimited(limiter: Ratelimit, request: Request): Promise<boolean> {
   const identifier = hashIpAddress(getClientIpAddress(request));
 
   try {

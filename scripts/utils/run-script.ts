@@ -1,9 +1,6 @@
 import { log } from './logger';
 
-export async function runScript(
-  title: string,
-  main: () => Promise<void>,
-): Promise<void> {
+export async function runScript(title: string, main: () => Promise<void>): Promise<void> {
   const startedAt = performance.now();
 
   log.divider();

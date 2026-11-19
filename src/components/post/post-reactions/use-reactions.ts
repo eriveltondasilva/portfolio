@@ -4,14 +4,10 @@ import { fetchReactions, sendReaction } from '@/lib/reactions/client';
 
 import type { ReactionState, ReactionType } from '@/lib/reactions/config';
 
-const RATE_LIMITED_MESSAGE =
-  'Muitas reações em pouco tempo. Tente novamente em instantes.';
+const RATE_LIMITED_MESSAGE = 'Muitas reações em pouco tempo. Tente novamente em instantes.';
 const GENERIC_ERROR_MESSAGE = 'Não foi possível salvar sua reação.';
 
-function withChoice(
-  current: ReactionState,
-  choice: ReactionType | null,
-): ReactionState {
+function withChoice(current: ReactionState, choice: ReactionType | null): ReactionState {
   if (current.choice === choice) return current;
 
   const counts = { ...current.counts };
@@ -32,8 +28,7 @@ export function useReactions(slug: string) {
 
   const [visibleState, applyOptimisticChoice] = useOptimistic(
     state,
-    (current, choice: ReactionType | null) =>
-      current && withChoice(current, choice),
+    (current, choice: ReactionType | null) => current && withChoice(current, choice),
   );
 
   useEffect(() => {

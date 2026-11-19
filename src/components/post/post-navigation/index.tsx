@@ -16,10 +16,7 @@ export function PostNavigation({ prevPost, nextPost }: Props) {
     <>
       <SectionSeparator />
 
-      <nav
-        aria-label='Navegação entre posts'
-        className='grid gap-3 sm:grid-cols-2'
-      >
+      <nav aria-label='Navegação entre posts' className='grid gap-3 sm:grid-cols-2'>
         {prevPost && <AdjacentPostCard post={prevPost} direction='prev' />}
         {nextPost && (
           <AdjacentPostCard

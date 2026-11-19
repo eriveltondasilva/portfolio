@@ -9,11 +9,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty';
-import {
-  getFeaturedProjects,
-  getOtherProjects,
-  projectCount,
-} from '@/lib/projects';
+import { getFeaturedProjects, getOtherProjects, projectCount } from '@/lib/projects';
 import { OG_LOCALE, SITE_NAME, TWITTER_HANDLE } from '@/lib/constants';
 
 import type { Metadata } from 'next';
@@ -70,11 +66,7 @@ export default function ProjectsPage() {
 
           <div className='grid gap-3 sm:grid-cols-2'>
             {featuredProjects.map((project) => (
-              <ProjectCard
-                key={project.slug}
-                project={project}
-                headingLevel='h3'
-              />
+              <ProjectCard key={project.slug} project={project} headingLevel='h3' />
             ))}
           </div>
         </section>

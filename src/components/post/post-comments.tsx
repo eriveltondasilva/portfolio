@@ -16,11 +16,7 @@ export function PostComments({ slug }: Props) {
   const { resolvedTheme } = useTheme();
 
   return (
-    <PostSection
-      title='Comentários'
-      icon={MessageSquareTextIcon}
-      iconClassName='text-orange-500'
-    >
+    <PostSection title='Comentários' icon={MessageSquareTextIcon} iconClassName='text-orange-500'>
       <Giscus
         repo={GISCUS.repo}
         repoId={GISCUS.repoId}

@@ -22,9 +22,7 @@ import type { Metadata } from 'next';
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: PageProps<'/series/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<'/series/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 
@@ -56,9 +54,7 @@ export function generateStaticParams() {
   return getAllSeries().map(({ slug }) => ({ slug }));
 }
 
-export default async function SeriesDetailPage({
-  params,
-}: PageProps<'/series/[slug]'>) {
+export default async function SeriesDetailPage({ params }: PageProps<'/series/[slug]'>) {
   const { slug } = await params;
   const series = getSeriesBySlug(slug);
 

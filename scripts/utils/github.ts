@@ -2,9 +2,7 @@ import { GithubTopic, ProjectStatus } from '@/lib/constants';
 
 import type { Octokit } from '@octokit/rest';
 
-export type GithubRepo = Awaited<
-  ReturnType<Octokit['repos']['listForUser']>
->['data'][number];
+export type GithubRepo = Awaited<ReturnType<Octokit['repos']['listForUser']>>['data'][number];
 
 const UTILITY_TOPICS = new Set<string>(Object.values(GithubTopic));
 
@@ -24,9 +22,7 @@ export function formatProjectName(repoName: string): string {
     .join(' ');
 }
 
-export function getProjectStatus(
-  repo: Pick<GithubRepo, 'archived' | 'topics'>,
-): ProjectStatus {
+export function getProjectStatus(repo: Pick<GithubRepo, 'archived' | 'topics'>): ProjectStatus {
   if (repo.archived) return ProjectStatus.ARCHIVED;
   if (repo.topics?.includes(GithubTopic.WIP)) return ProjectStatus.WIP;
 

@@ -12,9 +12,7 @@ export function GET() {
   const items = posts
     .map((post) => {
       const url = `${BASE_URL}/blog/${post.slug}`;
-      const categories = post.tags
-        .map((tag) => `<category>${escapeXml(tag)}</category>`)
-        .join('');
+      const categories = post.tags.map((tag) => `<category>${escapeXml(tag)}</category>`).join('');
 
       return `<item>
   <title>${escapeXml(post.title)}</title>
@@ -27,9 +25,7 @@ export function GET() {
     })
     .join('\n');
 
-  const lastBuildDate = new Date(
-    posts[0]?.publishedAt ?? Date.now(),
-  ).toUTCString();
+  const lastBuildDate = new Date(posts[0]?.publishedAt ?? Date.now()).toUTCString();
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">

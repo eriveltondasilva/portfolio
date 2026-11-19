@@ -1,10 +1,5 @@
 import { cn } from 'cn';
-import {
-  AlertTriangleIcon,
-  CheckCircleIcon,
-  InfoIcon,
-  XCircleIcon,
-} from 'lucide-react';
+import { AlertTriangleIcon, CheckCircleIcon, InfoIcon, XCircleIcon } from 'lucide-react';
 
 import { Icon } from '@/components/icon';
 import { tw } from '@/lib/tw';
@@ -47,13 +42,7 @@ interface Props {
   children: ReactNode;
 }
 
-export function Callout({
-  variant = 'info',
-  title,
-  className,
-  children,
-  ...props
-}: Props) {
+export function Callout({ variant = 'info', title, className, children, ...props }: Props) {
   const { icon, label, classes } = calloutConfig[variant];
 
   return (
@@ -72,9 +61,7 @@ export function Callout({
       <div className='flex flex-col gap-1'>
         {title && <p className='font-semibold'>{title}</p>}
 
-        <div className={cn('[&_p]:leading-relaxed', PROSE_RESET_CLASSES)}>
-          {children}
-        </div>
+        <div className={cn('[&_p]:leading-relaxed', PROSE_RESET_CLASSES)}>{children}</div>
       </div>
     </div>
   );

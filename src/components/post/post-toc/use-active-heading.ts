@@ -12,9 +12,7 @@ export function useActiveHeading(items: TocItem[]): string | null {
   const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const headings = items.flatMap(
-      ({ id }) => document.getElementById(id) ?? [],
-    );
+    const headings = items.flatMap(({ id }) => document.getElementById(id) ?? []);
 
     // Document-relative positions: scrolling becomes plain arithmetic, with no layout reads.
     let headingOffsets: number[] = [];
@@ -23,9 +21,7 @@ export function useActiveHeading(items: TocItem[]): string | null {
     function measureHeadings() {
       const { scrollY } = window;
 
-      headingOffsets = headings.map(
-        (heading) => heading.getBoundingClientRect().top + scrollY,
-      );
+      headingOffsets = headings.map((heading) => heading.getBoundingClientRect().top + scrollY);
     }
 
     // ! Derived from the current scroll, not from observer deltas: IntersectionObserver

@@ -40,15 +40,11 @@ class Logger {
     }
 
     this.divider('red');
-    console.error(
-      styleText('yellow', '🟡 Fix the errors above and try again.\n'),
-    );
+    console.error(styleText('yellow', '🟡 Fix the errors above and try again.\n'));
   }
 
   #row(prefix: string, label: string, detail: string) {
-    console.info(
-      `${prefix}  ${label.padEnd(20, ' ')} ${styleText('gray', detail)}`,
-    );
+    console.info(`${prefix}  ${label.padEnd(20, ' ')} ${styleText('gray', detail)}`);
   }
 }
 

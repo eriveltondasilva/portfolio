@@ -7,12 +7,7 @@ interface Props extends LucideProps {
   label?: string;
 }
 
-export function Icon({
-  iconNode: IconComp,
-  className,
-  label,
-  ...props
-}: Props) {
+export function Icon({ iconNode: IconComp, className, label, ...props }: Props) {
   return (
     <>
       <IconComp className={cn('size-4', className)} {...props} />

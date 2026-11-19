@@ -66,13 +66,7 @@ interface Props {
   onHover: () => void;
 }
 
-export function SearchResult({
-  result,
-  id,
-  isActive,
-  onNavigate,
-  onHover,
-}: Props) {
+export function SearchResult({ result, id, isActive, onNavigate, onHover }: Props) {
   const { item } = result;
 
   return (
@@ -88,17 +82,12 @@ export function SearchResult({
         onMouseMove={onHover}
         className='group block rounded-md px-3 py-2.5 transition-colors aria-selected:bg-muted'
       >
-        <span className='block truncate text-sm font-medium text-foreground'>
-          {item.title}
-        </span>
+        <span className='block truncate text-sm font-medium text-foreground'>{item.title}</span>
         <span className='mt-0.5 line-clamp-1 block text-xs text-muted-foreground'>
           {item.description}
         </span>
 
-        <ResultTags
-          tags={item.tags}
-          matchedIndexes={getMatchedTagIndexes(result)}
-        />
+        <ResultTags tags={item.tags} matchedIndexes={getMatchedTagIndexes(result)} />
       </Link>
     </li>
   );

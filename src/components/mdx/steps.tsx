@@ -8,10 +8,7 @@ import type { ComponentProps } from 'react';
 
 export function Steps({ className, children, ...props }: ComponentProps<'ol'>) {
   return (
-    <ol
-      className={cn('not-prose list-none [counter-reset:step]', className)}
-      {...props}
-    >
+    <ol className={cn('not-prose list-none [counter-reset:step]', className)} {...props}>
       {children}
     </ol>
   );

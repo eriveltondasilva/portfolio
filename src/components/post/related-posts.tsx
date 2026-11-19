@@ -18,21 +18,14 @@ export function RelatedPosts({ slug }: Props) {
   if (posts.length === 0) return null;
 
   return (
-    <PostSection
-      title='Posts relacionados'
-      icon={FileTextIcon}
-      iconClassName='text-blue-500'
-    >
+    <PostSection title='Posts relacionados' icon={FileTextIcon} iconClassName='text-blue-500'>
       <ul className='divide-y divide-border'>
         {posts.map((post) => {
           const displayDate = getPostDisplayDate(post);
 
           return (
             <li key={post.slug} className='group py-3 first:pt-0'>
-              <Link
-                href={`/blog/${post.slug}`}
-                className='flex items-start justify-between gap-4'
-              >
+              <Link href={`/blog/${post.slug}`} className='flex items-start justify-between gap-4'>
                 <div className='min-w-0 space-y-1.5'>
                   <p className='truncate text-sm font-medium text-foreground/80 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400'>
                     {post.title}

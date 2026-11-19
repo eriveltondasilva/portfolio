@@ -63,9 +63,7 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
           role='combobox'
           aria-expanded={hasResults}
           aria-controls={hasResults ? LISTBOX_ID : undefined}
-          aria-activedescendant={
-            hasResults ? getOptionId(activeIndex) : undefined
-          }
+          aria-activedescendant={hasResults ? getOptionId(activeIndex) : undefined}
           aria-autocomplete='list'
           aria-label='Buscar posts'
           value={query}
@@ -85,14 +83,9 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
       </div>
 
       {hasResults && (
-        <div
-          role='status'
-          className={'flex items-center justify-between px-4 pt-3 text-xs'}
-        >
+        <div role='status' className={'flex items-center justify-between px-4 pt-3 text-xs'}>
           <span className='font-semibold tracking-widest uppercase'>Posts</span>
-          <span className='tabular-nums'>
-            {formatResultCount(results.length, totalResults)}
-          </span>
+          <span className='tabular-nums'>{formatResultCount(results.length, totalResults)}</span>
         </div>
       )}
 

@@ -2,11 +2,7 @@ import Image from 'next/image';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from '@/components/ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import {
   createListFormatter,
   getGitHubAvatarUrl,
@@ -37,19 +33,11 @@ function AuthorHoverCard({ author }: { author: Readonly<Author> }) {
         </ExternalLink>
       </HoverCardTrigger>
 
-      <HoverCardContent
-        side='top'
-        align='start'
-        className='w-72 p-4'
-        sideOffset={6}
-      >
+      <HoverCardContent side='top' align='start' className='w-72 p-4' sideOffset={6}>
         {/* Header */}
         <div className='flex items-start gap-3'>
           <Avatar className='size-10 shrink-0 rounded-full border'>
-            <AvatarImage
-              src={getGitHubAvatarUrl(author, AVATAR_SIZE)}
-              alt={author.name}
-            />
+            <AvatarImage src={getGitHubAvatarUrl(author, AVATAR_SIZE)} alt={author.name} />
 
             <AvatarFallback className='bg-muted text-sm font-semibold text-muted-foreground'>
               {getNameInitials(author.name)}
@@ -57,18 +45,14 @@ function AuthorHoverCard({ author }: { author: Readonly<Author> }) {
           </Avatar>
 
           <div className='min-w-0'>
-            <p className='text-sm/tight font-semibold text-foreground'>
-              {author.name}
-            </p>
+            <p className='text-sm/tight font-semibold text-foreground'>{author.name}</p>
 
             <p className='text-xs text-muted-foreground'>@{githubUsername}</p>
           </div>
         </div>
 
         {/* Bio */}
-        <p className='mt-3 line-clamp-3 text-xs/relaxed text-muted-foreground'>
-          {author.bio}
-        </p>
+        <p className='mt-3 line-clamp-3 text-xs/relaxed text-muted-foreground'>{author.bio}</p>
 
         {/* Skills */}
         {authorSkillsCount > 0 && (
@@ -124,9 +108,7 @@ interface PostAuthorsProps {
 export function PostAuthors({ authors }: PostAuthorsProps) {
   const authorsBySlug = new Map(authors.map((author) => [author.slug, author]));
 
-  const parts = createListFormatter().formatToParts(
-    authors.map((author) => author.slug),
-  );
+  const parts = createListFormatter().formatToParts(authors.map((author) => author.slug));
 
   const authorNames = parts.map(({ type, value }, index) => {
     if (type === 'element') {

@@ -39,17 +39,9 @@ export function StatusBadge({ label, tone, size = 'sm', className }: Props) {
   return (
     <Badge
       variant='secondary'
-      className={cn(
-        'rounded-full border-none',
-        color.badge,
-        dimension.badge,
-        className,
-      )}
+      className={cn('rounded-full border-none', color.badge, dimension.badge, className)}
     >
-      <span
-        className={cn('rounded-full', color.dot, dimension.dot)}
-        aria-hidden='true'
-      />
+      <span className={cn('rounded-full', color.dot, dimension.dot)} aria-hidden='true' />
       {label}
     </Badge>
   );

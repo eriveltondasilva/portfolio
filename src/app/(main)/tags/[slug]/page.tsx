@@ -11,9 +11,7 @@ import type { Metadata } from 'next';
 
 export const dynamicParams = false;
 
-export async function generateMetadata({
-  params,
-}: PageProps<'/tags/[slug]'>): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<'/tags/[slug]'>): Promise<Metadata> {
   const { slug } = await params;
 
   const meta = {
@@ -67,10 +65,7 @@ export default async function TagPage({ params }: PageProps<'/tags/[slug]'>) {
       {/* Header */}
       <header className='space-y-2'>
         <h1 className='flex items-start gap-2 text-xl font-bold text-foreground'>
-          <Icon
-            iconNode={HashIcon}
-            className='mt-1 size-5 shrink-0 text-muted-foreground'
-          />
+          <Icon iconNode={HashIcon} className='mt-1 size-5 shrink-0 text-muted-foreground' />
           <span className='min-w-0 wrap-break-word'>{slug}</span>
         </h1>
 

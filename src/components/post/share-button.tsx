@@ -5,11 +5,7 @@ import { useSyncExternalStore } from 'react';
 
 import { Icon } from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 interface Props {
@@ -34,8 +30,7 @@ export function ShareButton({ title, url }: Props) {
       try {
         await navigator.share({ title, url });
       } catch (error) {
-        if (error instanceof DOMException && error.name === 'AbortError')
-          return;
+        if (error instanceof DOMException && error.name === 'AbortError') return;
         console.error('[ShareButton] Failed to share:', error);
       }
       return;
@@ -44,8 +39,7 @@ export function ShareButton({ title, url }: Props) {
     await copy(url);
   }
 
-  const idleLabel =
-    canNativeShare ? 'Compartilhar post' : 'Copiar link do post';
+  const idleLabel = canNativeShare ? 'Compartilhar post' : 'Copiar link do post';
   const label = copied ? 'Link copiado!' : idleLabel;
   const shareIcon = canNativeShare ? Share2Icon : Link2Icon;
   const icon = copied ? CheckIcon : shareIcon;
@@ -61,10 +55,7 @@ export function ShareButton({ title, url }: Props) {
             aria-label={label}
             className='shrink-0 text-muted-foreground hover:text-foreground'
           >
-            <Icon
-              iconNode={icon}
-              className={copied ? 'text-green-500' : undefined}
-            />
+            <Icon iconNode={icon} className={copied ? 'text-green-500' : undefined} />
           </Button>
         </TooltipTrigger>
         <TooltipContent>{label}</TooltipContent>

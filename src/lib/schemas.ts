@@ -36,9 +36,7 @@ const socialsSchema = z
         hostname: /^(www\.)?linkedin\.com$/,
       })
       .optional()
-      .describe(
-        'LinkedIn profile URL. Example: https://linkedin.com/in/username',
-      ),
+      .describe('LinkedIn profile URL. Example: https://linkedin.com/in/username'),
     //
     twitter: z
       .url({
@@ -55,9 +53,7 @@ const socialsSchema = z
 export const authorSchema = z
   .strictObject({
     //
-    slug: slugSchema(80, 'Author slug').describe(
-      'Unique identifier of the author in kebab-case.',
-    ),
+    slug: slugSchema(80, 'Author slug').describe('Unique identifier of the author in kebab-case.'),
     //
     name: z
       .string()
@@ -87,9 +83,7 @@ export const authorSchema = z
 export const postSchema = z
   .strictObject({
     //
-    slug: slugSchema(120, 'Post slug').describe(
-      'Unique identifier for the post.',
-    ),
+    slug: slugSchema(120, 'Post slug').describe('Unique identifier for the post.'),
     //
     title: z
       .string()
@@ -110,19 +104,11 @@ export const postSchema = z
       .refine(hasUniqueItems, 'Tags must be unique.')
       .describe('List of tags used to categorize the post.'),
     //
-    publishedAt: z.iso
-      .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).'),
+    publishedAt: z.iso.date().describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
-    updatedAt: z.iso
-      .date()
-      .optional()
-      .describe('Date of the last significant update to the post.'),
+    updatedAt: z.iso.date().optional().describe('Date of the last significant update to the post.'),
     //
-    status: z
-      .enum(PostStatus)
-      .default(PostStatus.DRAFT)
-      .describe('Visibility state of the post.'),
+    status: z.enum(PostStatus).default(PostStatus.DRAFT).describe('Visibility state of the post.'),
     //
     authors: z
       .array(slugSchema(80, 'Author slug').describe('Author slug.'))
@@ -151,8 +137,7 @@ export const postSchema = z
     if (hasSeries && !hasOrder) {
       ctx.addIssue({
         code: 'custom',
-        message:
-          'The "order" field is required when the post belongs to a series.',
+        message: 'The "order" field is required when the post belongs to a series.',
         path: ['order'],
       });
     }
@@ -175,8 +160,7 @@ export const postSchema = z
   })
   .meta({
     title: 'Post Frontmatter',
-    description:
-      'Schema for validating the metadata (meta.yml) of a blog post.',
+    description: 'Schema for validating the metadata (meta.yml) of a blog post.',
   });
 
 export const seriesSchema = z
@@ -198,9 +182,7 @@ export const seriesSchema = z
       .max(300, 'Description must not exceed 300 characters.')
       .describe('Short summary describing the series content.'),
     //
-    publishedAt: z.iso
-      .date()
-      .describe('Publication date in ISO format (YYYY-MM-DD).'),
+    publishedAt: z.iso.date().describe('Publication date in ISO format (YYYY-MM-DD).'),
     //
     status: z
       .enum(SeriesStatus)
@@ -221,11 +203,7 @@ export const projectSchema = z
     //
     name: z.string().min(1).max(100).describe('Display name of the project.'),
     //
-    description: z
-      .string()
-      .min(1)
-      .max(500)
-      .describe('Short summary of the project.'),
+    description: z.string().min(1).max(500).describe('Short summary of the project.'),
     //
     repository: z
       .url({
@@ -250,10 +228,7 @@ export const projectSchema = z
       .default(ProjectStatus.ACTIVE)
       .describe('Current state of the project.'),
     //
-    featured: z
-      .boolean()
-      .default(false)
-      .describe('Whether the project should be highlighted.'),
+    featured: z.boolean().default(false).describe('Whether the project should be highlighted.'),
   })
   .meta({
     title: 'Project Metadata',

@@ -1,22 +1,12 @@
 import { cn } from 'cn';
 
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { REACTION_CONFIG } from '@/lib/reactions/config';
 
 import type { ReactionType } from '@/lib/reactions/config';
 
-function ReactionCount({
-  value,
-  loadFailed,
-}: {
-  value: number | undefined;
-  loadFailed: boolean;
-}) {
+function ReactionCount({ value, loadFailed }: { value: number | undefined; loadFailed: boolean }) {
   if (value === undefined) {
     return loadFailed ? <span className='font-mono'>–</span> : null;
   }
@@ -60,9 +50,7 @@ export function ReactionButton({
           aria-label={count === undefined ? label : `${label} (${count})`}
           className={cn(
             'h-8 gap-1.5 px-2 text-xs',
-            isSelected ?
-              'bg-muted font-semibold text-foreground'
-            : 'text-muted-foreground',
+            isSelected ? 'bg-muted font-semibold text-foreground' : 'text-muted-foreground',
           )}
         >
           <span className='text-sm leading-none' aria-hidden='true'>

@@ -23,38 +23,23 @@ async function readValidatedYaml<T extends z.ZodType>(
 ): Promise<z.output<T>> {
   const result = schema.safeParse(await readYaml(filePath));
 
-  if (!result.success)
-    throw new BuildError(context, [formatZodError(filePath, result.error)]);
+  if (!result.success) throw new BuildError(context, [formatZodError(filePath, result.error)]);
 
   return result.data;
 }
 
 export async function readAuthors(): Promise<Author[]> {
-  const authors = await readValidatedYaml(
-    'authors',
-    AUTHORS_SOURCE_FILE,
-    authorSchema.array(),
-  );
+  const authors = await readValidatedYaml('authors', AUTHORS_SOURCE_FILE, authorSchema.array());
 
-  throwIfErrors(
-    'authors',
-    checkUniqueSlugs(toSlugEntries(authors, AUTHORS_SOURCE_FILE)),
-  );
+  throwIfErrors('authors', checkUniqueSlugs(toSlugEntries(authors, AUTHORS_SOURCE_FILE)));
 
   return authors;
 }
 
 export async function readSeries(): Promise<Series[]> {
-  const series = await readValidatedYaml(
-    'series',
-    SERIES_SOURCE_FILE,
-    seriesSchema.array(),
-  );
+  const series = await readValidatedYaml('series', SERIES_SOURCE_FILE, seriesSchema.array());
 
-  throwIfErrors(
-    'series',
-    checkUniqueSlugs(toSlugEntries(series, SERIES_SOURCE_FILE)),
-  );
+  throwIfErrors('series', checkUniqueSlugs(toSlugEntries(series, SERIES_SOURCE_FILE)));
 
   return series;
 }

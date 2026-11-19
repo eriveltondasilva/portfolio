@@ -6,9 +6,7 @@ function getReactionsUrl(slug: string): string {
 
 async function parseReactionState(response: Response): Promise<ReactionState> {
   if (!response.ok) {
-    const body: { error?: string } | null = await response
-      .json()
-      .catch(() => null);
+    const body: { error?: string } | null = await response.json().catch(() => null);
 
     throw new Error(body?.error ?? `status-${response.status}`);
   }
@@ -16,10 +14,7 @@ async function parseReactionState(response: Response): Promise<ReactionState> {
   return response.json();
 }
 
-export async function fetchReactions(
-  slug: string,
-  signal: AbortSignal,
-): Promise<ReactionState> {
+export async function fetchReactions(slug: string, signal: AbortSignal): Promise<ReactionState> {
   return parseReactionState(await fetch(getReactionsUrl(slug), { signal }));
 }
 
