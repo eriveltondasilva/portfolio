@@ -84,34 +84,24 @@ export function SearchPanel({ fuse, loadFailed, onNavigate }: Props) {
         </DialogClose>
       </div>
 
-      <div
-        role='status'
-        className={
-          hasResults ?
-            'flex items-center justify-between px-4 pt-3 text-xs'
-          : 'sr-only'
-        }
-      >
-        {hasResults && (
-          <>
-            <span className='font-semibold tracking-widest uppercase'>
-              Posts
-            </span>
-            <span className='tabular-nums'>
-              {formatResultCount(results.length, totalResults)}
-            </span>
-          </>
-        )}
-      </div>
+      {hasResults && (
+        <div
+          role='status'
+          className={'flex items-center justify-between px-4 pt-3 text-xs'}
+        >
+          <span className='font-semibold tracking-widest uppercase'>Posts</span>
+          <span className='tabular-nums'>
+            {formatResultCount(results.length, totalResults)}
+          </span>
+        </div>
+      )}
 
       <div className='max-h-80 min-h-48 scroll-py-2 overflow-y-auto p-2'>
-        {/* Always mounted so screen readers announce the message when it appears */}
-        <p
-          role='status'
-          className={message ? 'px-3 py-6 text-center text-sm' : 'sr-only'}
-        >
-          {message}
-        </p>
+        {message && (
+          <p role='status' className={'px-3 py-6 text-center text-sm'}>
+            {message}
+          </p>
+        )}
 
         {!message && (
           <ul
