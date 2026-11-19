@@ -23,6 +23,8 @@ import type { GithubRepo } from './utils/github';
 
 // # Fetchers
 
+const REPOS_PER_PAGE = 100;
+
 async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const token = process.env['GITHUB_TOKEN'];
 
@@ -33,7 +35,7 @@ async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
 
   return octokit.paginate(octokit.repos.listForUser, {
     username,
-    per_page: 100,
+    per_page: REPOS_PER_PAGE,
   });
 }
 

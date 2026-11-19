@@ -210,6 +210,7 @@ async function main(): Promise<void> {
   if (series.length > 0) log.ok('series exist:', 'all referenced series are defined');
   if (series.length > 0) log.ok('series order:', 'all posts have unique order');
   if (authors.length > 0) log.ok('authors exist:', 'all referenced authors are defined');
+
   log.ok('assets:', 'folder structure, image names and references are valid');
 
   for (const warning of warnings) log.skip('warning:', warning);

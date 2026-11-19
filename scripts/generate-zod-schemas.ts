@@ -7,8 +7,9 @@ import { runScript } from './utils/run-script';
 import { log } from './utils/logger';
 import { writeJson } from './utils/files';
 
-type 
-const targets = [
+type Target = { name: string; schema: z.ZodType; output: string };
+
+const targets: ReadonlyArray<Target> = [
   {
     name: 'series',
     schema: seriesSchema.array(),
@@ -20,7 +21,7 @@ const targets = [
     output: AUTHORS_SCHEMA_OUTPUT,
   },
   { name: 'post', schema: postSchema, output: POST_SCHEMA_OUTPUT },
-] satisfies ReadonlyArray<{ name: string; schema: z.ZodType; output: string }>;
+];
 
 async function main(): Promise<void> {
   log.section('Generating schemas');
