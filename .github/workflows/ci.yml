@@ -38,5 +38,17 @@ jobs:
           # The automatic token only raises the GitHub API rate limit
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run checks
-        run: bun run check
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Lint
+        run: bun run lint:check
+
+      - name: Format
+        run: bun run fmt:check
+
+      - name: Test
+        run: bun run test
+
+      - name: Knip
+        run: bun run knip

@@ -4,7 +4,7 @@
   "framework": "nextjs",
   "schedules": {
     "keepalive": {
-      "schedule": "0 12 * * 1,4",
+      "schedule": "0 12 * * 1",
       "path": "/api/keepalive",
       "requestMethod": "GET"
     }
