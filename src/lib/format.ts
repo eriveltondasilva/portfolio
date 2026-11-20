@@ -13,9 +13,16 @@ const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 
 function getDateFormatter(options?: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
   const key = JSON.stringify(options ?? {});
-  const callback = () => new Intl.DateTimeFormat(LOCALE, { ...DEFAULT_DATE_OPTIONS, ...options });
+  const cachedFormatter = dateFormatters.get(key);
 
-  return dateFormatters.getOrInsertComputed(key, callback);
+  if (cachedFormatter) {
+    return cachedFormatter;
+  }
+
+  const formatter = new Intl.DateTimeFormat(LOCALE, { ...DEFAULT_DATE_OPTIONS, ...options });
+  dateFormatters.set(key, formatter);
+
+  return formatter;
 }
 
 export function formatDate(date: string, options?: Intl.DateTimeFormatOptions): string {

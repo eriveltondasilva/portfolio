@@ -10,7 +10,13 @@ function groupPostsByTag(posts: PostIndex[]): Map<string, PostIndex[]> {
 
   for (const post of posts) {
     for (const tag of post.tags) {
-      grouped.getOrInsert(tag, []).push(post);
+      const postsWithTag = grouped.get(tag);
+
+      if (postsWithTag) {
+        postsWithTag.push(post);
+      } else {
+        grouped.set(tag, [post]);
+      }
     }
   }
 
@@ -21,8 +27,14 @@ function groupPostsBySeries(posts: PostIndex[]): Map<string, PostIndex[]> {
   const grouped = new Map<string, PostIndex[]>();
 
   for (const post of posts) {
-    if (post.series) {
-      grouped.getOrInsert(post.series, []).push(post);
+    if (!post.series) continue;
+
+    const postsInSeries = grouped.get(post.series);
+
+    if (postsInSeries) {
+      postsInSeries.push(post);
+    } else {
+      grouped.set(post.series, [post]);
     }
   }
 
