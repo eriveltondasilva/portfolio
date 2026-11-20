@@ -19,7 +19,7 @@
   "scripts": {
     "prebuild": "bun run generate:blog && bun run generate:projects",
     "build": "bun run --bun next build",
-    "check": "bun run typecheck && bun run lint:check && bun run fmt:check && bun run knip",
+    "check": "bun run typecheck && bun run lint:check && bun run fmt:check && bun run test && bun run knip",
     "predev": "bun run generate:blog",
     "dev": "bun run --bun next dev",
     "fix": "bun run lint:fix && bun run fmt:fix",
@@ -35,6 +35,7 @@
     "new-post": "bun run scripts/generate-new-post.ts",
     "prepare": "husky",
     "start": "bun run --bun next start",
+    "test": "vitest run",
     "typecheck": "bun run typegen && bun check --no-script",
     "typegen": "bun run --bun next typegen"
   },
@@ -96,6 +97,7 @@
     "reading-time": "^1.5.0",
     "tailwindcss": "^4.3.5",
     "typescript": "^6.0.3",
+    "vitest": "^5.1.1",
     "zod": "^4.6.7"
   },
   "packageManager": "bun@1.4.4",
