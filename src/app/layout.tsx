@@ -1,5 +1,6 @@
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
+import { Analytics } from '@vercel/analytics/next';
 
 import { Footer } from '@/components/layout/footer';
 import { TopBorder } from '@/components/layout/top-border';
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           </div>
 
           <Footer />
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>

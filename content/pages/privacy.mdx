@@ -1,8 +1,29 @@
 # Política de privacidade
 
-Última atualização: 3 de novembro de 2026.
+Última atualização: 19 de novembro de 2026.
 
-Este blog é mantido por Erivelton Silva. Esta página explica quais dados são usados nos recursos de reações e comentários dos posts, para que servem e por quanto tempo ficam guardados.
+Este blog é mantido por Erivelton Silva. Esta página explica quais dados são usados na medição de audiência e nos recursos de reações e comentários dos posts, para que servem e por quanto tempo ficam guardados.
+
+## Medição de audiência
+
+O site usa o Vercel Web Analytics para saber, de forma agregada, quantas pessoas visitam o blog e quais páginas são mais lidas. Ele não usa cookies e não acompanha você entre sites.
+
+### O que é usado
+
+Ao carregar uma página, a Vercel registra:
+
+- **A página visitada e a origem do acesso**, como o site ou buscador de onde você veio.
+- **Dados técnicos genéricos**, como país, tipo de dispositivo, navegador e sistema operacional.
+- **Um identificador anônimo temporário**, calculado a partir de dados da requisição (como endereço IP e navegador) e que muda a cada dia. Ele serve apenas para contar visitantes únicos no mesmo dia e não permite reconhecer você em dias diferentes. Seu endereço IP não é guardado.
+
+### Para que serve
+
+- Entender quais conteúdos interessam mais ao público.
+- Contar visitantes e visualizações de página.
+
+### Por quanto tempo
+
+Os dados agregados ficam disponíveis no painel da Vercel pelo período de retenção do plano contratado. Não existe cookie nem armazenamento no seu navegador para essa finalidade.
 
 ## Reações
 
@@ -43,11 +64,11 @@ As fotos de perfil dos autores são carregadas do GitHub. Alguns posts também p
 
 ## Onde os dados ficam
 
-Os dados das reações são armazenados em um banco Redis gerenciado pela Upstash, e o site é hospedado na Vercel. Esses dois serviços processam os dados em nome do blog. Os comentários ficam no GitHub, e o GitHub e o Giscus tratam os dados deles conforme as próprias políticas. Os dados não são vendidos nem compartilhados com terceiros para outras finalidades.
+Os dados das reações são armazenados em um banco Redis gerenciado pela Upstash, e o site é hospedado na Vercel, que também processa os dados de medição de audiência. Esses serviços processam os dados em nome do blog. Os comentários ficam no GitHub, e o GitHub e o Giscus tratam os dados deles conforme as próprias políticas. Os dados não são vendidos nem compartilhados com terceiros para outras finalidades.
 
 ## Seus direitos
 
-Você pode apagar o cookie a qualquer momento nas configurações do navegador. Também pode pedir informações sobre os dados ligados a você ou a eliminação deles, conforme a Lei Geral de Proteção de Dados (LGPD). Como o identificador é anônimo, posso pedir o valor do cookie `visitor_id`, visível nas ferramentas do desenvolvedor do navegador, para localizar seus dados.
+Você pode apagar o cookie a qualquer momento nas configurações do navegador. Também pode pedir informações sobre os dados ligados a você ou a eliminação deles, conforme a Lei Geral de Proteção de Dados (LGPD). Como o identificador das reações é anônimo, posso pedir o valor do cookie `visitor_id`, visível nas ferramentas do desenvolvedor do navegador, para localizar seus dados. Os dados de medição de audiência são agregados e anônimos, então não é possível associá-los a uma pessoa específica.
 
 Seus comentários ficam vinculados à sua conta do GitHub: você pode editá-los ou excluí-los por lá a qualquer momento, ou pedir a remoção pelo contato abaixo.
 
