@@ -17,6 +17,7 @@ import { BuildError, formatZodError, resolveAll } from './utils/errors';
 import { createAsker } from './utils/prompts';
 import { renderTemplate, yamlList, yamlString } from './utils/template';
 import * as logger from './utils/logger';
+import { slugify } from './utils/slug';
 
 import type { Ask, Flags, Validate } from './utils/prompts';
 import type { TemplateValues } from './utils/template';
@@ -72,16 +73,6 @@ const splitList = (value: string): string[] =>
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean);
-
-function slugify(text: string): string {
-  return text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .slice(0, 120)
-    .replace(/^-+|-+$/g, '');
-}
 
 // 'sv-SE' yields YYYY-MM-DD in local time; toISOString() is UTC and would return tomorrow's date after 21h in Brazil.
 const today = (): string => new Date().toLocaleDateString('sv-SE');
