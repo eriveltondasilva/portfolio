@@ -3,19 +3,23 @@ import { join } from 'node:path';
 import { createInterface } from 'node:readline/promises';
 import { parseArgs } from 'node:util';
 
+import { YAML, file as bunFile, write as bunWrite, Glob } from 'bun';
 import { z } from 'zod';
 
 import { postSchema } from '@/lib/schemas';
-import { POST_IMAGES_DIR, POST_META_FILE, PRIMARY_AUTHOR_SLUG, PostStatus } from '@/lib/constants';
+import { POST_IMAGES_DIR, POST_META_FILE, PRIMARY_AUTHOR_SLUG } from '@/lib/constants';
 
 import { POSTS_DIR } from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
 import { readYaml } from './utils/files';
 import { BuildError, formatZodError, resolveAll } from './utils/errors';
-import { log } from './utils/logger';
+import { createAsker } from './utils/prompts';
+import { renderTemplate, yamlList, yamlString } from './utils/template';
+import * as logger from './utils/logger';
 
-import type { Interface } from 'node:readline/promises';
+import type { Ask, Flags, Validate } from './utils/prompts';
+import type { TemplateValues } from './utils/template';
 
 const TEMPLATE_DIR = join(import.meta.dir, 'utils', 'templates');
 
@@ -30,17 +34,8 @@ const FLAG_OPTIONS = {
 } as const;
 
 type FlagName = keyof typeof FLAG_OPTIONS;
-type Flags = Partial<Record<FlagName, string | undefined>>;
-type Validate = (value: string) => string | undefined;
-type Ask = (field: Field) => Promise<string>;
-type TemplateValues = Readonly<Record<string, string | undefined>>;
-
-interface Field {
-  name: FlagName;
-  question: string;
-  validate: Validate;
-  defaultValue?: string;
-}
+type PostFlags = Flags<FlagName>;
+type PostAsk = Ask<FlagName>;
 
 interface ExistingPost {
   folder: string;
@@ -72,9 +67,6 @@ const existingPostSchema = z.object({
 
 // # Helpers
 
-const yamlString = (value: string): string => JSON.stringify(value);
-const yamlList = (items: readonly string[]): string => `[${items.map(yamlString).join(', ')}]`;
-
 const splitList = (value: string): string[] =>
   value
     .split(',')
@@ -103,28 +95,6 @@ function validateWith(schema: z.ZodType, parse: (value: string) => unknown = (v)
   };
 }
 
-const PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g;
-
-function renderTemplate(template: string, values: TemplateValues): string {
-  for (const [placeholder, key = ''] of template.matchAll(PLACEHOLDER_REGEX)) {
-    if (!Object.hasOwn(values, key))
-      throw new Error(`Template has an unknown placeholder: ${placeholder}`);
-  }
-
-  const rendered = template
-    .split('\n')
-    .filter((line) =>
-      Array.from(line.matchAll(PLACEHOLDER_REGEX)).every(
-        ([, key = '']) => values[key] !== undefined,
-      ),
-    )
-    .join('\n')
-    .replace(PLACEHOLDER_REGEX, (_, key: string) => values[key] ?? '')
-    .trimEnd();
-
-  return `${rendered}\n`;
-}
-
 // # Existing posts
 
 async function readExistingPosts(): Promise<ExistingPost[]> {
@@ -150,35 +120,9 @@ async function readExistingPosts(): Promise<ExistingPost[]> {
 
 // # Prompts
 
-function createAsker(rl: Interface, flags: Flags): Ask {
-  return async function ask(field) {
-    const flagValue = flags[field.name];
-
-    if (flagValue !== undefined) {
-      const error = field.validate(flagValue);
-
-      if (error) throw new BuildError('new-post', [`--${field.name}: ${error}`]);
-
-      return flagValue;
-    }
-
-    const suffix = field.defaultValue ? ` [${field.defaultValue}]` : '';
-
-    while (true) {
-      const answer = (await rl.question(`${field.question}${suffix}: `)).trim();
-      const value = answer || field.defaultValue || '';
-      const error = field.validate(value);
-
-      if (!error) return value;
-
-      console.error(`  ✖ ${error}`);
-    }
-  };
-}
-
 async function askSeries(
-  ask: Ask,
-  flags: Flags,
+  ask: PostAsk,
+  flags: PostFlags,
   { seriesSlugs, existing }: PostContext,
 ): Promise<PostInput['series']> {
   let seriesSlug = '';
@@ -223,8 +167,8 @@ async function askSeries(
 }
 
 async function collectPostInput(
-  ask: Ask,
-  flags: Flags,
+  ask: PostAsk,
+  flags: PostFlags,
   context: PostContext,
   createdAt: string,
 ): Promise<PostInput> {
@@ -289,21 +233,6 @@ async function collectPostInput(
 
 // # Scaffold
 
-function validatePostInput(input: PostInput, publishedAt: string): void {
-  const { series, ...rest } = input;
-
-  const result = postSchema.safeParse({
-    ...rest,
-    publishedAt,
-    status: PostStatus.DRAFT,
-    ...(series ? { series: series.slug, order: series.order } : {}),
-  });
-
-  if (!result.success) {
-    throw new BuildError('new-post', [formatZodError('generated metadata', result.error)]);
-  }
-}
-
 function toTemplateValues(
   { title, slug, description, tags, authors, series }: PostInput,
   publishedAt: string,
@@ -320,26 +249,41 @@ function toTemplateValues(
   };
 }
 
+// Validates the file that will actually be written, so the check cannot drift from the template.
+function assertValidMeta(content: string): void {
+  const result = postSchema.safeParse(YAML.parse(content));
+
+  if (!result.success) {
+    throw new BuildError('new-post', [formatZodError('generated metadata', result.error)]);
+  }
+}
+
 async function scaffoldPost(folderName: string, values: TemplateValues): Promise<string> {
   const templateFiles = Array.from(
-    new Bun.Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
+    new Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
   );
 
   if (templateFiles.length === 0) throw new Error(`No template files in ${TEMPLATE_DIR}`);
 
-  // Render everything before writing: a template error must not leave a half-created folder,
-  // since an existing folder blocks the slug on the next run.
+  // Render and validate everything before writing: a template error must not leave a
+  // half-created folder, since an existing folder blocks the slug on the next run.
   const rendered = await Promise.all(
     templateFiles.map(async (file) => ({
       file,
-      content: renderTemplate(await Bun.file(join(TEMPLATE_DIR, file)).text(), values),
+      content: renderTemplate(await bunFile(join(TEMPLATE_DIR, file)).text(), values),
     })),
   );
+
+  const meta = rendered.find(({ file }) => file === POST_META_FILE);
+
+  if (!meta) throw new Error(`${POST_META_FILE} not found in ${TEMPLATE_DIR}`);
+
+  assertValidMeta(meta.content);
 
   const folderPath = join(POSTS_DIR, folderName);
 
   for (const { file, content } of rendered) {
-    await Bun.write(join(folderPath, file), content);
+    await bunWrite(join(folderPath, file), content);
   }
 
   await mkdir(join(folderPath, POST_IMAGES_DIR), { recursive: true });
@@ -367,21 +311,19 @@ async function main(): Promise<void> {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
-    log.section('New post');
+    logger.section('New post');
 
     const createdAt = today();
-    const ask = createAsker(rl, flags);
+    const ask = createAsker<FlagName>(rl, flags, 'new-post');
     const input = await collectPostInput(ask, flags, context, createdAt);
-
-    validatePostInput(input, createdAt);
 
     const templateValues = toTemplateValues(input, createdAt);
     const folderName = formatPostFolderName(createdAt, input.slug);
     const folderPath = await scaffoldPost(folderName, templateValues);
 
-    log.section('Created');
-    log.ok('post:', folderPath);
-    log.detail(
+    logger.section('Created');
+    logger.ok('post:', folderPath);
+    logger.detail(
       `Edit ${POST_META_FILE}, write the post, then set "status: published" and update "publishedAt" to the publish date.`,
     );
   } finally {
