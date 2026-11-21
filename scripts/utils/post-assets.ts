@@ -1,7 +1,5 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
-
-import { file as bunFile, Glob } from 'bun';
 
 import { POST_CONTENT_FILE, POST_IMAGES_DIR, POST_META_FILE } from '@/lib/constants';
 
@@ -32,6 +30,11 @@ function stripFencedCode(content: string): string {
 interface ImageReference {
   kind: 'markdown' | 'html' | 'jsx' | 'import';
   path: string;
+}
+
+interface ImageFile {
+  path: string;
+  size: number;
 }
 
 export interface AssetReport {
@@ -78,18 +81,22 @@ function collectImageReferences(content: string): ImageReference[] {
 
 // # Files
 
-function listImageFiles(folderPath: string): string[] {
+async function listImageFiles(folderPath: string): Promise<ImageFile[]> {
   const imagesDir = join(folderPath, POST_IMAGES_DIR);
+  const entries = await readdir(imagesDir, { recursive: true }).catch(() => []);
 
-  try {
-    const glob = new Glob('**/*');
+  const candidates = await Promise.all(
+    entries.map(async (entry) => ({
+      path: entry.replaceAll('\\', '/'),
+      stats: await stat(join(imagesDir, entry)),
+    })),
+  );
 
-    return Array.from(glob.scanSync({ cwd: imagesDir, onlyFiles: true }))
-      .map((file) => file.replaceAll('\\', '/'))
-      .toSorted();
-  } catch {
-    return [];
-  }
+  // Hidden entries (e.g. .DS_Store) are not images, same as the Glob this replaced.
+  return candidates
+    .filter(({ path, stats }) => stats.isFile() && !path.split('/').some((s) => s.startsWith('.')))
+    .map(({ path, stats }) => ({ path, size: stats.size }))
+    .toSorted((a, b) => a.path.localeCompare(b.path));
 }
 
 function inspectRootEntries(entries: readonly string[]): AssetReport {
@@ -131,10 +138,10 @@ export async function inspectPostAssets(folderPath: string, content: string): Pr
   const entries = await readdir(folderPath);
   const { errors, warnings, coverFile } = inspectRootEntries(entries);
 
-  const files = listImageFiles(folderPath);
-  const imagePaths = new Set(files.map((file) => `${IMAGES_PREFIX}${file}`));
+  const files = await listImageFiles(folderPath);
+  const imagePaths = new Set(files.map(({ path }) => `${IMAGES_PREFIX}${path}`));
 
-  for (const file of files) {
+  for (const { path: file, size } of files) {
     const segments = file.split('/');
     const name = segments.at(-1) ?? '';
     const isValidName =
@@ -146,8 +153,6 @@ export async function inspectPostAssets(folderPath: string, content: string): Pr
           'Case differences work on macOS/Windows but break the build on Linux.',
       );
     }
-
-    const { size } = bunFile(join(folderPath, POST_IMAGES_DIR, file));
 
     if (size > MAX_IMAGE_BYTES) {
       warnings.push(
