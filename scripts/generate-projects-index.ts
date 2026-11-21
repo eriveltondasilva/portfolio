@@ -14,9 +14,9 @@ import {
   toProjectSlug,
 } from './utils/github';
 import { checkUniqueSlugs } from './utils/validations';
-import { formatZodError, throwIfErrors } from './utils/errors';
+import { BuildError, formatZodError, getErrorMessage, throwIfErrors } from './utils/errors';
 import { writeJson } from './utils/files';
-import { log } from './utils/logger';
+import * as logger from './utils/logger';
 
 import type { Project } from '@/types';
 import type { GithubRepo } from './utils/github';
@@ -28,15 +28,21 @@ const REPOS_PER_PAGE = 100;
 async function fetchPublicRepos(username: string): Promise<GithubRepo[]> {
   const token = process.env['GITHUB_TOKEN'];
 
-  if (!token) log.skip('token:', 'GITHUB_TOKEN not set, using the unauthenticated rate limit');
+  if (!token) logger.warn('token:', 'GITHUB_TOKEN not set, using the unauthenticated rate limit');
 
   const octokit = new Octokit(token ? { auth: token } : {});
-  log.detail(`Fetching repos for @${username}...`);
+  logger.detail(`Fetching repos for @${username}...`);
 
-  return octokit.paginate(octokit.repos.listForUser, {
-    username,
-    per_page: REPOS_PER_PAGE,
-  });
+  try {
+    return await octokit.paginate(octokit.repos.listForUser, {
+      username,
+      per_page: REPOS_PER_PAGE,
+    });
+  } catch (cause) {
+    throw new BuildError('projects', [
+      `Failed to fetch repos for @${username}: ${getErrorMessage(cause)}`,
+    ]);
+  }
 }
 
 // # Mappers
@@ -82,11 +88,11 @@ function validateProjects(candidates: readonly Project[]): Project[] {
 // # Logging
 
 function logSelection(repos: readonly GithubRepo[], portfolioRepos: readonly GithubRepo[]): void {
-  log.ok('repos fetched:', `${repos.length} public - ${portfolioRepos.length} included`);
+  logger.ok('repos fetched:', `${repos.length} public - ${portfolioRepos.length} included`);
 
   const withoutTopic = repos.length - portfolioRepos.length;
   if (withoutTopic > 0) {
-    log.skip('no topic:', `${withoutTopic} excluded (missing "${GithubTopic.INCLUDE}")`);
+    logger.skip('no topic:', `${withoutTopic} excluded (missing "${GithubTopic.INCLUDE}")`);
   }
 
   const featuredCount = portfolioRepos.filter((repo) =>
@@ -95,9 +101,9 @@ function logSelection(repos: readonly GithubRepo[], portfolioRepos: readonly Git
   const wipCount = portfolioRepos.filter((repo) => repo.topics?.includes(GithubTopic.WIP)).length;
   const archivedCount = portfolioRepos.filter((repo) => repo.archived).length;
 
-  if (featuredCount > 0) log.detail(`${featuredCount} featured`);
-  if (wipCount > 0) log.detail(`${wipCount} wip`);
-  if (archivedCount > 0) log.detail(`${archivedCount} archived (kept with archived status)`);
+  if (featuredCount > 0) logger.detail(`${featuredCount} featured`);
+  if (wipCount > 0) logger.detail(`${wipCount} wip`);
+  if (archivedCount > 0) logger.detail(`${archivedCount} archived (kept with archived status)`);
 }
 
 // # Main
@@ -106,24 +112,24 @@ async function main(): Promise<void> {
   const author = await readPrimaryAuthor();
   const username = getUrlPathname(author.socials.github);
 
-  log.section('Fetching from GitHub');
+  logger.section('Fetching from GitHub');
 
   const repos = await fetchPublicRepos(username);
   const portfolioRepos = selectPortfolioRepos(repos);
   logSelection(repos, portfolioRepos);
 
-  log.section('Validating');
+  logger.section('Validating');
 
   const projects = validateProjects(portfolioRepos.map(toProject));
-  log.ok('projects:', `${projects.length} valid`);
+  logger.ok('projects:', `${projects.length} valid`);
 
-  log.section('Writing index');
+  logger.section('Writing index');
 
   await writeJson(
     PROJECTS_INDEX_OUTPUT,
     projects.toSorted((a, b) => a.slug.localeCompare(b.slug)),
   );
-  log.ok('projects index:', PROJECTS_INDEX_OUTPUT);
+  logger.ok('projects index:', PROJECTS_INDEX_OUTPUT);
 }
 
 await runScript('Generating projects index', main);

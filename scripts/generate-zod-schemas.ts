@@ -4,7 +4,7 @@ import { authorSchema, postSchema, seriesSchema } from '@/lib/schemas';
 
 import { AUTHORS_SCHEMA_OUTPUT, POST_SCHEMA_OUTPUT, SERIES_SCHEMA_OUTPUT } from './utils/paths';
 import { runScript } from './utils/run-script';
-import { log } from './utils/logger';
+import * as logger from './utils/logger';
 import { writeJson } from './utils/files';
 
 type Target = { name: string; schema: z.ZodType; output: string };
@@ -24,20 +24,20 @@ const targets: ReadonlyArray<Target> = [
 ];
 
 async function main(): Promise<void> {
-  log.section('Generating schemas');
+  logger.section('Generating schemas');
 
   const jsonSchemas = targets.map(({ name, schema, output }) => {
     const jsonSchema = z.toJSONSchema(schema, { io: 'input' });
-    log.ok(`${name} schema`);
+    logger.ok(`${name} schema`);
 
     return { output, jsonSchema };
   });
 
-  log.section('Writing files');
+  logger.section('Writing files');
 
   await Promise.all(jsonSchemas.map(({ output, jsonSchema }) => writeJson(output, jsonSchema)));
 
-  for (const { output } of jsonSchemas) log.ok(output);
+  for (const { output } of jsonSchemas) logger.ok(output);
 }
 
 await runScript('Generating JSON Schemas', main);
