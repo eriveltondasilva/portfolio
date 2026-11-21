@@ -1,6 +1,7 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { file as bunFile } from 'bun';
 import getReadingTime from 'reading-time';
 
 import { postSchema } from '@/lib/schemas';
@@ -14,9 +15,9 @@ import {
 } from './utils/paths';
 import { runScript } from './utils/run-script';
 import { readAuthors, readSeries } from './utils/content';
-import { formatZodError, getErrMessage, resolveAll, throwIfErrors } from './utils/errors';
-import { log } from './utils/logger';
-import { COVER_GLOB, inspectPostAssets } from './utils/post-assets';
+import { formatZodError, getErrorMessage, resolveAll, throwIfErrors } from './utils/errors';
+import * as logger from './utils/logger';
+import { inspectPostAssets } from './utils/post-assets';
 import {
   checkAuthorsExist,
   checkSeriesExist,
@@ -67,14 +68,14 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
     { name: POST_META_FILE, path: metaPath },
     { name: POST_CONTENT_FILE, path: contentPath },
   ];
-  const exists = await Promise.all(files.map(({ path }) => Bun.file(path).exists()));
+  const exists = await Promise.all(files.map(({ path }) => bunFile(path).exists()));
   const missing = files.filter((_, index) => !exists[index]).map(({ name }) => name);
 
   if (missing.length > 0) {
     throw new Error(`${folderPath}\n\n  Missing file(s): ${missing.join(', ')}`);
   }
 
-  const [meta, content] = await Promise.all([readYaml(metaPath), Bun.file(contentPath).text()]);
+  const [meta, content] = await Promise.all([readYaml(metaPath), bunFile(contentPath).text()]);
 
   if (content.trimStart().startsWith('---')) {
     throw new Error(`${contentPath}\n\n  Frontmatter found in MDX. Move it to ${POST_META_FILE}.`);
@@ -93,15 +94,11 @@ async function parsePostFolder(folder: string): Promise<ParsedPost | null> {
 
   if (result.data.status === PostStatus.DRAFT) return null;
 
-  const [coverFile = null] = new Bun.Glob(COVER_GLOB).scanSync({
-    cwd: folderPath,
-  });
-
   return {
     post: {
       ...result.data,
       folder,
-      coverFile,
+      coverFile: assets.coverFile,
       readingTime: Math.ceil(getReadingTime(content).minutes),
     },
     warnings: assets.warnings.map((warning) => `${folder}: ${warning}`),
@@ -115,7 +112,7 @@ async function readPosts(): Promise<PostsData> {
   throwIfErrors(
     'posts',
     results.flatMap((result) =>
-      result.status === 'rejected' ? [getErrMessage(result.reason)] : [],
+      result.status === 'rejected' ? [getErrorMessage(result.reason)] : [],
     ),
   );
 
@@ -123,12 +120,6 @@ async function readPosts(): Promise<PostsData> {
     result.status === 'fulfilled' && result.value ? [result.value] : [],
   );
   const posts = parsed.map(({ post }) => post);
-
-  throwIfErrors(
-    'posts',
-    checkUniqueSlugs(posts.map((post) => ({ slug: post.slug, source: getPostMetaPath(post) }))),
-  );
-
   const published = posts.filter((post) => post.status === PostStatus.PUBLISHED);
 
   return {
@@ -146,9 +137,7 @@ async function readPosts(): Promise<PostsData> {
 
 // # Builders
 
-export function sortByDateDesc<T extends { publishedAt: string; slug: string }>(
-  items: readonly T[],
-): T[] {
+function sortByDateDesc<T extends { publishedAt: string; slug: string }>(items: readonly T[]): T[] {
   return items.toSorted(
     (a, b) => b.publishedAt.localeCompare(a.publishedAt) || a.slug.localeCompare(b.slug),
   );
@@ -178,7 +167,7 @@ function buildSeriesIndex(series: readonly Series[], posts: readonly PostIndex[]
 // # Main
 
 async function main(): Promise<void> {
-  log.section('Reading content');
+  logger.section('Reading content');
 
   const [authors, series, { posts, warnings, stats }] = await resolveAll(
     readAuthors(),
@@ -186,42 +175,46 @@ async function main(): Promise<void> {
     readPosts(),
   );
 
-  log.ok('authors:', `${authors.length} loaded`);
-  log.ok('series:', `${series.length} loaded`);
-  log.ok('posts:', `${stats.published} published of ${stats.scanned} scanned`);
+  logger.ok('authors:', `${authors.length} loaded`);
+  logger.ok('series:', `${series.length} loaded`);
+  logger.ok('posts:', `${stats.published} published of ${stats.scanned} scanned`);
 
-  if (stats.archived > 0) log.skip('archived:', `${stats.archived} archived`);
-  if (stats.drafts > 0) log.skip('drafts:', `${stats.drafts} skipped`);
+  if (stats.archived > 0) logger.skip('archived:', `${stats.archived} archived`);
+  if (stats.drafts > 0) logger.skip('drafts:', `${stats.drafts} skipped`);
   if (stats.withCover < stats.published) {
-    log.skip(
+    logger.warn(
       'cover:',
       `${stats.published - stats.withCover} of ${stats.published} published post(s) without cover`,
     );
   }
 
-  log.section('Validating');
+  logger.section('Validating');
 
   throwIfErrors('posts', [
+    ...checkUniqueSlugs(posts.map((post) => ({ slug: post.slug, source: getPostMetaPath(post) }))),
     ...checkSeriesExist(posts, new Set(series.map(({ slug }) => slug))),
     ...checkUniqueSeriesOrder(posts),
     ...checkAuthorsExist(posts, new Set(authors.map(({ slug }) => slug))),
   ]);
 
-  if (series.length > 0) log.ok('series exist:', 'all referenced series are defined');
-  if (series.length > 0) log.ok('series order:', 'all posts have unique order');
-  if (authors.length > 0) log.ok('authors exist:', 'all referenced authors are defined');
+  if (series.length > 0) {
+    logger.ok('series exist:', 'all referenced series are defined');
+    logger.ok('series order:', 'all posts have unique order');
+  }
 
-  log.ok('assets:', 'folder structure, image names and references are valid');
+  if (authors.length > 0) logger.ok('authors exist:', 'all referenced authors are defined');
 
-  for (const warning of warnings) log.skip('warning:', warning);
+  logger.ok('assets:', 'folder structure, image names and references are valid');
+
+  for (const warning of warnings) logger.warn('assets:', warning);
 
   const linkedToSeries = posts.filter((post) => post.series !== undefined).length;
 
   if (linkedToSeries > 0) {
-    log.detail(`${linkedToSeries} of ${posts.length} post(s) linked to series`);
+    logger.detail(`${linkedToSeries} of ${posts.length} post(s) linked to series`);
   }
 
-  log.section('Writing indices');
+  logger.section('Writing indices');
 
   const seriesIndex = buildSeriesIndex(series, posts);
 
@@ -231,13 +224,13 @@ async function main(): Promise<void> {
     writeJson(SERIES_INDEX_OUTPUT, seriesIndex),
   ]);
 
-  log.ok('authors index:', AUTHORS_INDEX_OUTPUT);
-  log.ok('posts index:', POSTS_INDEX_OUTPUT);
-  log.ok('series index:', SERIES_INDEX_OUTPUT);
+  logger.ok('authors index:', AUTHORS_INDEX_OUTPUT);
+  logger.ok('posts index:', POSTS_INDEX_OUTPUT);
+  logger.ok('series index:', SERIES_INDEX_OUTPUT);
 
   for (const { slug, posts: seriesPostRefs } of seriesIndex) {
     if (seriesPostRefs.length === 0) continue;
-    log.detail(`${slug}  (${seriesPostRefs.length} posts)`);
+    logger.detail(`${slug}  (${seriesPostRefs.length} posts)`);
   }
 }
 

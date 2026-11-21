@@ -1,12 +1,12 @@
 import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import { file as bunFile, Glob } from 'bun';
+
 import { POST_CONTENT_FILE, POST_IMAGES_DIR, POST_META_FILE } from '@/lib/constants';
 
-// ! Keep in sync with COVER_FILE_NAME below.
-export const COVER_GLOB = 'cover.{jpg,jpeg,png,webp,avif}';
-
-const COVER_FILE_NAME = /^cover\.(?:jpe?g|png|webp|avif)$/;
+const COVER_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'avif'];
+const COVER_FILE_NAME = new RegExp(`^cover\\.(?:${COVER_EXTENSIONS.join('|')})$`);
 const IMAGE_EXTENSION = /\.(?:png|jpe?g|webp|avif|gif|svg)$/i;
 const KEBAB_SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const KEBAB_FILE_NAME = /^[a-z0-9]+(?:-[a-z0-9]+)*\.[a-z0-9]+$/;
@@ -37,6 +37,7 @@ interface ImageReference {
 export interface AssetReport {
   errors: string[];
   warnings: string[];
+  coverFile: string | null;
 }
 
 // # References
@@ -81,7 +82,7 @@ function listImageFiles(folderPath: string): string[] {
   const imagesDir = join(folderPath, POST_IMAGES_DIR);
 
   try {
-    const glob = new Bun.Glob('**/*');
+    const glob = new Glob('**/*');
 
     return Array.from(glob.scanSync({ cwd: imagesDir, onlyFiles: true }))
       .map((file) => file.replaceAll('\\', '/'))
@@ -92,8 +93,8 @@ function listImageFiles(folderPath: string): string[] {
 }
 
 function inspectRootEntries(entries: readonly string[]): AssetReport {
-  const report: AssetReport = { errors: [], warnings: [] };
   const covers = entries.filter((name) => COVER_FILE_NAME.test(name));
+  const report: AssetReport = { errors: [], warnings: [], coverFile: covers[0] ?? null };
 
   if (covers.length > 1) {
     report.errors.push(`more than one cover found (${covers.join(', ')}); keep only one.`);
@@ -104,7 +105,9 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
     if (ALLOWED_ROOT_ENTRIES.has(name) || COVER_FILE_NAME.test(name)) continue;
 
     if (/^cover\./i.test(name)) {
-      report.errors.push(`"${name}": the cover must match "${COVER_GLOB}" (lowercase).`);
+      report.errors.push(
+        `"${name}": the cover must be named "cover.<ext>" in lowercase (${COVER_EXTENSIONS.join(', ')}).`,
+      );
       continue;
     }
 
@@ -125,10 +128,11 @@ function inspectRootEntries(entries: readonly string[]): AssetReport {
  * so the pattern is enforced here, before the Next.js build.
  */
 export async function inspectPostAssets(folderPath: string, content: string): Promise<AssetReport> {
-  const { errors, warnings } = inspectRootEntries(await readdir(folderPath));
+  const entries = await readdir(folderPath);
+  const { errors, warnings, coverFile } = inspectRootEntries(entries);
 
   const files = listImageFiles(folderPath);
-  const imagePaths = new Set(files.map((file) => `${POST_IMAGES_DIR}/${file}`));
+  const imagePaths = new Set(files.map((file) => `${IMAGES_PREFIX}${file}`));
 
   for (const file of files) {
     const segments = file.split('/');
@@ -143,7 +147,7 @@ export async function inspectPostAssets(folderPath: string, content: string): Pr
       );
     }
 
-    const { size } = Bun.file(join(folderPath, POST_IMAGES_DIR, file));
+    const { size } = bunFile(join(folderPath, POST_IMAGES_DIR, file));
 
     if (size > MAX_IMAGE_BYTES) {
       warnings.push(
@@ -170,9 +174,7 @@ export async function inspectPostAssets(folderPath: string, content: string): Pr
       continue;
     }
 
-    const relativePath = path.slice(2);
-
-    if (imagePaths.has(relativePath)) used.add(relativePath);
+    if (imagePaths.has(path)) used.add(path);
     else errors.push(`${path}: file not found (names are case-sensitive on Linux).`);
   }
 
@@ -180,5 +182,5 @@ export async function inspectPostAssets(folderPath: string, content: string): Pr
     if (!used.has(path)) warnings.push(`${path}: not referenced in ${POST_CONTENT_FILE}.`);
   }
 
-  return { errors, warnings };
+  return { errors, warnings, coverFile };
 }
