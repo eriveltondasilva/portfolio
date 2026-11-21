@@ -33,6 +33,7 @@ type FlagName = keyof typeof FLAG_OPTIONS;
 type Flags = Partial<Record<FlagName, string | undefined>>;
 type Validate = (value: string) => string | undefined;
 type Ask = (field: Field) => Promise<string>;
+type TemplateValues = Readonly<Record<string, string | undefined>>;
 
 interface Field {
   name: FlagName;
@@ -102,15 +103,23 @@ function validateWith(schema: z.ZodType, parse: (value: string) => unknown = (v)
   };
 }
 
-function renderTemplate(template: string, values: Readonly<Record<string, string>>): string {
-  for (const [placeholder, key = ''] of template.matchAll(/\{\{(\w+)\}\}/g)) {
+const PLACEHOLDER_REGEX = /\{\{(\w+)\}\}/g;
+
+function renderTemplate(template: string, values: TemplateValues): string {
+  for (const [placeholder, key = ''] of template.matchAll(PLACEHOLDER_REGEX)) {
     if (!Object.hasOwn(values, key))
       throw new Error(`Template has an unknown placeholder: ${placeholder}`);
   }
 
   const rendered = template
-    .replace(/\{\{(\w+)\}\}/g, (_, key: string) => values[key] ?? '')
-    .replace(/\n{3,}/g, '\n\n')
+    .split('\n')
+    .filter((line) =>
+      Array.from(line.matchAll(PLACEHOLDER_REGEX)).every(
+        ([, key = '']) => values[key] !== undefined,
+      ),
+    )
+    .join('\n')
+    .replace(PLACEHOLDER_REGEX, (_, key: string) => values[key] ?? '')
     .trimEnd();
 
   return `${rendered}\n`;
@@ -298,7 +307,7 @@ function validatePostInput(input: PostInput, publishedAt: string): void {
 function toTemplateValues(
   { title, slug, description, tags, authors, series }: PostInput,
   publishedAt: string,
-): Record<string, string> {
+): TemplateValues {
   return {
     slug: yamlString(slug),
     title: yamlString(title),
@@ -306,14 +315,12 @@ function toTemplateValues(
     tags: yamlList(tags),
     authors: yamlList(authors),
     publishedAt: yamlString(publishedAt),
-    series: series ? `series: ${yamlString(series.slug)}\norder: ${series.order}` : '',
+    series: series ? yamlString(series.slug) : undefined,
+    order: series ? String(series.order) : undefined,
   };
 }
 
-async function scaffoldPost(
-  folderName: string,
-  values: Readonly<Record<string, string>>,
-): Promise<string> {
+async function scaffoldPost(folderName: string, values: TemplateValues): Promise<string> {
   const templateFiles = Array.from(
     new Bun.Glob('**/*').scanSync({ cwd: TEMPLATE_DIR, onlyFiles: true }),
   );

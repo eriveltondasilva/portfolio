@@ -5,4 +5,5 @@ tags: {{tags}}
 authors: {{authors}}
 publishedAt: {{publishedAt}}
 status: draft
-{{series}}
+series: {{series}}
+order: {{order}}
